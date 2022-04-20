@@ -1,23 +1,47 @@
-import {ReactElement, useState} from 'react';
+import {ReactElement, useEffect, useState} from 'react';
 
 /* styles and ant design */
 import {
   TeamOutlined,
   HomeOutlined,
   PlaySquareOutlined,
+  FileTextOutlined,
+  ExpandOutlined,
+  NotificationOutlined,
+  PaperClipOutlined,
+  AppstoreOutlined
 } from '@ant-design/icons';
 import {theme} from 'utils/colors';
 import {Layout, Menu} from 'antd';
-import {useHistory} from 'react-router-dom';
-import {HeaderStyled, StyledLayout, LayoutStyles} from './styled';
+import {useHistory, useLocation} from 'react-router-dom';
+import {
+  HeaderStyled,
+  StyledLayout,
+  StyledSubMenu,
+  LayoutStyles,
+  MenuItemOnSelect,
+} from './styled';
 
 /* components */
 import NavigationContent from 'navigations/privateRoute';
 
 const {Sider, Content} = Layout;
+const {SubMenu} = Menu;
+
+const teamItems = [
+  {name:'Dashboards', link:'dashboards', icon: AppstoreOutlined},
+  {name:'Pages', link:'pages', icon: FileTextOutlined},
+  {name:'Announcements', link:'announcements', icon: NotificationOutlined},
+  {name:'Forms', link:'forms', icon: PaperClipOutlined},
+  {name:'Onboarding\nScreens', link:'onboarding', icon: ExpandOutlined}
+]
+
 const MainLayout = (): ReactElement => {
   const history = useHistory();
+  const location = useLocation();
   const [selected, setSelected] = useState('1');
+  const [listNum, setListNum] = useState(0);
+  const [collapsed, setCollapsed] = useState(true);
 
   const colorCondition = (key: string) => {
     return selected === key ? theme.WHITE : theme.BLACK;
@@ -27,84 +51,198 @@ const MainLayout = (): ReactElement => {
     history.push(route);
   };
 
+  useEffect(() => {
+    const path = location.pathname;
+    if (/team/g.test(path)) {
+      setSelected('3');
+      teamItems.forEach((o:any, i:number)=>{
+        const regX = new RegExp(o.link, 'g');
+        if(regX.test(path)) return setListNum(i);
+      })
+      return
+    }
+    if (/learn/g.test(path)) {
+      setSelected('2');
+      teamItems.forEach((o:any, i:number)=>{
+        const regX = new RegExp(o.link, 'g');
+        if(regX.test(path)) setListNum(i);
+      })
+      return
+    }
+    if (/home/g.test(path)) return setSelected('1');
+  }, [location]);
+
   return (
-    <StyledLayout>
+    <StyledLayout collapsed={collapsed}>
       <HeaderStyled></HeaderStyled>
-      <Layout>
-        <Sider width={200} collapsed={true}>
+      <Layout >
+        <Sider 
+          collapsed={collapsed} 
+          onMouseOver={()=>setCollapsed(false)} 
+          // onMouseLeave={()=>setCollapsed(true)} 
+          collapsedWidth={100} 
+          width={230}
+        >
           <Menu
-            mode="inline"
-            defaultOpenKeys={['sub1']}
             defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            mode="inline"
             onSelect={(e: any) => setSelected(e?.key)}
-            style={{height: '100%', borderRight: 0}}>
+            style={{
+              height: '100%',
+              borderRight: 0,
+              minWidth: 100,
+              paddingTop: 48
+            }}
+          >
             <Menu.Item
               key="1"
-              style={{marginTop: 48}}
+              style={selected === '1' && MenuItemOnSelect(collapsed)}
               onClick={() => pushHistory('/home')}
-              icon={
-                <HomeOutlined
-                  style={{
-                    fontSize: 20,
-                    marginTop: 5,
-                    color: colorCondition('1'),
-                  }}
-                />
-              }>
+            >
+              <HomeOutlined
+                style={{
+                  fontSize: 20,
+                  marginTop: 4,
+                  color: colorCondition('1'),
+                }}
+              />
               <span
                 style={{
-                  marginTop: 20,
                   fontSize: 16,
                   fontWeight: 700,
                   color: colorCondition('1'),
-                }}>
+                }}
+              >
                 Home
               </span>
             </Menu.Item>
 
-            <Menu.Item
+            <StyledSubMenu
+              active={selected === '2' ? 1 : 0} 
               key="2"
-              onClick={() => pushHistory('/learn')}
-              icon={
-                <PlaySquareOutlined
-                  style={{
-                    fontSize: 20,
-                    marginTop: 5,
-                    color: colorCondition('2'),
+              // style={selected === '2' && MenuItemOnSelect}
+              title={
+                <span>
+                  <PlaySquareOutlined
+                    style={{
+                      fontSize: 20,
+                      marginTop: 4,
+                      color: colorCondition('2'),
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: colorCondition('2'),
+                    }}
+                  >
+                    Learn
+                  </span>
+                </span>
+              }
+            >
+              {teamItems.map((obj, i)=>(
+                <Menu.Item
+                  key={"learn-"+i}
+                  onClick={() => {
+                    setListNum(listNum)
+                    pushHistory('/learn/'+obj.link)
                   }}
-                />
-              }>
-              <span
-                style={{
-                  fontSize: 16,
-                  fontWeight: 700,
-                  color: colorCondition('2'),
-                }}>
-                Learn
-              </span>
-            </Menu.Item>
+                  style={{
+                    height: '20px', 
+                    paddingTop: '25px', 
+                    paddingBottom: '25px',
+                    color: listNum === i && selected === '2' ? '#635ffa' : ''}
+                  }
+                >
+                    <obj.icon
+                      style={{
+                        fontSize: 20,
+                        marginTop: 5
+                      }}
+                    />
+                    <div
+                      style={{
+                        marginTop: 5,
+                        display: 'inline-block',
+                        fontSize: 16,
+                        fontWeight: 700,
+                        paddingLeft: 8,
+                        width: '100px',
+                        lineHeight: 1.25,
+                        whiteSpace: 'pre'
+                      }}
+                    >
+                      {obj.name}
+                    </div>
+                  </Menu.Item>
+                ))}
+            </StyledSubMenu>
 
-            <Menu.Item
+            <StyledSubMenu
+              active={selected === '3' ? 1 : 0} 
               key="3"
-              onClick={() => pushHistory('/team')}
-              icon={
-                <TeamOutlined
-                  style={{
-                    fontSize: 20,
-                    marginTop: 5,
-                    color: colorCondition('3'),
+              // style={selected === '3' && MenuItemOnSelect}
+              title={
+                <span>
+                  <TeamOutlined
+                    style={{
+                      fontSize: 20,
+                      marginTop: 4,
+                      color: colorCondition('3'),
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 700,
+                      color: colorCondition('3'),
+                    }}
+                  >
+                    Team
+                  </span>
+                </span>
+              }
+            >
+              {teamItems.map((obj, i)=>(
+                <Menu.Item
+                  key={"team-"+i}
+                  onClick={() => {
+                    setListNum(listNum)
+                    pushHistory('/team/'+obj.link)
                   }}
-                />
-              }>
-              <span
-                style={{
-                  fontSize: 16,
-                  fontWeight: 700,
-                  color: colorCondition('3'),
-                }}>
-                Team
-              </span>
-            </Menu.Item>
+                  style={{
+                    height: '20px', 
+                    paddingTop: '25px', 
+                    paddingBottom: '25px',
+                    color: listNum === i && selected === '3' ? '#635ffa' : ''}
+                  }
+                >
+                  <obj.icon
+                    style={{
+                      fontSize: 20,
+                      marginTop: 5
+                    }}
+                  />
+                  <div
+                    style={{
+                      marginTop: 5,
+                      display: 'inline-block',
+                      fontSize: 16,
+                      fontWeight: 700,
+                      paddingLeft: 8,
+                      width: '100px',
+                      lineHeight: 1.25,
+                      whiteSpace: 'pre'
+                    }}
+                  >
+                    {obj.name}
+                  </div>
+                </Menu.Item>
+              ))}
+            </StyledSubMenu>
           </Menu>
         </Sider>
 

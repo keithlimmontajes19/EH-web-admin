@@ -3,6 +3,7 @@ import {theme} from 'utils/colors';
 import {Layout, Menu} from 'antd';
 
 const {Header} = Layout;
+const {SubMenu}:any = Menu;
 
 export const Container = styled.div``;
 export const Logostyles = {
@@ -27,7 +28,7 @@ export const HeaderStyled = styled(Header)`
   height: 70px;
 `;
 
-export const StyledLayout = styled(Layout).attrs(() => ({
+export const StyledLayout:any = styled(Layout).attrs(() => ({
   style: {minHeight: '100vh'},
 }))`
   .ant-menu-item .ant-menu-item-selected .ant-menu-item-only-child span {
@@ -35,19 +36,78 @@ export const StyledLayout = styled(Layout).attrs(() => ({
     background: red;
   }
 
-  .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  .ant-menu-item, .ant-menu-submenu-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     min-height: 50px;
-    background: #635ffa;
+    padding-top: 3px;
+    margin-right: 50px;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
   }
 
-  .ant-menu-item {
-    min-height: 50px;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
+  ${({collapsed}:any) => !collapsed && `.ant-menu-root > .ant-menu-item {
+    width: 202px;
+  }`}
+
+  .ant-menu-title-content {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  ul > .ant-menu-item {
+    background: none
+  }
+
+  .anticon  {
+    padding-right: 8px;
+  }
+
+  .ant-menu-item:after {
+    border-right: none;
   }
 `;
+
+export const StyledSubMenu = styled(SubMenu)`
+  .ant-menu-submenu-arrow {
+    color: ${({active}:any) => active ? `white` : `inherit`}!important;
+  }
+
+  .ant-menu-submenu-title {
+    ${({active, collapsed}:any) => active ? `min-height: 50px;
+    background: #635ffa;
+    ${!collapsed && `width: 202px;`}
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;` : `min-height: 50px; width: 202px;`}
+  }
+
+  .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected, 
+  .ant-menu-item:hover {
+    background-color: transparent;
+    color: inherit;
+  }
+
+  .ant-menu-item span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 1px;
+  }
+
+  .ant-menu {
+    margin: 7px 0 20px -15px;
+    background: transparent;
+  }
+`
+
+export const MenuItemOnSelect = (collapsed:any=false) => ({
+  minHeight: '50px',
+  background: '#635ffa',
+  width: collapsed ? 'auto' : '202px',
+  borderTopRightRadius: '20px',
+  borderBottomRightRadius: '20px'
+})
 
 export const LayoutStyles = {
   paddingTop: 21,

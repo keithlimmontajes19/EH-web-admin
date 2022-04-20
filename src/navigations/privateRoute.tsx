@@ -11,7 +11,7 @@ const Navigation = () => {
       <Route exact path="/" component={Home} />
       <Route path="/home" component={Home} />
       <Route path="/team" component={Team} />
-      <Route exact path="/learn" component={Learn} />
+      <Route path="/learn" component={Learn} />
       <Redirect to="/" />
     </Switch>
   );
