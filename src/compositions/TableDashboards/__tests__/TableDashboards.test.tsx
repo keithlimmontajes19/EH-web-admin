@@ -1,11 +1,11 @@
 import React from 'react';
 import {render} from '@testing-library/react-native';
-import Team from '../Team';
+import TableDashboards from '../TableDashboards';
 
-describe('Team', () => {
+describe('TableDashboards', () => {
   it('Should work as expected', () => {
     const all = render(
-        <Team />
+        <TableDashboards />
     );
     expect(all.toJSON()).toMatchSnapshot();
   });

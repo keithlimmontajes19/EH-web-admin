@@ -44,7 +44,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   async (requestConfig) => requestConfig,
   async function (error) {
-    if (error.response.status === 401) {
+    if (error?.response?.status === 401) {
       localStorage.clear();
       store.dispatch({type: 'GET_AUTHENTICATION_FAILED'});
       return error;
