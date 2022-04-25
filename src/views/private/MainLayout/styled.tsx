@@ -47,12 +47,12 @@ export const StyledLayout:any = styled(Layout).attrs(() => ({
     border-bottom-right-radius: 20px;
   }
 
-  ${({collapsed}:any) => !collapsed && `.ant-menu-root > .ant-menu-item {
-    width: 202px;
-  }`}
+  .ant-menu-root > .ant-menu-item {
+    max-width: 202px;
+  }
 
   .ant-menu-title-content {
-    padding-left: 5px;
+    padding-left: 0px;
     padding-right: 5px;
   }
 
@@ -72,20 +72,25 @@ export const StyledLayout:any = styled(Layout).attrs(() => ({
 export const StyledSubMenu = styled(SubMenu)`
   .ant-menu-submenu-arrow {
     color: ${({active}:any) => active ? `white` : `inherit`}!important;
+    margin-right: 10px;
   }
 
   .ant-menu-submenu-title {
-    ${({active, collapsed}:any) => active ? `min-height: 50px;
+    ${({active}:any) => active ? `min-height: 50px;
     background: #635ffa;
-    ${!collapsed && `width: 202px;`}
+    max-width: 202px;
     border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;` : `min-height: 50px; width: 202px;`}
+    border-bottom-right-radius: 20px;` : `min-height: 50px; max-width: 202px;`}
   }
 
-  .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected, 
-  .ant-menu-item:hover {
+  .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
     background-color: transparent;
     color: inherit;
+  }
+
+  .ant-menu-item:hover {
+    background-color: transparent;
+    color: #635ffa;
   }
 
   .ant-menu-item span {
@@ -101,13 +106,13 @@ export const StyledSubMenu = styled(SubMenu)`
   }
 `
 
-export const MenuItemOnSelect = (collapsed:any=false) => ({
+export const MenuItemOnSelect = {
   minHeight: '50px',
   background: '#635ffa',
-  width: collapsed ? 'auto' : '202px',
+  maxWidth: '202px',
   borderTopRightRadius: '20px',
   borderBottomRightRadius: '20px'
-})
+}
 
 export const LayoutStyles = {
   paddingTop: 21,

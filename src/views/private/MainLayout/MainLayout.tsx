@@ -26,7 +26,6 @@ import {
 import NavigationContent from 'navigations/privateRoute';
 
 const {Sider, Content} = Layout;
-const {SubMenu} = Menu;
 
 const teamItems = [
   {name:'Dashboards', link:'dashboards', icon: AppstoreOutlined},
@@ -73,12 +72,12 @@ const MainLayout = (): ReactElement => {
   }, [location]);
 
   return (
-    <StyledLayout collapsed={collapsed}>
+    <StyledLayout> 
       <HeaderStyled></HeaderStyled>
       <Layout >
         <Sider 
-          collapsed={collapsed} 
-          onMouseOver={()=>setCollapsed(false)} 
+          collapsed={collapsed}
+          onMouseOver={()=>setCollapsed(false)}
           // onMouseLeave={()=>setCollapsed(true)} 
           collapsedWidth={100} 
           width={230}
@@ -92,12 +91,13 @@ const MainLayout = (): ReactElement => {
               height: '100%',
               borderRight: 0,
               minWidth: 100,
-              paddingTop: 48
+              paddingTop: 48,
+              zIndex:2
             }}
           >
             <Menu.Item
               key="1"
-              style={selected === '1' && MenuItemOnSelect(collapsed)}
+              style={selected === '1' && MenuItemOnSelect}
               onClick={() => pushHistory('/home')}
             >
               <HomeOutlined
@@ -119,7 +119,8 @@ const MainLayout = (): ReactElement => {
             </Menu.Item>
 
             <StyledSubMenu
-              active={selected === '2' ? 1 : 0} 
+              active={selected === '2' ? 1 : 0}
+              collapsed={collapsed}
               key="2"
               // style={selected === '2' && MenuItemOnSelect}
               title={
@@ -183,6 +184,7 @@ const MainLayout = (): ReactElement => {
 
             <StyledSubMenu
               active={selected === '3' ? 1 : 0} 
+              collapsed={collapsed}
               key="3"
               // style={selected === '3' && MenuItemOnSelect}
               title={
@@ -243,6 +245,13 @@ const MainLayout = (): ReactElement => {
                 </Menu.Item>
               ))}
             </StyledSubMenu>
+            <div 
+              style={{
+                width:'100%', 
+                height:'100%',
+                cursor:'pointer'
+              }} 
+              onClick={()=>setCollapsed(!collapsed)}/>
           </Menu>
         </Sider>
 
