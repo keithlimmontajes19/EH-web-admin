@@ -48,9 +48,9 @@ export const SpaceDiv: any = styled.div`
 `;
 
 export const StyledButton: any = styled(Button)`
-  background: #635ffa;
-  color: #fff;
-  width: 166px;
+  background: ${({bg}: any) => (bg ? bg : `#635ffa`)};
+  color: ${({c}: any) => (c ? c : `#fff`)};
+  width: ${({w}: any) => (w ? w : `166`)}px;
   height: 48px;
   border-radius: 8px;
   font-size: 20px;

@@ -1,11 +1,11 @@
 import React from 'react';
 import {render} from '@testing-library/react-native';
-import Learn from '../Learn';
+import AntDropdown from '../Dropdown';
 
-describe('Learn', () => {
+describe('Dropdown', () => {
   it('Should work as expected', () => {
     const all = render(
-        <Learn />
+        <AntDropdown />
     );
     expect(all.toJSON()).toMatchSnapshot();
   });
