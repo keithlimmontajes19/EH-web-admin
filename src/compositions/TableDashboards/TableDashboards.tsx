@@ -1,13 +1,7 @@
 import {Table, Modal, Input, PageHeader, Layout} from 'antd';
 import {useEffect, useState} from 'react';
 import {SearchOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
-import {
-  SpaceDiv,
-  StyledButton,
-  StyledInput,
-  StyledText,
-  TableContainer,
-} from './styled';
+import {StyledButton, StyledInput, StyledText, TableContainer} from './styled';
 
 // ducks action
 import {useSelector} from 'react-redux';
@@ -68,7 +62,16 @@ function TableDashboards() {
                 <EditOutlined style={{color: '#635ffa'}} />
                 &nbsp;RENAME
               </span>
-              <SpaceDiv w={'5%'}>@</SpaceDiv>
+              <div
+                style={{
+                  display: 'inline-block',
+                  visibility: 'hidden',
+                  textIndent: -99999,
+                  width: '20%',
+                }}
+              >
+                @
+              </div>
               <span onClick={() => onDeleteData([record])}>
                 <DeleteOutlined style={{color: '#635ffa'}} />
                 &nbsp;DELETE
@@ -85,7 +88,7 @@ function TableDashboards() {
   }, []);
 
   useEffect(() => {
-    if (!rawData || dataSource.length !== 0) return;
+    if (!rawData.length) return;
     setDataSource(
       rawData.map((obj, i) => ({
         ...obj,
@@ -118,6 +121,7 @@ function TableDashboards() {
     setDataSource((pre) => {
       return [...pre, newData];
     });
+    console.log('add');
   };
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
@@ -144,6 +148,7 @@ function TableDashboards() {
     setEditingData(null);
   };
   const onSelectChange = (newRowKeys) => {
+    console.log('selectedRowKeys changed: ', newRowKeys);
     setSelectedRowKeys(newRowKeys);
   };
   const rowSelection = {
@@ -179,8 +184,15 @@ function TableDashboards() {
     });
     if (!tmp.length) return setSearchdData([]);
     setSearchdData(dataSource.filter((obj) => tmp.includes(obj.key)));
+    console.log(
+      tmp,
+      dataSource.filter((obj) => tmp.includes(obj.key)),
+      e.target.value,
+      searchInpt,
+    );
   };
   const refreshSearchdData = () => {
+    console.log('refresh');
     setSearchdData(
       dataSource.filter((record) =>
         searchdData.some((obj) => obj.key === record.key),
@@ -225,6 +237,7 @@ function TableDashboards() {
           onOk={() => {
             setDataSource((pre) => {
               return pre.map((obj) => {
+                console.log(obj);
                 if (obj._id === editingData._id) {
                   return editingData;
                 } else {

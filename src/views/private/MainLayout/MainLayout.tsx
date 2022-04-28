@@ -1,4 +1,4 @@
-import {ReactElement, useEffect, useState} from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 /* styles and ant design */
 import {
@@ -10,48 +10,46 @@ import {
   NotificationOutlined,
   PaperClipOutlined,
   AppstoreOutlined,
-  FolderFilled,
-  BulbOutlined,
+  FolderOutlined,
   BookOutlined,
+  FolderOpenOutlined,
+  ClockCircleOutlined
 } from '@ant-design/icons';
-import {theme} from 'utils/colors';
-import {Layout, Menu} from 'antd';
-import {useHistory, useLocation} from 'react-router-dom';
+import { theme } from 'utils/colors';
+import { Layout, Menu } from 'antd';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   HeaderStyled,
   StyledLayout,
   StyledSubMenu,
   LayoutStyles,
   MenuItemOnSelect,
-  StyledMenu,
-  ItemTextDiv,
 } from './styled';
 
 /* components */
 import NavigationContent from 'navigations/privateRoute';
 
-const {Sider, Content} = Layout;
-
-const learnItems = [
-  {name: 'Courses', link: 'courses', icon: BulbOutlined},
-  {name: 'Lessons', link: 'lessons', icon: BookOutlined},
-  {name: 'Topics', link: 'topics', icon: FolderFilled},
-  {name: 'Quizzes', link: 'quizzes', icon: AppstoreOutlined},
-];
+const { Sider, Content } = Layout;
 
 const teamItems = [
-  {name: 'Dashboards', link: 'dashboards', icon: AppstoreOutlined},
-  {name: 'Pages', link: 'pages', icon: FileTextOutlined},
-  {name: 'Announcements', link: 'announcements', icon: NotificationOutlined},
-  {name: 'Forms', link: 'forms', icon: PaperClipOutlined},
-  {name: 'Onboarding\nScreens', link: 'onboarding', icon: ExpandOutlined},
-];
+  { name: 'Dashboards', link: 'dashboards', icon: AppstoreOutlined },
+  { name: 'Pages', link: 'pages', icon: FileTextOutlined },
+  { name: 'Announcements', link: 'announcements', icon: NotificationOutlined },
+  { name: 'Forms', link: 'forms', icon: PaperClipOutlined },
+  { name: 'Onboarding\nScreens', link: 'onboarding', icon: ExpandOutlined }
+]
+const learnItems = [
+  { name: 'Courses', link: 'dashboards', icon: FolderOutlined },
+  { name: 'Lessons', link: 'lessons', icon: BookOutlined },
+  { name: 'Topics', link: 'topics', icon: FolderOpenOutlined },
+  { name: 'Quizzes', link: 'quizzes', icon: ClockCircleOutlined }
+]
 
 const MainLayout = (): ReactElement => {
   const history = useHistory();
   const location = useLocation();
   const [selected, setSelected] = useState('1');
-  const [listNum, setListNum] = useState(-1);
+  const [listNum, setListNum] = useState(0);
   const [collapsed, setCollapsed] = useState(true);
 
   const colorCondition = (key: string) => {
@@ -66,23 +64,19 @@ const MainLayout = (): ReactElement => {
     const path = location.pathname;
     if (/team/g.test(path)) {
       setSelected('3');
-      setListNum(-1);
-
       teamItems.forEach((o: any, i: number) => {
         const regX = new RegExp(o.link, 'g');
         if (regX.test(path)) return setListNum(i);
-      });
-      return;
+      })
+      return
     }
     if (/learn/g.test(path)) {
       setSelected('2');
-      setListNum(-1);
-
-      learnItems.forEach((o: any, i: number) => {
+      teamItems.forEach((o: any, i: number) => {
         const regX = new RegExp(o.link, 'g');
         if (regX.test(path)) setListNum(i);
-      });
-      return;
+      })
+      return
     }
     if (/home/g.test(path)) return setSelected('1');
   }, [location]);
@@ -90,19 +84,26 @@ const MainLayout = (): ReactElement => {
   return (
     <StyledLayout>
       <HeaderStyled></HeaderStyled>
-      <Layout>
+      <Layout >
         <Sider
           collapsed={collapsed}
           onMouseOver={() => setCollapsed(false)}
-          // onMouseLeave={()=>setCollapsed(true)}
+          // onMouseLeave={()=>setCollapsed(true)} 
           collapsedWidth={100}
           width={230}
         >
-          <StyledMenu
+          <Menu
             defaultSelectedKeys={['1']}
             defaultOpenKeys={['sub1']}
             mode="inline"
             onSelect={(e: any) => setSelected(e?.key)}
+            style={{
+              height: '100%',
+              borderRight: 0,
+              minWidth: 100,
+              paddingTop: 48,
+              zIndex: 2
+            }}
           >
             <Menu.Item
               key="1"
@@ -152,31 +153,42 @@ const MainLayout = (): ReactElement => {
                   </span>
                 </span>
               }
-              onTitleClick={() => {
-                pushHistory('/learn');
-              }}
             >
-              {learnItems.map((obj, i) => (
+              {teamItems.map((obj, i) => (
                 <Menu.Item
-                  key={'learn-' + i}
+                  key={"learn-" + i}
                   onClick={() => {
-                    setListNum(listNum);
-                    pushHistory('/learn/' + obj.link);
+                    setListNum(listNum)
+                    pushHistory('/learn/' + obj.link)
                   }}
                   style={{
                     height: '20px',
                     paddingTop: '25px',
                     paddingBottom: '25px',
-                    color: listNum === i && selected === '2' ? '#635ffa' : '',
-                  }}
+                    color: listNum === i && selected === '2' ? '#635ffa' : ''
+                  }
+                  }
                 >
                   <obj.icon
                     style={{
                       fontSize: 20,
-                      marginTop: 5,
+                      marginTop: 5
                     }}
                   />
-                  <ItemTextDiv>{obj.name}</ItemTextDiv>
+                  <div
+                    style={{
+                      marginTop: 5,
+                      display: 'inline-block',
+                      fontSize: 16,
+                      fontWeight: 700,
+                      paddingLeft: 8,
+                      width: '100px',
+                      lineHeight: 1.25,
+                      whiteSpace: 'pre'
+                    }}
+                  >
+                    {obj.name}
+                  </div>
                 </Menu.Item>
               ))}
             </StyledSubMenu>
@@ -206,29 +218,42 @@ const MainLayout = (): ReactElement => {
                   </span>
                 </span>
               }
-              onTitleClick={() => pushHistory('/team')}
             >
-              {teamItems.map((obj, i) => (
+              {learnItems.map((obj, i) => (
                 <Menu.Item
-                  key={'team-' + i}
+                  key={"team-" + i}
                   onClick={() => {
-                    setListNum(listNum);
-                    pushHistory('/team/' + obj.link);
+                    setListNum(listNum)
+                    pushHistory('/team/' + obj.link)
                   }}
                   style={{
                     height: '20px',
                     paddingTop: '25px',
                     paddingBottom: '25px',
-                    color: listNum === i && selected === '3' ? '#635ffa' : '',
-                  }}
+                    color: listNum === i && selected === '3' ? '#635ffa' : ''
+                  }
+                  }
                 >
                   <obj.icon
                     style={{
                       fontSize: 20,
-                      marginTop: 5,
+                      marginTop: 5
                     }}
                   />
-                  <ItemTextDiv>{obj.name}</ItemTextDiv>
+                  <div
+                    style={{
+                      marginTop: 5,
+                      display: 'inline-block',
+                      fontSize: 16,
+                      fontWeight: 700,
+                      paddingLeft: 8,
+                      width: '100px',
+                      lineHeight: 1.25,
+                      whiteSpace: 'pre'
+                    }}
+                  >
+                    {obj.name}
+                  </div>
                 </Menu.Item>
               ))}
             </StyledSubMenu>
@@ -236,11 +261,10 @@ const MainLayout = (): ReactElement => {
               style={{
                 width: '100%',
                 height: '100%',
-                cursor: 'pointer',
+                cursor: 'pointer'
               }}
-              onClick={() => setCollapsed(!collapsed)}
-            />
-          </StyledMenu>
+              onClick={() => setCollapsed(!collapsed)} />
+          </Menu>
         </Sider>
 
         <Layout style={LayoutStyles}>
