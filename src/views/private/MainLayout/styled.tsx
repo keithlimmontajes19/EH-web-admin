@@ -20,7 +20,7 @@ export const LogoContainer = {
 export const MainLayoutStyles = {minHeight: '100vh'};
 export const Siderstyles = {background: theme.WHITE};
 
-export const StyledMenu = styled(Menu)`
+export const StyledMenu = styled<any>(Menu)`
   height: 100%;
   border-right: 0;
   min-width: 100px;
