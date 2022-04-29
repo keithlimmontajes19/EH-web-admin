@@ -13,12 +13,13 @@ import listicon4 from '../../../assets/icons/recent-icon-4.svg'
 import viewicon from '../../../assets/icons/viewicon.svg'
 import doticon from '../../../assets/icons/dot-icon.svg'
 import greendot from '../../../assets/icons/greendot.svg'
+import reddot from '../../../assets/icons/red-dot.svg'
 import orgicon from '../../../assets/icons/orgicon.svg'
 import clockicon from '../../../assets/icons/clockicon.svg'
 import noannouncment from '../../../assets/images/noannouncement.png'
 
 import type { PropsType } from './types';
-import { Container, RootContainer, IconImg, Img, Title, ListTitle, ViewIcon, DotIcon, Br, RecentBody, TableContainer, StatusDot } from './styled';
+import { Container, RootContainer, IconImg, Img, Title, ListTitle, ViewIcon, DotIcon, Br, RecentBody, TableContainer, StatusDot, TableCell, TabContainer } from './styled';
 import { StyledText } from 'compositions/TableDashboards/styled';
 const { TabPane } = Tabs;
 function callback(key) {
@@ -58,86 +59,45 @@ const data = [
 
 ]
 
-const column = [
-  {
-    title: 'Announcement',
-    dataIndex: 'announcement',
-    key: 'announcement',
-  },
-  {
-    title: 'Organization/Team',
-    dataIndex: 'organizationTeam',
-    key: 'organizationTeam',
-  },
-  {
-    title: 'Date Added',
-    dataIndex: 'dateadded',
-    key: 'dateadded',
-  },
-]
-
 const tabledata = [
   {
 
-    Announcement: ` Sample Announcement`,
-    dateadded: 'Sept. 11, 2022 11:24 PM',
-    organizationTeam: 'Sample NameTeam/Organization',
+    announcement: ` Sample Announcement`,
+    dateadded: <TableCell><StatusDot src={clockicon} style={{ margin: '0px 5px' }} /><h3 style={{ marginBottom: '0px' }}>Sept. 11, 2022 11:24 PM</h3></TableCell>,
+    organizationTeam: <TableCell><StatusDot src={orgicon} style={{ margin: '0px 5px' }} /><h3 style={{ marginBottom: '0px' }}>Sample NameTeam / Organization</h3></TableCell>
 
 
   },
   {
 
-    Announcement: 'Sample Announcement',
-    dateadded: 'Sept. 11, 2022 11:24 PM',
-    organizationTeam: 'Sample NameTeam/Organization',
+    announcement: 'Sample Announcement',
+    dateadded: <TableCell><StatusDot src={clockicon} style={{ margin: '0px 5px' }} /><h3 style={{ marginBottom: '0px' }}>Sept. 11, 2022 11:24 PM</h3></TableCell>,
+    organizationTeam: <TableCell><StatusDot src={orgicon} style={{ margin: '0px 5px' }} /><h3 style={{ marginBottom: '0px' }}>Sample NameTeam / Organization</h3></TableCell>,
 
   },
   {
 
-    Announcement: 'Sample Announcement',
-    dateadded: 'Sept. 11, 2022 11:24 PM',
-    organizationTeam: 'Sample NameTeam/Organization',
+    announcement: 'Sample Announcement',
+    dateadded: <TableCell><StatusDot src={clockicon} style={{ margin: '0px 5px' }} /><h3 style={{ marginBottom: '0px' }}>Sept. 11, 2022 11:24 PM</h3></TableCell>,
+    organizationTeam: <TableCell><StatusDot src={orgicon} style={{ margin: '0px 5px' }} /><h3 style={{ marginBottom: '0px' }}>Sample NameTeam / Organization</h3></TableCell>,
 
   },
   {
 
-    Announcement: 'Sample Announcement',
-    dateadded: 'Sept. 11, 2022 11:24 PM',
-    organizationTeam: 'Sample NameTeam/Organization',
+    announcement: 'Sample Announcement',
+    dateadded: <TableCell><StatusDot src={clockicon} style={{ margin: '0px 5px' }} /><h3 style={{ marginBottom: '0px' }}>Sept. 11, 2022 11:24 PM</h3></TableCell>,
+    organizationTeam: <TableCell><StatusDot src={orgicon} style={{ margin: '0px 5px' }} /><h3 style={{ marginBottom: '0px' }}>Sample NameTeam / Organization</h3></TableCell>,
 
   },
   {
 
-    Announcement: 'Sample Announcement',
-    dateadded: 'Sept. 11, 2022 11:24 PM',
-    organizationTeam: 'Sample NameTeam/Organization',
+    announcement: 'Sample Announcement',
+    dateadded: <TableCell><StatusDot src={clockicon} style={{ margin: '0px 5px' }} /><h3 style={{ marginBottom: '0px' }}>Sept. 11, 2022 11:24 PM</h3></TableCell>,
+    organizationTeam: <TableCell><StatusDot src={orgicon} style={{ margin: '0px 5px' }} /><h3 style={{ marginBottom: '0px' }}>Sample NameTeam / Organization</h3></TableCell>,
+
 
   },
 ];
-// const Table = (<div>
-//   <table>
-//     <tr>
-//       {column.map((item, index) => {
-//         <th key={index}>{item.title}</th>
-//       })}
-//     </tr>
-
-//     {
-//       tabledata.map((item, index) => {
-//         <tr key={index}>
-//           <td>{item.announcement}</td>
-//           <td>{item.organizationTeam}</td>
-//           <td>{item.dateadded}</td>
-//         </tr>
-//       })
-//     }
-
-//   </table>
-
-// </div>)
-
-
-
 
 
 const Home = (props: PropsType): ReactElement => {
@@ -161,26 +121,32 @@ const Home = (props: PropsType): ReactElement => {
                   dataIndex="announcement"
                   key="announcement"
                   render={announcement => (
-                    <StatusDot src={greendot} />
-                  )}
+                    <>
+                      <TableCell> <StatusDot src={(announcement === 'green' ? `${greendot}` : `${reddot}`)} />   Sample Announcement</TableCell>
+                    </>
+                  )
+                  }
 
                 />
                 <Table.Column
                   title="organization/Team"
                   dataIndex="organizationTeam"
                   key="organizationTeam"
-                  render={organizationTeam => (
-                    <StatusDot src={orgicon} />
-                  )}
+                // render={organizationTeam => (
+                //   <>
+                //     <StatusDot src={orgicon} />
+
+                //   </>
+                // )}
 
                 />
                 <Table.Column
-                  title="organization/Team"
-                  dataIndex="organizationTeam"
-                  key="organizationTeam"
-                  render={organizationTeam => (
-                    <StatusDot src={clockicon} />
-                  )}
+                  title="Date Added"
+                  dataIndex="dateadded"
+                  key="dateadded"
+                // render={dateadded => (
+                //   <StatusDot src={clockicon} />
+                // )}
 
                 />
               </Table >
@@ -193,10 +159,23 @@ const Home = (props: PropsType): ReactElement => {
             title={<StyledText fs={30} >Recents</StyledText>}
             style={{ background: 'none', padding: 8 }}
           />
+          <TabContainer>
+            <Tabs defaultActiveKey="1" onChange={callback}>
+              <TabPane tab="Visited" key={1}>
+                <List
+                  itemLayout="horizontal"
+                  dataSource={data}
+                  renderItem={item => (
+                    <List.Item >
+                      <List.Item.Meta
+                        avatar={<IconImg src={item.src} />}
+                        title={<ListTitle>{item.title}</ListTitle>}
+                        description={<div>{item.description} <DotIcon src={doticon} />  <ViewIcon src={viewicon} />{item.view}</div>} />
+                      <Br />
 
-          <Tabs defaultActiveKey="1" onChange={callback}>
-            <TabPane tab="Visited" key={1}>
-              <List
+                    </List.Item >)} />
+              </TabPane>
+              <TabPane tab="Worked on" key={2}><List
                 itemLayout="horizontal"
                 dataSource={data}
                 renderItem={item => (
@@ -207,45 +186,33 @@ const Home = (props: PropsType): ReactElement => {
                       description={<div>{item.description} <DotIcon src={doticon} />  <ViewIcon src={viewicon} />{item.view}</div>} />
                     <Br />
 
-                  </List.Item >)} />
-            </TabPane>
-            <TabPane tab="Worked on" key={2}><List
-              itemLayout="horizontal"
-              dataSource={data}
-              renderItem={item => (
-                <List.Item >
-                  <List.Item.Meta
-                    avatar={<IconImg src={item.src} />}
-                    title={<ListTitle>{item.title}</ListTitle>}
-                    description={<div>{item.description} <DotIcon src={doticon} />  <ViewIcon src={viewicon} />{item.view}</div>} />
-                  <Br />
+                  </List.Item >)} /></TabPane>
+              <TabPane tab="Draft" key={3}><List
+                itemLayout="horizontal"
+                dataSource={data}
+                renderItem={item => (
+                  <List.Item >
+                    <List.Item.Meta
+                      avatar={<IconImg src={item.src} />}
+                      title={<ListTitle>{item.title}</ListTitle>}
+                      description={<div>{item.description} <DotIcon src={doticon} />  <ViewIcon src={viewicon} />{item.view}</div>} />
+                    <Br />
 
-                </List.Item >)} /></TabPane>
-            <TabPane tab="Draft" key={3}><List
-              itemLayout="horizontal"
-              dataSource={data}
-              renderItem={item => (
-                <List.Item >
-                  <List.Item.Meta
-                    avatar={<IconImg src={item.src} />}
-                    title={<ListTitle>{item.title}</ListTitle>}
-                    description={<div>{item.description} <DotIcon src={doticon} />  <ViewIcon src={viewicon} />{item.view}</div>} />
-                  <Br />
+                  </List.Item >)} /></TabPane>
+              <TabPane tab="Started" key={4}><List
+                itemLayout="horizontal"
+                dataSource={data}
+                renderItem={item => (
+                  <List.Item >
+                    <List.Item.Meta
+                      avatar={<IconImg src={item.src} />}
+                      title={<ListTitle>{item.title}</ListTitle>}
+                      description={<div>{item.description} <DotIcon src={doticon} />  <ViewIcon src={viewicon} />{item.view}</div>} />
+                    <Br />
 
-                </List.Item >)} /></TabPane>
-            <TabPane tab="Started" key={4}><List
-              itemLayout="horizontal"
-              dataSource={data}
-              renderItem={item => (
-                <List.Item >
-                  <List.Item.Meta
-                    avatar={<IconImg src={item.src} />}
-                    title={<ListTitle>{item.title}</ListTitle>}
-                    description={<div>{item.description} <DotIcon src={doticon} />  <ViewIcon src={viewicon} />{item.view}</div>} />
-                  <Br />
-
-                </List.Item >)} /></TabPane>
-          </Tabs>
+                  </List.Item >)} /></TabPane>
+            </Tabs>
+          </TabContainer>
         </RecentBody >
       </RootContainer >
     </div>

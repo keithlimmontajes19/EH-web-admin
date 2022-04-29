@@ -1,90 +1,69 @@
+import { Button, Input, Layout, Table } from 'antd';
 import styled from 'styled-components';
-import { Layout } from 'antd';
 
-export const Container = styled.div`
-
-width:100%;
-height:353px;
-display: flex;
-    flex-wrap: nowrap;
-    flex-direction: column;
-    align-content: space-around;
-    align-items: center;
-    justify-content: space-evenly;
-  
-/* Hub Blurple */
-background: #e0dffe;
-box-shadow: 0px 5px 20px -5px rgba(43, 46, 74, 0.2);
-border-radius: 15px;
-
-`;
-
-export const Img = styled.img`
-    width:153px;
-`
-export const IconImg = styled.img`
-    width:30px;
-`
 export const RootContainer = styled.div`
-    // display:flex;
-    // justify-content:space-evenly;
-`
-export const Title = styled.h2`
-font-family: 'Red Hat Display';
-font-style: normal;
-font-weight: 700;
-font-size: 22px;
-line-height: 28px;
-color:#8586a4;
-`
-export const ListTitle = styled.h3`
-font-family: 'Red Hat Display';
-font-style: normal;
-font-weight: 600;
-font-size: 22px;
-line-height: 28px;
-opacity: 0.8;
-`
-export const ViewIcon = styled.img`
-    width:20px;
-    margin-right:14px;
-`
-export const DotIcon = styled.img` 
-width:5px;
-margin:0px 14px;
-`
-export const StatusDot = styled.img`
-    width:16px
-`
-export const Br = styled.br`
-position: absolute;
-width: 687px;
-height: 0px;
-left: 259px;
-top: 711px;
 
-opacity: 0.1;
-/* Hub Blurple */
-
-border: 2px solid #635FFA;
 `
-export const RecentBody = styled.div`
-    padding:30px
-`
-export const TableContainer: any = styled(Layout)`
-.ant-table {
-    // background: #e0dffe;
-    border-radius:15px;
-}
-.ant-table-thead {
-    color: #e0dffe ;
+export const StyledButtonCancle = styled(Button)`
+background: #fff;
+    color: #635ffa;
+    width: 166px;
+    height: 48px;
+    border-radius: 8px;
     font-size: 20px;
-    font-weight: 400;
-    background: #e0dffe ;
+    font-weight: 700;
+    text-align:center;
+    justify-contet:center;
+    cursor:pointer;
+    border:none;
 
-}
-.ant-table-cell {
-    // background: #e0dffe;
-}
+`
+export const StyledButton = styled(Button)`
+background: #635ffa;
+    color: #fff;
+    width: 166px;
+    height: 48px;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    text-align:center;
+    justify-contet:center;
+    cursor:pointer;
+    border:none;
+`
 
+export const HeaderContainer = styled.div`
+    font-weight:bold;
+    background:#f6f6f6;
+    padding:25px;
+    border-radius:15px;
+`
+export const AddContainer = styled.div`
+    background: #e0dffe;
+
+    @media screen and (max-width:1600px) {
+        {
+        padding:200px !important;
+          
+        }
+      }
+    padding:300px;
+    border-radius:15px;
+    align-items:center;
+    margin-right:15px;
+    
+    
+`
+export const PlusImg = styled.img`
+    height:100%;
+    width:100%;
+    max-height:144px;
+    cursor:pointer;
+    
+`
+export const BoardContainer = styled.div`
+    
+`
+export const BodyContainer = styled.div`
+      
 `
