@@ -1,8 +1,33 @@
-import { Button, Input, Layout, Table } from 'antd';
+import { Button, Layout } from 'antd';
 import styled from 'styled-components';
 
-export const RootContainer = styled.div`
+export const RootContainer = styled(Layout)`
+.ant-row ant-row-center{
+    row-gap: 0px;
+    display: flex;
+    align-items: center;
+}
+.ant-row{
+    display:flex;
+    align-items:center;
+}
+.ant-layout ant-layout sc-cOFTSb eNnZcb{
+    background:none !important;
+}
+.ant-layout-content{ 
+    background: none !important;
+}
+#rootContainer{
+    background: none !important;
 
+}
+.ant-row{
+    justify-content:space-around;
+}
+.ant-layout*{ 
+    background: none !important;
+    // padding-left:15px;
+}
 `
 export const StyledButtonCancle = styled(Button)`
 background: #fff;
@@ -60,10 +85,4 @@ export const PlusImg = styled.img`
     max-height:144px;
     cursor:pointer;
     
-`
-export const BoardContainer = styled.div`
-    
-`
-export const BodyContainer = styled.div`
-      
 `

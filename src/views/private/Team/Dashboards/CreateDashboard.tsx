@@ -22,43 +22,43 @@ const CreateDashboard = (props) => {
         history.push(route)
     }
     return (
-        <RootContainer>
+        <RootContainer id='rootContainer' style={{ background: 'none !important' }}>
             <Breadcrumb separator="<">
                 <Breadcrumb.Item href="/team/dashboards"> Back to Dashboards</Breadcrumb.Item>
             </Breadcrumb>
-            <Row gutter={16}>
-                <Col span={12} className="gutter-row">
+            <Row >
+                <Col span={12} >
                     <PageHeader
                         title={<StyledText>Dashboard Name 1</StyledText>}
                     />
                 </Col>
-                <Col span={12} className="gutter-row">
+                <Col span={12} >
                     <Row gutter={45} justify="center">
-                        <Col className='gutter-row'>
-                            <Row>
+                        <Col >
+                            <Row >
                                 <Col>
-                                    <RedoOutlined />
+                                    <RedoOutlined style={{ fontSize: '25px', paddingRight: '24px', cursor: 'pointer' }} />
                                 </Col>
                                 <Col>
                                     <StyledButton onClick={() => pushHistory('/team/dashboards/create/addbord')}><PlusOutlined /> BOARD</StyledButton>
                                 </Col>
                             </Row>
                         </Col>
-                        <Col className='gutter-row'>
+                        <Col >
                             <StyledButton><CheckOutlined /> PUBLISH</StyledButton>
                         </Col>
-                        <Col className='gutter-row'>
-                            <StyledButtonCancle>Cancle</StyledButtonCancle>
+                        <Col >
+                            <StyledButtonCancle onClick={() => pushHistory('./tam/dashboard')}>Cancle</StyledButtonCancle>
                         </Col>
                     </Row>
 
                 </Col>
             </Row>
-            <Row gutter={16} align="middle">
-                <Col span={12} className="gutter-row">
+            <Row align="middle">
+                <Col span={12} >
                     <AddContainer><PlusImg src={plusicon} /></AddContainer>
                 </Col>
-                <Col span={12} className="gutter-row">
+                <Col span={12}>
                     <AddContainer><PlusImg src={plusicon} /></AddContainer>
 
                 </Col>

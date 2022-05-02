@@ -39,7 +39,7 @@ const teamItems = [
   { name: 'Onboarding\nScreens', link: 'onboarding', icon: ExpandOutlined }
 ]
 const learnItems = [
-  { name: 'Courses', link: 'dashboards', icon: FolderOutlined },
+  { name: 'Courses', link: 'courses', icon: FolderOutlined },
   { name: 'Lessons', link: 'lessons', icon: BookOutlined },
   { name: 'Topics', link: 'topics', icon: FolderOpenOutlined },
   { name: 'Quizzes', link: 'quizzes', icon: ClockCircleOutlined }
@@ -62,19 +62,21 @@ const MainLayout = (): ReactElement => {
 
   useEffect(() => {
     const path = location.pathname;
+
+    if (/learn/g.test(path)) {
+      setSelected('2');
+      learnItems.forEach((o: any, i: number) => {
+        const regX = new RegExp(o.link, 'g');
+        if (regX.test(path)) setListNum(i);
+      })
+      return
+
+    }
     if (/team/g.test(path)) {
       setSelected('3');
       teamItems.forEach((o: any, i: number) => {
         const regX = new RegExp(o.link, 'g');
         if (regX.test(path)) return setListNum(i);
-      })
-      return
-    }
-    if (/learn/g.test(path)) {
-      setSelected('2');
-      teamItems.forEach((o: any, i: number) => {
-        const regX = new RegExp(o.link, 'g');
-        if (regX.test(path)) setListNum(i);
       })
       return
     }
@@ -154,7 +156,8 @@ const MainLayout = (): ReactElement => {
                 </span>
               }
             >
-              {teamItems.map((obj, i) => (
+
+              {learnItems.map((obj, i) => (
                 <Menu.Item
                   key={"learn-" + i}
                   onClick={() => {
@@ -219,7 +222,7 @@ const MainLayout = (): ReactElement => {
                 </span>
               }
             >
-              {learnItems.map((obj, i) => (
+              {teamItems.map((obj, i) => (
                 <Menu.Item
                   key={"team-" + i}
                   onClick={() => {
@@ -256,6 +259,7 @@ const MainLayout = (): ReactElement => {
                   </div>
                 </Menu.Item>
               ))}
+
             </StyledSubMenu>
             <div
               style={{

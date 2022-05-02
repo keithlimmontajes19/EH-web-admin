@@ -1,19 +1,21 @@
 import React from "react";
 import { StyledButton, StyledText } from 'compositions/TableDashboards/styled';
-import { RootContainer, StyledButtonCancle, HeaderContainer, AddContainer, PlusImg, BoardContainer, BodyContainer } from './styled';
+import { RootContainer } from './styled';
+import Board from "compositions/Board";
+import ListOfPages from "compositions/ListOfPages";
 
 
 // antdesing componenets import here
 import { Row, Col } from 'antd'
 import { Breadcrumb } from 'antd';
 import { PageHeader } from 'antd';
-import { RedoOutlined, CheckOutlined, PlusOutlined } from '@ant-design/icons'
+import { RedoOutlined, PlusOutlined } from '@ant-design/icons'
 
 
 
 const AddBoard = (props) => {
     return (
-        <RootContainer>
+        <RootContainer style={{ background: 'none !important' }}>
             <Breadcrumb separator="<">
                 <Breadcrumb.Item href="/team/dashboards/create"> Back to Recent Dashboards</Breadcrumb.Item>
             </Breadcrumb>
@@ -28,10 +30,10 @@ const AddBoard = (props) => {
                         <Col className='gutter-row'>
                             <Row>
                                 <Col>
-                                    <RedoOutlined />
+                                    <RedoOutlined style={{ fontSize: '25px', paddingRight: '24px', cursor: 'pointer' }} />
                                 </Col>
                                 <Col>
-                                    <StyledButton ><PlusOutlined /> Edit</StyledButton>
+                                    <ListOfPages />
                                 </Col>
                             </Row>
                         </Col>
@@ -39,19 +41,12 @@ const AddBoard = (props) => {
                 </Col>
             </Row>
             <Row>
-                <Col span={12}>
-                    <BoardContainer>
-                        <HeaderContainer>
-                            <Row justify="space-between">
-                                <Col span={6}>Board Name_1</Col>
-                                <Col span={6} style={{ color: "" }}>...</Col>
-                            </Row>
-                        </HeaderContainer>
-                        <BodyContainer></BodyContainer>
-                    </BoardContainer>
-                </Col>
-            </Row>
 
+                <Board />
+                <Board />
+                <Board />
+                <Board />
+            </Row>
         </RootContainer >
     )
 }

@@ -1,16 +1,18 @@
-import {Table, Modal, Input, PageHeader, Layout} from 'antd';
-import {useEffect, useState} from 'react';
-import {SearchOutlined, EditOutlined, DeleteOutlined} from '@ant-design/icons';
-import {StyledButton, StyledInput, StyledText, TableContainer} from './styled';
+import { Table, Modal, Input, PageHeader, Layout } from 'antd';
+import { useEffect, useState } from 'react';
+import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { StyledButton, StyledInput, StyledText, TableContainer } from './styled';
+import { Link, Redirect, useHistory } from 'react-router-dom';
+
 
 // ducks action
-import {useSelector} from 'react-redux';
-import {RootState} from 'ducks/store';
-import {getDashboard} from 'ducks/dashboard/actionCreator';
+import { useSelector } from 'react-redux';
+import { RootState } from 'ducks/store';
+import { getDashboard } from 'ducks/dashboard/actionCreator';
 import Loading from 'components/Loading';
 
 function TableDashboards() {
-  const {data: rawData}: any = useSelector<RootState>(
+  const { data: rawData }: any = useSelector<RootState>(
     (state) => state.dashboard,
   );
   const [loading, setLoading] = useState(true);
@@ -20,6 +22,12 @@ function TableDashboards() {
   const [dataSource, setDataSource] = useState([]);
   const [searchdData, setSearchdData] = useState([]);
   const [searchInpt, setSearchInpt] = useState('');
+
+  const history = useHistory()
+
+  const pushHistory = (route: string) => {
+    history.push(route)
+  }
 
   const columns = [
     {
@@ -38,15 +46,15 @@ function TableDashboards() {
     {
       key: '3',
       title: (
-        <div style={{textAlign: 'right'}}>
+        <div style={{ textAlign: 'right' }}>
           <span
-            style={{cursor: 'pointer'}}
+            style={{ cursor: 'pointer' }}
             onClick={() => {
-              onDeleteData(selectedRowKeys.map((key) => ({key: key})));
+              onDeleteData(selectedRowKeys.map((key) => ({ key: key })));
               setSelectedRowKeys([]);
             }}
           >
-            <DeleteOutlined style={{color: '#635ffa'}} />
+            <DeleteOutlined style={{ color: '#635ffa' }} />
             <StyledText fC="inherit" fS={20}>
               DELETE
             </StyledText>
@@ -59,7 +67,7 @@ function TableDashboards() {
           <>
             <div className="row-actions">
               <span onClick={() => onEditData(record)}>
-                <EditOutlined style={{color: '#635ffa'}} />
+                <EditOutlined style={{ color: '#635ffa' }} />
                 &nbsp;RENAME
               </span>
               <div
@@ -73,7 +81,7 @@ function TableDashboards() {
                 @
               </div>
               <span onClick={() => onDeleteData([record])}>
-                <DeleteOutlined style={{color: '#635ffa'}} />
+                <DeleteOutlined style={{ color: '#635ffa' }} />
                 &nbsp;DELETE
               </span>
             </div>
@@ -122,6 +130,7 @@ function TableDashboards() {
       return [...pre, newData];
     });
     console.log('add');
+    pushHistory('/team/dashboards/create')
   };
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
@@ -133,7 +142,7 @@ function TableDashboards() {
         setDataSource((pre) => {
           return pre
             .filter((obj) => recArr.every((record) => record.key !== obj.key))
-            .map((obj, i) => ({...obj, key: i}));
+            .map((obj, i) => ({ ...obj, key: i }));
         });
         if (searchInpt !== '') refreshSearchdData();
       },
@@ -141,7 +150,7 @@ function TableDashboards() {
   };
   const onEditData = (record) => {
     setIsEditing(true);
-    setEditingData({...record});
+    setEditingData({ ...record });
   };
   const resetEditing = () => {
     setIsEditing(false);
@@ -200,11 +209,11 @@ function TableDashboards() {
     );
   };
   return (
-    <Layout style={{paddingRight: 50, background: 'transparent'}}>
+    <Layout style={{ paddingRight: 50, background: 'transparent' }}>
       <PageHeader
         ghost={false}
         title={<StyledText fS={30}>Dashboards</StyledText>}
-        style={{background: 'none', paddingTop: 8}}
+        style={{ background: 'none', paddingTop: 8 }}
         extra={[<StyledButton onClick={onAddData}>Create</StyledButton>]}
       />
       <TableContainer
@@ -218,14 +227,14 @@ function TableDashboards() {
           placeholder="Search Dashboards"
           defaultValue={searchInpt}
           onChange={handleSearch}
-          prefix={<SearchOutlined style={{color: '#635ffa'}} />}
+          prefix={<SearchOutlined style={{ color: '#635ffa' }} />}
         />
         <Table
           onRow={rowListener}
           rowSelection={rowSelection}
           columns={columns}
           dataSource={searchInpt !== '' ? searchdData : dataSource}
-          loading={{indicator: <Loading />, spinning: loading}}
+          loading={{ indicator: <Loading />, spinning: loading }}
         />
         <Modal
           title="Rename"
@@ -253,7 +262,7 @@ function TableDashboards() {
             prefix="Title: "
             onChange={(e) => {
               setEditingData((pre) => {
-                return {...pre, name: e.target.value};
+                return { ...pre, name: e.target.value };
               });
             }}
           />
@@ -262,7 +271,7 @@ function TableDashboards() {
             prefix="Department: "
             onChange={(e) => {
               setEditingData((pre) => {
-                return {...pre, department: e.target.value};
+                return { ...pre, department: e.target.value };
               });
             }}
           />
