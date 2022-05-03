@@ -1,4 +1,4 @@
-import {Button, Col, Form, Input, Layout, Modal, Row, Space, Tree} from 'antd';
+import {Col, Form, Modal, Row, Space} from 'antd';
 import Dropdown from 'components/Dropdown';
 import React, {useEffect, useState} from 'react';
 import {
@@ -10,7 +10,6 @@ import {
   PictureOutlined,
   FormOutlined,
 } from '@ant-design/icons';
-import TextArea from 'antd/lib/input/TextArea';
 import {
   StyledButton,
   StyledInput,
@@ -30,6 +29,8 @@ function TreeCourse({data, setData}) {
 
   useEffect(() => {
     const copy = {...data};
+    const keysToExpand = [];
+
     const dataToTrees = (obj, objKey, lvl) => {
       const arr = obj[objKey];
       if (!arr) return;
@@ -149,6 +150,7 @@ function TreeCourse({data, setData}) {
           selectable: false,
         });
 
+        keysToExpand.push(_objMakeKey);
         _obj.key = _objMakeKey;
         _tmp.push(title(_obj, nextObjKey));
         if (addMode) _tmp.push(addAction(onEdit[3]));
@@ -157,7 +159,8 @@ function TreeCourse({data, setData}) {
       return _tmp;
     };
 
-    const tmp = dataToTrees(copy, 'curriculum', '0-2');
+    const tmp = dataToTrees(copy, 'curriculum', '0-');
+    setExpandedKeys(keysToExpand);
     setTreeData(tmp);
   }, [data, onEdit]);
 
@@ -371,13 +374,16 @@ function TreeCourse({data, setData}) {
     setData(copy);
   };
 
+  const onExpand = (nodeKey) => {
+    setExpandedKeys(nodeKey);
+  };
+
   return (
     <>
       <StyledTree
         className="draggable-tree"
-        defaultExpandedKeys={expandedKeys}
-        defaultExpandAll={true}
-        autoExpandParent={true}
+        onExpand={onExpand}
+        expandedKeys={expandedKeys}
         draggable={!onEdit[0]}
         blockNode
         onDrop={onDropv2}
