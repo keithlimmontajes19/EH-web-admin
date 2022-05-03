@@ -1,7 +1,9 @@
 export const theme = {
   DEFAULT: '#5E5873',
   BLACK: '#2B2E4A',
+  GRAY: '#2B2E4A77',
   WHITE: '#FFFFFF',
+  WHITE_MID: '#FDFDFD',
   SIDEBAR_ACTIVE: '#7890FF',
   SUBTITLE_GRAY: '#B9B9C3',
   ICONS: '#6E6B7B',
@@ -18,6 +20,8 @@ export const theme = {
   SEMI_BLACK: '#757789',
   PRIMARY: '#635FFA',
   PRIMARY_MID: '#E0DFFE',
+  PRIMARY_SMID: '#E8E8FF',
   PRIMARY_LIGHT: '#EFEFFE',
   PRIMARY_SLIGHT: '#F7F7FF',
+  HEADER: '#EFEFFE'
 };
