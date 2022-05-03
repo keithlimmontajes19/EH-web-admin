@@ -1,10 +1,11 @@
 import React, { ReactElement, useState } from "react";
-import { Modal } from "antd";
+import { Modal, Button } from "antd";
 import type { PropsType } from "./types";
 import { StyledButton } from "compositions/TableDashboards/styled";
-import { Container } from "./styled";
+import { Container, ModalContainer } from "./styled";
 import { PlusOutlined } from "@ant-design/icons";
 import Collapsetab from "components/Collapsetab";
+import { render } from "@testing-library/react";
 
 const ListOfPages = (props: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -26,15 +27,15 @@ const ListOfPages = (props: PropsType): ReactElement => {
         <PlusOutlined />
         Edit
       </StyledButton>
-
-      <Modal
+      <ModalContainer
         title="List of Pages"
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
+        style={{ borderRadius: "15px" }}
       >
         <Collapsetab />
-      </Modal>
+      </ModalContainer>
     </Container>
   );
 };

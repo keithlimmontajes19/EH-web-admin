@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import {theme} from 'utils/colors';
-import {Layout, Menu} from 'antd';
+import styled from "styled-components";
+import { theme } from "utils/colors";
+import { Layout, Menu } from "antd";
 
-const {Header} = Layout;
-const {SubMenu}:any = Menu;
+const { Header } = Layout;
+const { SubMenu }: any = Menu;
 
 export const Container = styled.div``;
 export const Logostyles = {
@@ -17,26 +17,47 @@ export const LogoContainer = {
   paddingBottom: 27,
 };
 
-export const MainLayoutStyles = {minHeight: '100vh'};
-export const Siderstyles = {background: theme.WHITE};
+export const MainLayoutStyles = { minHeight: "100vh" };
+export const Siderstyles = { background: theme.WHITE };
 
 export const HeaderStyled = styled(Header)`
-  opacity: 0.1;
-  background: #635ffa;
+  background: #efeffe;
   border-radius: 0px;
   box-shadow: 0px 4px 5px 1px rgba(99, 95, 250, 0.15);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 50px;
   height: 70px;
 `;
 
-export const StyledLayout:any = styled(Layout).attrs(() => ({
-  style: {minHeight: '100vh'},
+export const Searchdiv = styled.div`
+  // background: #fff;
+  // height: 48px;
+  // width: 497px;
+  // max-width: 497px;
+  // border-radius: 15px;
+  margin-right: 500px;
+  padding: 20px;
+
+  @media only screen and (max-width: 1224px) {
+    margin-right: 360px !important;
+  }
+`;
+
+export const SearchIcon = styled.img``;
+
+export const StyledLayout: any = styled(Layout).attrs(() => ({
+  style: { minHeight: "100vh" },
 }))`
   .ant-menu-item .ant-menu-item-selected .ant-menu-item-only-child span {
     color: #000 !important;
     background: red;
   }
 
-  .ant-menu-item, .ant-menu-submenu-title {
+  .ant-menu-item,
+  .ant-menu-submenu-title {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -57,13 +78,12 @@ export const StyledLayout:any = styled(Layout).attrs(() => ({
   }
 
   ul > .ant-menu-item {
-    background: none
+    background: none;
   }
 
-  .anticon  {
+  .anticon {
     padding-right: 8px;
   }
-
   .ant-menu-item:after {
     border-right: none;
   }
@@ -71,16 +91,19 @@ export const StyledLayout:any = styled(Layout).attrs(() => ({
 
 export const StyledSubMenu = styled(SubMenu)`
   .ant-menu-submenu-arrow {
-    color: ${({active}:any) => active ? `white` : `inherit`}!important;
+    color: ${({ active }: any) => (active ? `white` : `inherit`)}!important;
     margin-right: 10px;
   }
 
   .ant-menu-submenu-title {
-    ${({active}:any) => active ? `min-height: 50px;
+    ${({ active }: any) =>
+      active
+        ? `min-height: 50px;
     background: #635ffa;
     max-width: 202px;
     border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;` : `min-height: 50px; max-width: 202px;`}
+    border-bottom-right-radius: 20px;`
+        : `min-height: 50px; max-width: 202px;`}
   }
 
   .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
@@ -104,19 +127,19 @@ export const StyledSubMenu = styled(SubMenu)`
     margin: 7px 0 20px -15px;
     background: transparent;
   }
-`
+`;
 
 export const MenuItemOnSelect = {
-  minHeight: '50px',
-  background: '#635ffa',
-  maxWidth: '202px',
-  borderTopRightRadius: '20px',
-  borderBottomRightRadius: '20px'
-}
+  minHeight: "50px",
+  background: "#635ffa",
+  maxWidth: "202px",
+  borderTopRightRadius: "20px",
+  borderBottomRightRadius: "20px",
+};
 
 export const LayoutStyles = {
   paddingTop: 21,
   paddingLeft: 21,
-  background: '#f8f8f8',
-  minHeight: '98vh',
+  background: "#f8f8f8",
+  minHeight: "98vh",
 };

@@ -25,7 +25,25 @@ const Collapsetab = (props: PropsType): ReactElement => {
       <CollapseTab>
         <Checkbox onChange={onChange}>
           <Collapse defaultActiveKey={["1"]} onChange={callback}>
-            <Panel header="page 1" key="1">
+            <Panel header="page 1" key="1" style={{ width: "450px" }}>
+              <Collapse defaultActiveKey={["1"]}>
+                <Panel key="1" header="nested 1">
+                  <p>{text}</p>
+                </Panel>
+              </Collapse>
+              <Collapse defaultActiveKey={["1"]}>
+                <Panel key="2" header="nested 2">
+                  <p>{text}</p>
+                </Panel>
+              </Collapse>
+            </Panel>
+          </Collapse>
+        </Checkbox>
+      </CollapseTab>
+      <CollapseTab>
+        <Checkbox onChange={onChange}>
+          <Collapse defaultActiveKey={["1"]} onChange={callback}>
+            <Panel header="page 2" key="2" style={{ width: "450px" }}>
               <p>{text}</p>
             </Panel>
           </Collapse>
@@ -34,16 +52,7 @@ const Collapsetab = (props: PropsType): ReactElement => {
       <CollapseTab>
         <Checkbox onChange={onChange}>
           <Collapse defaultActiveKey={["1"]} onChange={callback}>
-            <Panel header="page 1" key="1">
-              <p>{text}</p>
-            </Panel>
-          </Collapse>
-        </Checkbox>
-      </CollapseTab>
-      <CollapseTab>
-        <Checkbox onChange={onChange}>
-          <Collapse defaultActiveKey={["1"]} onChange={callback}>
-            <Panel header="page 1" key="1">
+            <Panel header="page 1" key="1" style={{ width: "450px" }}>
               <p>{text}</p>
             </Panel>
           </Collapse>
