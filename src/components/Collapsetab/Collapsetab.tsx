@@ -1,12 +1,11 @@
-import { ReactElement } from 'react';
-import { Collapse, Row } from 'antd';
-import { Checkbox } from 'antd';
+import { ReactElement } from "react";
+import { Collapse } from "antd";
+import { Checkbox } from "antd";
 
-import type { PropsType } from './types';
-import { Container, CollapseTab } from './styled';
+import type { PropsType } from "./types";
+import { Container, CollapseTab } from "./styled";
 
 const { Panel } = Collapse;
-
 
 const text = `
   A dog is a type of domesticated animal.
@@ -21,40 +20,37 @@ function onChange(e) {
 }
 
 const Collapsetab = (props: PropsType): ReactElement => {
-
-  return <Container>
-    <CollapseTab>
-      <Checkbox onChange={onChange}>
-        <Collapse defaultActiveKey={['1']} onChange={callback} >
-          <Panel header="page 1" key="1">
-            <p>{text}</p>
-          </Panel>
-        </Collapse>
-      </Checkbox>
-    </CollapseTab>
-    <CollapseTab>
-      <Checkbox onChange={onChange}>
-        <Collapse defaultActiveKey={['1']} onChange={callback} >
-          <Panel header="page 1" key="1">
-            <p>{text}</p>
-          </Panel>
-        </Collapse>
-      </Checkbox>
-    </CollapseTab>
-    <CollapseTab>
-      <Checkbox onChange={onChange}>
-        <Collapse defaultActiveKey={['1']} onChange={callback} >
-          <Panel header="page 1" key="1">
-            <p>{text}</p>
-          </Panel>
-        </Collapse>
-      </Checkbox>
-    </CollapseTab>
-
-
-
-
-  </Container>;
+  return (
+    <Container>
+      <CollapseTab>
+        <Checkbox onChange={onChange}>
+          <Collapse defaultActiveKey={["1"]} onChange={callback}>
+            <Panel header="page 1" key="1">
+              <p>{text}</p>
+            </Panel>
+          </Collapse>
+        </Checkbox>
+      </CollapseTab>
+      <CollapseTab>
+        <Checkbox onChange={onChange}>
+          <Collapse defaultActiveKey={["1"]} onChange={callback}>
+            <Panel header="page 1" key="1">
+              <p>{text}</p>
+            </Panel>
+          </Collapse>
+        </Checkbox>
+      </CollapseTab>
+      <CollapseTab>
+        <Checkbox onChange={onChange}>
+          <Collapse defaultActiveKey={["1"]} onChange={callback}>
+            <Panel header="page 1" key="1">
+              <p>{text}</p>
+            </Panel>
+          </Collapse>
+        </Checkbox>
+      </CollapseTab>
+    </Container>
+  );
 };
 
 export default Collapsetab;
