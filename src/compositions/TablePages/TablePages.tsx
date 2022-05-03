@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import { Table, Modal, Input, PageHeader, Layout } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -11,15 +12,18 @@ import {
   StyledText,
   TableContainer,
 } from "./styled";
+
+import type { PropsType } from "./types";
 import { useHistory } from "react-router-dom";
 
-// ducks action
+import {} from "./styled";
+
 import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
 import { getDashboard } from "ducks/dashboard/actionCreator";
 import Loading from "components/Loading";
 
-function TableDashboards() {
+const TablePages = (props: PropsType): ReactElement => {
   const { data: rawData }: any = useSelector<RootState>(
     (state) => state.dashboard
   );
@@ -36,7 +40,6 @@ function TableDashboards() {
   const pushHistory = (route: string) => {
     history.push(route);
   };
-
   const columns = [
     {
       key: "1",
@@ -45,12 +48,7 @@ function TableDashboards() {
       width: "35%",
       maxWidth: "35%",
     },
-    {
-      key: "2",
-      title: <StyledText fS={20}>DEPARTMENT</StyledText>,
-      dataIndex: "department",
-      maxWidth: "25%",
-    },
+
     {
       key: "3",
       title: (
@@ -98,11 +96,9 @@ function TableDashboards() {
       },
     },
   ];
-
   useEffect(() => {
     getDashboard();
   }, []);
-
   useEffect(() => {
     if (!rawData.length) return;
     setDataSource(
@@ -113,7 +109,6 @@ function TableDashboards() {
     );
     setLoading(false);
   }, [rawData]);
-
   useEffect(() => {
     if (searchInpt === "") return;
     setSearchdData(
@@ -138,7 +133,6 @@ function TableDashboards() {
       return [...pre, newData];
     });
     console.log("add");
-    pushHistory("/team/dashboards/create");
   };
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
@@ -217,76 +211,78 @@ function TableDashboards() {
     );
   };
   return (
-    <Layout style={{ paddingRight: 50, background: "transparent" }}>
-      <PageHeader
-        ghost={false}
-        title={<StyledText fS={30}>Dashboards</StyledText>}
-        style={{ background: "none", paddingTop: 8 }}
-        extra={[<StyledButton onClick={onAddData}>Create</StyledButton>]}
-      />
-      <TableContainer
-        style={{
-          paddingLeft: 30,
-          paddingRight: 24,
-          background: "transparent",
-        }}
-      >
-        <StyledInput
-          placeholder="Search Dashboards"
-          defaultValue={searchInpt}
-          onChange={handleSearch}
-          prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
+    <>
+      <Layout style={{ paddingRight: 50, background: "transparent" }}>
+        <PageHeader
+          ghost={false}
+          title={<StyledText fS={30}>Pages</StyledText>}
+          style={{ background: "none", paddingTop: 8 }}
+          extra={[<StyledButton onClick={onAddData}>Create</StyledButton>]}
         />
-        <Table
-          onRow={rowListener}
-          rowSelection={rowSelection}
-          columns={columns}
-          dataSource={searchInpt !== "" ? searchdData : dataSource}
-          loading={{ indicator: <Loading />, spinning: loading }}
-        />
-        <Modal
-          title="Rename"
-          visible={isEditing}
-          okText="Save"
-          onCancel={() => {
-            resetEditing();
-          }}
-          onOk={() => {
-            setDataSource((pre) => {
-              return pre.map((obj) => {
-                console.log(obj);
-                if (obj._id === editingData._id) {
-                  return editingData;
-                } else {
-                  return obj;
-                }
-              });
-            });
-            resetEditing();
+        <TableContainer
+          style={{
+            paddingLeft: 30,
+            paddingRight: 24,
+            background: "transparent",
           }}
         >
-          <Input
-            value={editingData?.name}
-            prefix="Title: "
-            onChange={(e) => {
-              setEditingData((pre) => {
-                return { ...pre, name: e.target.value };
-              });
-            }}
+          <StyledInput
+            placeholder="Search Pages"
+            defaultValue={searchInpt}
+            onChange={handleSearch}
+            prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
-          <Input
-            value={editingData?.department}
-            prefix="Department: "
-            onChange={(e) => {
-              setEditingData((pre) => {
-                return { ...pre, department: e.target.value };
-              });
-            }}
+          <Table
+            onRow={rowListener}
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={searchInpt !== "" ? searchdData : dataSource}
+            loading={{ indicator: <Loading />, spinning: loading }}
           />
-        </Modal>
-      </TableContainer>
-    </Layout>
+          <Modal
+            title="Rename"
+            visible={isEditing}
+            okText="Save"
+            onCancel={() => {
+              resetEditing();
+            }}
+            onOk={() => {
+              setDataSource((pre) => {
+                return pre.map((obj) => {
+                  console.log(obj);
+                  if (obj._id === editingData._id) {
+                    return editingData;
+                  } else {
+                    return obj;
+                  }
+                });
+              });
+              resetEditing();
+            }}
+          >
+            <Input
+              value={editingData?.name}
+              prefix="Title: "
+              onChange={(e) => {
+                setEditingData((pre) => {
+                  return { ...pre, name: e.target.value };
+                });
+              }}
+            />
+            <Input
+              value={editingData?.department}
+              prefix="Department: "
+              onChange={(e) => {
+                setEditingData((pre) => {
+                  return { ...pre, department: e.target.value };
+                });
+              }}
+            />
+          </Modal>
+        </TableContainer>
+      </Layout>
+    </>
   );
-}
+};
 
-export default TableDashboards;
+export default TablePages;
