@@ -25,6 +25,9 @@ export const StyledMenu = styled(Menu)`
   border-right: 0;
   min-width: 100px;
   padding-top: 48px;
+  background: ${theme.WHITE_MID};
+  box-shadow: 0px 0px 5px 3px ${theme.WHITE_MID} !important;
+  border-left: 2px solid ${theme.PRIMARY_LIGHT}
   z-index: 2;
 `;
 
@@ -40,11 +43,11 @@ export const ItemTextDiv = styled.div`
 `;
 
 export const HeaderStyled = styled(Header)`
-  opacity: 0.1;
-  background: #635ffa;
+  background: ${theme.HEADER};
   border-radius: 0px;
-  box-shadow: 0px 4px 5px 1px rgba(99, 95, 250, 0.15);
+  box-shadow: 0px 4px 5px 1px ${theme.HEADER}44;
   height: 70px;
+  z-index: 4;
 `;
 
 export const StyledLayout: any = styled(Layout).attrs(() => ({
@@ -139,6 +142,6 @@ export const MenuItemOnSelect = {
 export const LayoutStyles = {
   paddingTop: 21,
   paddingLeft: 21,
-  background: '#f8f8f8',
+  background: '#fff',
   minHeight: '98vh',
 };
