@@ -1,17 +1,24 @@
 import { ReactElement } from "react";
 import { Table, Modal, Input, PageHeader, Layout } from "antd";
 import { useEffect, useState } from "react";
+import Collapsetab from "components/Collapsetab";
 import {
   SearchOutlined,
   EditOutlined,
   DeleteOutlined,
+  EyeFilled,
 } from "@ant-design/icons";
 import {
   StyledButton,
   StyledInput,
   StyledText,
   TableContainer,
+  BuildIcon,
 } from "./styled";
+
+// icons imorted here
+import nopages from "../../assets/icons/nopages.svg";
+import hammericon from "../../assets/icons/hammer-icon.svg";
 
 import type { PropsType } from "./types";
 import { useHistory } from "react-router-dom";
@@ -76,21 +83,23 @@ const TablePages = (props: PropsType): ReactElement => {
                 <EditOutlined style={{ color: "#635ffa" }} />
                 &nbsp;RENAME
               </span>
-              <div
-                style={{
-                  display: "inline-block",
-                  visibility: "hidden",
-                  textIndent: -99999,
-                  width: "20%",
-                }}
-              >
-                @
-              </div>
+              &nbsp; &nbsp; &nbsp;
+              <span onClick={() => onEditData(record)}>
+                <EyeFilled style={{ color: "#635ffa" }} />
+                &nbsp;VIEW
+              </span>
+              &nbsp; &nbsp; &nbsp;
+              <span onClick={() => onEditData(record)}>
+                <BuildIcon src={hammericon} style={{ color: "#635ffa" }} />
+                &nbsp;BUILDER
+              </span>
+              &nbsp; &nbsp; &nbsp;
               <span onClick={() => onDeleteData([record])}>
                 <DeleteOutlined style={{ color: "#635ffa" }} />
                 &nbsp;DELETE
               </span>
             </div>
+            {/* <Collapsetab title="page1" /> */}
           </>
         );
       },
@@ -130,9 +139,10 @@ const TablePages = (props: PropsType): ReactElement => {
       department: "Address " + newKey,
     };
     setDataSource((pre) => {
-      return [...pre, newData];
+      return [];
     });
     console.log("add");
+    pushHistory("/team/pages/createpage");
   };
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
@@ -232,13 +242,44 @@ const TablePages = (props: PropsType): ReactElement => {
             onChange={handleSearch}
             prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
-          <Table
-            onRow={rowListener}
-            rowSelection={rowSelection}
-            columns={columns}
-            dataSource={searchInpt !== "" ? searchdData : dataSource}
-            loading={{ indicator: <Loading />, spinning: loading }}
-          />
+          {dataSource.length === 0 ? (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginTop: "80px",
+                }}
+              >
+                <img
+                  src={nopages}
+                  style={{
+                    height: "109px",
+                    width: "87px",
+                  }}
+                ></img>
+                <h3
+                  style={{
+                    padding: "10px",
+                    fontWeight: "500",
+                    fontSize: "22px",
+                    color: "#2B2E4A !important",
+                  }}
+                >
+                  No pages
+                </h3>
+              </div>
+            </>
+          ) : (
+            <Table
+              onRow={rowListener}
+              rowSelection={rowSelection}
+              columns={columns}
+              dataSource={searchInpt !== "" ? searchdData : dataSource}
+              loading={{ indicator: <Loading />, spinning: loading }}
+            />
+          )}
           <Modal
             title="Rename"
             visible={isEditing}
@@ -266,15 +307,6 @@ const TablePages = (props: PropsType): ReactElement => {
               onChange={(e) => {
                 setEditingData((pre) => {
                   return { ...pre, name: e.target.value };
-                });
-              }}
-            />
-            <Input
-              value={editingData?.department}
-              prefix="Department: "
-              onChange={(e) => {
-                setEditingData((pre) => {
-                  return { ...pre, department: e.target.value };
                 });
               }}
             />

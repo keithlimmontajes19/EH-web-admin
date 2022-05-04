@@ -168,3 +168,5 @@ export const TableContainer: any = styled(Layout)`
     cursor: pointer;
   }
 `;
+
+export const BuildIcon = styled.img``;

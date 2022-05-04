@@ -6,6 +6,11 @@ import { Container, ModalContainer } from "./styled";
 import { PlusOutlined } from "@ant-design/icons";
 import Collapsetab from "components/Collapsetab";
 import { render } from "@testing-library/react";
+const text = `
+  A dog is a type of domesticated animal.
+  Known for its loyalty and faithfulness,
+  it can be found as a welcome guest in many households across the world122222.
+`;
 
 const ListOfPages = (props: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,7 +39,7 @@ const ListOfPages = (props: PropsType): ReactElement => {
         onCancel={handleCancel}
         style={{ borderRadius: "15px" }}
       >
-        <Collapsetab />
+        <Collapsetab title={text} />
       </ModalContainer>
     </Container>
   );

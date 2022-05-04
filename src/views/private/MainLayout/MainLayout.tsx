@@ -99,6 +99,7 @@ const MainLayout = (): ReactElement => {
               placeholder="search"
               style={{ borderRadius: "10px", width: "497px", height: "48px" }}
               size="large"
+              prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
             ></Input>
           </Searchdiv>
         </Row>

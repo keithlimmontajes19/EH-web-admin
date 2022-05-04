@@ -8,7 +8,7 @@ import {
   PlusImg,
   StyledButton,
 } from "./styled";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 // antdesing componenets import here
 import { Row, Col } from "antd";
@@ -28,54 +28,28 @@ const CreateDashboard = (props) => {
   return (
     <RootContainer id="rootContainer" style={{ background: "none !important" }}>
       <Breadcrumb separator="<">
-        <Breadcrumb.Item href="/team/dashboards">
-          {" "}
-          Back to Dashboards
+        <Breadcrumb.Item> </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Link to="/team/dashboards">Back to Dashboards</Link>
         </Breadcrumb.Item>
       </Breadcrumb>
-      <Row>
-        <Col span={12}>
-          <PageHeader title={<StyledText>Dashboard Name 1</StyledText>} />
-        </Col>
-        <Col span={12}>
-          <Row gutter={45} justify="center">
-            <Col>
-              <Row>
-                <Col>
-                  <RedoOutlined
-                    style={{
-                      fontSize: "25px",
-                      paddingRight: "24px",
-                      cursor: "pointer",
-                    }}
-                  />
-                </Col>
-                <Col>
-                  <StyledButton
-                    onClick={() =>
-                      pushHistory("/team/dashboards/create/addbord")
-                    }
-                  >
-                    <PlusOutlined /> BOARD
-                  </StyledButton>
-                </Col>
-              </Row>
-            </Col>
-            <Col>
-              <StyledButton>
-                <CheckOutlined /> PUBLISH
-              </StyledButton>
-            </Col>
-            <Col>
-              <StyledButtonCancle
-                onClick={() => pushHistory("./tam/dashboard")}
-              >
-                Cancle
-              </StyledButtonCancle>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+      <PageHeader
+        title={<StyledText>Dashboard Name 1</StyledText>}
+        extra={[
+          <StyledButton
+            onClick={() => pushHistory("/team/dashboards/create/addbord")}
+          >
+            <PlusOutlined /> BOARD
+          </StyledButton>,
+          <StyledButton>
+            <CheckOutlined /> PUBLISH
+          </StyledButton>,
+          <StyledButtonCancle onClick={() => pushHistory("./tam/dashboard")}>
+            Cancle
+          </StyledButtonCancle>,
+        ]}
+      />
+
       <Row align="middle">
         <Col span={12}>
           <AddContainer>
