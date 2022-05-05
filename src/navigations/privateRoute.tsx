@@ -9,6 +9,7 @@ import AddBoard from "views/private/Team/Dashboards/AddBoard";
 import Pages from "views/private/Pages";
 import Createpage from "compositions/Createpage";
 import Announcements from "compositions/Announcements";
+// import Createannouncement from "compositions/Createannouncement";
 
 const Navigation = () => {
   return (
@@ -26,6 +27,7 @@ const Navigation = () => {
       <Route exact path="/team/pages" component={Pages} />
       <Route exact path="/team/pages/createpage" component={Createpage} />
       <Route exact path="/team/announcements" component={Announcements} />
+
       <Redirect to="/" />
     </Switch>
   );

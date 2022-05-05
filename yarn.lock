@@ -9901,6 +9901,11 @@
     "browserslist" "^4.16.6"
     "postcss-selector-parser" "^6.0.4"
 
+"suneditor@^2.43.2":
+  "integrity" "sha512-0oTLEIevPe5irPLScmBFHcAMiGnYKyheF4h9PHkHGsPSC7MUl0KuiAcfy0HNAI18aN8GP+0LrnRG6StYEg79qA=="
+  "resolved" "https://registry.npmjs.org/suneditor/-/suneditor-2.43.2.tgz"
+  "version" "2.43.2"
+
 "supports-color@^5.3.0":
   "integrity" "sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow=="
   "resolved" "https://registry.npmjs.org/supports-color/-/supports-color-5.5.0.tgz"
