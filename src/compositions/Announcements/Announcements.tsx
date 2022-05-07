@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
 import Loading from "components/Loading";
 import { getDashboard } from "ducks/dashboard/actionCreator";
+import Createannouncement from "compositions/Createannouncement";
 
 import {
   SearchOutlined,
@@ -313,7 +314,7 @@ const Announcements = (props: PropsType): ReactElement => {
           ghost={false}
           title={<StyledText fS={30}>Announcements</StyledText>}
           style={{ background: "none", paddingTop: 8 }}
-          extra={[<StyledButton>create</StyledButton>]}
+          extra={[<Createannouncement />]}
         />
         <TableContainer
           style={{

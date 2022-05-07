@@ -26,3 +26,31 @@ export const StyledButtonCancle = styled(Button)`
   cursor: pointer;
   border: none;
 `;
+
+export const MenuContainer = styled.div`
+  box-shadow: -6px -6px 64px -59px rgba(0, 0, 0, 1);
+  -webkit-box-shadow: -6px -6px 64px -59px rgba(0, 0, 0, 1);
+  -moz-box-shadow: -6px -6px 64px -59px rgba(0, 0, 0, 1);
+  background: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  margin: 15px;
+`;
+export const EditorContainer = styled.div`
+  box-shadow: -6px -6px 64px -59px rgba(0, 0, 0, 1);
+  -webkit-box-shadow: -6px -6px 64px -59px rgba(0, 0, 0, 1);
+  -moz-box-shadow: -6px -6px 64px -59px rgba(0, 0, 0, 1);
+  background: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  margin: 15px;
+  height: auto;
+  min-height: 800px;
+`;
+export const ItemContainer = styled.div``;
+
+export const FontStyleContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+`;
