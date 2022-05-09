@@ -1,8 +1,18 @@
 import styled from "styled-components";
-import { Layout, Input, Button, Modal } from "antd";
+import { Button, Layout, Modal } from "antd";
+import { isExportDeclaration } from "typescript";
 
 export const Container = styled.div``;
 
+export const StyledButton: any = styled(Button)`
+  background: #635ffa;
+  color: #fff;
+  width: 166px;
+  height: 48px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 700;
+`;
 export const TableContainer: any = styled(Layout)`
   .ant-table {
     background: transparent;
@@ -133,33 +143,7 @@ export const TableContainer: any = styled(Layout)`
     border-radius: 15px !important;
   }
 `;
-
-export const StyledInput: any = styled(Input)`
-  width: 497px;
-  height: 48px;
-  border: none;
-  padding-left: 20px;
-  border-radius: 20px;
-  margin-bottom: 40px;
-  font-size: 14px;
-  font-weight: 400;
-`;
-export const StyledText: any = styled.span`
-  color: ${({ fC }: any) => (fC ? fC : `#635FFA`)};
-  font-size: ${({ fS }: any) => (fS ? fS : 28)}px;
-  font-weight: ${({ fW }: any) => (fW ? fW : 700)};
-`;
-
-export const StyledButton: any = styled(Button)`
-  background: #635ffa;
-  color: #fff;
-  width: 166px;
-  height: 48px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: 700;
-`;
-export const StyledButtonResult: any = styled(Button)`
+export const StyledButtonCreate: any = styled(Button)`
   background: #fff;
   color: #635ffa;
   width: 166px;
@@ -167,6 +151,13 @@ export const StyledButtonResult: any = styled(Button)`
   border-radius: 8px;
   font-size: 20px;
   font-weight: 700;
+`;
+
+export const ScreensContainer = styled(Layout)`
+  display: flex;
+  flex-direction: row;
+  align-itmes: center;
+  justify-content: space-evenly;
 `;
 export const ModalContainer = styled(Modal)`
   .ant-modal-content {

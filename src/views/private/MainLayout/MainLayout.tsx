@@ -46,7 +46,7 @@ const teamItems = [
   { name: "Pages", link: "pages", icon: FileTextOutlined },
   { name: "Announcements", link: "announcements", icon: NotificationOutlined },
   { name: "Forms", link: "forms", icon: PaperClipOutlined },
-  { name: "Onboarding\nScreens", link: "onboarding", icon: ExpandOutlined },
+  { name: "OnboardingScreens", link: "onboarding", icon: ExpandOutlined },
 ];
 const learnItems = [
   { name: "Courses", link: "courses", icon: FolderOutlined },
@@ -172,7 +172,7 @@ const MainLayout = (): ReactElement => {
                 </span>
               }
               onTitleClick={() => {
-                pushHistory('/learn');
+                pushHistory("/learn");
               }}
             >
               {learnItems.map((obj, i) => (
@@ -226,7 +226,7 @@ const MainLayout = (): ReactElement => {
                 </span>
               }
               onTitleClick={() => {
-                pushHistory('/team');
+                pushHistory("/team");
               }}
             >
               {teamItems.map((obj, i) => (

@@ -156,8 +156,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
               margin: "10px 0px",
             }}
             size="large"
-            aria-placeholder="Sample Announcement_2"
-            defaultValue="Sample Announcement_2"
+            aria-placeholder="screen name 1"
           ></Input>
           <Input.TextArea
             placeholder="Type Announcement"
