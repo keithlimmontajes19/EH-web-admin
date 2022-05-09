@@ -1,11 +1,11 @@
 import React from 'react';
 import {render} from '@testing-library/react-native';
-import Learn from '../Learn';
+import Lessons from '../Lessons';
 
-describe('Learn', () => {
+describe('Lessons', () => {
   it('Should work as expected', () => {
     const all = render(
-        <Learn />
+        <Lessons />
     );
     expect(all.toJSON()).toMatchSnapshot();
   });
