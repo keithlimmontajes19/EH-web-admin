@@ -9,8 +9,10 @@ import {
   ModalContainer,
 } from "./styled";
 import { Layout, PageHeader, Table, Input } from "antd";
+import { History } from "history";
 
 import { SearchOutlined, DeleteFilled } from "@ant-design/icons";
+import { useHistory } from "react-router-dom";
 
 const columns = [
   {
@@ -65,6 +67,8 @@ const data = [
 
 const Forms = (props: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [formtitle, setFormName]=useState("")
+  const history = useHistory()
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -72,11 +76,16 @@ const Forms = (props: PropsType): ReactElement => {
 
   const handleOk = () => {
     setIsModalVisible(false);
+    history.push(`/team/forms/createforms/${formtitle}`)
+
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+  
+
+  
   return (
     <>
       <Layout style={{ paddingRight: 50, background: "transparent" }}>
@@ -110,7 +119,9 @@ const Forms = (props: PropsType): ReactElement => {
                       width: "485px",
                       height: "38px",
                       margin: "10px 0px",
-                    }}
+            
+                  }}
+                  onChange={(e) =>setFormName(e.target.value)}
                     size="large"
                     aria-placeholder="Form Name 1"
                     defaultValue="Form Name 1"

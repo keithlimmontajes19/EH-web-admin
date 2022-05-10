@@ -37,7 +37,7 @@ import {
 } from "./styled";
 import buildicon from "../../assets/icons/hammer-icon.svg";
 
-const Announcements = (props: PropsType): ReactElement => {
+const Announcements = (props: PropsType): ReactElement => { 
   const { data: rawData }: any = useSelector<RootState>(
     (state) => state.dashboard
   );
@@ -49,6 +49,12 @@ const Announcements = (props: PropsType): ReactElement => {
   const [dataSource, setDataSource] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
+const [file, setFile] = useState("")
+
+const handlechnage = () =>{
+
+}
+
 
   const history = useHistory();
   const pushHistory = (route: string) => {

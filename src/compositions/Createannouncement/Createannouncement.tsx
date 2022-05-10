@@ -48,6 +48,8 @@ import CustomeSelect from "components/CustomeSelect";
 const { MonthPicker, YearPicker } = DatePicker;
 const { Option } = Select;
 
+  
+
 const dayFormat = "DD";
 
 const dataprops = {
@@ -78,6 +80,7 @@ const dataprops = {
 
 const Createannouncement = (props: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -137,7 +140,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
               justifyContent: "space-around",
             }}
           >
-            <Upload accept="images/*">
+            <Upload accept="images/*" >
               <ItemContainer src={galleryicon} />
             </Upload>
             <Upload accept="video/*">

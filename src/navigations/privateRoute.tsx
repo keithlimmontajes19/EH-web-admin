@@ -17,7 +17,7 @@ import Createpage from "compositions/Createpage";
 import Announcements from "views/private/Team/Announcements";
 import Forms from "compositions/Forms";
 import OnboardingScreens from "views/private/Team/OnboardingScreens";
-
+import CreateForm from "compositions/CreateForm";
 const Navigation = () => {
   return (
     <Switch>
@@ -47,6 +47,7 @@ const Navigation = () => {
       <Route exact path="/team/pages/createpage" component={Createpage} />
       <Route exact path="/team/announcements" component={Announcements} />
       <Route exact path="/team/forms" component={Forms} />
+      <Route exact path="/team/forms/createforms/:formtitle?" component={CreateForm}/>
 
       <Redirect to="/" />
     </Switch>

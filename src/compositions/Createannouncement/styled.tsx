@@ -13,7 +13,6 @@ export const StyledButton: any = styled(Button)`
 
 export const Container = styled(Layout)`
   border-radius: 15px;
-
   .ant-modal-content {
     border-radius: 15px;
   }
