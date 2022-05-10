@@ -24,7 +24,7 @@ const Navigation = () => {
       <Route path="/learn/courses/:page?/:subpage?" component={Courses} />
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
       <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
-      <Route path="/learn/quizzes/:page?/:subpage?" component={Quizzes} />
+      <Route path="/learn/quizzes/:page?/:subpage?/:item?" component={Quizzes} />
 
 
       <Route exact path="/team" component={()=><h1>team index view here</h1>} />
