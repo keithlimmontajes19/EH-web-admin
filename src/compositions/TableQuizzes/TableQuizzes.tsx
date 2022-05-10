@@ -77,7 +77,9 @@ function TableQuizzes() {
       const toCollapse = (arr) => (
         <Collapse activeKey={'1'} expandIcon={() => <></>} ghost>
           <Collapse.Panel header={record.title} key="1">
-            {arr.map((t) => (
+            {arr
+              .filter(obj => typeof(obj)=== 'object' ?  obj.contentType === 'quiz' : false)
+              .map((quizObj) => (
               <p>
                 <EnterOutlined
                   style={{
@@ -85,7 +87,7 @@ function TableQuizzes() {
                     margin: '0 10px 0 21px',
                   }}
                 />
-                <span style={{color: theme.BLACK}}>{t}</span>
+                <span style={{color: theme.BLACK}}>{quizObj.title}</span>
               </p>
             ))}
           </Collapse.Panel>
@@ -109,32 +111,10 @@ function TableQuizzes() {
             {
               key: 'b1',
               title: (
-                <Row align="middle" justify="space-between">
+                <Row align="middle" justify='start'>
                   <StyledText fS={25} fC={theme.BLACK} fW={500}>
                     {obj.title}
                   </StyledText>
-                  <Space className="row-actions" size={'middle'}>
-                    <span onClick={() => onEditData(copy, iA, -1)}>
-                      <EditOutlined style={{color: '#635ffa'}} />
-                      &nbsp;RENAME
-                    </span>
-                    <span>
-                      <EyeFilled style={{color: '#635ffa'}} />
-                      &nbsp;VIEW
-                    </span>
-                    <span onClick={() => onDeleteData([obj.key])}>
-                      <DeleteOutlined style={{color: '#635ffa'}} />
-                      &nbsp;DELETE
-                    </span>
-                    <span
-                      onClick={() =>
-                        history.push('/learn/courses/builder/' + obj._id)
-                      }
-                    >
-                      <BuildFilled style={{color: '#635ffa'}} />
-                      &nbsp;BUILDER
-                    </span>
-                  </Space>
                 </Row>
               ),
               render: (rec, record, iB) => ({
@@ -156,7 +136,7 @@ function TableQuizzes() {
                       </span>
                       <span
                         onClick={() =>
-                          history.push('/learn/courses/builder/' + obj._id)
+                          history.push('/learn/quizzes/builder/' + obj._id + '/' + iB)
                         }
                       >
                         <BuildFilled style={{color: '#635ffa'}} />
