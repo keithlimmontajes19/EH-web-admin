@@ -67,6 +67,11 @@ export const Searchdiv = styled.div`
   @media only screen and (max-width: 1224px) {
     margin-right: 360px !important;
   }
+
+  .ant-input:hover {
+    border-color: none;
+    border-right-width: 1px;
+  }
 `;
 
 export const SearchIcon = styled.img``;

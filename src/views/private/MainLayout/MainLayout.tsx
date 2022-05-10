@@ -46,7 +46,7 @@ const teamItems = [
   { name: "Pages", link: "pages", icon: FileTextOutlined },
   { name: "Announcements", link: "announcements", icon: NotificationOutlined },
   { name: "Forms", link: "forms", icon: PaperClipOutlined },
-  { name: "Onboarding\nScreens", link: "onboarding", icon: ExpandOutlined },
+  { name: "OnboardingScreens", link: "onboarding", icon: ExpandOutlined },
 ];
 const learnItems = [
   { name: "Courses", link: "courses", icon: FolderOutlined },
@@ -103,6 +103,7 @@ const MainLayout = (): ReactElement => {
               placeholder="search"
               style={{ borderRadius: "10px", width: "497px", height: "48px" }}
               size="large"
+              prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
             ></Input>
           </Searchdiv>
         </Row>
@@ -171,7 +172,7 @@ const MainLayout = (): ReactElement => {
                 </span>
               }
               onTitleClick={() => {
-                pushHistory('/learn');
+                pushHistory("/learn");
               }}
             >
               {learnItems.map((obj, i) => (
@@ -225,7 +226,7 @@ const MainLayout = (): ReactElement => {
                 </span>
               }
               onTitleClick={() => {
-                pushHistory('/team');
+                pushHistory("/team");
               }}
             >
               {teamItems.map((obj, i) => (
