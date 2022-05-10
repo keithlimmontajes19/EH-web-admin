@@ -247,7 +247,7 @@ export const TableContainer: any = styled(Layout)`
   .ant-no-collapse {
     font-size: 14px;
     font-weight: 400;
-    color: ${theme.GRAY};
+    color: ${theme.BLACK};
   }
 
   .ant-collapse-header > div {

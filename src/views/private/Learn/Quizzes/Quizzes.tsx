@@ -11,6 +11,7 @@ import {StyledButton, StyledTabs, StyledText} from './styled';
 import Dropdown from 'components/Dropdown';
 import TableQuizzes from 'compositions/TableQuizzes';
 import SettingsLessons from 'compositions/SettingsLessons';
+import BuilderQuiz from 'compositions/BuilderQuiz';
 
 const headerActions = [
   {
@@ -29,19 +30,15 @@ const Quizzes = (): ReactElement => {
   const params: Params = useParams();
   return (
     <>
-      <Layout style={{paddingRight: 50, background: 'transparent'}}>
+      {params.page ? (
+        <BuilderQuiz id={params.subpage} item={params.item} />
+      ) : (
+        <Layout style={{paddingRight: 50, background: 'transparent'}}>
         <PageHeader
           ghost={false}
           title={<StyledText fS={30}>Quizzes</StyledText>}
           style={{background: 'none', paddingTop: 8}}
           extra={[
-            <StyledButton
-              w={130}
-              onClick={() => history.push('/learn/courses/add')}
-            >
-              <PlusOutlined />
-              ADD
-            </StyledButton>,
             <Dropdown
               menu={headerActions}
               title={
@@ -52,7 +49,7 @@ const Quizzes = (): ReactElement => {
                   </StyledText>
                 </span>
               }
-            />,
+            />
           ]}
           footer={
             <StyledTabs activeKey={page} onChange={(n) => setPage(n)}>
@@ -85,6 +82,7 @@ const Quizzes = (): ReactElement => {
         />
         {page === '0' ? <TableQuizzes /> : <SettingsLessons />}
       </Layout>
+      )}
     </>
   );
 };
