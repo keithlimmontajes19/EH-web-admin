@@ -4,5 +4,6 @@ export type PropsType = {
 
 export type Params = {
   page?: string,
-  subpage?: string
+  subpage?: string,
+  item?: string
 }
