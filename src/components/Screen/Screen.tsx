@@ -20,7 +20,8 @@ const Screen = (props: PropsType): ReactElement => {
       style={{ borderRadius: "15px", background: "#fff", padding: "15px" }}
     >
       <Col span={24}>
-        <Container>
+        <Container style={{ borderRadius: `${props.borderradius}` }}>
+          {console.log(props.borderradius)}
           <ImageContainer>
             <Img src={imageicon} alt="image" />
           </ImageContainer>
