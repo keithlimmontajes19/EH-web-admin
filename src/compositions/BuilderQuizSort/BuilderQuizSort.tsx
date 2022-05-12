@@ -1,86 +1,129 @@
-import {ReactElement, useState} from 'react';
+import { ReactElement } from "react";
 
-import type {PropsType} from './types';
-import {} from './styled';
-import IconImage from 'components/IconImage';
-import SORT_ICON from 'assets/icons/drag-icon.png';
-import { Tree } from 'antd';
-import { useTheme } from 'styled-components';
-{/* <IconImage source={SORT_ICON} width={50} height={60} /> */}
+import { LineInput, StyledText, StyledTree, TreeNodeStyle } from "./styled";
+import IconImage from "components/IconImage";
+import SORT_ICON from "assets/icons/drag-icon.png";
+import { Col, Modal, Row, Space, Tree } from "antd";
+import { PlusCircleFilled, MinusCircleFilled } from "@ant-design/icons";
+import { theme } from "utils/colors";
 
 const TreeNode = Tree.TreeNode;
 
-const x = 3;
-const y = 0;
-const z = 0;
-const ggData = [];
+const BuilderQuizSort = ({ item, submitQ, deleteQ }: any): ReactElement => {
+  const data = { ...item };
 
-const generateData = (_level, _preKey?, _tns?) => {
-  const preKey = _preKey || '0';
-  const tns = _tns || ggData;
-
-  const children = [];
-  for (let i = 0; i < x; i++) {
-    const key = i;
-    tns.push({ title: key, key });
-    if (i < y) {
-      children.push(key)
-    }
-  }
-  if (_level < 0) {
-    return tns;
-  }
-  const level = _level - 1;
-
-  children.forEach((key, index) => {
-    tns[index].children = [];
-    return generateData(level, key, tns[index].children);
-  });
-};
-generateData(z);
-
-function Demo() {
-  const [gData, setGData] = useState([...ggData]);
-
-  const onDragEnter = (info) => {
-    console.log(info);
-  }
+  const generateData = (x, i) => {
+    const props = {
+      title: (
+        <>
+          <StyledText
+            fS={25}
+            fC={`${theme.PRIMARY}88`}
+            className="ant-tree-title-number"
+          >
+            {i + 1}
+          </StyledText>
+          <LineInput
+            value={x}
+            placeholder={`Answer #${i + 1}`}
+            onChange={(e) => {
+              data.resource.answer[i] = e.target.value;
+              submitQ(data);
+            }}
+          />
+        </>
+      ),
+      key: i,
+    };
+    return <TreeNode {...props} style={TreeNodeStyle} />;
+  };
 
   const onDrop = (info) => {
     const dropIndex = Number(info.node.props.eventKey);
     const dragIndex = Number(info.dragNode.props.eventKey);
+    if (dropIndex === dragIndex) return;
 
-    const data = [...gData];
-    const a = data[dragIndex];
-    const b = data[dropIndex];
-    data[dragIndex] = b;
-    data[dropIndex] = a;
+    const tmp = [...data.resource.answer];
+    const a = tmp[dragIndex];
+    const b = tmp[dropIndex];
+    tmp[dragIndex] = b;
+    tmp[dropIndex] = a;
+    data.resource.answer = tmp.filter((x) => x);
 
-    setGData(data)
-  }
+    submitQ(data);
+  };
+
+  const onDelete = () => {
+    Modal.confirm({
+      title: "Are you sure, you want to delete this record?",
+      okText: "Yes",
+      okType: "danger",
+      onOk: () => {},
+    });
+  };
 
   return (
-      <Tree
-        className="draggable-tree"
-        draggable
-        onDragEnter={onDragEnter}
+    <div className="question">
+      <Row justify="start" style={{ marginBottom: 50 }}>
+        <Col flex={1} style={{ justifyContent: "center", paddingRight: 35 }}>
+          <LineInput
+            value={data.title}
+            placeholder="Sort Title"
+            onChange={(e) => {
+              data.title = e.target.value;
+              submitQ(data);
+            }}
+          />
+        </Col>
+        <Col flex={23} style={{ justifyContent: "center" }}>
+          <LineInput
+            defaultValue={data.description}
+            placeholder="Sort Description"
+            onChange={(e) => {
+              data.description = e.target.value;
+              submitQ(data);
+            }}
+          />
+        </Col>
+        <Col span={3}>
+          <Row justify="end">
+            <StyledText fS={18} onClick={deleteQ} className="question-delete">
+              DELETE
+            </StyledText>
+          </Row>
+        </Col>
+      </Row>
+      <StyledTree
+        draggable={{
+          icon: <IconImage source={SORT_ICON} width={60} height={60} />,
+          nodeDraggable: () => true,
+        }}
+        selectable={false}
         onDrop={onDrop}
+        showLine={false}
       >
-        {gData.map((item) => (
-          <TreeNode 
-          key={item.key} 
-          title={item.title} 
-          style={{
-            background:'red',
-            margin: '0 0 10px 50px'
-          }} />
-        ))}
-      </Tree>
+        {data.resource.answer.map(generateData)}
+      </StyledTree>
+      <Space size={0} style={{ margin: "10px 0 50px 50px" }}>
+        <StyledText fS={30}>
+          <PlusCircleFilled
+            onClick={() => {
+              data.resource.answer.push("");
+              submitQ(data);
+            }}
+          />
+          <MinusCircleFilled
+            onClick={() => {
+              if (data.resource.answer.length <= 1) return;
+              data.resource.answer.pop();
+              submitQ(data);
+            }}
+          />
+        </StyledText>
+        <StyledText fS={18}>ANSWER</StyledText>
+      </Space>
+    </div>
   );
-}
-
-const BuilderQuizSort = (props: PropsType): ReactElement => {
-  return <><Demo /></>;
 };
 
 export default BuilderQuizSort;
