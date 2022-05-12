@@ -10,6 +10,7 @@ import {
 } from "./styled";
 import { Layout, PageHeader, Table, Input } from "antd";
 import { History } from "history";
+import Results from "compositions/Results";
 
 import { SearchOutlined, DeleteFilled } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
@@ -67,7 +68,7 @@ const data = [
 
 const Forms = (props: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [formtitle, setFormName]=useState("")
+  const [formtitle, setFormName] = useState("")
   const history = useHistory()
 
   const showModal = () => {
@@ -83,9 +84,9 @@ const Forms = (props: PropsType): ReactElement => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  
 
-  
+
+
   return (
     <>
       <Layout style={{ paddingRight: 50, background: "transparent" }}>
@@ -99,7 +100,7 @@ const Forms = (props: PropsType): ReactElement => {
                 <StyledButtonResult>See Results</StyledButtonResult>
               ) : (
                 <>
-                  <StyledButton>See Results</StyledButton>
+                  <Results />
                 </>
               ),
               <>
@@ -119,9 +120,9 @@ const Forms = (props: PropsType): ReactElement => {
                       width: "485px",
                       height: "38px",
                       margin: "10px 0px",
-            
-                  }}
-                  onChange={(e) =>setFormName(e.target.value)}
+
+                    }}
+                    onChange={(e) => setFormName(e.target.value)}
                     size="large"
                     aria-placeholder="Form Name 1"
                     defaultValue="Form Name 1"

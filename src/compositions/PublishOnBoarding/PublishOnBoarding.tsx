@@ -17,6 +17,7 @@ const PublishOnBoarding = (props: PropsType): ReactElement => {
       title="Publish Onboarding Screens"
       centered
       visible={visible}
+      onCancel={() => setVisible(false)}
       onOk={() => setVisible(false)}
       width={1000}
       footer={[<StyledButton onClick={() => setVisible(false)}>Publish</StyledButton>]}
