@@ -1,1 +1,1 @@
-export {default} from './BuilderQuizEssay';
+export { default } from "./BuilderQuizEssay";

@@ -1,1 +1,1 @@
-export {default} from './BuilderQuizMultipleChoice';
+export { default } from "./BuilderQuizMultipleChoice";
