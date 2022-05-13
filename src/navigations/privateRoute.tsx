@@ -18,13 +18,13 @@ import Announcements from "views/private/Team/Announcements";
 import Forms from "compositions/Forms";
 import OnboardingScreens from "views/private/Team/OnboardingScreens";
 import OnBoardingScreen from "compositions/OnBoardingScreen"
-import CreateForm from "compositions/CreateForm";
+import BuilderQuiz from "compositions/BuilderQuiz";
+import QuizzesTab from "compositions/QuizzesTab";
 const Navigation = () => {
   return (
     <Switch>
       <Route exact path="/" component={Home} />
       <Route path="/home" component={Home} />
-
       <Route exact path="/learn" component={Learn} />
       <Route path="/learn/courses/:page?/:subpage?" component={Courses} />
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
@@ -48,7 +48,8 @@ const Navigation = () => {
       <Route exact path="/team/pages/createpage" component={Createpage} />
       <Route exact path="/team/announcements" component={Announcements} />
       <Route exact path="/team/forms" component={Forms} />
-      <Route exact path="/team/forms/createforms/:formtitle?" component={CreateForm} />
+      {/* <Route exact path="/team/forms/createforms/:formtitle?" component={CreateForm} /> */}
+      <Route exact path="/team/forms/createforms/:quizees?" component={QuizzesTab} />
       <Route exact path="/team/onboarding/createonboard/:screenname?" component={OnBoardingScreen} />
 
       <Redirect to="/" />

@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { Button, Modal } from 'antd';
+import { theme } from 'utils/colors';
 
-export const Container = styled.div``;
+export const Container = styled.div`
+
+`;
 
 export const StyledButton: any = styled(Button)`
-  background: #635ffa;
+  background: ${theme.PRIMARY};
   color: #fff;
   width: 166px;
   height: 48px;
@@ -12,6 +15,24 @@ export const StyledButton: any = styled(Button)`
   font-size: 20px;
   font-weight: 700;
 `;
+export const StyledTextHeading: any = styled.span`
+color: ${theme.PRIMARY};
+  width: 166px;
+  height: 48px;
+  
+  font-size: 20px;
+  font-weight: 700;
+`
+
+export const StyledText: any = styled.span`
+margin: 0;
+    /* color: rgb(54 52 137); */
+    color: ${theme.GRAY};
+    font-weight: 700;
+    font-size: 25px;
+    line-height: 22px;
+    word-wrap: break-word;
+`
 
 export const ModalContainer = styled(Modal)`
   .ant-modal-content {

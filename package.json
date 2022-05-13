@@ -14,6 +14,7 @@
     "@types/react-router-dom": "^5.3.2",
     "@types/redux-logger": "^3.0.9",
     "@types/styled-components": "^5.1.19",
+    "ag-charts-react": "^5.2.0",
     "antd": "^4.18.0",
     "apexcharts": "^3.35.2",
     "axios": "^0.24.0",

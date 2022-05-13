@@ -2,58 +2,94 @@ import { ReactElement } from 'react';
 import { useState } from 'react';
 import type { PropsType } from './types';
 import { Modal, Button, Row, Col, Collapse, } from 'antd';
-import { EnterOutlined } from "@ant-design/icons"
+import { EnterOutlined, CaretDownOutlined } from "@ant-design/icons"
 import { theme } from 'utils/colors';
 import ReactApexChart from 'react-apexcharts'
+import { AgChartsReact } from "ag-charts-react"
 
-import { StyledButton, ModalContainer } from './styled';
+import { StyledButton, ModalContainer, StyledText, StyledTextHeading, Container } from './styled';
 
 const data = [
-  { title: ['page1'] },
+  { title: ['Sample Survey_1'], participates: 49 },
 
 ];
-var series: [44, 55, 13, 43, 22]
-var options = [{
-  chart: {
-    width: 380,
-    type: 'pie',
-  },
-  labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
-  responsive: [{
-    breakpoint: 480,
-    options: {
-      chart: {
-        width: 200
-      },
-      legend: {
-        position: 'bottom'
-      }
+
+const pages = [<>Page1</>, "page2", "page3", "page4"]
+var options = {
+  data: [
+    {
+      label: "Sample Answere A",
+      value: 50
+    },
+    {
+      label: "Sample Answere B",
+      value: 25
+    },
+    {
+      label: " Sample Answere C",
+      value: 25
     }
-  }]
-}]
+  ],
+  series: [
+    {
+      type: "pie",
+      angleKey: "value",
+      labelKey: "label",
+      strokes: "none",
+      fills: ["#AB70F1", "#FF4545", "#FF755B"],
+
+
+    }
+  ],
+  highlightStyle: {
+    fill: "#AB70F1"
+  }
+}
+
+const series = {
+  type: "pie",
+  angleKey: "value",
+  labelKey: "label"
+
+}
 const Results = (props: PropsType): ReactElement => {
   const [visible, setVisible] = useState(false);
 
-  const toCollapse = (arr) => (
-    <Collapse ghost>
-      <Collapse.Panel header={"page1"} key="1">
-        {arr.map((t) => (
-          <p>
-            <EnterOutlined
+  const toCollapse = (arr, title) => (
+    <Collapse ghost expandIconPosition="right">
+
+      {arr.map((t) => (<>
+        <Collapse.Panel header={<>
+          <Row>
+            <Col><p style={{ padding: '0px !important', margin: '0px' }}>{title}</p><h2 style={{ color: theme.GRAY }}> <EnterOutlined
               style={{
                 transform: 'scale(-1,1)',
-                margin: '0 10px 0 21px',
+                margin: '0 10px 0 10px',
               }}
-            />
-            <span style={{ color: theme.GRAY }}>{t.title}</span>
-            {/* <ApexCharts options={Option} /> */}
-            {/* <ReactApexChart options={options} series={series} type="pie" width="380" /> */}
-          </p>
-        ))}
-      </Collapse.Panel>
-    </Collapse>
+            />{title}</h2></Col>
+          </Row>
+        </>} key="1" >
+          <Row justify='end' >
+            <Col span={24}>
+              <StyledTextHeading> Sample Qusestion #1 ?</StyledTextHeading>
+            </Col>
+
+          </Row>
+          <Row justify='end'>
+            <StyledText>
+              {t.participates} Participate
+            </StyledText>
+          </Row>
+          <AgChartsReact options={options} />
+
+        </Collapse.Panel>
+      </>
+      ))}
+
+    </Collapse >
   )
   return <>
+
     <StyledButton onClick={() => setVisible(true)}>
       See Results
     </StyledButton>
@@ -66,9 +102,16 @@ const Results = (props: PropsType): ReactElement => {
       width={1000}
       footer={[<StyledButton onClick={() => setVisible(false)}>Publish</StyledButton>]}
     >
-      {toCollapse(data)}
+      <Container>
+        {pages.map((title) => (
+          <>
+            {toCollapse(data, title)}
+          </>
+        ))}
+      </Container>
 
     </ModalContainer>
+
   </>;
 };
 
