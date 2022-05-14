@@ -97,16 +97,14 @@ const MainLayout = (): ReactElement => {
   return (
     <StyledLayout>
       <HeaderStyled>
-        <Row>
-          <Searchdiv>
-            <Input
-              placeholder="search"
-              style={{ borderRadius: "10px", width: "497px", height: "48px" }}
-              size="large"
-              prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
-            ></Input>
-          </Searchdiv>
-        </Row>
+        <Searchdiv collapsed={collapsed}>
+          <Input
+            size="large"
+            placeholder="search"
+            style={{ borderRadius: "10px", width: "497px", height: "48px" }}
+            prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
+          />
+        </Searchdiv>
         <Avatar size={64} icon={<UserOutlined style={{ padding: "0px" }} />} />
       </HeaderStyled>
       <Layout>

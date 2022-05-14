@@ -49,20 +49,17 @@ export const HeaderStyled = styled(Header)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
   padding: 50px;
   height: 70px;
   z-index: 4;
 `;
 
-export const Searchdiv = styled.div`
-  // background: #fff;
-  // height: 48px;
-  // width: 497px;
-  // max-width: 497px;
-  // border-radius: 15px;
-  margin-right: 500px;
+export const Searchdiv = styled.div<any>`
+  flex: 1;
+  display: flex;
   padding: 20px;
+  margin-left: ${(props: any) => (props?.collapsed ? "80px" : "210px")};
+  transition: margin-left 0.1s;
 
   @media only screen and (max-width: 1224px) {
     margin-right: 360px !important;
