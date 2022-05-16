@@ -1,8 +1,8 @@
-import {ReactElement, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import { ReactElement, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 /* styles antd */
-import {Form} from 'antd';
+import { Form } from "antd";
 import {
   FlexRow,
   Container,
@@ -14,22 +14,24 @@ import {
   StyledPassword,
   SignupContainer,
   InputContaier,
-} from './styled';
-import {EyeInvisibleOutlined, EyeTwoTone} from '@ant-design/icons';
+} from "./styled";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 
 /* redux actions helpers */
-import {useSelector, useDispatch} from 'react-redux';
-import {postLogin} from 'ducks/authentication/actionCreator';
-import {RootState} from 'ducks/store';
-import {rulesConfig} from 'utils/helpers';
+import { useSelector, useDispatch } from "react-redux";
+import { postLogin } from "ducks/authentication/actionCreator";
+import { RootState } from "ducks/store";
+import { rulesConfig } from "utils/helpers";
 
-import LOGO from 'assets/icons/logo.png';
-import IconImage from 'components/IconImage';
+import LOGO from "assets/icons/logo.png";
+import IconImage from "components/IconImage";
 
 const LoginForm = (): ReactElement => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const {data}: any = useSelector<RootState>((state) => state.authentication);
+  const { data, loading }: any = useSelector<RootState>(
+    (state) => state.authentication
+  );
 
   const handlesubmit = (values: never) => {
     dispatch(postLogin(values));
@@ -45,20 +47,20 @@ const LoginForm = (): ReactElement => {
   };
 
   const INITIAL_VALUES = {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   };
 
   useEffect(() => {
-    const email = form.getFieldValue('email');
-    const password = form.getFieldValue('password');
+    const email = form.getFieldValue("email");
+    const password = form.getFieldValue("password");
 
     if (!data?.success && email.length) {
-      setFormFields('email', data?.message);
+      setFormFields("email", data?.message);
     }
 
     if (!data?.success && password.length) {
-      setFormFields('password', data?.message);
+      setFormFields("password", data?.message);
     }
   }, [data]);
 
@@ -74,28 +76,33 @@ const LoginForm = (): ReactElement => {
         layout="vertical"
         requiredMark={false}
         onFinish={handlesubmit}
-        initialValues={INITIAL_VALUES}>
-        <Form.Item name="email" rules={rulesConfig('Email is required.')}>
+        initialValues={INITIAL_VALUES}
+      >
+        <Form.Item name="email" rules={rulesConfig("Email is required.")}>
           <StyledInput
             type="email"
             size="large"
             placeholder="Input Email"
-            onChange={() => setFormFields('email', '')}
+            onChange={() => setFormFields("email", "")}
           />
         </Form.Item>
 
-        <Form.Item name="password" rules={rulesConfig('Password is required.')}>
+        <Form.Item name="password" rules={rulesConfig("Password is required.")}>
           <StyledPassword
             size="large"
             placeholder="Input Password"
-            onChange={() => setFormFields('password', '')}
+            onChange={() => setFormFields("password", "")}
             iconRender={(visible) =>
               visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
             }
           />
         </Form.Item>
 
-        <StyledButton size="large" onClick={() => form.submit()}>
+        <StyledButton
+          loading={loading}
+          size="large"
+          onClick={() => form.submit()}
+        >
           Sign In
         </StyledButton>
 
