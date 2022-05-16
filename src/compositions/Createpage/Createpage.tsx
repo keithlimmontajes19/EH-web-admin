@@ -1,4 +1,5 @@
 import { ReactElement, useState } from "react";
+import 'draft-js/dist/Draft.css';
 import {
   PageHeader,
   Breadcrumb,
@@ -15,7 +16,7 @@ import {
   PlusOutlined,
   UnderlineOutlined,
 } from "@ant-design/icons";
-import { Editor, EditorState, RichUtils } from "draft-js";
+import { Editor, EditorState, RichUtils, contentStateWithEntity } from "draft-js";
 import type { PropsType } from "./types";
 import {
   StyledButton,
@@ -25,6 +26,7 @@ import {
   ItemContainer,
   EditorContainer,
 } from "./styled";
+import { mediaBlockRenderer } from "./entities/mediaBlockRender";
 // import { StyledText } from "compositions/TableDashboards/styled";
 import { Link } from "react-router-dom";
 // import ColorPicker, { colorPickerPlugin } from "draft-js-color-picker";
@@ -72,6 +74,49 @@ const Createpage = (props: PropsType): ReactElement => {
     const textdecoration = RichUtils.toggleInlineStyle(editorState, "ITALIC");
     setEditorState(textdecoration);
   };
+
+
+
+  const handlePastedFiles = (files) => {
+    // const formData = new FormData();
+    // formData.append('file', files[0])
+    // fetch('/api/uploads',
+    //   { method: 'POST', body: formData })
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     if (data.file) {
+    //       setEditorState(insertImage(data.file)) //created below
+    //     }
+    //   }).catch(err => {
+    //     console.log(err)
+    //   })
+  }
+  const insertImage = (url) => {
+    //   const contentState = editorState.getCurrentContent();
+    //   const contentStateWithEntity = contentState.createEntity(
+    //       ‘IMAGE’,
+    //       ‘IMMUTABLE’,
+    // { src: url },)
+    // const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    // setEditorState(editorState, { currentContent: contentStateWithEntity });
+    // return AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ‘ ‘);
+  };
+
+  // const Link  = () =>{
+  //   const link  = RichUtils.toggleLink(
+  //     editorState,
+
+
+  //   )
+  // }
+
+  const Video = () => {
+
+  }
+
+  const Img = () => {
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+  }
 
   // let picker = colorPickerPlugin(setEditorState(editorState), editorState);
   return (

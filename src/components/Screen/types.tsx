@@ -4,4 +4,5 @@ export type PropsType = {
   descreption?: string;
   screentitle?: string;
   borderradius?: number;
+  background?: string;
 };

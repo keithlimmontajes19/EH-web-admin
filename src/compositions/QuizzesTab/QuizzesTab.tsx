@@ -49,6 +49,9 @@ const options = [
   },
 
 ]
+const question = [
+
+]
 
 
 
@@ -60,12 +63,35 @@ const QuizzesTab = (props: PropsType): ReactElement => {
   const [points, setPoints] = useState(0);
   const params: Params = useParams()
   const [addans, setAddanswere] = useState(false)
+  const [anslist, setAnsList] = useState([])
+
+
+  const ans = () => {
+    return (
+      <Row>
+        <div style={{ margin: '10px 0px' }}>
+          <Radio>
+            <Input placeholder='Type Answere Here...' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} />
+          </Radio>
+        </div>
+      </Row>
+    )
+  }
 
 
   const addAnswere = () => {
     setAddanswere(true)
-
-
+  }
+  const addanswere = () => {
+    setAnsList(anslist.concat(
+      <Row key={anslist.length}>
+        <div style={{ margin: '10px 0px' }}>
+          <Radio>
+            <Input placeholder='Type Answere Here...' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} />
+          </Radio>
+        </div>
+      </Row>
+    ))
   }
   const addNew = (obj) => {
     setBuilderData((prev) => [...builderData, JSON.parse(JSON.stringify(obj))]);
@@ -159,7 +185,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
     {!loading ? (<Loading />) : (
       <QuizLayout>
         <Row justify='center' gutter={16} align="middle" style={{ marginBottom: '30px' }}>
-          <Col span={18} className="guttor-row">
+          <Col flex="1 1 200px" className="guttor-row">
             <StyledInput
               value={data.title}
               style={{ marginBottom: 0 }}
@@ -173,40 +199,6 @@ const QuizzesTab = (props: PropsType): ReactElement => {
               }
             />
           </Col>
-          <Col span={6} className="guttor-row">
-            <Row>
-              <Col>
-                <Dropdown
-                  menu={options}
-                  title={<h3
-
-                    style={{ height: '60px', width: '170px', background: `${theme.PRIMARY_MID}`, backgroundColor: `${theme.PRIMARY_MID}`, color: `${theme.BLACK}`, border: 'none', borderRadius: '15px', textAlign: 'center', paddingTop: '15px', marginBottom: '0px' }}
-                  >Select quiz type<CaretRightOutlined style={{ padding: '2px 10px' }} /></h3>}
-
-                />
-                {/* <select defaultValue='Select Quiz Type'
-              style={{ height: '60px', width: 'auto', background: `${theme.PRIMARY_MID}`, backgroundColor: `${theme.PRIMARY_MID} !important`, color: `${theme.BLACK}`, border: 'none', borderRadius: '15px', textAlign: 'center', padding: '10px' }}
-            >
-              <option value="option1">Select Quiz Type</option>
-              <option value="option2">Option2</option>x
-              <option value="option3">Option3</option>
-            </select> */}
-              </Col>
-
-              <Col>
-                <Row justify='center'>
-                  <Col>
-                    <Input placeholder={`${points}`} style={{ borderRadius: '15px', width: 'auto', maxWidth: '40px', marginLeft: '0px', background: 'none' }} />
-                  </Col>
-                  <Col>
-                    <h3 style={{ marginBottom: '0px', color: `${theme.GRAY}`, marginLeft: '10px' }}>Points</h3>
-                  </Col>
-                </Row>
-              </Col>
-
-            </Row>
-          </Col>
-
         </Row>
 
         <StyledTextArea
@@ -222,49 +214,18 @@ const QuizzesTab = (props: PropsType): ReactElement => {
           }}
         />
         <QuestionLayout>
-          {/* {builderData.map(dataMapper)}
-          <Dropdown
-            menu={headerActions}
-            title={
-              <StyledButton
-                w={184}
-                m={"-20px 0 5px 0"}
-                icon={<PlusOutlined />}
-              >
-                <StyledText fC="#fff" fS="18" fW="500">
-                  QUESTION
-                </StyledText>
-              </StyledButton>
-            }
-          /> */}
-
           {(addans === true) ?
             <StyledQuestionContainer>
               <div style={{ margin: '10px 0px' }}>
                 <Row >
                   <Input placeholder='#Sample Question 1' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none' }} />
-                  <h3 style={{ textAlign: 'center', margin: '0px 10px' }}> 5 Points</h3>
-                  <EditOutlined style={{ color: `${theme.PRIMARY}`, margin: '5px 10px', fontSize: "20px" }} />
+
                 </Row>
               </div>
-              <Row>
-                <div style={{ margin: '10px 0px' }}>
-                  <Radio>
-                    <Input placeholder='Answer # 1' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: '#000  ' }} />
-                  </Radio>
-                </div>
-              </Row>
-              <Row>
-
-                <div style={{ margin: '10px 0px' }}>
-                  <Radio>
-                    <Input placeholder='Type Answere Here...' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} />
-                  </Radio>
-                </div>
-              </Row>
+              {anslist}
               <Row>
                 <PlusCircleFilled style={{ fontSize: '25px', color: `${theme.PRIMARY}`, margin: '10px 0px 0px 30px' }} />
-                <StyledText fS={25}>Answere</StyledText>
+                <StyledText fS={25} style={{ cursor: 'pointer' }} onClick={addanswere}>Answere</StyledText>
               </Row>
               <PageHeader extra={[<StyledButtonCancle onClick={() => (setAddanswere(false))}>Cancle</StyledButtonCancle>, <StyledButton>SAVE</StyledButton>]} />
             </StyledQuestionContainer> :
@@ -279,8 +240,6 @@ const QuizzesTab = (props: PropsType): ReactElement => {
               </StyledText>
             </StyledButton>
           }
-
-
         </QuestionLayout>
       </QuizLayout >
     )}
