@@ -1,0 +1,5 @@
+#root{
+  overflow: hidden;
+}
+
+@import '~gleap/build/index.min.css';
