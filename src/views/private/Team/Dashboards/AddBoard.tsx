@@ -8,7 +8,7 @@ import ListOfPages from "compositions/ListOfPages";
 import { Row, Col } from "antd";
 import { Breadcrumb } from "antd";
 import { PageHeader } from "antd";
-import { RedoOutlined } from "@ant-design/icons";
+import { RedoOutlined, MoreOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
 const AddBoard = (props) => {
@@ -30,10 +30,10 @@ const AddBoard = (props) => {
               cursor: "pointer",
             }}
           />,
-          <ListOfPages />,
+
+          <ListOfPages />, <MoreOutlined style={{ fontSize: '26px', color: '#635FFA', cursor: 'pointer' }} />
         ]}
       />
-
       <Row>
         <Board />
         <Board />

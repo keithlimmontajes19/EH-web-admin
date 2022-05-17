@@ -8,8 +8,9 @@ import {
   TableContainer,
   ModalContainer,
 } from "./styled";
-import { Layout, PageHeader, Table, Input } from "antd";
+import { Layout, PageHeader, Table, Input, Empty } from "antd";
 import { History } from "history";
+import NoForms from 'assets/icons/NoFormsIcon.svg'
 import Results from "compositions/Results";
 
 import { SearchOutlined, DeleteFilled } from "@ant-design/icons";
@@ -137,7 +138,38 @@ const Forms = (props: PropsType): ReactElement => {
             // onChange={handleSearch}
             prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
-          <Table columns={columns} dataSource={data} />
+          {data.length === 0 ? (<>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                marginTop: "80px",
+              }}
+            >
+              <img
+                src={NoForms}
+                style={{
+                  height: "109px",
+                  width: "87px",
+                }}
+              ></img>
+              <h3
+                style={{
+                  padding: "10px",
+                  fontWeight: "500",
+                  fontSize: "22px",
+                  color: "#2B2E4A !important",
+                }}
+              >
+                No Forms
+              </h3>
+            </div>
+
+          </>) : <>
+            <Table columns={columns} dataSource={data} />
+
+          </>}
         </TableContainer>
       </Layout>
     </>

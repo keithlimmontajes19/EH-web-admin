@@ -36,6 +36,7 @@ const CreateDashboard = (props) => {
       <PageHeader
         title={<StyledText>Dashboard Name 1</StyledText>}
         extra={[
+          <RedoOutlined style={{ fontSize: '26px', cursor: 'pointer' }} />,
           <StyledButton
             onClick={() => pushHistory("/team/dashboards/create/addbord")}
           >

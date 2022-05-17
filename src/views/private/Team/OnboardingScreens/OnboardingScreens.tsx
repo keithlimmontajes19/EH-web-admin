@@ -130,16 +130,18 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
           ]}
         />
         <Row justify="center">
-          {screens?.map((item, index) => (
-            <Col>
-              <Screen
-                title={item.title}
-                descreption={item.descreption}
-                key={index}
-                screentitle={item.screentitle}
-              />
-            </Col>
-          ))}
+          {(screens.length === 0) ? <></> :
+
+            screens?.map((item, index) => (
+              <Col>
+                <Screen
+                  title={item.title}
+                  descreption={item.descreption}
+                  key={index}
+                  screentitle={item.screentitle}
+                />
+              </Col>
+            ))}
         </Row>
       </Layout>
     </>
