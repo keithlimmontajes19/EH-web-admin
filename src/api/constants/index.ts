@@ -11,5 +11,5 @@ export const ANNOUNCEMENT = '/announcement';
 export const NOTIFICATION = '/notification';
 export const ORGANIZATION = '/organizations';
 export const REWARDS = '/rewards/leaderboard';
-export const DASHBOARD = '/dashboard/mobile/user';
+export const DASHBOARD = '/dashboard';
 export const ONBOARDING = '/onboarding/mobile/user';

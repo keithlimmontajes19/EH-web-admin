@@ -5,20 +5,28 @@ import InsideFolder from 'components/InsideFolder';
 import { Container, Folderimg, BodyContainer } from './styled';
 
 // icon imported here
-import foldericon from '../../assets/icons/folder-icon.svg'
+import foldericon from '../../assets/icons/folder-icon.svg';
 import { History } from 'history';
 import { useHistory } from 'react-router-dom';
 
 const Folder = (props: PropsType): ReactElement => {
-const history = useHistory();
+  const { pages } = props;
 
-  return <>
-    <Container>
-      <BodyContainer>
-        <InsideFolder foldertitle={"Folder"}/>      
-      </BodyContainer>
-    </Container>
-  </>;
+  const history = useHistory();
+
+  console.log(pages);
+  return (
+    <>
+      <Container>
+        <BodyContainer>
+          <InsideFolder
+            foldertitle={pages?.item_name}
+            pages={pages?.item_pages}
+          />
+        </BodyContainer>
+      </Container>
+    </>
+  );
 };
 
 export default Folder;

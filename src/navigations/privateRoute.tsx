@@ -1,25 +1,25 @@
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-import Home from "views/private/Home";
+import Home from 'views/private/Home';
 
-import Learn from "views/private/Learn/Learn";
-import Courses from "views/private/Learn/Courses";
-import Lessons from "views/private/Learn/Lessons";
-import Topics from "views/private/Learn/Topics";
-import Quizzes from "views/private/Learn/Quizzes";
+import Learn from 'views/private/Learn/Learn';
+import Courses from 'views/private/Learn/Courses';
+import Lessons from 'views/private/Learn/Lessons';
+import Topics from 'views/private/Learn/Topics';
+import Quizzes from 'views/private/Learn/Quizzes';
 
-import Dashboards from "views/private/Team/Dashboards";
-import CreateDashboard from "views/private/Team/Dashboards/CreateDashboard";
-import AddBoard from "views/private/Team/Dashboards/AddBoard";
-import Pages from "views/private/Team/Pages";
-import Createpage from "compositions/Createpage";
-import Announcements from "views/private/Team/Announcements";
-import Forms from "compositions/Forms";
-import OnboardingScreens from "views/private/Team/OnboardingScreens";
-import OnBoardingScreen from "compositions/OnBoardingScreen"
-import BuilderQuiz from "compositions/BuilderQuiz";
-import QuizzesTab from "compositions/QuizzesTab";
+import Dashboards from 'views/private/Team/Dashboards';
+import CreateDashboard from 'views/private/Team/Dashboards/CreateDashboard';
+import AddBoard from 'views/private/Team/Dashboards/AddBoard';
+import Pages from 'views/private/Team/Pages';
+import Createpage from 'compositions/Createpage';
+import Announcements from 'views/private/Team/Announcements';
+import Forms from 'compositions/Forms';
+import OnboardingScreens from 'views/private/Team/OnboardingScreens';
+import OnBoardingScreen from 'compositions/OnBoardingScreen';
+import BuilderQuiz from 'compositions/BuilderQuiz';
+import QuizzesTab from 'compositions/QuizzesTab';
 const Navigation = () => {
   return (
     <Switch>
@@ -29,7 +29,10 @@ const Navigation = () => {
       <Route path="/learn/courses/:page?/:subpage?" component={Courses} />
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
       <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
-      <Route path="/learn/quizzes/:page?/:subpage?/:item?" component={Quizzes} />
+      <Route
+        path="/learn/quizzes/:page?/:subpage?/:item?"
+        component={Quizzes}
+      />
 
       <Route
         exact
@@ -49,8 +52,16 @@ const Navigation = () => {
       <Route exact path="/team/announcements" component={Announcements} />
       <Route exact path="/team/forms" component={Forms} />
       {/* <Route exact path="/team/forms/createforms/:formtitle?" component={CreateForm} /> */}
-      <Route exact path="/team/forms/createforms/:quizees?" component={QuizzesTab} />
-      <Route exact path="/team/onboarding/createonboard/:screenname?" component={OnBoardingScreen} />
+      <Route
+        exact
+        path="/team/forms/createforms/:quizees?"
+        component={QuizzesTab}
+      />
+      <Route
+        exact
+        path="/team/onboarding/createonboard/:screenname?"
+        component={OnBoardingScreen}
+      />
 
       <Redirect to="/" />
     </Switch>

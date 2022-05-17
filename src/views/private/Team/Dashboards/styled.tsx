@@ -1,5 +1,5 @@
-import { Button, Layout } from "antd";
-import styled from "styled-components";
+import { Button, Layout } from 'antd';
+import styled from 'styled-components';
 
 export const RootContainer = styled.div`
   .ant-row ant-row-center {
@@ -79,4 +79,10 @@ export const PlusImg = styled.img`
   width: 100%;
   max-height: 144px;
   cursor: pointer;
+`;
+export const FlexWrap = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 `;

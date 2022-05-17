@@ -1,9 +1,13 @@
-import {TYPES} from './actionTypes';
+import { TYPES } from './actionTypes';
 
 const INITIAL_STATE = {
   data: [],
   error: false,
   loading: false,
+  single_dashboard: {
+    data: [],
+    loading: false,
+  },
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -14,28 +18,48 @@ const reducer = (state = INITIAL_STATE, action) => {
      * ==================
      * **/
     case TYPES.LIST_DASHBOARD_REQUEST:
-      return {
-        data: state.data,
-        error: false,
-        loading: true,
-      };
+      return { ...state, data: state.data, error: false, loading: true };
 
     case TYPES.LIST_DASHBOARD_SUCCESS:
-      return {
-        error: false,
-        loading: false,
-        data: action.payload,
-      };
+      return { ...state, error: false, loading: false, data: action.payload };
 
     case TYPES.LIST_DASHBOARD_FAILED:
+      return { ...state, data: [], error: true, loading: false };
+
+    /**
+     * ==================
+     * DASHBOARD GET ONE
+     * ==================
+     * **/
+    case TYPES.GET_ONE_DASHBOARD_REQUEST:
       return {
-        data: [],
-        error: true,
-        loading: false,
+        ...state,
+        single_dashboard: {
+          data: [],
+          error: true,
+        },
+      };
+
+    case TYPES.GET_ONE_DASHBOARD_SUCCESS:
+      return {
+        ...state,
+        single_dashboard: {
+          data: action.payload,
+          error: true,
+        },
+      };
+
+    case TYPES.GET_ONE_DASHBOARD_FAILED:
+      return {
+        ...state,
+        single_dashboard: {
+          data: [],
+          error: true,
+        },
       };
 
     default:
-      return {...state};
+      return { ...state };
   }
 };
 
