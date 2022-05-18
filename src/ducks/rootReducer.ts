@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 
 import lms from './lms/reducer';
 import team from './teams/reducer';
@@ -7,6 +7,7 @@ import dashboard from './dashboard/reducer';
 import onboarding from './onboarding/reducer';
 import announcement from './announcement/reducer';
 import authentication from './authentication/reducer';
+import pages from './pages/reducer'
 
 const rootReducer = combineReducers({
   lms,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   onboarding,
   announcement,
   authentication,
+  pages,
 });
 
 export default rootReducer;

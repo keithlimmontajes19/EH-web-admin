@@ -14,6 +14,7 @@ import {
   StyledText,
   TableContainer,
   BuildIcon,
+  ModalContainer
 } from "./styled";
 
 // icons imorted here
@@ -25,8 +26,10 @@ import { useHistory } from "react-router-dom";
 
 import { } from "./styled";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "ducks/store";
+import { addPage } from "ducks/pages/sagas/listSaga";
+import { getPages } from "ducks/pages/actionCreator";
 import { getDashboard } from "ducks/dashboard/actionCreator";
 import Loading from "components/Loading";
 
@@ -34,13 +37,17 @@ const TablePages = (props: PropsType): ReactElement => {
   const { data: rawData }: any = useSelector<RootState>(
     (state) => state.dashboard
   );
+  const dispatch = useDispatch()
   const [loading, setLoading] = useState(true);
+  const [pagename, setPageName] = useState("")
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [searchdData, setSearchdData] = useState([]);
   const [searchInpt, setSearchInpt] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
 
   const history = useHistory();
 
@@ -142,8 +149,13 @@ const TablePages = (props: PropsType): ReactElement => {
       return [];
     });
     console.log("add");
-    pushHistory("/team/pages/createpage");
+    // pushHistory("/team/pages/createpage");
+    setIsModalVisible(true)
   };
+  const onokData = () => {
+    dispatch(addPage({ title: pagename, details: '<html><p>This is the Quiz forms answer all the quizes</p></html>', forms: ["624ddd5db5ffd056297445f7", "624ddda0b5ffd05629744604", "624dddc5b5ffd05629744611"], isPublish: false, videoURL: 'null', imgaURL: 'null' }))
+    pushHistory(`/team/pages/createpage/${pagename}`)
+  }
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
     Modal.confirm({
@@ -227,7 +239,37 @@ const TablePages = (props: PropsType): ReactElement => {
           ghost={false}
           title={<StyledText fS={30}>Pages</StyledText>}
           style={{ background: "none", paddingTop: 8 }}
-          extra={[<StyledButton onClick={onAddData}>Create</StyledButton>]}
+          extra={[<StyledButton onClick={onAddData}>Create</StyledButton>
+            ,
+          <ModalContainer
+            visible={isModalVisible}
+            title="Create Page"
+            onCancel={() => setIsModalVisible(false)}
+            onOk={onokData}
+            centered
+          >
+            <Input
+              placeholder="Page 1"
+              style={{
+                borderRadius: "15px",
+                background: "#F8F8F8",
+                width: "485px",
+                height: "38px",
+                margin: "10px 0px",
+
+              }}
+              onChange={(e) => setPageName(e.target.value)}
+              size="large"
+              aria-placeholder="Page 1"
+              defaultValue="Page 1"
+            ></Input>
+          </ModalContainer>
+
+
+
+
+
+          ]}
         />
         <TableContainer
           style={{
