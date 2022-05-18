@@ -1,4 +1,5 @@
 export type PropsType = {
-  testID?: string,
-  foldertitle:string,
+  testID?: string;
+  foldertitle: string;
+  pages?: any;
 };

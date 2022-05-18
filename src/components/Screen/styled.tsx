@@ -9,6 +9,17 @@ export const Container = styled.div`
   padding: 30px 0px;
 `;
 
+export const Contentdiv = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin-right: 25px;
+  opacity: 0.8;
+  cursor: pointer;
+  font-weight: 700;
+  color: ;
+`;
+
 export const ImageContainer = styled.div`
   padding: 10px 60px;
   background: #f5f5f5;

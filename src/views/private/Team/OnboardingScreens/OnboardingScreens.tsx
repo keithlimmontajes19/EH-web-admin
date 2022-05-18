@@ -9,8 +9,10 @@ import {
   ModalContainer,
 } from "./styled";
 import Screen from "components/Screen";
+import PublishOnBoarding from "compositions/PublishOnBoarding";
 
 import { Layout, PageHeader, Table, Input, Row, Col } from "antd";
+import { useHistory } from "react-router-dom";
 
 const screens = [
   {
@@ -76,13 +78,16 @@ const screens = [
 ];
 const OnboardingScreens = (props: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [screenname, setScreenname] = useState("")
+  const history = useHistory();
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
   const handleOk = () => {
-    setIsModalVisible(false);
+
+    history.push(`/team/onboarding/createonboard/${screenname}`)
   };
 
   const handleCancel = () => {
@@ -117,23 +122,26 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
                   size="large"
                   aria-placeholder="Screen Name 1"
                   defaultValue="Screen Name 1"
+                  onChange={(e) => setScreenname(e.target.value)}
                 ></Input>
               </ModalContainer>
             </>,
-            <StyledButton>PUBLISH</StyledButton>,
+            <PublishOnBoarding />,
           ]}
         />
         <Row justify="center">
-          {screens?.map((item, index) => (
-            <Col>
-              <Screen
-                title={item.title}
-                descreption={item.descreption}
-                key={index}
-                screentitle={item.screentitle}
-              />
-            </Col>
-          ))}
+          {(screens.length === 0) ? <></> :
+
+            screens?.map((item, index) => (
+              <Col>
+                <Screen
+                  title={item.title}
+                  descreption={item.descreption}
+                  key={index}
+                  screentitle={item.screentitle}
+                />
+              </Col>
+            ))}
         </Row>
       </Layout>
     </>

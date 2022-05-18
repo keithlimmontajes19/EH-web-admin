@@ -1,6 +1,5 @@
-import styled from "styled-components";
-import { theme } from "utils/colors"
-
+import styled from 'styled-components';
+import { theme } from 'utils/colors';
 
 export const Container = styled.div``;
 export const BoardContainer: any = styled.div`
@@ -12,14 +11,14 @@ export const BoardContainer: any = styled.div`
 
 export const HeaderContainer = styled.div`
   font-weight: bold;
-  border-top-right-radius:15px;
-  border-top-left-radius:15px;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
   padding: 20px;
- 
-  background:${theme.HEADER};
-  display:flex;
-  flex-direction:row;
-  justify-content:space-between;
+
+  background: ${theme.HEADER};
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 export const BodyContainer = styled.div`
   display: flex;
