@@ -1,6 +1,9 @@
 import { TYPES } from './actionTypes'
 
 const INITIAL_STATE = {
+    data: [],
+    error: false,
+    loading: false,
     page: {
         data: [],
         loading: false,
@@ -23,30 +26,24 @@ const reducer = (state = INITIAL_STATE, action) => {
         case TYPES.LIST_PAGE_REQUEST:
             return {
                 ...state,
-                pages: {
-                    data: [],
-                    loading: true,
-                    error: false,
-                }
+                data: state.pages,
+                loading: true,
+                error: false,
             };
 
         case TYPES.LIST_PAGE_SUCCESS:
             return {
                 ...state,
-                pages: {
-                    data: action.payload,
-                    loading: false,
-                    error: false,
-                },
+                data: action.payload,
+                loading: false,
+                error: false,
             }
         case TYPES.LIST_PAGE_FAILED:
             return {
                 ...state,
-                pages: {
-                    data: [],
-                    loading: false,
-                    error: true,
-                }
+                data: [],
+                loading: false,
+                error: true,
             }
         case TYPES.GET_ONE_PAGE_REQUEST:
             return {
@@ -140,6 +137,33 @@ const reducer = (state = INITIAL_STATE, action) => {
                     error: true
                 }
             }
+        /**
+* ================
+*  DeLETE PAGES reducers
+* ================
+* **/
+        case TYPES.DELETE_PAGE_REQUEST:
+            return {
+                ...state,
+                data: state.data,
+                loading: true,
+                error: false
+            }
+        case TYPES.DELETE_PAGE_SUCCESS:
+            return {
+                ...state,
+                data: action.payload,
+                loading: false,
+                error: false
+            }
+        case TYPES.EDIT_PAGE_FAILED:
+            return {
+                ...state,
+                data: [],
+                loading: false,
+                error: true
+            }
+
         default:
             return { ...state }
     }

@@ -25,15 +25,20 @@ import {
   AtomicBlockUtils,
   getDefaultKeyBinding,
 } from 'draft-js';
+import { useSelector } from 'react-redux';
 import { Editor } from 'react-draft-wysiwyg';
 import type { PropsType } from './types';
 import { StyledButton, StyledButtonCancle } from './styled';
 import { Link } from 'react-router-dom';
+import { RootState } from 'ducks/store';
+import { stat } from 'fs';
 
 const Createpage = (props: PropsType): ReactElement => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
+
+  const { data: rawData }: any = useSelector<RootState>((state) => state.pages)
   const onHandleKeyBindings = (e) => {
     if (e.keyCode === 9) {
       setEditorState(RichUtils.onTab(e, editorState, 4));
@@ -45,6 +50,10 @@ const Createpage = (props: PropsType): ReactElement => {
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
   };
+
+  const publishpage = () => {
+
+  }
   function uploadImageCallBack(file) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest(); // eslint-disable-line no-undef
@@ -95,7 +104,7 @@ const Createpage = (props: PropsType): ReactElement => {
               cursor: 'pointer',
             }}
           />,
-          <StyledButton>
+          <StyledButton onClick={publishpage}>
             <CheckOutlined /> Publish
           </StyledButton>,
           <StyledButtonCancle>Cancle</StyledButtonCancle>,

@@ -28,16 +28,19 @@ import { } from "./styled";
 
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "ducks/store";
-import { addPage } from "ducks/pages/sagas/listSaga";
-import { getPages } from "ducks/pages/actionCreator";
-import { getDashboard } from "ducks/dashboard/actionCreator";
+
+import { getPages, addPage, deletePage, getOnePage, editPage } from "ducks/pages/actionCreator"
+// import { getPages } from "ducks/pages/actionCreator";
+// import { getDashboard } from "ducks/dashboard/actionCreator";
 import Loading from "components/Loading";
+import { readConfigFile } from "typescript";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
 
 const TablePages = (props: PropsType): ReactElement => {
   const { data: rawData }: any = useSelector<RootState>(
-    (state) => state.dashboard
+    (state) => state.pages
   );
-  const dispatch = useDispatch()
   const [loading, setLoading] = useState(true);
   const [pagename, setPageName] = useState("")
   const [isEditing, setIsEditing] = useState(false);
@@ -46,6 +49,7 @@ const TablePages = (props: PropsType): ReactElement => {
   const [dataSource, setDataSource] = useState([]);
   const [searchdData, setSearchdData] = useState([]);
   const [searchInpt, setSearchInpt] = useState("");
+  const [modaldata, setModaldata] = useState();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
 
@@ -58,7 +62,7 @@ const TablePages = (props: PropsType): ReactElement => {
     {
       key: "1",
       title: <StyledText fS={20}>TITLE</StyledText>,
-      dataIndex: "name",
+      dataIndex: "title",
       width: "35%",
       maxWidth: "35%",
     },
@@ -86,17 +90,17 @@ const TablePages = (props: PropsType): ReactElement => {
         return (
           <>
             <div className="row-actions">
-              <span onClick={() => onEditData(record)}>
+              <span onClick={() => onRename(record)}>
                 <EditOutlined style={{ color: "#635ffa" }} />
                 &nbsp;RENAME
               </span>
               &nbsp; &nbsp; &nbsp;
-              <span onClick={() => onEditData(record)}>
+              <span onClick={() => onEditData(record._id)}>
                 <EyeFilled style={{ color: "#635ffa" }} />
                 &nbsp;VIEW
               </span>
               &nbsp; &nbsp; &nbsp;
-              <span onClick={() => onEditData(record)}>
+              <span onClick={() => onEditData(record._id)}>
                 <BuildIcon src={hammericon} style={{ color: "#635ffa" }} />
                 &nbsp;BUILDER
               </span>
@@ -113,9 +117,10 @@ const TablePages = (props: PropsType): ReactElement => {
     },
   ];
   useEffect(() => {
-    getDashboard();
+    getPages();
   }, []);
   useEffect(() => {
+
     if (!rawData.length) return;
     setDataSource(
       rawData.map((obj, i) => ({
@@ -124,8 +129,10 @@ const TablePages = (props: PropsType): ReactElement => {
       }))
     );
     setLoading(false);
+
   }, [rawData]);
   useEffect(() => {
+
     if (searchInpt === "") return;
     setSearchdData(
       dataSource.filter((obj) => {
@@ -134,6 +141,7 @@ const TablePages = (props: PropsType): ReactElement => {
         });
       })
     );
+
   }, [dataSource]);
 
   const onAddData = () => {
@@ -141,7 +149,7 @@ const TablePages = (props: PropsType): ReactElement => {
     const newData = {
       _id: newKey,
       key: newKey,
-      name: "Name " + newKey,
+      title: "Name " + newKey,
       email: newKey + "@gmail.com",
       department: "Address " + newKey,
     };
@@ -153,28 +161,42 @@ const TablePages = (props: PropsType): ReactElement => {
     setIsModalVisible(true)
   };
   const onokData = () => {
-    dispatch(addPage({ title: pagename, details: '<html><p>This is the Quiz forms answer all the quizes</p></html>', forms: ["624ddd5db5ffd056297445f7", "624ddda0b5ffd05629744604", "624dddc5b5ffd05629744611"], isPublish: false, videoURL: 'null', imgaURL: 'null' }))
+    addPage({ title: pagename, details: "data", forms: [], isPublish: true, videoURL: 'null', imageURL: 'null' })
     pushHistory(`/team/pages/createpage/${pagename}`)
   }
   const onDeleteData = (recArr) => {
+    // console.log(recArr[0]._id)
     if (!recArr.length) return;
     Modal.confirm({
       title: "Are you sure, you want to delete this record?",
       okText: "Yes",
       okType: "danger",
       onOk: () => {
-        setDataSource((pre) => {
-          return pre
-            .filter((obj) => recArr.every((record) => record.key !== obj.key))
-            .map((obj, i) => ({ ...obj, key: i }));
-        });
-        if (searchInpt !== "") refreshSearchdData();
+        // let id = 
+        console.log(recArr[0]._id)
+        deletePage(recArr[0]._id)
+        // console.log(recArr[0]._id, "pageid")
+        // console.log(recArr[0]?._id)
+        // setDataSource((pre) => {
+        //   return pre
+        //     .filter((obj) => recArr.every((record) => record.key !== obj.key))
+        //     .map((obj, i) => ({ ...obj, key: i }));
+        // });
+        // if (searchInpt !== "") refreshSearchdData();
       },
     });
   };
+
+  const onRename = (record) => {
+    setIsEditing(true)
+    setEditingData(record.title);
+
+  }
   const onEditData = (record) => {
     setIsEditing(true);
-    setEditingData({ ...record });
+    getOnePage(record)
+    history.push(`/team/pages/editpage/${record}`)
+    setEditingData(record.title);
   };
   const resetEditing = () => {
     setIsEditing(false);
@@ -213,7 +235,7 @@ const TablePages = (props: PropsType): ReactElement => {
     const regX = new RegExp(`${pattern}`, "gi");
     const tmp = [];
     dataSource.forEach((record, i) => {
-      if (regX.test(record?.name + " " + record?.department)) tmp.push(i);
+      if (regX.test(record?.title + " " + record?.department)) tmp.push(i);
     });
     if (!tmp.length) return setSearchdData([]);
     setSearchdData(dataSource.filter((obj) => tmp.includes(obj.key)));
@@ -264,11 +286,6 @@ const TablePages = (props: PropsType): ReactElement => {
               defaultValue="Page 1"
             ></Input>
           </ModalContainer>
-
-
-
-
-
           ]}
         />
         <TableContainer
@@ -284,7 +301,7 @@ const TablePages = (props: PropsType): ReactElement => {
             onChange={handleSearch}
             prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
-          {dataSource.length === 0 ? (
+          {loading && dataSource.length === 0 ? (
             <>
               <div
                 style={{
@@ -326,9 +343,8 @@ const TablePages = (props: PropsType): ReactElement => {
             title="Rename"
             visible={isEditing}
             okText="Save"
-            onCancel={() => {
-              resetEditing();
-            }}
+            onCancel={() =>
+              setIsEditing(false)}
             onOk={() => {
               setDataSource((pre) => {
                 return pre.map((obj) => {
@@ -344,17 +360,19 @@ const TablePages = (props: PropsType): ReactElement => {
             }}
           >
             <Input
-              value={editingData?.name}
-              prefix="Title: "
+              value={editingData?.title}
+              prefix="Title:"
               onChange={(e) => {
                 setEditingData((pre) => {
-                  return { ...pre, name: e.target.value };
+                  return { ...pre, title: e.target.value };
                 });
               }}
             />
           </Modal>
+
         </TableContainer>
       </Layout>
+      <ToastContainer />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import {all} from 'redux-saga/effects';
+import { all } from 'redux-saga/effects';
 
 import lmsSaga from './lms/sagas';
 import teamSaga from './teams/sagas';
@@ -8,6 +8,7 @@ import authSaga from './authentication/sagas';
 import onboardingSaga from './onboarding/sagas';
 import announncementSaga from './announcement/sagas';
 import authenticationSaga from './authentication/sagas';
+import pagesSaga from './pages/sagas'
 
 export default function* rootSaga() {
   yield all([
@@ -20,5 +21,6 @@ export default function* rootSaga() {
     onboardingSaga(),
     announncementSaga(),
     authenticationSaga(),
+    pagesSaga(),
   ]);
 }
