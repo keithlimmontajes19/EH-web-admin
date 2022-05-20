@@ -1,4 +1,5 @@
 import { TYPES } from './actionTypes'
+import { toast } from "react-toastify"
 
 const INITIAL_STATE = {
     data: [],
@@ -26,7 +27,7 @@ const reducer = (state = INITIAL_STATE, action) => {
         case TYPES.LIST_PAGE_REQUEST:
             return {
                 ...state,
-                data: state.pages,
+                data: state.data,
                 loading: true,
                 error: false,
             };
@@ -49,7 +50,7 @@ const reducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 page: {
-                    data: [],
+                    data: action.payload,
                     loading: true,
                     error: false,
                 }
@@ -92,8 +93,9 @@ const reducer = (state = INITIAL_STATE, action) => {
                 page: {
                     data: action.payload,
                     loading: false,
-                    error: false
-                }
+                    error: false,
+                },
+
             }
         case TYPES.ADD_PAGE_FAILED:
             return {

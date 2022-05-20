@@ -1,8 +1,14 @@
-import { takeLatest, put, call } from "redux-saga/effects";
+import { takeLatest, put, call, takeEvery, takeMaybe } from "redux-saga/effects";
 import { TYPES } from '../actionTypes'
 import page_service from 'api/services/pages_service'
 import { toast } from "react-toastify";
+import { AnyAction } from "redux";
 
+
+type Params = {
+    pageId: string,
+    payload: any
+}
 export function* listPages(): any {
     try {
         const response = yield call(page_service.getPages);
@@ -20,12 +26,12 @@ export function* listPages(): any {
 }
 export function* getOnepage(payload): any {
     try {
-        const resoponse = yield call(page_service.getOnePage, payload);
+        const response = yield call(page_service.getOnePage, payload.payload);
         yield put({
             type: TYPES.GET_ONE_PAGE_SUCCESS,
-            payload: resoponse?.data,
+            payload: response?.data,
         })
-        return Promise.resolve(resoponse)
+        return Promise.resolve(response)
     } catch (error) {
         yield put({
             type: TYPES.GET_ONE_PAGE_FAILED,
@@ -34,14 +40,15 @@ export function* getOnepage(payload): any {
     }
 }
 
-export function* addPage({ payload }: any) {
+export function* addPage(payload: any) {
     try {
-        const response = yield call(page_service.addPage, payload);
+        const response = yield call(page_service.addPage, payload.payload);
+        toast.success("Page Added Successfully")
         yield put({
             type: TYPES.ADD_PAGE_SUCCESS,
             payload: response?.data,
-        })
-        toast.success("Page Added Successfully")
+        }
+        )
         return Promise.resolve(response);
     } catch (error) {
         yield put({
@@ -52,14 +59,22 @@ export function* addPage({ payload }: any) {
     }
 
 }
-export function* editPage(payload): any {
+export function* editPage({ payload }: AnyAction) {
     try {
-        const response = yield call(page_service.editPage, payload);
+        const response = yield call(page_service.editPage,
+            {
+                title: payload.title,
+                details: payload.details,
+                forms: payload.forms,
+                isPublish: payload.isPublish,
+                videoURL: payload.videoURL,
+                imageURL: payload.imageURL
+            }, payload.pageId);
         yield put({
             type: TYPES.EDIT_PAGE_SUCCESS,
             payload: response?.data
         })
-        toast.error("page Edited sucessfully")
+        toast.success(`${payload.title} Edited sucessfully`)
         return Promise.resolve(response);
     } catch (error) {
         toast.error(error)
@@ -67,12 +82,14 @@ export function* editPage(payload): any {
     }
 }
 export function* deletePage(pageId): any {
+    console.log(pageId, "pageid")
     try {
-        const response = yield call(page_service.deletePage, pageId);
+        const response = yield call(page_service.deletePage, pageId.pageId);
         yield put({
             type: TYPES.DELETE_PAGE_SUCCESS,
             payload: response?.data
         })
+        toast.success("page deleted sucessfully")
         return Promise.resolve(response);
     }
     catch (error) {
@@ -84,7 +101,7 @@ export function* deletePage(pageId): any {
 export default function* watcher() {
     yield takeLatest(TYPES.LIST_PAGE_REQUEST, listPages)
     yield takeLatest(TYPES.ADD_PAGE_REQUEST, addPage)
-    yield takeLatest(TYPES.EDIT_PAGE_REQUEST, editPage)
+    yield takeEvery(TYPES.EDIT_PAGE_REQUEST, editPage)
     yield takeLatest(TYPES.DELETE_PAGE_REQUEST, deletePage)
     yield takeLatest(TYPES.GET_ONE_PAGE_REQUEST, getOnepage)
 }

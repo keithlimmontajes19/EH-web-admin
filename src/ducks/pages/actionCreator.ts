@@ -6,7 +6,7 @@ export const getPages = () =>
         ({
             type: TYPES.LIST_PAGE_REQUEST,
         });
-export const getOnePage = (payload: string) => store.dispatch({
+export const getOnePage = (payload: any) => store.dispatch({
     type: TYPES.GET_ONE_PAGE_REQUEST,
     payload,
 })

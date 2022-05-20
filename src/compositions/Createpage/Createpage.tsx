@@ -1,7 +1,8 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import 'draft-js/dist/Draft.css';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './index.css';
+import { Params } from './types';
 import {
   PageHeader,
   Breadcrumb,
@@ -15,8 +16,6 @@ import {
 import {
   RedoOutlined,
   CheckOutlined,
-  PlusOutlined,
-  UnderlineOutlined,
 } from '@ant-design/icons';
 import {
   EditorState,
@@ -24,19 +23,35 @@ import {
   contentStateWithEntity,
   AtomicBlockUtils,
   getDefaultKeyBinding,
+  convertToRaw
 } from 'draft-js';
 import { useSelector } from 'react-redux';
 import { Editor } from 'react-draft-wysiwyg';
 import type { PropsType } from './types';
 import { StyledButton, StyledButtonCancle } from './styled';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { RootState } from 'ducks/store';
 import { stat } from 'fs';
+import { addPage } from 'ducks/pages/actionCreator';
+import { getOnepage } from 'ducks/pages/sagas/listSaga';
 
 const Createpage = (props: PropsType): ReactElement => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
+  const params: Params = useParams()
+  const history = useHistory();
+  const [title, setTitle] = useState();
+  const [details, setDetails] = useState({});
+  const [content, setContent] = useState();
+  const [forms, setForms] = useState(["624ddd5db5ffd056297445f7",
+    "624ddda0b5ffd05629744604",
+    "624dddc5b5ffd05629744611"])
+  const [isPublish, setIsPublish] = useState(false);
+  const [videoURL, setVideoURL] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
+
+
 
   const { data: rawData }: any = useSelector<RootState>((state) => state.pages)
   const onHandleKeyBindings = (e) => {
@@ -47,11 +62,36 @@ const Createpage = (props: PropsType): ReactElement => {
     }
   };
 
+  useEffect(() => {
+    getOnepage(params.pagename)
+  }, [params])
+
+  const handlechange = (rawDraftContentState) => {
+    const contentstate = rawDraftContentState.getCurrentContent()
+    // setDetails(convertToRaw(rawDraftContentState))
+    setDetails(convertToRaw(contentstate))
+    // console.log(convertToRaw(contentstate))
+  }
+
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
+    handlechange(editorState)
+    console.log(params.pagename)
   };
 
   const publishpage = () => {
+    setIsPublish(true)
+    addPage({
+      title: params.pagename,
+      details: JSON.stringify(details),
+      forms: forms,
+      isPublish: true,
+      videoURL: videoURL,
+      imageURL: imageURL,
+    })
+    // history.push('/team/pages')
+
+
 
   }
   function uploadImageCallBack(file) {

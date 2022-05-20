@@ -20,6 +20,7 @@ import OnboardingScreens from 'views/private/Team/OnboardingScreens';
 import OnBoardingScreen from 'compositions/OnBoardingScreen';
 import BuilderQuiz from 'compositions/BuilderQuiz';
 import QuizzesTab from 'compositions/QuizzesTab';
+import Editpage from 'compositions/Editpage';
 const Navigation = () => {
   return (
     <Switch>
@@ -49,7 +50,7 @@ const Navigation = () => {
       <Route exact path="/team/dashboards/create" component={CreateDashboard} />
       <Route exact path="/team/pages" component={Pages} />
       <Route exact path="/team/pages/createpage/:pagename?" component={Createpage} />
-      <Route exact path="/team/pages/editpage/:pagename?" component={Createpage} />
+      <Route exact path="/team/pages/editpage/:pagename?" component={Editpage} />
       <Route exact path="/team/announcements" component={Announcements} />
       <Route exact path="/team/forms" component={Forms} />
       {/* <Route exact path="/team/forms/createforms/:formtitle?" component={CreateForm} /> */}

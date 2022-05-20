@@ -30,8 +30,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "ducks/store";
 
 import { getPages, addPage, deletePage, getOnePage, editPage } from "ducks/pages/actionCreator"
-// import { getPages } from "ducks/pages/actionCreator";
-// import { getDashboard } from "ducks/dashboard/actionCreator";
 import Loading from "components/Loading";
 import { readConfigFile } from "typescript";
 import 'react-toastify/dist/ReactToastify.css';
@@ -119,8 +117,8 @@ const TablePages = (props: PropsType): ReactElement => {
   useEffect(() => {
     getPages();
   }, []);
-  useEffect(() => {
 
+  useEffect(() => {
     if (!rawData.length) return;
     setDataSource(
       rawData.map((obj, i) => ({
@@ -129,10 +127,9 @@ const TablePages = (props: PropsType): ReactElement => {
       }))
     );
     setLoading(false);
-
   }, [rawData]);
-  useEffect(() => {
 
+  useEffect(() => {
     if (searchInpt === "") return;
     setSearchdData(
       dataSource.filter((obj) => {
@@ -153,36 +150,31 @@ const TablePages = (props: PropsType): ReactElement => {
       email: newKey + "@gmail.com",
       department: "Address " + newKey,
     };
-    setDataSource((pre) => {
-      return [];
-    });
+    // setDataSource((pre) => {
+    //   return [];
+    // });
     console.log("add");
     // pushHistory("/team/pages/createpage");
     setIsModalVisible(true)
   };
   const onokData = () => {
-    addPage({ title: pagename, details: "data", forms: [], isPublish: true, videoURL: 'null', imageURL: 'null' })
     pushHistory(`/team/pages/createpage/${pagename}`)
   }
   const onDeleteData = (recArr) => {
-    // console.log(recArr[0]._id)
+
     if (!recArr.length) return;
     Modal.confirm({
       title: "Are you sure, you want to delete this record?",
       okText: "Yes",
       okType: "danger",
       onOk: () => {
-        // let id = 
-        console.log(recArr[0]._id)
         deletePage(recArr[0]._id)
-        // console.log(recArr[0]._id, "pageid")
-        // console.log(recArr[0]?._id)
-        // setDataSource((pre) => {
-        //   return pre
-        //     .filter((obj) => recArr.every((record) => record.key !== obj.key))
-        //     .map((obj, i) => ({ ...obj, key: i }));
-        // });
-        // if (searchInpt !== "") refreshSearchdData();
+        setDataSource((pre) => {
+          return pre
+            .filter((obj) => recArr.every((record) => record.key !== obj.key))
+            .map((obj, i) => ({ ...obj, key: i }));
+        });
+        if (searchInpt !== "") refreshSearchdData();
       },
     });
   };
@@ -190,7 +182,6 @@ const TablePages = (props: PropsType): ReactElement => {
   const onRename = (record) => {
     setIsEditing(true)
     setEditingData(record.title);
-
   }
   const onEditData = (record) => {
     setIsEditing(true);
@@ -299,38 +290,10 @@ const TablePages = (props: PropsType): ReactElement => {
             placeholder="Search Pages"
             defaultValue={searchInpt}
             onChange={handleSearch}
+            loading={{ indicator: <Loading />, spinnig: loading }}
             prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
-          {loading && dataSource.length === 0 ? (
-            <>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  marginTop: "80px",
-                }}
-              >
-                <img
-                  src={nopages}
-                  style={{
-                    height: "109px",
-                    width: "87px",
-                  }}
-                ></img>
-                <h3
-                  style={{
-                    padding: "10px",
-                    fontWeight: "500",
-                    fontSize: "22px",
-                    color: "#2B2E4A !important",
-                  }}
-                >
-                  No pages
-                </h3>
-              </div>
-            </>
-          ) : (
+          {(
             <Table
               onRow={rowListener}
               rowSelection={rowSelection}
