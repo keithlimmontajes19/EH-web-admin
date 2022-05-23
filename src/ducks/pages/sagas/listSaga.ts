@@ -43,12 +43,12 @@ export function* getOnepage(payload): any {
 export function* addPage(payload: any) {
     try {
         const response = yield call(page_service.addPage, payload.payload);
-        toast.success("Page Added Successfully")
         yield put({
             type: TYPES.ADD_PAGE_SUCCESS,
             payload: response?.data,
         }
         )
+        toast.success("Page Added Successfully")
         return Promise.resolve(response);
     } catch (error) {
         yield put({
@@ -74,7 +74,7 @@ export function* editPage({ payload }: AnyAction) {
             type: TYPES.EDIT_PAGE_SUCCESS,
             payload: response?.data
         })
-        toast.success(`${payload.title} Edited sucessfully`)
+        toast.success(`Page Edited sucessfully`)
         return Promise.resolve(response);
     } catch (error) {
         toast.error(error)

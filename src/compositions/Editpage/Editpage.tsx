@@ -11,6 +11,7 @@ import {
   Layout,
   InputNumber,
   Button,
+  Empty,
 } from 'antd';
 import {
   RedoOutlined,
@@ -36,23 +37,22 @@ import { stat } from 'fs';
 import { addPage, editPage } from 'ducks/pages/actionCreator';
 import { getOnepage } from 'ducks/pages/sagas/listSaga';
 import Loading from 'components/Loading';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 const Editpage = (props: PropsType): ReactElement => {
 
+
+  //Constants for the edit page
   const { data: rawData }: any = useSelector<RootState>(
     (state) => state.pages.page
   );
   const loadingstate = useSelector<RootState>((state) => state.pages.page.loading)
-
-  // const content = JSON.parse(rawData?.details)
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
   const history = useHistory()
-  const [title, setTitle] = useState(rawData.title);
   const [details, setDetails] = useState({});
-  const [content, setContent] = useState();
   const [forms, setForms] = useState(["624ddd5db5ffd056297445f7",
     "624ddda0b5ffd05629744604",
     "624dddc5b5ffd05629744611"])
@@ -62,6 +62,8 @@ const Editpage = (props: PropsType): ReactElement => {
   const params: Params = useParams()
   const [loading, setLoading] = useState(loadingstate)
   // const history = useHistory();
+
+  // handler keys for editors
   const onHandleKeyBindings = (e) => {
     if (e.keyCode === 9) {
       setEditorState(RichUtils.onTab(e, editorState, 4));
@@ -70,6 +72,7 @@ const Editpage = (props: PropsType): ReactElement => {
     }
   };
 
+  //get one page data method here
   async function data() {
     setLoading(true)
     await getOnepage(params.pagename)
@@ -87,31 +90,48 @@ const Editpage = (props: PropsType): ReactElement => {
     data()
   }, [rawData])
 
+  // handle change for editor
   const handlechange = (editorState) => {
     const contentstate = editorState.getCurrentContent()
     setDetails(convertToRaw(contentstate))
 
   }
+
+  // Editor state change method 
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
-    // console.log(editorState)
     handlechange(editorState)
 
   };
 
+
+  // publish mehtod
   const publishpage = () => {
-    editPage({
-      title: rawData.title,
-      details: JSON.stringify(details),
-      forms: forms,
-      isPublish: true,
-      videoURL: videoURL,
-      imageURL: imageURL,
-      pageId: params.pagename
-    })
+    console.log(details)
+    if (Object.keys(details).length === 0) {
+      toast.error("enter some content into the editor")
+    }
+    else {
+      setIsPublish(true)
+      editPage({
+        title: rawData.title,
+        details: JSON.stringify(details),
+        forms: forms,
+        isPublish: isPublish,
+        videoURL: videoURL,
+        imageURL: imageURL,
+        pageId: params.pagename
+      })
+    }
     // history.push('/team/pages')
 
   }
+  // reset page method 
+  const resetPage = () => {
+    setEditorState(EditorState.createEmpty())
+  }
+
+  // file upload handler 
   function uploadImageCallBack(file) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest(); // eslint-disable-line no-undef
@@ -158,6 +178,7 @@ const Editpage = (props: PropsType): ReactElement => {
             paddingRight: '24px',
             cursor: 'pointer',
           }}
+          onClick={resetPage}
         />,
         <StyledButton onClick={publishpage}>
           <CheckOutlined /> Publish
@@ -188,7 +209,10 @@ const Editpage = (props: PropsType): ReactElement => {
           },
         }}
       />}
+
     </Layout>
+    <ToastContainer />
+
   </>;
 };
 

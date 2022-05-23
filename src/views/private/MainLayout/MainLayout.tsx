@@ -18,7 +18,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 import { theme } from 'utils/colors';
-import { Layout, Menu, Avatar, Input, Row } from 'antd';
+import { Layout, Menu, Avatar, Input, Row, PageHeader } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
   HeaderStyled,
@@ -107,6 +107,20 @@ const MainLayout = (): ReactElement => {
         </Searchdiv>
         <Avatar size={64} icon={<UserOutlined style={{ padding: '0px' }} />} />
       </HeaderStyled>
+
+      {/* <PageHeader
+        extra={[<>
+          <Searchdiv collapsed={collapsed}>
+            <Input
+              size="large"
+              placeholder="search"
+              style={{ borderRadius: '10px', width: '497px', height: '48px' }}
+              prefix={<SearchOutlined style={{ color: '#635ffa' }} />}
+            />
+          </Searchdiv>,
+          <Avatar size={64} icon={<UserOutlined style={{ padding: '0px' }} />} />
+        </>]}
+      /> */}
       <Layout>
         <Sider
           collapsed={collapsed}

@@ -58,6 +58,8 @@ export const Searchdiv = styled.div<any>`
   flex: 1;
   display: flex;
   padding: 20px;
+  justify-content:space-around;
+
   margin-left: ${(props: any) => (props?.collapsed ? "80px" : "210px")};
   transition: margin-left 0.1s;
 
@@ -122,13 +124,13 @@ export const StyledSubMenu = styled(SubMenu)`
 
   .ant-menu-submenu-title {
     ${({ active }: any) =>
-      active
-        ? `min-height: 50px;
+    active
+      ? `min-height: 50px;
     background: #635ffa;
     max-width: 202px;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;`
-        : `min-height: 50px; max-width: 202px;`}
+      : `min-height: 50px; max-width: 202px;`}
   }
 
   .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {

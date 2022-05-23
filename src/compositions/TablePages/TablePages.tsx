@@ -116,7 +116,10 @@ const TablePages = (props: PropsType): ReactElement => {
   ];
   useEffect(() => {
     getPages();
-  }, []);
+  }, [rawData]);
+  useEffect(() => {
+    getPages();
+  }, [])
 
   useEffect(() => {
     if (!rawData.length) return;
@@ -181,7 +184,7 @@ const TablePages = (props: PropsType): ReactElement => {
 
   const onRename = (record) => {
     setIsEditing(true)
-    setEditingData(record.title);
+    setEditingData(record);
   }
   const onEditData = (record) => {
     setIsEditing(true);
@@ -319,6 +322,15 @@ const TablePages = (props: PropsType): ReactElement => {
                   }
                 });
               });
+              editPage({
+                title: editingData?.title,
+                details: editingData?.details,
+                forms: editingData?.forms,
+                isPublish: editingData?.isPublish,
+                videoURL: editingData?.videoURL,
+                imageURL: editingData?.imageURL,
+                pageId: editingData?._id
+              });
               resetEditing();
             }}
           >
@@ -331,6 +343,7 @@ const TablePages = (props: PropsType): ReactElement => {
                 });
               }}
             />
+            {console.log(editingData)}
           </Modal>
 
         </TableContainer>

@@ -34,16 +34,17 @@ import { RootState } from 'ducks/store';
 import { stat } from 'fs';
 import { addPage } from 'ducks/pages/actionCreator';
 import { getOnepage } from 'ducks/pages/sagas/listSaga';
+import { toast, ToastContainer } from 'react-toastify';
 
 const Createpage = (props: PropsType): ReactElement => {
+
+  // create page constant
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
   const params: Params = useParams()
   const history = useHistory();
-  const [title, setTitle] = useState();
   const [details, setDetails] = useState({});
-  const [content, setContent] = useState();
   const [forms, setForms] = useState(["624ddd5db5ffd056297445f7",
     "624ddda0b5ffd05629744604",
     "624dddc5b5ffd05629744611"])
@@ -80,20 +81,29 @@ const Createpage = (props: PropsType): ReactElement => {
   };
 
   const publishpage = () => {
-    setIsPublish(true)
-    addPage({
-      title: params.pagename,
-      details: JSON.stringify(details),
-      forms: forms,
-      isPublish: true,
-      videoURL: videoURL,
-      imageURL: imageURL,
-    })
-    // history.push('/team/pages')
-
-
-
+    if (Object.keys(details).length === 0) {
+      toast.error("enter some content into the editor")
+    }
+    else {
+      setIsPublish(true)
+      addPage({
+        title: params.pagename,
+        details: JSON.stringify(details),
+        forms: forms,
+        isPublish: true,
+        videoURL: videoURL,
+        imageURL: imageURL,
+      })
+    }
+    history.push('/team/pages')
   }
+
+  // reset page method
+  const resetPage = () => {
+    setEditorState(EditorState.createEmpty())
+  }
+
+  // file upload handler
   function uploadImageCallBack(file) {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest(); // eslint-disable-line no-undef
@@ -113,7 +123,6 @@ const Createpage = (props: PropsType): ReactElement => {
     });
   }
 
-  // let picker = colorPickerPlugin(setEditorState(editorState), editorState);
   return (
     <>
       <PageHeader
@@ -142,10 +151,12 @@ const Createpage = (props: PropsType): ReactElement => {
               fontSize: '25px',
               paddingRight: '24px',
               cursor: 'pointer',
+
             }}
+            onClick={resetPage}
           />,
           <StyledButton onClick={publishpage}>
-            <CheckOutlined /> Publish
+            <CheckOutlined /> Create
           </StyledButton>,
           <StyledButtonCancle>Cancle</StyledButtonCancle>,
         ]}
@@ -173,6 +184,8 @@ const Createpage = (props: PropsType): ReactElement => {
           }}
         />
       </Layout>
+      <ToastContainer />
+
     </>
   );
 };

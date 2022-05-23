@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
 import Loading from "components/Loading";
 import { getDashboard } from "ducks/dashboard/actionCreator";
+import { getAllAnnouncement, getAnnouncements } from "ducks/announcement/actionCreator"
 import Createannouncement from "compositions/Createannouncement";
 
 import {
@@ -37,25 +38,26 @@ import {
 } from "./styled";
 import buildicon from "../../assets/icons/hammer-icon.svg";
 
-const Announcements = (props: PropsType): ReactElement => { 
+const Announcements = (props: PropsType): ReactElement => {
   const { data: rawData }: any = useSelector<RootState>(
-    (state) => state.dashboard
+    (state) => state.announcement
   );
   const [loading, setLoading] = useState(true);
 
   const [searchInpt, setSearchInpt] = useState("");
+
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchdData, setSearchdData] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
-const [file, setFile] = useState("")
-
-const handlechnage = () =>{
-
-}
+  const [file, setFile] = useState("")
 
 
+
+  const handlechnage = () => {
+
+  }
   const history = useHistory();
   const pushHistory = (route: string) => {
     history.push(route);
@@ -111,37 +113,6 @@ const handlechnage = () =>{
     setEditingData(null);
   };
 
-  const data = [
-    {
-      key: "1",
-      name: "page1",
-      department: "Sample Department",
-      status: ["active"],
-      dateadded: "17/12/2022",
-    },
-    {
-      key: "2",
-      name: "page3",
-      department: "Sample Department",
-      status: ["inactive"],
-      dateadded: "17/02/2022",
-    },
-    {
-      key: "3",
-      name: "page3",
-      department: "Sample Department",
-      status: ["inactive"],
-      dateadded: "04/10/2022",
-    },
-    {
-      key: "4",
-      name: "page3",
-      department: "Sample Department",
-      status: ["inprogress"],
-      dateadded: "07/01/2022",
-    },
-  ];
-
   const content = (
     <div style={{ fontSize: "18px" }}>
       <Contentdiv>
@@ -185,14 +156,14 @@ const handlechnage = () =>{
     {
       key: "1",
       title: <StyledText fS={20}>TITLE</StyledText>,
-      dataIndex: "name",
+      dataIndex: "title",
       width: "35%",
       maxWidth: "35%",
     },
     {
       key: "2",
       title: <StyledText fS={20}>DEPARTMENT</StyledText>,
-      dataIndex: "department",
+      dataIndex: "title",
       width: "35%",
       maxWidth: "35%",
     },
@@ -202,48 +173,44 @@ const handlechnage = () =>{
       dataIndex: "status",
       width: "35%",
       maxWidth: "35%",
-      render: (status) => (
-        <>
-          {status?.map((tag) => {
-            let color: string = "green";
-            if (tag === "active") {
-              color = "green";
-            }
-            if (tag === "inactive") {
-              color = "red";
-            }
-            if (tag === "inprogress") {
-              color = "blue";
-            }
+      render: (status) => {
+        let color: string = "green";
+        if (status === "active") {
+          color = "green";
+        }
+        if (status === "inactive") {
+          color = "red";
+        }
+        if (status === "inprogress") {
+          color = "blue";
+        }
 
-            return (
-              <Tag
-                color={color}
-                style={{
-                  borderRadius: "15px",
-                  fontSize: "16px",
-                  padding: "10px 30px",
-                }}
-                key={tag}
-              >
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+        return (
+          <Tag
+            color={color}
+            style={{
+              borderRadius: "15px",
+              fontSize: "16px",
+              padding: "10px 30px",
+            }}
+
+          >
+            {status.toUpperCase()}
+          </Tag>
+        );
+      }
     },
     {
       key: "4",
       title: <StyledText fS={20}>DATEADDED</StyledText>,
-      dataIndex: "dateadded",
+      dataIndex: "start_date",
       width: "35%",
       maxWidth: "35%",
       render: (dateadded) => {
         return (
           <>
             <PopupContainer>
-              <div>{dateadded}</div>
+              <div style={{ fontSize: '16«px' }}>{dateadded.split("T")[0]}</div>
               <Popover
                 trigger="click"
                 content={content}
@@ -265,7 +232,7 @@ const handlechnage = () =>{
   ];
 
   useEffect(() => {
-    getDashboard();
+    getAllAnnouncement();
   }, []);
   useEffect(() => {
     if (!rawData.length) return;
@@ -288,7 +255,7 @@ const handlechnage = () =>{
     );
   }, [dataSource]);
 
-  const handleSearch = (e) => {};
+  const handleSearch = (e) => { };
 
   const rowListener = (record) => ({
     onClick: (event) => {
@@ -340,7 +307,7 @@ const handlechnage = () =>{
             onRow={rowListener}
             rowSelection={rowSelection}
             columns={columns}
-            dataSource={data}
+            dataSource={searchInpt !== "" ? searchdData : dataSource}
             loading={{ indicator: <Loading />, spinning: loading }}
           />
         </TableContainer>
