@@ -1,5 +1,5 @@
-import {takeLatest, put, call} from 'redux-saga/effects';
-import {TYPES} from '../actionTypes';
+import { takeLatest, put, call } from 'redux-saga/effects';
+import { TYPES } from '../actionTypes';
 
 import lms_service from 'api/services/lms_service';
 
@@ -52,7 +52,7 @@ export function* getMyCourses(): any {
   }
 }
 
-export function* getReviews({payload}: any): any {
+export function* getReviews({ payload }: any): any {
   try {
     const response = yield call(lms_service.getReview, payload);
     yield put({
@@ -70,12 +70,12 @@ export function* getReviews({payload}: any): any {
   }
 }
 
-export function* getCurriculum({payload}: any): any {
-  yield put({type: TYPES.GET_COURSES_CURICULUM_SUCCESS, payload});
+export function* getCurriculum({ payload }: any): any {
+  yield put({ type: TYPES.GET_COURSES_CURICULUM_SUCCESS, payload });
 }
 
-export function* getCurrilumDetails({payload}: any): any {
-  yield put({type: TYPES.GET_CURICULUM_DETAILS_SUCCESS, payload});
+export function* getCurrilumDetails({ payload }: any): any {
+  yield put({ type: TYPES.GET_CURICULUM_DETAILS_SUCCESS, payload });
 }
 
 export function* getLesson(): any {
@@ -100,17 +100,18 @@ export function* getLesson(): any {
   }
 }
 
-export function* getLessonDetails(): any {
+export function* getLessonDetails({ payload }: any): any {
   const idLesson = yield call(lessonId);
   const idCourse = yield call(courseId);
   const idOrg = yield call(organizationId);
 
+  console.log(payload);
   try {
     const response = yield call(
       lms_service.getLessonDetails,
       idOrg,
       idCourse,
-      idLesson,
+      idLesson
     );
 
     yield put({
@@ -140,7 +141,7 @@ export function* getTopicDetails(): any {
       idCourse,
       idLesson,
       idTopic,
-      idOrg,
+      idOrg
     );
 
     yield put({
@@ -158,12 +159,12 @@ export function* getTopicDetails(): any {
   }
 }
 
-export function* getTopicId({payload}: any): any {
-  yield put({type: TYPES.ID_GET_TOPIC_SUCCESS, payload});
+export function* getTopicId({ payload }: any): any {
+  yield put({ type: TYPES.ID_GET_TOPIC_SUCCESS, payload });
 }
 
-export function* getLessonId({payload}: any): any {
-  yield put({type: TYPES.ID_GET_LESSON_SUCCESS, payload});
+export function* getLessonId({ payload }: any): any {
+  yield put({ type: TYPES.ID_GET_LESSON_SUCCESS, payload });
 }
 
 export default function* watcher() {
