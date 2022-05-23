@@ -3,7 +3,7 @@ import { Modal, Button, Collapse, Checkbox, Row } from "antd";
 import type { PropsType } from "./types";
 import { StyledButton } from "compositions/TableDashboards/styled";
 import { Container, ModalContainer } from "./styled";
-import { PlusOutlined, EnterOutlined } from "@ant-design/icons";
+import { PlusOutlined, EnterOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
 import Collapsetab from "components/Collapsetab";
 import { render } from "@testing-library/react";
 import { theme } from "utils/colors";
@@ -37,9 +37,10 @@ const ListOfPages = (props: PropsType): ReactElement => {
   return (
     <Container>
       <StyledButton onClick={showModal}>
-        <PlusOutlined />
+        <EditOutlined />
         Edit
       </StyledButton>
+
       <ModalContainer
         title="List of Pages"
         visible={isModalVisible}

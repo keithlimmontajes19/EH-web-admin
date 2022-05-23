@@ -1,5 +1,5 @@
-import {takeLatest, put, call} from 'redux-saga/effects';
-import {TYPES} from '../actionTypes';
+import { takeLatest, put, call } from 'redux-saga/effects';
+import { TYPES } from '../actionTypes';
 
 import dashboard_service from 'api/services/dashboard_service';
 
@@ -22,6 +22,26 @@ export function* listDashboard(): any {
   }
 }
 
+export function* getOneDashboard({ payload }: any): any {
+  try {
+    const response = yield call(dashboard_service.getOneDashboard, payload);
+
+    yield put({
+      type: TYPES.GET_ONE_DASHBOARD_SUCCESS,
+      payload: response?.data,
+    });
+
+    return Promise.resolve(response);
+  } catch (error) {
+    yield put({
+      type: TYPES.GET_ONE_DASHBOARD_FAILED,
+    });
+
+    return Promise.reject(error);
+  }
+}
+
 export default function* watcher() {
   yield takeLatest(TYPES.LIST_DASHBOARD_REQUEST, listDashboard);
+  yield takeLatest(TYPES.GET_ONE_DASHBOARD_REQUEST, getOneDashboard);
 }

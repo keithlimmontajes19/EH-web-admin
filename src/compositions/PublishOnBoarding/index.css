@@ -1,0 +1,52 @@
+.form-control input {
+    position: relative;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.form-control {
+    position: relative;
+}
+
+.form-control:hover {
+    cursor: pointer;
+    /* background-color: #6c64ff; */
+    z-index: 99;
+}
+
+.form-control input:checked~.checkmark {
+    background-color: #c6c4fb;
+    z-index: 99;
+    top: 100 !important;
+    left: 50 !important;
+    opacity: 0.8;
+}
+
+.form-control input:checked~.select-count {
+    display: inline;
+}
+
+.select-count {
+    /* display: none; */
+}
+
+.checkmark {
+    height: 100px;
+    width: 100px;
+    border-radius: 50px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    top: 25%;
+    margin: 0 auto;
+    right: 0;
+    left: 0;
+    /* background-color: #635FFA; */
+}
+
+.checkmark:hover input~.checkmark {
+    background: #635FFA !important;
+}

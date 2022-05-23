@@ -5,15 +5,15 @@ export const Container = styled.div`
 `;
 
 export const RowContainer = {
-  height: '98vh',
-  overflow: 'hidden',
+  width: '100%',
+  height: '100vh',
 };
 
 export const SubLogoContainer = styled.div`
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 100%;
   background: linear-gradient(
     286.97deg,
     #4ab9e7 -8.31%,
@@ -24,15 +24,14 @@ export const SubLogoContainer = styled.div`
   );
 `;
 
-export const SublogoStyles = {height: '100%', width: '100%'};
-
+export const SublogoStyles = { height: '100%', width: '100%' };
 export const FormContainer = styled.div`
-  position: absolute;
   width: 550px;
   height: 801px;
-  top: 111px;
-  right: 146px;
+  overflow: hidden;
+  margin-top: 111px;
+  margin-right: 146px;
   background: #ffffff;
   border-radius: 20px;
-  overflow: hidden;
+  align-self: flex-end;
 `;

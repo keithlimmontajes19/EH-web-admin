@@ -23,7 +23,7 @@ import hammericon from "../../assets/icons/hammer-icon.svg";
 import type { PropsType } from "./types";
 import { useHistory } from "react-router-dom";
 
-import {} from "./styled";
+import { } from "./styled";
 
 import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";

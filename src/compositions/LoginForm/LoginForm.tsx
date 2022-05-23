@@ -1,8 +1,8 @@
-import {ReactElement, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import { ReactElement, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 /* styles antd */
-import {Form} from 'antd';
+import { Form } from 'antd';
 import {
   FlexRow,
   Container,
@@ -15,13 +15,13 @@ import {
   SignupContainer,
   InputContaier,
 } from './styled';
-import {EyeInvisibleOutlined, EyeTwoTone} from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 
 /* redux actions helpers */
-import {useSelector, useDispatch} from 'react-redux';
-import {postLogin} from 'ducks/authentication/actionCreator';
-import {RootState} from 'ducks/store';
-import {rulesConfig} from 'utils/helpers';
+import { useSelector, useDispatch } from 'react-redux';
+import { postLogin } from 'ducks/authentication/actionCreator';
+import { RootState } from 'ducks/store';
+import { rulesConfig } from 'utils/helpers';
 
 import LOGO from 'assets/icons/logo.png';
 import IconImage from 'components/IconImage';
@@ -29,7 +29,9 @@ import IconImage from 'components/IconImage';
 const LoginForm = (): ReactElement => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
-  const {data}: any = useSelector<RootState>((state) => state.authentication);
+  const { data, loading }: any = useSelector<RootState>(
+    (state) => state.authentication
+  );
 
   const handlesubmit = (values: never) => {
     dispatch(postLogin(values));
@@ -74,7 +76,8 @@ const LoginForm = (): ReactElement => {
         layout="vertical"
         requiredMark={false}
         onFinish={handlesubmit}
-        initialValues={INITIAL_VALUES}>
+        initialValues={INITIAL_VALUES}
+      >
         <Form.Item name="email" rules={rulesConfig('Email is required.')}>
           <StyledInput
             type="email"
@@ -95,14 +98,18 @@ const LoginForm = (): ReactElement => {
           />
         </Form.Item>
 
-        <StyledButton size="large" onClick={() => form.submit()}>
+        <StyledButton
+          loading={loading}
+          size="large"
+          onClick={() => form.submit()}
+        >
           Sign In
         </StyledButton>
 
         <InputContaier>
           <LabelStyled>
-            <StyledTextlink>
-              <Link to="/forgot">Log in as Employee</Link>
+            <StyledTextlink href={'https://my.huee.io/'}>
+              Log in as Employee
             </StyledTextlink>
           </LabelStyled>
         </InputContaier>

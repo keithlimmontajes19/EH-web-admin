@@ -1,4 +1,7 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useState } from 'react';
+import 'draft-js/dist/Draft.css';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import './index.css';
 import {
   PageHeader,
   Breadcrumb,
@@ -7,71 +10,59 @@ import {
   Layout,
   InputNumber,
   Button,
-} from "antd";
+} from 'antd';
 
 import {
   RedoOutlined,
   CheckOutlined,
   PlusOutlined,
   UnderlineOutlined,
-} from "@ant-design/icons";
-import { Editor, EditorState, RichUtils } from "draft-js";
-import type { PropsType } from "./types";
+} from '@ant-design/icons';
 import {
-  StyledButton,
-  StyledButtonCancle,
-  MenuContainer,
-  FontStyleContainer,
-  ItemContainer,
-  EditorContainer,
-} from "./styled";
-// import { StyledText } from "compositions/TableDashboards/styled";
-import { Link } from "react-router-dom";
-// import ColorPicker, { colorPickerPlugin } from "draft-js-color-picker";
-
-// Add preset colors to the picker
-const presetColors = [
-  "#ff00aa",
-  "#F5A623",
-  "#F8E71C",
-  "#8B572A",
-  "#7ED321",
-  "#417505",
-  "#BD10E0",
-  "#9013FE",
-  "#4A90E2",
-  "#50E3C2",
-  "#B8E986",
-  "#000000",
-  "#4A4A4A",
-  "#9B9B9B",
-  "#FFFFFF",
-];
+  EditorState,
+  RichUtils,
+  contentStateWithEntity,
+  AtomicBlockUtils,
+  getDefaultKeyBinding,
+} from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import type { PropsType } from './types';
+import { StyledButton, StyledButtonCancle } from './styled';
+import { Link } from 'react-router-dom';
 
 const Createpage = (props: PropsType): ReactElement => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
-  // const updateEditorstate = setEditorState({ ...editorState });
-
-  const boldText = () => {
-    const nextState = RichUtils.toggleInlineStyle(editorState, "BOLD");
-
-    setEditorState(nextState);
+  const onHandleKeyBindings = (e) => {
+    if (e.keyCode === 9) {
+      setEditorState(RichUtils.onTab(e, editorState, 4));
+    } else {
+      return getDefaultKeyBinding(e);
+    }
   };
 
-  const UnderLineText = () => {
-    const textdecoration = RichUtils.toggleInlineStyle(
-      editorState,
-      "UNDERLINE"
-    );
-    setEditorState(textdecoration);
+  const onEditorStateChange = (editorState) => {
+    setEditorState(editorState);
   };
-
-  const ItalicText = () => {
-    const textdecoration = RichUtils.toggleInlineStyle(editorState, "ITALIC");
-    setEditorState(textdecoration);
-  };
+  function uploadImageCallBack(file) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest(); // eslint-disable-line no-undef
+      xhr.open('POST', 'https://api.imgur.com/3/image');
+      xhr.setRequestHeader('Authorization', 'Client-ID 8d26ccd12712fca');
+      const data = new FormData(); // eslint-disable-line no-undef
+      data.append('image', file);
+      xhr.send(data);
+      xhr.addEventListener('load', () => {
+        const response = JSON.parse(xhr.responseText);
+        resolve(response);
+      });
+      xhr.addEventListener('error', () => {
+        const error = JSON.parse(xhr.responseText);
+        reject(error);
+      });
+    });
+  }
 
   // let picker = colorPickerPlugin(setEditorState(editorState), editorState);
   return (
@@ -81,7 +72,7 @@ const Createpage = (props: PropsType): ReactElement => {
           <Breadcrumb separator="<">
             <Breadcrumb.Item> </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <Link to="/team/pages" style={{ textDecoration: "underline" }}>
+              <Link to="/team/pages" style={{ textDecoration: 'underline' }}>
                 Back to Pages
               </Link>
             </Breadcrumb.Item>
@@ -89,19 +80,19 @@ const Createpage = (props: PropsType): ReactElement => {
         }
         ghost={false}
         style={{
-          background: "none",
+          background: 'none',
           paddingTop: 8,
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
         extra={[
           <RedoOutlined
             style={{
-              fontSize: "25px",
-              paddingRight: "24px",
-              cursor: "pointer",
+              fontSize: '25px',
+              paddingRight: '24px',
+              cursor: 'pointer',
             }}
           />,
           <StyledButton>
@@ -112,44 +103,26 @@ const Createpage = (props: PropsType): ReactElement => {
       />
       <Layout
         style={{
-          background: "none",
+          background: 'none',
         }}
       >
-        <Row>
-          <Col flex="1 1 200px">
-            <EditorContainer>
-              <Editor editorState={editorState} onChange={setEditorState} />
-            </EditorContainer>
-          </Col>
-          <Col flex="0 1 300px">
-            <MenuContainer style={{ minHeight: "800px", height: "auto" }}>
-              <FontStyleContainer>
-                <ItemContainer>
-                  <InputNumber
-                    style={{ borderRadius: "15px", width: "40px" }}
-                    type="number"
-                  />
-                </ItemContainer>
-                <ItemContainer>
-                  <Button
-                    ghost={false}
-                    onClick={boldText}
-                    style={{ borderRadius: "15px" }}
-                  >
-                    B
-                  </Button>
-                </ItemContainer>
-                <ItemContainer>
-                  <Button ghost={false} onClick={ItalicText}>
-                    I
-                  </Button>
-                </ItemContainer>
-                <UnderlineOutlined onClick={UnderLineText} />
-                {/* <ColorPicker toggleColor={(color) => picker.addColor(color)} /> */}
-              </FontStyleContainer>
-            </MenuContainer>
-          </Col>
-        </Row>
+        <Editor
+          editorState={editorState}
+          toolbarClassName="toolbarClassName"
+          wrapperClassName="wrapperClassName"
+          editorClassName="editorClassName"
+          onEditorStateChange={onEditorStateChange}
+          onTab={onHandleKeyBindings}
+          toolbar={{
+            image: {
+              urlEnabled: true,
+              uploadEnabled: true,
+              uploadCallback: uploadImageCallBack,
+              previewImage: true,
+              alt: { present: true, mandatory: true },
+            },
+          }}
+        />
       </Layout>
     </>
   );
