@@ -1,62 +1,6 @@
-import {Button, Input, Layout} from 'antd';
+import { Layout} from 'antd';
 import styled from 'styled-components';
 import {theme} from 'utils/colors';
-
-export const Container = styled.div``;
-
-export const StyledText: any = styled.span`
-  color: ${({fC}: any) => (fC ? fC : `#635FFA`)};
-  font-size: ${({fS}: any) => (fS ? fS : 28)}px;
-  font-weight: ${({fW}: any) => (fW ? fW : 700)};
-`;
-
-export const StyledInput: any = styled(Input)`
-  width: 497px;
-  height: 48px;
-  border: none;
-  padding-left: 20px;
-  border-radius: 20px;
-  margin-bottom: 40px;
-  font-size: 14px;
-  font-weight: 400;
-`;
-
-export const NakedInput: any = styled(Input)`
-  display: inline-block;
-  margin: 0;
-  background: none;
-  padding: 0;
-  width: 90px;
-  border: none;
-  font-size: 18px;
-  font-weight: 500;
-  transition: none;
-
-  &::placeholder {
-    color: inherit;
-  }
-
-  &:focus {
-    box-shadow: none;
-  }
-`;
-
-export const SpaceDiv: any = styled.div`
-  display: inline-block;
-  visibility: hidden;
-  text-indent: -99999;
-  width: ${({w}: any) => (w ? w : `20px`)};
-`;
-
-export const StyledButton: any = styled(Button)`
-  background: ${({bg}: any) => (bg ? bg : `#635ffa`)};
-  color: ${({c}: any) => (c ? c : `#fff`)};
-  width: ${({w}: any) => (w ? w : `166`)}px;
-  height: 48px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: 700;
-`;
 
 export const TableContainer: any = styled(Layout)`
   .ant-table {
