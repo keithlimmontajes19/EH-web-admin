@@ -1,49 +1,46 @@
 export const blanks = {
   singleChoice: {
     contentType: "question",
+    questionType: "single-choice",
     title: "",
     description: "",
     resource: {
       points: 1,
       answer: undefined,
       choices: ["", ""],
-    },
-    questionType: "single-choice",
-    createdAt: new Date().getTime(),
+    }
   },
   multipleChoice: {
     contentType: "question",
+    questionType: "multiple-choice",
     title: "",
     description: "",
     resource: {
       points: 1,
       answer: [],
       choices: [""],
-    },
-    questionType: "multiple-choice",
-    createdAt: new Date().getTime(),
+    }
   },
   essay: {
     contentType: "question",
-    resource: { points: 1 },
+    questionType: "essay",
     title: "",
     description: "",
-    questionType: "essay",
-    createdAt: new Date().getTime(),
+    resource: { points: 1 }
   },
   sort: {
     contentType: "question",
+    questionType: "sorting",
     title: "",
     description: "",
     resource: {
       points: 1,
       answer: ["", ""],
-    },
-    questionType: "sorting",
-    createdAt: new Date().getTime(),
+    }
   },
   fillBlanks: {
     contentType: "question",
+    questionType: "fill-in-the-blanks",
     title: "",
     description: "",
     body: `
@@ -56,8 +53,14 @@ export const blanks = {
     resource: {
       points: 1,
       answer: [],
-    },
-    questionType: "fill-in-the-blanks",
-    createdAt: new Date().getTime(),
+    }
   },
+  quiz: {
+    contentType: 'quiz',
+    title: '',
+    description: '',
+    preview: {type: 'image'},
+    questions: [],
+    isNew: true
+  }
 };

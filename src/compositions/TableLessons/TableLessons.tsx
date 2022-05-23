@@ -1,43 +1,27 @@
-import {
-  Table,
-  Modal,
-  Input,
-  PageHeader,
-  Layout,
-  Tabs,
-  Row,
-  Space,
-  CollapseProps,
-  Collapse,
-} from 'antd';
+import { Table, Modal, Input, Row, Space, Collapse } from 'antd';
 import { useEffect, useState } from 'react';
 import {
-  SearchOutlined,
   EditOutlined,
   DeleteOutlined,
   EyeFilled,
   BuildFilled,
-  PlusOutlined,
   EnterOutlined,
 } from '@ant-design/icons';
-import { SpaceDiv, StyledText, TableContainer } from './styled';
+import { TableContainer } from './styled';
 import { theme } from 'utils/colors';
 
 // ducks action
-import Loading from 'components/Loading';
-
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'ducks/store';
-import { getMyCourses, getContents } from 'ducks/lms/actionCreator';
+import { getMyCourses } from 'ducks/lms/actionCreator';
+import Loading from 'components/Loading';
+import Text from 'components/Text';
 import { useHistory } from 'react-router-dom';
 
 function TableLessons() {
   const history = useHistory();
   const dispatch = useDispatch();
-
   const { data: rawData }: any = useSelector<RootState>((state) => state.lms);
-  console.log(rawData);
-
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
@@ -45,23 +29,23 @@ function TableLessons() {
   const [dataSource, setDataSource] = useState([]);
   const [treeData, setTreeData] = useState([]);
 
-  const fnGetContentsDetails = () => dispatch(getContents({}));
+  // const fnGetContentsDetails = () => dispatch(getContents({}));
 
   const columns = [
     {
       key: 'b1',
       title: (
         <Row align="middle" justify="space-between">
-          <StyledText fS={20}>TITLE</StyledText>
+          <Text fS={20}>TITLE</Text>
           <span
             style={{ cursor: 'pointer' }}
             onClick={() => deleteSelected(selectedRowKeys)}
           >
             <DeleteOutlined style={{ color: '#635ffa', fontSize: 20 }} />
             &nbsp;
-            <StyledText fS={20} fC={theme.BLACK}>
+            <Text fS={20} fC={theme.BLACK}>
               DELETE
-            </StyledText>
+            </Text>
           </span>
         </Row>
       ),
@@ -71,7 +55,7 @@ function TableLessons() {
   ];
 
   useEffect(() => {
-    getMyCourses();
+    dispatch(getMyCourses());
   }, []);
 
   useEffect(() => {
@@ -130,9 +114,9 @@ function TableLessons() {
               key: 'b1',
               title: (
                 <Row align="middle" justify="space-between">
-                  <StyledText fS={25} fC={theme.BLACK} fW={500}>
+                  <Text fS={25} fC={theme.BLACK} fW={500}>
                     {obj.title}
-                  </StyledText>
+                  </Text>
                   <Space className="row-actions" size={'middle'}>
                     <span onClick={() => onEditData(copy, iA, -1)}>
                       <EditOutlined style={{ color: '#635ffa' }} />

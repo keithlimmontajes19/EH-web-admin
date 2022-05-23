@@ -1,35 +1,34 @@
 import {Table, Modal, Input, PageHeader, Layout, Tabs} from 'antd';
 import {useEffect, useState} from 'react';
 import {
-  SearchOutlined,
   EditOutlined,
   DeleteOutlined,
   EyeFilled,
   BuildFilled,
-  PlusOutlined,
 } from '@ant-design/icons';
-import {SpaceDiv, StyledText, TableContainer} from './styled';
+import {SpaceDiv, TableContainer} from './styled';
 
 // ducks action
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from 'ducks/store';
-import {getMyCourses} from 'ducks/lms/actionCreator';
+import {updateCourse, getMyCourses, deleteCourse} from 'ducks/lms/actionCreator';
 import Loading from 'components/Loading';
+import Text from 'components/Text';
 import {useHistory} from 'react-router-dom';
 
 function TableCourses() {
   const history = useHistory();
-  const {data: rawData}: any = useSelector<RootState>((state) => state.lms);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [dataSource, setDataSource] = useState([]);
-
+  
   const columns = [
     {
       key: 'a1',
-      title: <StyledText fS={20}>TITLE</StyledText>,
+      title: <Text fS={20}>TITLE</Text>,
       dataIndex: 'title',
       width: '35%',
       maxWidth: '35%',
@@ -41,14 +40,14 @@ function TableCourses() {
           <span
             style={{cursor: 'pointer'}}
             onClick={() => {
-              onDeleteData(selectedRowKeys.map((key) => ({key: key})));
+              onDeleteData(dataSource.filter((obj) => selectedRowKeys.includes(obj.key)));
               setSelectedRowKeys([]);
             }}
           >
             <DeleteOutlined style={{color: '#635ffa'}} />
-            <StyledText fC="inherit" fS={20}>
+            <Text fC="inherit" fS={20}>
               DELETE
-            </StyledText>
+            </Text>
           </span>
         </div>
       ),
@@ -73,8 +72,11 @@ function TableCourses() {
               </span>
               <SpaceDiv w={'5%'}>@</SpaceDiv>
               <span
-                onClick={() =>
-                  history.push('/learn/courses/builder/' + record._id)
+                onClick={() => {
+                    localStorage.setItem('courseId', record?._id);
+                    localStorage.setItem('organizationId', record?.organizationId);
+                    history.push('/learn/courses/builder/' + record._id)
+                  }
                 }
               >
                 <BuildFilled style={{color: '#635ffa'}} />
@@ -87,20 +89,32 @@ function TableCourses() {
     },
   ];
 
+  const {data, loading: rawLoading}: any = useSelector<RootState>((state) => state.lms);
+
   useEffect(() => {
-    getMyCourses();
+    localStorage.setItem('organizationId', '6239ffd1cb8440277f2a2b39')
+    dispatch(getMyCourses());
   }, []);
 
   useEffect(() => {
-    if (!rawData || dataSource.length !== 0) return;
+    if(data.length === 0) {
+      setDataSource([])
+      return
+    }
+    const sortIt = (a, b) => {
+      if (a>b) return 1
+      if (b>a) return -1
+      return 0
+    }
+    const sorted = data.sort((a, b) => sortIt(a.title, b.title))
     setDataSource(
-      rawData.map((obj, i) => ({
+      sorted.map((obj, i) => ({
         ...obj,
         key: i,
       })),
     );
     setLoading(false);
-  }, [rawData]);
+  }, [data]);
 
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
@@ -109,11 +123,22 @@ function TableCourses() {
       okText: 'Yes',
       okType: 'danger',
       onOk: () => {
-        setDataSource((pre) => {
-          return pre
-            .filter((obj) => recArr.every((record) => record.key !== obj.key))
-            .map((obj, i) => ({...obj, key: i}));
-        });
+        const callback = (res) => {
+          if(!res) return
+          setDataSource((pre) => {
+            return pre
+              .filter((obj) => recArr.every((record) => record.key !== obj.key))
+              .map((obj, i) => ({...obj, key: i}));
+          });
+        }
+
+        recArr.forEach(record => 
+          dispatch(deleteCourse({
+            idOrg: record.organizationId,
+            idCourse: record._id,
+            callback
+          }))
+        )
       },
     });
   };
@@ -125,6 +150,18 @@ function TableCourses() {
     setIsEditing(false);
     setEditingData(null);
   };
+  const renameOk = () => {
+    if(JSON.stringify(editingData) === '{}') return
+    localStorage.setItem('organizationId', editingData.organizationId)
+    localStorage.setItem('courseId', editingData._id)
+    dispatch(updateCourse(editingData))
+    const mapped = dataSource.map((obj) => {
+      if (obj._id === editingData._id) return editingData;
+      return obj;
+    })
+    setDataSource(mapped);
+    resetEditing();
+  }
   const onSelectChange = (newRowKeys) => {
     setSelectedRowKeys(newRowKeys);
   };
@@ -169,18 +206,7 @@ function TableCourses() {
         onCancel={() => {
           resetEditing();
         }}
-        onOk={() => {
-          setDataSource((pre) => {
-            return pre.map((obj) => {
-              if (obj._id === editingData._id) {
-                return editingData;
-              } else {
-                return obj;
-              }
-            });
-          });
-          resetEditing();
-        }}
+        onOk={renameOk}
       >
         <Input
           value={editingData?.name}
