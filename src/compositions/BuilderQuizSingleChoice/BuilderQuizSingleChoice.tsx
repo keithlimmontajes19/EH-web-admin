@@ -1,7 +1,8 @@
 import { ReactElement } from "react";
 
 import { PlusCircleFilled, MinusCircleFilled } from "@ant-design/icons";
-import { LineInput, StyledText } from "./styled";
+import Text from 'components/Text'
+import Input from 'components/Input'
 import { Col, Radio, Row, Space } from "antd";
 
 const BuilderQuizSingleChoice = ({
@@ -22,7 +23,8 @@ const BuilderQuizSingleChoice = ({
     >
       <Row justify="start" style={{ marginBottom: 15 }}>
         <Col flex={1} style={{ justifyContent: "center", paddingRight: 35 }}>
-          <LineInput
+          <Input
+            isNaked={true}
             value={data.title}
             placeholder="Single Choice Title"
             onChange={(e) => {
@@ -32,7 +34,8 @@ const BuilderQuizSingleChoice = ({
           />
         </Col>
         <Col flex={23} style={{ justifyContent: "center" }}>
-          <LineInput
+          <Input
+            isNaked={true}
             defaultValue={data.description}
             placeholder="Single Choice Description"
             onChange={(e) => {
@@ -43,9 +46,9 @@ const BuilderQuizSingleChoice = ({
         </Col>
         <Col span={3}>
           <Row justify="end">
-            <StyledText fS={18} onClick={deleteQ} className="question-delete">
+            <Text fS={18} onClick={deleteQ} className="question-delete">
               DELETE
-            </StyledText>
+            </Text>
           </Row>
         </Col>
       </Row>
@@ -55,7 +58,8 @@ const BuilderQuizSingleChoice = ({
             <Radio value={x} />
           </Col>
           <Col flex={1} style={{ justifyContent: "center", height: 35 }}>
-            <LineInput
+            <Input
+              isNaked={true}
               value={x}
               placeholder={`Answer #${i + 1}`}
               onChange={(e) => {
@@ -68,7 +72,7 @@ const BuilderQuizSingleChoice = ({
         </Row>
       ))}
       <Space size={0} style={{ margin: "10px 0 50px 50px" }}>
-        <StyledText fS={30}>
+        <Text fS={30}>
           <PlusCircleFilled
             onClick={() => {
               data.resource.choices.push("");
@@ -82,8 +86,8 @@ const BuilderQuizSingleChoice = ({
               submitQ(data);
             }}
           />
-        </StyledText>
-        <StyledText fS={18}>ANSWER</StyledText>
+        </Text>
+        <Text fS={18}>ANSWER</Text>
       </Space>
     </Radio.Group>
   );

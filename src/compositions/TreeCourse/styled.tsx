@@ -3,62 +3,29 @@ import TextArea from 'antd/lib/input/TextArea';
 import styled from 'styled-components';
 import {theme} from 'utils/colors';
 
-export const StyledText: any = styled.span`
-  color: ${({fC}: any) => (fC ? fC : `#635FFA`)};
-  font-size: ${({fS}: any) => (fS ? fS : 28)}px;
-  font-weight: ${({fW}: any) => (fW ? fW : 700)};
-`;
+export const getTreeStyle = (type, lastIofSect, i) => {
+  const mode = type === 'section-head' ? 0 : type === 'lesson' ? 1 : i%2 === 0 ? 2 : 3
+  const color = [
+    theme.PRIMARY_MID,
+    '#fff',
+    theme.PRIMARY_LIGHT,
+    theme.PRIMARY_SLIGHT,
+  ];
+  return {
+    background: color[mode],
+    fontSize: mode === 0 ? '20px' : '18px',
+    fontWeight: mode === 0 ? 600 : 400,
+    marginTop: mode === 0 ? '15px' : '0',
+    marginBottom: mode === 0 || lastIofSect ? '15px' : '0',
+    color: theme.BLACK,
+    height: '60px',
+    borderTop: mode === 0 ? '1px solid #635FFA' : 'none',
+    borderBottom: mode === 0 ? '1px solid #635FFA' : 'none',
+    zIndex: mode <= 1 ? 3 : 2,
+    filter: `drop-shadow(0 0 ${mode <= 1 ? 2 : 1}px #635FFAEA)`,
+  };
+};
 
-export const StyledInput: any = styled(Input)`
-  height: 60px;
-  border: none;
-  padding-left: 20px;
-  background: ${theme.PRIMARY_MID} !important;
-  color: ${theme.PRIMARY} !important;
-  border-radius: 15px;
-  border: none;
-  font-size: 16px;
-  font-weight: 400;
-
-  &::placeholder {
-    color: ${theme.PRIMARY} !important;
-  }
-`;
-
-export const StyledTextArea: any = styled(TextArea)`
-  border: none;
-  padding-left: 20px;
-  background: ${theme.PRIMARY_MID} !important;
-  color: ${theme.PRIMARY} !important;
-  border-radius: 15px;
-  border: none;
-  font-size: 16px;
-  font-weight: 400;
-
-  &::placeholder {
-    color: ${theme.PRIMARY} !important;
-  }
-`;
-
-export const StyledButton: any = styled(Button)`
-    background: ${({bg}: any) => (bg ? bg : `#635ffa`)};
-    color: ${({c}: any) => (c ? c : `#fff`)};
-    width: ${({w}: any) => (w ? w : `166`)}px;
-    height: 48px;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border: ${({b}: any) => (b ? b : 'none')};
-    font-size: 20px;
-    font-weight: 700;
-    padding-top: -10px;
-
-    &:hover, &:active, &:focus { {
-        background: ${({bg}: any) => (bg ? bg : `#635ffa`)};
-        color: ${({c}: any) => (c ? c : `#fff`)};
-        filter: brightness(150%);
-        border: ${({b}: any) => (b ? b : 'none')};
-    }
-`;
 export const StyledTree = styled(Tree)`
   .ant-tree-treenode .action-to-hide {
     visibility: hidden;
