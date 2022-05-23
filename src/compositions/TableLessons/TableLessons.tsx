@@ -10,7 +10,7 @@ import {
   CollapseProps,
   Collapse,
 } from 'antd';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import {
   SearchOutlined,
   EditOutlined,
@@ -20,25 +20,32 @@ import {
   PlusOutlined,
   EnterOutlined,
 } from '@ant-design/icons';
-import {SpaceDiv, StyledText, TableContainer} from './styled';
-import {theme} from 'utils/colors';
+import { SpaceDiv, StyledText, TableContainer } from './styled';
+import { theme } from 'utils/colors';
 
 // ducks action
-import {useSelector} from 'react-redux';
-import {RootState} from 'ducks/store';
-import {getMyCourses} from 'ducks/lms/actionCreator';
 import Loading from 'components/Loading';
-import {useHistory} from 'react-router-dom';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from 'ducks/store';
+import { getMyCourses, getContents } from 'ducks/lms/actionCreator';
+import { useHistory } from 'react-router-dom';
 
 function TableLessons() {
   const history = useHistory();
-  const {data: rawData}: any = useSelector<RootState>((state) => state.lms);
+  const dispatch = useDispatch();
+
+  const { data: rawData }: any = useSelector<RootState>((state) => state.lms);
+  console.log(rawData);
+
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState({});
   const [dataSource, setDataSource] = useState([]);
   const [treeData, setTreeData] = useState([]);
+
+  const fnGetContentsDetails = () => dispatch(getContents({}));
 
   const columns = [
     {
@@ -47,10 +54,10 @@ function TableLessons() {
         <Row align="middle" justify="space-between">
           <StyledText fS={20}>TITLE</StyledText>
           <span
-            style={{cursor: 'pointer'}}
+            style={{ cursor: 'pointer' }}
             onClick={() => deleteSelected(selectedRowKeys)}
           >
-            <DeleteOutlined style={{color: '#635ffa', fontSize: 20}} />
+            <DeleteOutlined style={{ color: '#635ffa', fontSize: 20 }} />
             &nbsp;
             <StyledText fS={20} fC={theme.BLACK}>
               DELETE
@@ -59,7 +66,7 @@ function TableLessons() {
         </Row>
       ),
       dataIndex: 'table',
-      style: {marginBottom: 100},
+      style: { marginBottom: 100 },
     },
   ];
 
@@ -81,10 +88,11 @@ function TableLessons() {
     const copy = [...dataSource];
 
     const makeTitle = (record) => {
-      const {curriculum, contents, contentType} = record;
+      const { curriculum, contents, contentType } = record;
       const testA = curriculum ? curriculum.length > 0 : false;
       const testB = contents ? contents.length > 0 : false;
       const testC = contentType === 'section-head' || contentType === 'lesson';
+
       const toCollapse = (arr) => (
         <Collapse ghost>
           <Collapse.Panel header={record.title} key="1">
@@ -96,18 +104,19 @@ function TableLessons() {
                     margin: '0 10px 0 21px',
                   }}
                 />
-                <span style={{color: theme.GRAY}}>{t}</span>
+                <span style={{ color: theme.GRAY }}>{t}</span>
               </p>
             ))}
           </Collapse.Panel>
         </Collapse>
       );
+
       return testA && testC ? (
         toCollapse(curriculum)
       ) : testB && testC ? (
         toCollapse(contents)
       ) : (
-        <span className="ant-no-collapse" style={{marginLeft: 36}}>
+        <span className="ant-no-collapse" style={{ marginLeft: 36 }}>
           {record.title}
         </span>
       );
@@ -126,15 +135,15 @@ function TableLessons() {
                   </StyledText>
                   <Space className="row-actions" size={'middle'}>
                     <span onClick={() => onEditData(copy, iA, -1)}>
-                      <EditOutlined style={{color: '#635ffa'}} />
+                      <EditOutlined style={{ color: '#635ffa' }} />
                       &nbsp;RENAME
                     </span>
                     <span>
-                      <EyeFilled style={{color: '#635ffa'}} />
+                      <EyeFilled style={{ color: '#635ffa' }} />
                       &nbsp;VIEW
                     </span>
                     <span onClick={() => onDeleteData([obj.key])}>
-                      <DeleteOutlined style={{color: '#635ffa'}} />
+                      <DeleteOutlined style={{ color: '#635ffa' }} />
                       &nbsp;DELETE
                     </span>
                     <span
@@ -142,7 +151,7 @@ function TableLessons() {
                         history.push('/learn/courses/builder/' + obj._id)
                       }
                     >
-                      <BuildFilled style={{color: '#635ffa'}} />
+                      <BuildFilled style={{ color: '#635ffa' }} />
                       &nbsp;BUILDER
                     </span>
                   </Space>
@@ -154,15 +163,15 @@ function TableLessons() {
                     {makeTitle(record)}
                     <Space className="row-actions" size={'middle'}>
                       <span onClick={() => onEditData(copy, iA, iB)}>
-                        <EditOutlined style={{color: '#635ffa'}} />
+                        <EditOutlined style={{ color: '#635ffa' }} />
                         &nbsp;RENAME
                       </span>
                       <span>
-                        <EyeFilled style={{color: '#635ffa'}} />
+                        <EyeFilled style={{ color: '#635ffa' }} />
                         &nbsp;VIEW
                       </span>
                       <span onClick={() => onDeleteData([record.key])}>
-                        <DeleteOutlined style={{color: '#635ffa'}} />
+                        <DeleteOutlined style={{ color: '#635ffa' }} />
                         &nbsp;DELETE
                       </span>
                       <span
@@ -170,7 +179,7 @@ function TableLessons() {
                           history.push('/learn/courses/builder/' + obj._id)
                         }
                       >
-                        <BuildFilled style={{color: '#635ffa'}} />
+                        <BuildFilled style={{ color: '#635ffa' }} />
                         &nbsp;BUILDER
                       </span>
                     </Space>
@@ -216,7 +225,7 @@ function TableLessons() {
                 findAKey(tmp[i], 'curriculum', key, (obj, objKey, i) => {
                   const tmp = [...obj[objKey]];
                   obj[objKey] = tmp.filter((a, b) => b !== i);
-                }),
+                })
               );
           }
           return tmp.filter((i) => i);
@@ -235,7 +244,7 @@ function TableLessons() {
       const currLvl = lvl + '-' + i;
       const isSect = _obj.contentType === 'section-head';
       const nextObjKey = isSect ? 'curriculum' : 'contents';
-      _obj.style = {background: 'red'};
+      _obj.style = { background: 'red' };
       _obj.key = currLvl;
       createUniqueId(_obj, nextObjKey, currLvl);
     }
@@ -279,8 +288,8 @@ function TableLessons() {
               findAKey(obj, 'curriculum', key, (obj, objKey, i) => {
                 const tmp = [...obj[objKey]];
                 obj[objKey] = tmp.filter((a, b) => b !== i);
-              }),
-            ),
+              })
+            )
           );
         }
         setSelectedRowKeys({});
@@ -291,14 +300,14 @@ function TableLessons() {
 
   const onEditData = (copy, iA, iB) => {
     setIsEditing(true);
-    setEditingData({copy, iA, iB, title: ''});
+    setEditingData({ copy, iA, iB, title: '' });
   };
   const resetEditing = () => {
     setIsEditing(false);
     setEditingData(null);
   };
   const onSelectChange = (newRowKeys, i) => {
-    const tmp = {...selectedRowKeys};
+    const tmp = { ...selectedRowKeys };
     tmp[i] = newRowKeys;
     if (i === 0) newRowKeys.forEach((n) => (tmp[n + 1] = []));
     if (i !== 0 && 0 in tmp ? tmp[0].includes(i - 1) : false)
@@ -323,7 +332,7 @@ function TableLessons() {
         rowSelection={rowSelection(0)}
         columns={columns}
         dataSource={treeData}
-        loading={{indicator: <Loading />, spinning: loading}}
+        loading={{ indicator: <Loading />, spinning: loading }}
         rowClassName={(rec) =>
           rec.isLone ? 'main-table-row row-is-lone' : 'main-table-row'
         }
@@ -352,7 +361,7 @@ function TableLessons() {
           prefix="Title: "
           onChange={(e) => {
             setEditingData((pre) => {
-              return {...pre, title: e.target.value};
+              return { ...pre, title: e.target.value };
             });
           }}
         />

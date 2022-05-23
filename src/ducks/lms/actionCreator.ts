@@ -1,5 +1,5 @@
-import {TYPES} from './actionTypes';
-import {store} from 'ducks/store';
+import { TYPES } from './actionTypes';
+import { store } from 'ducks/store';
 
 export const getMyCourses = () =>
   store.dispatch({
@@ -29,8 +29,9 @@ export const getLessonsDetail = () => ({
   type: TYPES.GET_DETAILS_LESSONS_LIST_REQUEST,
 });
 
-export const getContents = () => ({
+export const getContents = (payload) => ({
   type: TYPES.GET_CONTENTS_LIST_REQUEST,
+  payload,
 });
 
 export const getTopicID = (payload) => ({
