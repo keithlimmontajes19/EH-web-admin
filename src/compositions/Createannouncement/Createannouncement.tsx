@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useEffect } from "react";
 import {
   Modal,
   Button,
@@ -44,11 +44,14 @@ import videoicon from "../../assets/icons/video-icon.svg";
 import publishicon from "../../assets/icons/publish-icon.svg";
 import { StyledText } from "compositions/Announcements/styled";
 import CustomeSelect from "components/CustomeSelect";
+import { getAllOrganizations } from "ducks/announcement/actionCreator"
+import { useSelector } from "react-redux";
+import { RootState } from "ducks/store";
 
 const { MonthPicker, YearPicker } = DatePicker;
 const { Option } = Select;
 
-  
+
 
 const dayFormat = "DD";
 
@@ -80,10 +83,41 @@ const dataprops = {
 
 const Createannouncement = (props: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
+  const [imagemodal, setImageModal] = useState(false)
+  const [imageurl, setImageurl] = useState<String>("")
+  const [videourl, setVideourl] = useState<String>("")
+  const [title, setTitle] = useState<String>();
+  const [description, setDescription] = useState<String>();
+  const [starttime, setStartTime] = useState([]);
+  const [endtime, setEndTime] = useState<Date>();
+  const [startdate, setStartdate] = useState<Date>();
+  const [enddate, setEnddata] = useState<Date>();
+  const [isPublish, setPublish] = useState();
+  const { data: Organization }: any = useSelector<RootState>((state) => state.announcement.data)
+
+
+  useEffect(() => {
+    // console.log(title, "title");
+    console.log(imageurl)
+    console.log(videourl)
+    console.log(Organization)
+    // console.log(description, "description")
+  }, [title, description, imageurl, videourl, Organization])
+
+  const startdatehandler = (date, dateString) => {
+    // console.log(date, dateString)
+    let newdate = new Date(date)
+    setStartdate(newdate)
+    console.log(startdate)
+  }
+
+  const imageUploadmodal = () => {
+    setImageModal(true)
+  }
 
   const showModal = () => {
     setIsModalVisible(true);
+    getAllOrganizations()
   };
 
   const handleOk = () => {
@@ -129,8 +163,9 @@ const Createannouncement = (props: PropsType): ReactElement => {
           }}
         >
           <div>
-            <ImgContainer>
+            <ImgContainer >
               {/* <Progress strokeColor="#635ffa" percent={90} /> */}
+
             </ImgContainer>
           </div>
           <div
@@ -140,12 +175,68 @@ const Createannouncement = (props: PropsType): ReactElement => {
               justifyContent: "space-around",
             }}
           >
-            <Upload accept="images/*" >
-              <ItemContainer src={galleryicon} />
-            </Upload>
-            <Upload accept="video/*">
+            <ItemContainer onClick={imageUploadmodal} src={galleryicon} />
+            <ModalContainer
+              title="enter image Url"
+              visible={imagemodal}
+              centered
+              onOk={() => {
+                setImageModal(false)
+              }}
+              onCancel={() => {
+                setImageModal(false)
+              }}
+
+            >
+              <Input
+                placeholder="Enter image url"
+                onChange={(e) => setImageurl(e.target.value)}
+                style={{
+                  borderRadius: "15px",
+                  background: "#F8F8F8",
+                  width: "485px",
+                  height: "38px",
+                  margin: "10px 0px",
+                }}
+                // onChange={(e) => setTitle(e.target.value)}
+                size="large"
+                aria-placeholder="screen name 1"
+              ></Input>
+            </ModalContainer>
+            <ItemContainer onClick={imageUploadmodal} src={videoicon} />
+            <ModalContainer
+              title="Enter Video Url"
+              visible={imagemodal}
+              centered
+              onOk={() => {
+
+                setImageModal(false)
+              }}
+              onCancel={() => {
+                setImageModal(false)
+              }}
+
+            >
+              <Input
+                placeholder="Sample Announcement_2"
+                onChange={(e) => setVideourl(e.target.value)}
+                style={{
+                  borderRadius: "15px",
+                  background: "#F8F8F8",
+                  width: "485px",
+                  height: "38px",
+                  margin: "10px 0px",
+                }}
+                // onChange={(e) => setTitle(e.target.value)}
+                size="large"
+                aria-placeholder="screen name 1"
+              ></Input>
+            </ModalContainer>
+            {/* <Upload accept="images/*" >
+            </Upload> */}
+            {/* <Upload accept="video/*">
               <ItemContainer src={videoicon} />
-            </Upload>
+            </Upload> */}
           </div>
         </div>
         <div style={{ marginTop: "20px" }}>
@@ -158,11 +249,13 @@ const Createannouncement = (props: PropsType): ReactElement => {
               height: "38px",
               margin: "10px 0px",
             }}
+            onChange={(e) => setTitle(e.target.value)}
             size="large"
             aria-placeholder="screen name 1"
           ></Input>
           <Input.TextArea
             placeholder="Type Announcement"
+            onChange={(e) => setDescription(e.target.value)}
             style={{
               borderRadius: "15px",
               background: "#F8F8F8",
@@ -182,15 +275,18 @@ const Createannouncement = (props: PropsType): ReactElement => {
               <MonthPicker
                 format="MMM"
                 placeholder="Month"
+                onChange={startdatehandler}
                 style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
               />
               <DatePicker
                 format={dayFormat}
+                onChange={startdatehandler}
                 placeholder="Date"
                 style={{ borderRadius: "15px", width: "80px", margin: "5px" }}
               />
               <YearPicker
                 format="YYYY"
+                onChange={startdatehandler}
                 placeholder="Year"
                 style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
               />
@@ -266,9 +362,12 @@ const Createannouncement = (props: PropsType): ReactElement => {
               placeholder="Sample Organization Name"
               style={{ width: "390px", borderRadius: "15px !important" }}
             >
-              <Option value="option1">Option 1</Option>
-              <Option value="option1">Option 2</Option>
-              <Option value="option1">Option 3</Option>
+              {
+                Organization?.map((item, index) => (
+                  <Option value={item.name} key={index}>{item.name}</Option>
+
+                ))
+              }
             </CustomeSelect>
           </ViewerContainer>
           <Button

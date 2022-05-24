@@ -1,8 +1,7 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import { TYPES } from '../actionTypes';
-
 import announcement_service from 'api/services/announcement_service';
-import page_services from 'api/services/pages_service';
+import organization_services from 'api/services/organizations_service';
 
 
 export function* listAnnouncement(): any {
@@ -39,7 +38,25 @@ export function* listAnnouncements() {
   }
 }
 
+export function* listOrganizations() {
+  try {
+    const response = yield call(organization_services.getOrganizations);
+    yield put({
+      type: TYPES.LIST_ORGANIZATIONS_SUCCESS,
+      payload: response?.data
+    })
+    return Promise.resolve(response)
+  } catch (error) {
+    yield put({
+      type: TYPES.LIST_ORGANIZATIONS_FAILED
+    })
+    return Promise.reject(error)
+  }
+}
+
+
 export default function* watcher() {
   yield takeLatest(TYPES.LIST_ANNOUNCEMENT_REQUEST, listAnnouncement);
   yield takeLatest(TYPES.LIST_ANNOUNCEMENTS_REQUEST, listAnnouncements)
+  yield takeLatest(TYPES.LIST_ORGANIZATIONS_REQUEST, listOrganizations)
 }

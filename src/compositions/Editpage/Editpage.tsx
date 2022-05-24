@@ -90,6 +90,10 @@ const Editpage = (props: PropsType): ReactElement => {
     data()
   }, [rawData])
 
+  useEffect(() => {
+    console.log(details)
+  }, [details])
+
   // handle change for editor
   const handlechange = (editorState) => {
     const contentstate = editorState.getCurrentContent()

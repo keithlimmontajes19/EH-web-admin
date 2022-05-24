@@ -7,3 +7,6 @@ export const getAnnouncements = () => store.dispatch({
 export const getAllAnnouncement = () => store.dispatch({
   type: TYPES.LIST_ANNOUNCEMENTS_REQUEST
 })
+export const getAllOrganizations = () => store.dispatch({
+  type: TYPES.LIST_ORGANIZATIONS_REQUEST
+})

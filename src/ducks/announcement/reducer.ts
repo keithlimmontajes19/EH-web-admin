@@ -58,6 +58,29 @@ const reducer = (state = INITIAL_STATE, action) => {
         error: true
       }
 
+    case TYPES.LIST_ORGANIZATIONS_REQUEST:
+      return {
+        ...state,
+        data: [],
+        loading: true,
+        error: false
+
+      }
+    case TYPES.LIST_ORGANIZATIONS_SUCCESS:
+      return {
+        ...state,
+        data: action.payload,
+        loading: false,
+        error: false
+      }
+    case TYPES.LIST_ORGANIZATIONS_FAILED:
+      return {
+        ...state,
+        data: [],
+        loading: false,
+        error: true
+      }
+
     default:
       return { ...state };
   }

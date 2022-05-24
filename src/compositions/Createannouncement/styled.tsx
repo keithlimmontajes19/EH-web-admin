@@ -101,7 +101,7 @@ export const ImgContainer = styled(Layout)`
 `;
 
 export const ItemContainer = styled.img`
-  height: 113px;
+  height: 105px;
   width: 103px;
   cursor: pointer;
 `;
