@@ -1,7 +1,9 @@
 import { ReactElement } from "react";
 
-import { LineInput, StyledText, StyledTree, TreeNodeStyle } from "./styled";
+import { StyledTree, TreeNodeStyle } from "./styled";
 import IconImage from "components/IconImage";
+import Text from "components/Text";
+import Input from "components/Input";
 import SORT_ICON from "assets/icons/drag-icon.png";
 import { Col, Modal, Row, Space, Tree } from "antd";
 import { PlusCircleFilled, MinusCircleFilled } from "@ant-design/icons";
@@ -16,14 +18,15 @@ const BuilderQuizSort = ({ item, submitQ, deleteQ }: any): ReactElement => {
     const props = {
       title: (
         <>
-          <StyledText
+          <Text
             fS={25}
             fC={`${theme.PRIMARY}88`}
             className="ant-tree-title-number"
           >
             {i + 1}
-          </StyledText>
-          <LineInput
+          </Text>
+          <Input
+            isNaked={true}
             value={x}
             placeholder={`Answer #${i + 1}`}
             onChange={(e) => {
@@ -66,8 +69,9 @@ const BuilderQuizSort = ({ item, submitQ, deleteQ }: any): ReactElement => {
     <div className="question">
       <Row justify="start" style={{ marginBottom: 50 }}>
         <Col flex={1} style={{ justifyContent: "center", paddingRight: 35 }}>
-          <LineInput
-            value={data.title}
+          <Input
+            isNaked={true}
+            defaultValue={data.title}
             placeholder="Sort Title"
             onChange={(e) => {
               data.title = e.target.value;
@@ -76,7 +80,8 @@ const BuilderQuizSort = ({ item, submitQ, deleteQ }: any): ReactElement => {
           />
         </Col>
         <Col flex={23} style={{ justifyContent: "center" }}>
-          <LineInput
+          <Input
+            isNaked={true}
             defaultValue={data.description}
             placeholder="Sort Description"
             onChange={(e) => {
@@ -87,9 +92,9 @@ const BuilderQuizSort = ({ item, submitQ, deleteQ }: any): ReactElement => {
         </Col>
         <Col span={3}>
           <Row justify="end">
-            <StyledText fS={18} onClick={deleteQ} className="question-delete">
+            <Text fS={18} onClick={deleteQ} className="question-delete">
               DELETE
-            </StyledText>
+            </Text>
           </Row>
         </Col>
       </Row>
@@ -105,7 +110,7 @@ const BuilderQuizSort = ({ item, submitQ, deleteQ }: any): ReactElement => {
         {data.resource.answer.map(generateData)}
       </StyledTree>
       <Space size={0} style={{ margin: "10px 0 50px 50px" }}>
-        <StyledText fS={30}>
+        <Text fS={30}>
           <PlusCircleFilled
             onClick={() => {
               data.resource.answer.push("");
@@ -119,8 +124,8 @@ const BuilderQuizSort = ({ item, submitQ, deleteQ }: any): ReactElement => {
               submitQ(data);
             }}
           />
-        </StyledText>
-        <StyledText fS={18}>ANSWER</StyledText>
+        </Text>
+        <Text fS={18}>ANSWER</Text>
       </Space>
     </div>
   );

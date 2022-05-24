@@ -1,7 +1,8 @@
 import { ReactElement, useEffect, useRef, useState } from "react";
-
 import { PlusCircleFilled } from "@ant-design/icons";
-import { CustomDiv, InputStyle, LineInput, StyledText } from "./styled";
+import { CustomDiv, InputStyle} from "./styled";
+import Input from 'components/Input'
+import Text from 'components/Text'
 import { Col, Row, Space } from "antd";
 
 const BuilderQuizFillBlanks = ({
@@ -13,15 +14,17 @@ const BuilderQuizFillBlanks = ({
   const [splitText, setSplitText] = useState([]);
   const [toInput, setToInput] = useState([]);
   const [answerInput, setAnswerInput] = useState("");
+  const [updated, setUpdated] = useState(false);
   const innerRef: any = useRef();
 
   useEffect(() => {
-    const getText = data.body.match(/(?<=&lt;p&gt;)(.*)(?=&lt;[/]p&gt;)/);
-    setSplitText(getText ? getText[0].split(/\s/) : []);
+    const getText = data.body.match(/&lt;p&gt;.*?&lt;[/]p&gt;/g).join("")
+      .replace(/&lt;p&gt;|&lt;[/]p&gt;/g, "").split(/\s/);
+    setSplitText(getText ? getText : []);
   }, []);
 
   useEffect(() => {
-    if (!innerRef.current) return;
+    if (!innerRef.current || splitText.length === 0) return;
     let stringed = "";
     splitText.forEach((value, index) => {
       if (/^[{][\d+][}]$/g.test(value)) {
@@ -38,13 +41,14 @@ const BuilderQuizFillBlanks = ({
     });
     innerRef.current.innerHTML = stringed;
     data.body = generateBody(data.description, splitText.join(" "));
-    submitQ(data);
+    if(updated) submitQ(data)
   }, [splitText]);
 
   const generateBody = (d, t) =>
     `&lt;html&gt; &lt;body&gt; &lt;h4&gt;${d}&lt;/h4&gt; &lt;p&gt;${t}&lt;/p&gt; &lt;/body&gt; &lt;/html&gt;`;
 
   const handleTextChange = (arr, addNew: any = false) => {
+    setUpdated(true)
     let answer = [...data.resource.answer];
     let newAnswer = [];
     let count = -1;
@@ -111,7 +115,8 @@ const BuilderQuizFillBlanks = ({
     <div className="question">
       <Row justify="start" style={{ marginBottom: 15 }}>
         <Col flex={1} style={{ justifyContent: "center", paddingRight: 35 }}>
-          <LineInput
+          <Input
+            isNaked={true}
             value={data.title}
             placeholder="Fill Blanks Title"
             onChange={(e) => {
@@ -121,7 +126,8 @@ const BuilderQuizFillBlanks = ({
           />
         </Col>
         <Col flex={23} style={{ justifyContent: "center" }}>
-          <LineInput
+          <Input
+            isNaked={true}
             defaultValue={data.description}
             placeholder="Fill Blanks Description"
             onChange={(e) => {
@@ -132,9 +138,9 @@ const BuilderQuizFillBlanks = ({
         </Col>
         <Col span={3}>
           <Row justify="end">
-            <StyledText fS={18} onClick={deleteQ} className="question-delete">
+            <Text fS={18} onClick={deleteQ} className="question-delete">
               DELETE
-            </StyledText>
+            </Text>
           </Row>
         </Col>
       </Row>
@@ -150,7 +156,7 @@ const BuilderQuizFillBlanks = ({
         className="custom-div"
       ></CustomDiv>
       <Space size={0} style={{ margin: "35px 0 50px 0" }}>
-        <StyledText fS={30}>
+        <Text fS={30}>
           <InputStyle
             value={answerInput}
             onChange={(e) => setAnswerInput(e.target.value)}
@@ -164,8 +170,8 @@ const BuilderQuizFillBlanks = ({
               handleTextChange(splitText, true);
             }}
           />
-        </StyledText>
-        <StyledText fS={18}>ANSWER</StyledText>
+        </Text>
+        <Text fS={18}>ANSWER</Text>
       </Space>
     </div>
   );

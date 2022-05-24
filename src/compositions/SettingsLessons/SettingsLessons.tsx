@@ -1,14 +1,13 @@
-import {Col, Collapse, Row} from 'antd';
+import {Col, Row} from 'antd';
 import {useState} from 'react';
 import {theme} from 'utils/colors';
 import {
   HeaderDiv,
-  OptionWrap,
   SettingsContainer,
-  StyledButton,
   StyledCollapse,
   StyledPanel,
 } from './styled';
+import StyledButton from 'components/StyledButton'
 
 const SaveButtons = () => (
   <Row justify="end">

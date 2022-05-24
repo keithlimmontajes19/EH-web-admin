@@ -14,34 +14,6 @@ export const HeaderDiv = styled.div`
     flex-direction: column;
 `;
 
-export const OptionWrap: any = styled.div`
-  margin: ${({m}: any) => (m ? m : '0 0 0 0')};
-  padding: ${({p}: any) => (p ? p : '0 0 0 0')};
-`;
-
-export const StyledButton: any = styled(Button)`
-  background: ${({bg}: any) => (bg ? bg : `#635ffa`)};
-  color: ${({c}: any) => (c ? c : `#fff`)};
-  width: ${({w}: any) => (w ? w : `166`)}px;
-  height: 48px;
-  box-sizing: border-box;
-  border-radius: 8px;
-  border: ${({b}: any) => (b ? b : 'none')};
-  font-size: 20px;
-  font-weight: 700;
-  padding-top: -10px;
-  margin-bottom: ${({mb}: any) => (mb ? mb : `0`)};
-
-  &:hover,
-  &:active,
-  &:focus {
-    background: ${({bg}: any) => (bg ? bg : `#635ffa`)};
-    color: ${({c}: any) => (c ? c : `#fff`)};
-    filter: brightness(150%);
-    border: ${({b}: any) => (b ? b : 'none')};
-  }
-`;
-
 export const StyledCollapse = styled(Collapse)`
   background: none;
 `;

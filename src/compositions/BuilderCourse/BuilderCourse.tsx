@@ -1,121 +1,70 @@
 import {ReactElement, useEffect, useState} from 'react';
 
-import {StyledButton, StyledInput, StyledText, StyledTextArea} from './styled';
-import {Col, Form, Layout, PageHeader, Row, Space} from 'antd';
-import {
-  PlusOutlined,
-  VideoCameraOutlined,
-  PictureOutlined,
-} from '@ant-design/icons';
-import {useSelector} from 'react-redux';
+import Text from 'components/Text'
+import Input from 'components/Input'
+
+import {Col, Form, Layout, PageHeader, Row} from 'antd';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from 'ducks/store';
-import {getMyCourses} from 'ducks/lms/actionCreator';
+import {getCourse, getMyCourses, postCourse} from 'ducks/lms/actionCreator';
 import Loading from 'components/Loading';
 import TreeCourse from 'compositions/TreeCourse';
-import {theme} from 'utils/colors';
-import {useHistory} from 'react-router-dom';
-
-export const newData = (m, t, d) => {
-  const mode = ['section-head', 'lesson', 'topic', 'quiz'];
-
-  return {
-    title: t,
-    description: d,
-    contentType: mode[m],
-    createdAt: new Date().getTime(),
-    updatedAt: new Date().getTime(),
-  };
-};
+import {useHistory, useParams} from 'react-router-dom';
+import { Params } from 'views/private/Learn/Courses/types';
+import StyledButton from 'components/StyledButton';
+import { theme } from 'utils/colors';
+import { updateCourse } from 'ducks/lms/actionCreator';
 
 const BuilderCourse = ({id = ''}: any): ReactElement => {
   const history = useHistory();
-  const {data: rawData}: any = useSelector<RootState>((state) => state.lms);
+  const dispatch = useDispatch();
+  const params:Params = useParams();
+  const getData: any = useSelector<RootState>((state) => state.lms);
   const [loading, setLoading] = useState(true);
-  const [data, setData]: any = useState({});
+  const [course, setCourse]: any = useState({});
   const [onAdd, setOnAdd]: any = useState(false);
+  const [queue, setQueue] = useState(false);
+  const addNew = params.page === 'add'
+
   useEffect(() => {
-    getMyCourses();
+    localStorage.setItem('organizationId', '6239ffd1cb8440277f2a2b39')
+    localStorage.setItem('courseId', id)
+
+    if(addNew) dispatch(postCourse({
+      callback: addNewCallback
+    }))
+    else dispatch(getCourse({
+      callback: defaultCallback
+    }))
   }, []);
 
-  useEffect(() => {
-    if (!rawData || JSON.stringify(data) !== '{}') return;
-    const filtered = rawData.filter((obj) => obj._id === id)[0];
-    setData(typeof filtered === 'object' ? filtered : {});
-    setLoading(false);
-  }, [rawData]);
+  const addNewCallback = (res) => {
+    if(!res) return
+    const {course: rawCourse} = res.data;
+    localStorage.setItem('courseId', res._id)
+    setCourse(rawCourse)
+    setLoading(false)
+  }
 
-  const AddLesson = () => (
-    <Form
-      onFinish={({t, d}) => {
-        const copy = {...data};
-        const newArr = [].concat(copy.curriculum, [newData(1, t, d)]);
-        copy.curriculum = newArr;
-        setData(copy);
-        setOnAdd(false);
-      }}
-      style={{marginTop: '10px'}}
-    >
-      <Form.Item name="t" rules={[{required: true, message: 'Enter a title'}]}>
-        <StyledInput placeholder="Lesson title" />
-      </Form.Item>
-      <Form.Item name="d">
-        <StyledTextArea
-          style={{minHeight: '179px'}}
-          placeholder="Add Content"
-        />
-      </Form.Item>
-      <Form.Item>
-        <Row justify="space-between">
-          <Space>
-            <StyledButton
-              bg={'none'}
-              c={theme.PRIMARY}
-              b={`2px solid ${theme.PRIMARY}`}
-              icon={<VideoCameraOutlined />}
-              htmlType="button"
-            >
-              <StyledText fS={18} fW={500}>
-                Add Video
-              </StyledText>
-            </StyledButton>
-            <StyledButton
-              bg={'none'}
-              c={theme.PRIMARY}
-              b={`2px solid ${theme.PRIMARY}`}
-              icon={<PictureOutlined />}
-              htmlType="button"
-            >
-              <StyledText fS={18} fW={500}>
-                Add Picture
-              </StyledText>
-            </StyledButton>
-          </Space>
-          <Col>
-            <Row justify="end">
-              <Col>
-                <StyledButton
-                  bg={'none'}
-                  c={theme.BLACK}
-                  htmlType="button"
-                  onClick={() => setOnAdd(false)}
-                >
-                  CANCEL
-                </StyledButton>
-                <StyledButton htmlType="submit">SAVE</StyledButton>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </Form.Item>
-    </Form>
-  );
+  const defaultCallback = (res) => {
+    if(!res) return
+    setCourse(res.data);
+    setLoading(false);
+  }
+
+  const setCourseInfo = () => {
+    localStorage.setItem('organizationId', '6239ffd1cb8440277f2a2b39')
+    localStorage.setItem('courseId', course._id)
+    dispatch(updateCourse(course))
+    setQueue(false)
+  }
 
   return (
     <Layout style={{paddingRight: 50, background: 'transparent'}}>
       <PageHeader
         ghost={false}
         title={
-          <StyledText
+          <Text
             u={true}
             fS={16}
             fC={'#635FFA'}
@@ -123,12 +72,12 @@ const BuilderCourse = ({id = ''}: any): ReactElement => {
             onClick={() => history.push('/learn/courses')}
           >
             {'< '}Back to Courses
-          </StyledText>
+          </Text>
         }
         footer={
-          <StyledText fS={25} fC={'#2B2E4A'}>
+          <Text fS={25} fC={'#2B2E4A'}>
             Add Course
-          </StyledText>
+          </Text>
         }
         style={{background: 'none', paddingTop: 8, paddingBottom: 30}}
       />
@@ -138,24 +87,25 @@ const BuilderCourse = ({id = ''}: any): ReactElement => {
         <Layout style={{background: 'none', paddingLeft: 30, paddingRight: 25}}>
           <Form
             initialValues={{
-              t: data.title,
-              d: data.description,
-              a: data.author,
+              t: course.title === 'NaN$' ? '' : course.title,
+              d: course.description === 'NaN$' ? '' : course.description,
+              a: course.instructor.name === 'NaN$' ? '' : course.instructor.name,
             }}
           >
             <Form.Item
               name="t"
               rules={[{required: true, message: 'Enter a title'}]}
             >
-              <StyledInput
+              <Input
                 placeholder={'Course Title'}
-                onChange={(e) =>
-                  setData((prev) => {
-                    const tmp = {...prev};
-                    tmp.title = e.target.value;
-                    return tmp;
+                value={course.title}
+                onChange={(e) => {
+                  setQueue(true)
+                  setCourse(prev=>{
+                    prev.title = e.target.value;
+                    return prev
                   })
-                }
+                }}
               />
             </Form.Item>
             <Row justify="space-between">
@@ -164,15 +114,16 @@ const BuilderCourse = ({id = ''}: any): ReactElement => {
                   name="d"
                   rules={[{required: true, message: 'Enter a content'}]}
                 >
-                  <StyledInput
+                  <Input
                     placeholder={'Add Subtitle/Short Slogan/Short Description'}
-                    onChange={(e) =>
-                      setData((prev) => {
-                        const tmp = {...prev};
-                        tmp.description = e.target.value;
-                        return tmp;
+                    value={course.description}
+                    onChange={(e) => {
+                      setQueue(true)
+                      setCourse(prev=>{
+                        prev.description = e.target.value;
+                        return prev
                       })
-                    }
+                    }}
                   />
                 </Form.Item>
               </Col>
@@ -181,52 +132,34 @@ const BuilderCourse = ({id = ''}: any): ReactElement => {
                   name="a"
                   rules={[{required: true, message: 'Enter an author'}]}
                 >
-                  <StyledInput
+                  <Input
                     placeholder={'Author'}
-                    onChange={(e) =>
-                      setData((prev) => {
-                        const tmp = {...prev};
-                        tmp.author = e.target.value;
-                        return tmp;
+                    onChange={(e) => {
+                      setQueue(true)
+                      setCourse(prev=>{
+                        prev.instructor = {
+                          name: e.target.value,
+                          title: prev.instructor.title
+                        };
+                        return prev
                       })
-                    }
+                    }}
                   />
                 </Form.Item>
               </Col>
             </Row>
           </Form>
-          <StyledButton
-            w={213}
-            mb={'20px'}
-            onClick={() => setOnAdd(true)}
-            icon={<PlusOutlined />}
-          >
-            <StyledText fC="#fff" fS="18" fW="500">
-              LESSON
-            </StyledText>
-          </StyledButton>
-          {onAdd && <AddLesson />}
-          <TreeCourse data={data} setData={setData} />
+          <TreeCourse course={course} onAdd={onAdd} setOnAdd={setOnAdd} queue={queue} setCourseInfo={setCourseInfo}/>
           <Row justify="end" style={{marginTop: '150px', paddingRight: '20px'}}>
             <Col>
               {!onAdd && (
                 <>
                   <StyledButton
-                    bg={'none'}
-                    c={theme.BLACK}
-                    htmlType="button"
+                    htmlType="submit"
+                    disabled={onAdd}
                     onClick={() => history.goBack()}
                   >
-                    CANCEL
-                  </StyledButton>
-                  <StyledButton
-                    htmlType="submit"
-                    onClick={() => {
-                      console.log('data to integrate: ', data);
-                      history.goBack();
-                    }}
-                  >
-                    SAVE
+                    BACK
                   </StyledButton>
                 </>
               )}

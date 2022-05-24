@@ -42,7 +42,7 @@ Hover me <DownOutlined />
 </a>
 
 */
-const Dropdown = ({menu = [], title = <></>}) => {
+const Dropdown = ({menu = [], title = <></>, disabled = false}) => {
   const menued = (
     <Menu>
       {menu.map((obj, i) => (
@@ -51,7 +51,7 @@ const Dropdown = ({menu = [], title = <></>}) => {
     </Menu>
   );
 
-  return <AntDropdown overlay={menued}>{title}</AntDropdown>;
+  return <AntDropdown overlay={menued} disabled={disabled}>{title}</AntDropdown>;
 };
 
 export default Dropdown;

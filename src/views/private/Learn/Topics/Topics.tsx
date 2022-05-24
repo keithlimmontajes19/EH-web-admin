@@ -6,11 +6,13 @@ import {Params} from './types';
 import {theme} from 'utils/colors';
 import {Layout, PageHeader, Tabs} from 'antd';
 import {PlusOutlined, DownOutlined} from '@ant-design/icons';
-import {StyledButton, StyledTabs, StyledText} from './styled';
+import {StyledTabs} from './styled';
 
 import Dropdown from 'components/Dropdown';
 import TableTopics from 'compositions/TableTopics';
 import SettingsLessons from 'compositions/SettingsLessons';
+import StyledButton from 'components/StyledButton';
+import Text from 'components/Text';
 
 const headerActions = [
   {
@@ -32,7 +34,7 @@ const Topics = (): ReactElement => {
       <Layout style={{paddingRight: 50, background: 'transparent'}}>
         <PageHeader
           ghost={false}
-          title={<StyledText fS={30}>Topics</StyledText>}
+          title={<Text fS={30}>Topics</Text>}
           style={{background: 'none', paddingTop: 8}}
           extra={[
             <StyledButton
@@ -46,10 +48,10 @@ const Topics = (): ReactElement => {
               menu={headerActions}
               title={
                 <span style={{paddingLeft: 50}}>
-                  <StyledText fS={20}>
+                  <Text fS={20}>
                     Actions&nbsp;
                     <DownOutlined style={{fontSize: 15}} />
-                  </StyledText>
+                  </Text>
                 </span>
               }
             />,
@@ -58,25 +60,25 @@ const Topics = (): ReactElement => {
             <StyledTabs activeKey={page} onChange={(n) => setPage(n)}>
               <Tabs.TabPane
                 tab={
-                  <StyledText fC={theme.BLACK} fW={500} fS={22} m={'0 20px'}>
+                  <Text fC={theme.BLACK} fW={500} fS={22} m={'0 20px'}>
                     All Topics
-                  </StyledText>
+                  </Text>
                 }
                 key={'0'}
               />
               <Tabs.TabPane
                 tab={
-                  <StyledText fC={theme.BLACK} fW={500} fS={22} m={'0 20px'}>
+                  <Text fC={theme.BLACK} fW={500} fS={22} m={'0 20px'}>
                     Settings
-                  </StyledText>
+                  </Text>
                 }
                 key={'1'}
               />
               <Tabs.TabPane
                 tab={
-                  <StyledText fC={theme.BLACK} fW={500} fS={22} m={'0 20px'}>
+                  <Text fC={theme.BLACK} fW={500} fS={22} m={'0 20px'}>
                     Submitted Essays
-                  </StyledText>
+                  </Text>
                 }
                 key={'1'}
               />

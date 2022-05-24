@@ -1,4 +1,4 @@
-import {Col, Form, Modal, Row, Space} from 'antd';
+import {Col, Modal, Row, Space} from 'antd';
 import Dropdown from 'components/Dropdown';
 import React, {useEffect, useState} from 'react';
 import {
@@ -6,26 +6,59 @@ import {
   DeleteOutlined,
   EyeFilled,
   PlusOutlined,
-  VideoCameraOutlined,
-  PictureOutlined,
   FormOutlined,
 } from '@ant-design/icons';
 import {
-  StyledButton,
-  StyledInput,
-  StyledText,
-  StyledTextArea,
+  getTreeStyle,
   StyledTree,
 } from './styled';
 import {theme} from 'utils/colors';
-import {newData} from 'compositions/BuilderCourse/BuilderCourse';
+import { useDispatch, useSelector } from 'react-redux';
+import { getLessons, postLesson, deleteLesson, postLessonContent, updateLesson, updateLessonContent, deleteLessonContent } from 'ducks/lms/actionCreator';
+import Loading from 'components/Loading';
+import { useHistory } from 'react-router-dom';
+import { AddLesson, EditField, newData } from './components';
+import StyledButton from 'components/StyledButton';
+import Text from 'components/Text'
 
-function TreeCourse({data, setData}) {
+function TreeCourse({course, onAdd, setOnAdd, queue, setCourseInfo}) {
+  const history = useHistory();
+  const [data, setData] = useState({});
   const [treeData, setTreeData] = useState([]);
   const [expandedKeys, setExpandedKeys] = useState(['0-0', '0-0-0', '0-0-0-0']);
   const [onDragNode, setOnDragNode]: any = useState({});
   // upto 4 elements, [ onEdit, keyToEdit, onAdd, editFieldMode ]
   const [onEdit, setOnEdit]: any = useState([false]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const dispatch = useDispatch()
+
+  useEffect(()=>{
+    localStorage.setItem('courseId', course._id)
+    localStorage.setItem('organizationId', '6239ffd1cb8440277f2a2b39')
+    dispatch(getLessons({
+      callback: defaultCallback
+    }))
+  }, [])
+  
+  const getOrgId = () => {
+    const getItem = localStorage.getItem('organizationId')
+    return getItem ? getItem : '6239ffd1cb8440277f2a2b39'
+  }
+
+  const sortByPosition = (arr) => arr.sort((a: any, b: any) => parseFloat(a.position) - parseFloat(b.position))
+
+  const defaultCallback = (res) => {
+    if(!res) {
+      setData({})
+      setTreeData([])
+      setIsLoading(true)
+      return
+    }
+    const sorted = sortByPosition(res)
+    setData({curriculum: sorted})
+    setIsLoading(false)
+  }
 
   useEffect(() => {
     const copy = {...data};
@@ -34,20 +67,33 @@ function TreeCourse({data, setData}) {
     const dataToTrees = (obj, objKey, lvl) => {
       const arr = obj[objKey];
       if (!arr) return;
+      const sortedArr = sortByPosition(arr)
       const _tmp = [];
-      for (let i = 0; i < arr.length; i++) {
-        const _obj = arr[i];
+      for (let i = 0; i < sortedArr.length; i++) {
+        const _obj = sortedArr[i];
         if (!_obj || typeof _obj !== 'object') continue;
         const _objMakeKey = lvl + i * 2;
         const editMode = onEdit[1] === _objMakeKey;
         const addMode = onEdit[1] === _objMakeKey && onEdit[2];
+
         const isSpecial =
           _obj.contentType === 'section-head' || _obj.contentType === 'lesson';
         const isSect = _obj.contentType === 'section-head';
-        const nextObjKey = isSect ? 'curriculum' : 'contents';
+        const nextObjKey = 'curriculum' in _obj ? 'curriculum' : 'contents';
+        const lastIofSect = obj.contentType === 'section-head' && i === sortedArr.length - 1;
 
-        const lastIofSect =
-          obj.contentType === 'section-head' && i === arr.length - 1;
+        const branchLvl = Math.floor((_objMakeKey.length-1)/2)
+        const limitAction = branchLvl === 1 ? false : true
+        const ids = branchLvl === 1 ? {
+          idOrg: getOrgId(),
+          idCourse: _obj.course,
+          idLesson: _obj._id
+        } : branchLvl === 2 ? {
+          idOrg: getOrgId(),
+          idCourse: obj.course,
+          idLesson: obj._id,
+          idContent: _obj._id
+        } : {}
 
         const title = (obj, objKey) => ({
           title: (
@@ -80,23 +126,27 @@ function TreeCourse({data, setData}) {
                         okType: 'danger',
                         onOk: () => {
                           const copy = {...data};
-                          findAKey(
-                            copy,
-                            'curriculum',
-                            _objMakeKey,
-                            (obj, objKey, objI) => {
+                          const callback = (res) => 
+                          {
+                            if(!res) return
+                            const reset = (obj, objKey, objI) => {
                               const arr = [...obj[objKey]];
                               obj[objKey] = arr.filter((x, z) => z !== objI);
                               setData(copy);
-                            },
-                          );
+                            }
+                            findAKey(copy, 'curriculum', _objMakeKey, reset);
+                          }
+                          const payload = {...ids, callback}
+
+                          if(branchLvl === 1) dispatch(deleteLesson(payload));
+                          if(branchLvl === 2) dispatch(deleteLessonContent(payload));
                         },
                       });
                     }}
                   />
                   {isSpecial && (
                     <Dropdown
-                      menu={addActions(_objMakeKey)}
+                      menu={addActions(_objMakeKey, limitAction)}
                       title={<PlusOutlined />}
                     />
                   )}
@@ -108,15 +158,29 @@ function TreeCourse({data, setData}) {
           selectable: !onEdit[0],
           contentType: _obj.contentType || 'none',
           children: dataToTrees(obj, objKey, lvl + i * 2 + '-'),
-          style: getTreeStyle(_obj.contentType, _objMakeKey, lastIofSect),
+          style: getTreeStyle(_obj.contentType, lastIofSect, i),
+          branchLvl,
+          ids
         });
         const editAction = {
           title: (
             <EditField
+              setOnEdit={setOnEdit}
               cb={(t, d) => {
-                _obj.title = t;
-                _obj.description = d;
-                setData(copy);
+                const callback = (res) => {
+                  if(!res) return
+                  _obj.title = t;
+                  _obj.description = d;
+                  setData(copy);
+                }
+                const payload = {
+                  data: {..._obj, title: t, description: d},
+                  ...ids,
+                  callback
+                }
+
+                if(branchLvl === 1) dispatch(updateLesson(payload));
+                if(branchLvl === 2) dispatch(updateLessonContent(payload));
                 setOnEdit([false]);
               }}
               t={_obj.title}
@@ -134,11 +198,24 @@ function TreeCourse({data, setData}) {
         const addAction = (mode) => ({
           title: (
             <EditField
+              setOnEdit={setOnEdit}
               cb={(t, d) => {
-                const oldArr = _obj[nextObjKey];
-                const newArr = [].concat(oldArr, [newData(onEdit[3], t, d)]);
-                _obj[nextObjKey] = newArr;
-                setData(copy);
+                const payload = {
+                  data: newData(mode, t, d, _obj[nextObjKey].length+1), 
+                  ...ids
+                }
+                const callback = (res) => {
+                  if(!res) return
+                  const oldArr = _obj[nextObjKey];
+                  const newArr = [].concat(oldArr, [res]);
+                  _obj[nextObjKey] = newArr;
+                  setData(copy)
+                }
+
+                dispatch(postLessonContent({
+                  ...payload,
+                  callback
+                }))
                 setOnEdit([false]);
               }}
               mode={mode}
@@ -163,168 +240,15 @@ function TreeCourse({data, setData}) {
     setExpandedKeys(keysToExpand);
     setTreeData(tmp);
   }, [data, onEdit]);
-
-  const EditField = ({cb, t = '', d = '', mode = 2}) => {
-    const modes = ['Section Heading', 'Lesson', 'Topic', 'Quiz'];
-
-    return (
-      <Form
-        onFinish={({t, d}) => cb(t, d)}
-        initialValues={{t: t, d: d}}
-        style={{marginTop: '15px'}}
-      >
-        {mode !== 0 ? (
-          <>
-            <Form.Item
-              name="t"
-              rules={[{required: true, message: `Add a ${modes[mode]} Title`}]}
-            >
-              <StyledInput placeholder={`${modes[mode]} Title`} />
-            </Form.Item>
-            <Form.Item
-              name="d"
-              rules={[{required: true, message: 'Add a Content'}]}
-            >
-              <StyledTextArea
-                style={{minHeight: '179px'}}
-                placeholder="Add Content"
-              />
-            </Form.Item>
-            <Form.Item>
-              <Row justify={mode <= 1 ? 'space-between' : 'end'}>
-                {mode <= 1 && (
-                  <Space>
-                    <StyledButton
-                      bg={'none'}
-                      c={theme.PRIMARY}
-                      b={`2px solid ${theme.PRIMARY}`}
-                      icon={<VideoCameraOutlined />}
-                      htmlType="button"
-                    >
-                      <StyledText fS={18} fW={500}>
-                        Add Video
-                      </StyledText>
-                    </StyledButton>
-                    <StyledButton
-                      bg={'none'}
-                      c={theme.PRIMARY}
-                      b={`2px solid ${theme.PRIMARY}`}
-                      icon={<PictureOutlined />}
-                      htmlType="button"
-                    >
-                      <StyledText fS={18} fW={500}>
-                        Add Picture
-                      </StyledText>
-                    </StyledButton>
-                  </Space>
-                )}
-                <Col>
-                  <Row justify="end">
-                    <Col>
-                      <StyledButton
-                        bg={'none'}
-                        c={theme.BLACK}
-                        htmlType="button"
-                        onClick={() => setOnEdit([false])}
-                      >
-                        CANCEL
-                      </StyledButton>
-                      <StyledButton htmlType="submit">SAVE</StyledButton>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Form.Item>
-          </>
-        ) : (
-          <div
-            style={{
-              display: 'flex',
-              height: '60px',
-              marginBottom: '20px',
-              justifyContent: 'center',
-            }}
-          >
-            <div style={{width: 'calc(100% - 332px)'}}>
-              <Form.Item
-                name="t"
-                rules={[
-                  {required: true, message: `Add a ${modes[mode]} Title`},
-                ]}
-              >
-                <StyledInput placeholder={`${modes[mode]} Title`} />
-              </Form.Item>
-            </div>
-            <Row align="middle" justify="end">
-              <StyledButton
-                bg={'none'}
-                c={theme.BLACK}
-                htmlType="button"
-                onClick={() => setOnEdit([false])}
-              >
-                CANCEL
-              </StyledButton>
-              <StyledButton htmlType="submit">SAVE</StyledButton>
-            </Row>
-          </div>
-        )}
-      </Form>
-    );
-  };
-
-  const addActions = (objKey) => {
-    const action = (n) => {
-      setOnEdit([true, objKey, true, n]);
-    };
-
-    return [
-      {
-        name: 'Section Heading',
-        action: () => action(0),
-      },
-      {
-        name: 'Lesson',
-        action: () => action(1),
-      },
-      {
-        name: 'Topic',
-        action: () => action(2),
-      },
-      {
-        name: 'Quiz',
-        action: () => action(3),
-      },
-    ];
-  };
-
-  const getTreeStyle = (type, key, lastIofSect) => {
-    const mode =
-      type === 'section-head'
-        ? 0
-        : type === 'lesson'
-        ? 1
-        : type === 'quiz'
-        ? 3
-        : 2;
-    const color = [
-      theme.PRIMARY_MID,
-      '#fff',
-      theme.PRIMARY_LIGHT,
-      theme.PRIMARY_SLIGHT,
-    ];
-    return {
-      background: color[mode],
-      fontSize: mode === 0 ? '20px' : '18px',
-      fontWeight: mode === 0 ? 600 : 400,
-      marginTop: mode === 0 ? '15px' : '0',
-      marginBottom: mode === 0 || lastIofSect ? '15px' : '0',
-      color: theme.BLACK,
-      height: '60px',
-      borderTop: mode === 0 ? '1px solid #635FFA' : 'none',
-      borderBottom: mode === 0 ? '1px solid #635FFA' : 'none',
-      zIndex: mode <= 1 ? 3 : 2,
-      filter: `drop-shadow(0 0 ${mode <= 1 ? 2 : 1}px #635FFAEA)`,
-    };
+  
+  const addActions = (objKey, limitAction) => {
+    // Nesting temporarily disabled
+    // const specialMode = [{n: 'Section Heading', m: 0}, {n: 'Lesson', m: 1}]
+    // const defaultMode = [{n: 'Topic', m: 2}, {n: 'Quiz', m: 3}]
+    // const modes = limitAction ? defaultMode : [...specialMode, ...defaultMode]
+    const modes = [{n: 'Topic', m: 2},{n: 'Quiz', m: 3},{n: 'Activity', m: 4},{n: 'Assignments', m: 5}]
+    const action = (n: any) => setOnEdit([true, objKey, true, n])
+    return modes.map(({n, m}, i)=>({name: n, action: () => action(m)}))
   };
 
   // Recursive object and keys array iterator
@@ -348,8 +272,8 @@ function TreeCourse({data, setData}) {
   };
 
   const onDropv2 = (info) => {
-    const dropKey = info.node.key;
-    const dragKey = info.dragNode.key;
+    const {key: dropKey} = info.node;
+    const {key: dragKey} = info.dragNode;
     const dropPos = dropKey.split('-');
     const dropPosition = Math.ceil(Number(dropPos[dropPos.length - 1]) / 2);
 
@@ -357,54 +281,138 @@ function TreeCourse({data, setData}) {
 
     // Find dropArray and paste dragObject
     let toPaste;
+    let branchLvl;
+    let ids;
 
     findAKey(copy, 'curriculum', dragKey, (obj, objKey, objI) => {
       const arr = [...obj[objKey]];
-      toPaste = {...arr[objI]};
+      const foundObj = {...arr[objI]}
+      toPaste = foundObj;
+      branchLvl = Math.floor((foundObj.key.length-1)/2)
+      ids = branchLvl === 1 ? {
+        idOrg: getOrgId(),
+        idCourse: foundObj.course,
+        idLesson: foundObj._id
+      } : branchLvl === 2 ? {
+        idOrg: getOrgId(),
+        idCourse: obj.course,
+        idLesson: obj._id,
+        idContent: foundObj._id
+      } : {}
+
       obj[objKey] = arr.filter((x, z) => z !== objI);
 
       findAKey(copy, 'curriculum', dropKey, (obj, objKey) => {
         const arr = [...obj[objKey]];
         const a = arr.slice(0, dropPosition);
         const b = arr.slice(dropPosition);
-        obj[objKey] = [].concat(a, toPaste, b);
+        const c = [].concat(a, toPaste, b)
+        const d = c.map((cObj, cI) => ({...cObj, position: cI+1}))
+
+        d.forEach( (dObj, dI) => {
+          const lastObj = dI === c.length - 1
+          const callback = (res) => {
+            if(!res || !lastObj) return
+            obj[objKey] = d;
+            setData(copy);
+          }
+          if(branchLvl === 1) dispatch(updateLesson({
+            data: dObj, ...ids, idLesson: dObj._id, callback
+          }));
+          if(branchLvl === 2) dispatch(updateLessonContent({
+            data: dObj, ...ids, idContent: dObj._id, callback
+          }));
+        })
       });
     });
 
-    setData(copy);
+
   };
 
   const onExpand = (nodeKey) => {
     setExpandedKeys(nodeKey);
   };
 
+  const allowDrop = ({dropNode}) => {
+    // conditions to avoid dropping into invincible node (for edit field)
+    if (onEdit[0]) return false;
+    const dragArr = onDragNode.key.split('-')
+    const dropArr = dropNode.key.split('-');
+    const dropPosition = Number(dropArr[dropArr.length - 1]) % 2;
+    if (dropPosition) return false;
+    
+    // -- added to limit drag options
+    const {key: keyA} = dropNode
+    const {key: keyB} = onDragNode
+    if (keyA.length !== keyB.length) return false
+    if (keyA.length === 5) {
+      if (dragArr[1] !== dropArr[1]) return false
+    }
+    return true
+    // const a = onDragNode.contentType;
+    // const b = a === 'section-head' || a === 'lesson';
+    // if (b) return true;
+    // else return dropArr.length !== 2;
+  }
+
+  const handleDispatch = (obj) => {
+    const callback = (res: any) => {
+      if(!res) return
+      const copy = JSON.parse(JSON.stringify(data));
+      const newArr = [].concat(copy.curriculum, [res.lesson]);
+      copy.curriculum = newArr;
+      setData(copy);
+    }
+    dispatch(postLesson({
+      data: obj, 
+      idOrg: obj.organizationId,
+      idCourse: obj.courseId,
+      callback
+    }))
+    setOnAdd(false)
+  }
+
   return (
     <>
-      <StyledTree
-        className="draggable-tree"
-        onExpand={onExpand}
-        expandedKeys={expandedKeys}
-        draggable={!onEdit[0]}
-        blockNode
-        onDrop={onDropv2}
-        onDragStart={({node}) => setOnDragNode(node)}
-        allowDrop={({dropNode}: any) => {
-          if (onEdit[0]) return false;
-          const dropPos = dropNode.key.split('-');
-          const dropPosition = Number(dropPos[dropPos.length - 1]) % 2;
-          if (dropPosition) return false;
-
-          const a = onDragNode.contentType;
-          const b = a === 'section-head' || a === 'lesson';
-
-          if (b) return true;
-          else return dropPos.length !== 2;
-        }}
-        treeData={treeData}
-        style={{background: 'rgb(248, 248, 248)'}}
-      />
+      <Row justify='space-between'>
+      <StyledButton
+        w={213}
+        m={'0 0 20px 0'}
+        p={'-10px 0 0 0'}
+        onClick={() => setOnAdd(true)}
+        icon={<PlusOutlined />}
+      >
+        <Text fC="#fff" fS="18" fW="500">
+          LESSON
+        </Text>
+      </StyledButton>
+      {queue && (
+        <StyledButton
+        m={'0 20px 20px 0'}
+        p={'-10px 0 0 0'}
+        onClick={setCourseInfo}
+      >
+          SAVE ?
+      </StyledButton>
+      )}
+      </Row>
+      {onAdd && <AddLesson data={data} setOnAdd={setOnAdd} handleDispatch={handleDispatch} />}
+      {isLoading ? <Loading /> : (
+        <StyledTree
+          className="draggable-tree"
+          onExpand={onExpand}
+          expandedKeys={expandedKeys}
+          draggable={!onEdit[0]}
+          blockNode
+          onDrop={onDropv2}
+          onDragStart={({node}) => setOnDragNode(node)}
+          allowDrop={allowDrop}
+          treeData={treeData}
+          style={{background: 'none '}}
+        />
+      )}
     </>
-  );
+  )
 }
 
 export default TreeCourse;

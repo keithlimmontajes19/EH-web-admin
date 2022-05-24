@@ -1,8 +1,9 @@
 import { ReactElement } from "react";
 
-import { LineInput, StyledText } from "./styled";
+import Text from 'components/Text'
+import Input from 'components/Input'
 import { PlusCircleFilled, MinusCircleFilled } from "@ant-design/icons";
-import { Checkbox, Col, Form, Input, Row, Space } from "antd";
+import { Checkbox, Col, Row, Space } from "antd";
 
 const BuilderQuizMultipleChoice = ({
   item,
@@ -22,7 +23,8 @@ const BuilderQuizMultipleChoice = ({
     >
       <Row justify="start" style={{ marginBottom: 15 }}>
         <Col flex={1} style={{ justifyContent: "center", paddingRight: 35 }}>
-          <LineInput
+          <Input
+            isNaked={true}
             value={data.title}
             placeholder="Multiple Choice Title"
             onChange={(e) => {
@@ -32,7 +34,8 @@ const BuilderQuizMultipleChoice = ({
           />
         </Col>
         <Col flex={23} style={{ justifyContent: "center" }}>
-          <LineInput
+          <Input
+            isNaked={true}
             defaultValue={data.description}
             placeholder="Multiple Choice Description"
             onChange={(e) => {
@@ -43,9 +46,9 @@ const BuilderQuizMultipleChoice = ({
         </Col>
         <Col span={3}>
           <Row justify="end">
-            <StyledText fS={18} onClick={deleteQ} className="question-delete">
+            <Text fS={18} onClick={deleteQ} className="question-delete">
               DELETE
-            </StyledText>
+            </Text>
           </Row>
         </Col>
       </Row>
@@ -55,7 +58,8 @@ const BuilderQuizMultipleChoice = ({
             <Checkbox value={x} />
           </Col>
           <Col flex={1} style={{ justifyContent: "center", height: 35 }}>
-            <LineInput
+            <Input
+              isNaked={true}
               value={x}
               placeholder={`Answer #${i + 1}`}
               onChange={(e) => {
@@ -68,7 +72,7 @@ const BuilderQuizMultipleChoice = ({
         </Row>
       ))}
       <Space size={0} style={{ margin: "10px 0 50px 50px" }}>
-        <StyledText fS={30}>
+        <Text fS={30}>
           <PlusCircleFilled
             onClick={() => {
               data.resource.choices.push("");
@@ -82,8 +86,8 @@ const BuilderQuizMultipleChoice = ({
               submitQ(data);
             }}
           />
-        </StyledText>
-        <StyledText fS={18}>ANSWER</StyledText>
+        </Text>
+        <Text fS={18}>ANSWER</Text>
       </Space>
     </Checkbox.Group>
   );

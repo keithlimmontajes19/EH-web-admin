@@ -6,11 +6,13 @@ import {Params} from './types';
 import {theme} from 'utils/colors';
 import {Layout, PageHeader, Tabs} from 'antd';
 import {PlusOutlined, DownOutlined} from '@ant-design/icons';
-import {StyledButton, StyledTabs, StyledText} from './styled';
+import {StyledTabs} from './styled';
 
 import Dropdown from 'components/Dropdown';
 import TableLessons from 'compositions/TableLessons';
 import SettingsLessons from 'compositions/SettingsLessons';
+import StyledButton from 'components/StyledButton';
+import Text from 'components/Text'
 
 const headerActions = [
   {
@@ -32,7 +34,7 @@ const Lessons = (): ReactElement => {
       <Layout style={{paddingRight: 50, background: 'transparent'}}>
         <PageHeader
           ghost={false}
-          title={<StyledText fS={30}>Lessons</StyledText>}
+          title={<Text fS={30}>Lessons</Text>}
           style={{background: 'none', paddingTop: 8}}
           extra={[
             <StyledButton
@@ -46,10 +48,10 @@ const Lessons = (): ReactElement => {
               menu={headerActions}
               title={
                 <span style={{paddingLeft: 50}}>
-                  <StyledText fS={20}>
+                  <Text fS={20}>
                     Actions&nbsp;
                     <DownOutlined style={{fontSize: 15}} />
-                  </StyledText>
+                  </Text>
                 </span>
               }
             />,
@@ -58,17 +60,17 @@ const Lessons = (): ReactElement => {
             <StyledTabs activeKey={page} onChange={(n) => setPage(n)}>
               <Tabs.TabPane
                 tab={
-                  <StyledText fC={theme.BLACK} fW={500} fS={22} m={'0 20px'}>
+                  <Text fC={theme.BLACK} fW={500} fS={22} m={'0 20px'}>
                     All Lessons
-                  </StyledText>
+                  </Text>
                 }
                 key={'0'}
               />
               <Tabs.TabPane
                 tab={
-                  <StyledText fC={theme.BLACK} fW={500} fS={22} m={'0 20px'}>
+                  <Text fC={theme.BLACK} fW={500} fS={22} m={'0 20px'}>
                     Settings
-                  </StyledText>
+                  </Text>
                 }
                 key={'1'}
               />

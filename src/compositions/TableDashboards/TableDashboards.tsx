@@ -49,8 +49,17 @@ function TableDashboards() {
     {
       key: '2',
       title: <StyledText fS={20}>DEPARTMENT</StyledText>,
-      dataIndex: 'department',
+      dataIndex: 'organization',
       maxWidth: '25%',
+      render: (record: any) => {
+        return (
+          <>
+            {(record || []).map((item) => (
+              <p>{item?.name} &nbsp;</p>
+            ))}
+          </>
+        );
+      },
     },
     {
       key: '3',

@@ -3,16 +3,17 @@ import { ReactElement, useEffect, useState } from "react";
 import {
   QuestionLayout,
   QuizLayout,
-  StyledButton,
-  StyledInput,
-  StyledText,
-  StyledTextArea,
 } from "./styled";
+
+import Text from 'components/Text'
+import Input from 'components/Input'
+import TextArea from 'components/TextArea'
+import StyledButton from 'components/StyledButton'
+
 import { Col, Layout, PageHeader, Row } from "antd";
 import { PlusOutlined, DownOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
-import { RootState } from "ducks/store";
-import { getMyCourses } from "ducks/lms/actionCreator";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteQuizQuestion, getMyCourses, getQuizQuestions, getSingleLesson, postLessonContent, postQuizQuestion, updateLessonContent, updateQuizQuestion } from "ducks/lms/actionCreator";
 import Loading from "components/Loading";
 import { theme } from "utils/colors";
 import { useHistory } from "react-router-dom";
@@ -23,76 +24,116 @@ import BuilderQuizSort from "compositions/BuilderQuizSort";
 import BuilderQuizFillBlanks from "compositions/BuilderQuizFillBlanks";
 import BuilderQuizEssay from "compositions/BuilderQuizEssay";
 import BuilderQuizMultipleChoice from "compositions/BuilderQuizMultipleChoice";
-import { quizQuestions } from "utils/dummydata";
 import { blanks } from "./blanks";
 
-const BuilderQuiz = ({ id = "", item = -1 }: any): ReactElement => {
-  const itemIndex = Number(item);
+const BuilderQuiz = ({ courseid: idCourse = "", lessonid: idLesson = "" }: any): ReactElement => {
   const history = useHistory();
-  const { data: rawData }: any = useSelector<RootState>((state) => state.lms);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
   const [data, setData]: any = useState({});
+  const [loading, setLoading] = useState(true);
   const [builderData, setBuilderData] = useState([]);
 
+  const getOrgId = () => {
+    const getItem = localStorage.getItem('organizationId')
+    return getItem ? getItem : '6239ffd1cb8440277f2a2b39'
+  }
+
+  const sortByPosition = (arr) => arr.sort((a, b) => Number(a.position) - Number(b.position))
+  const recurseQuiz = (arr, i=0) => {
+    if(i >= arr.length) return
+    dispatch(getQuizQuestions({
+      ...arr[i].idList,
+      callback: (res) => {
+        arr[i].callback(res);
+        recurseQuiz(arr, i+1);
+      }
+    }))
+  }
+  const initialDispatchCallback = (res, ids) => {
+    if(!res) return
+    const quizArr = [];
+    const sorted = JSON.parse(JSON.stringify(res))
+    sorted.contents = sortByPosition(res.contents).map((quizObj, i) => {
+      if(quizObj.contentType !== 'quiz') return quizObj
+      const tmp = JSON.parse(JSON.stringify(quizObj))
+      quizArr.push({
+        idList: {...ids, idQuiz: quizObj._id},
+        callback: (res) => {
+          if(!res) return
+          setData( prev => {
+            const _tmp = JSON.parse(JSON.stringify(prev))
+            _tmp.contents[i].questions = sortByPosition(res)
+            return _tmp
+          })
+        }
+      })
+      return {
+        ...tmp,
+        questions: sortByPosition(quizObj.questions)
+      }
+    })
+    recurseQuiz(quizArr)
+    setData(sorted)
+    setLoading(false)
+  }
+
   useEffect(() => {
-    getMyCourses();
+    const ids = {
+      idOrg: getOrgId(),
+      idCourse: idCourse,
+      idLesson: idLesson
+    }
+    dispatch(getSingleLesson({
+      ...ids,
+      callback: res => initialDispatchCallback(res, ids)
+    })) 
   }, []);
-
+  
   useEffect(() => {
-    if (!rawData || JSON.stringify(data) !== "{}") return;
-    const filtered = rawData.filter((obj) => obj._id === id)[0];
-    if (!filtered) return;
-    const testA =
-      typeof filtered === "object" ? "curriculum" in filtered : false;
-    const testB = testA ? filtered.curriculum.length >= itemIndex : false;
+    console.log(data)
+  })
 
-    setData(filtered.curriculum[itemIndex]);
-    setLoading(false);
-  }, [rawData]);
-
-  useEffect(() => {
-    if (!rawData || JSON.stringify(data) === "{}") return;
-    const copy = { ...data };
-    // setBuilderData(copy.contents.filter(obj => typeof(obj) === 'object'))
-    setBuilderData(
-      quizQuestions.sort((a, b) => Number(a.position) - Number(b.position))
-    ); // DUMMY QUIZ DATA
-  }, [data]);
-
-  const addNew = (obj) => {
-    setBuilderData((prev) => [...builderData, JSON.parse(JSON.stringify(obj))]);
+  const addNew = (newQuestion, i) => {
+    setData(prev => {
+      const tmp = JSON.parse(JSON.stringify(prev));
+      tmp.contents[i].questions = [
+        ...prev.contents[i].questions, 
+        {...newQuestion, position: prev.contents[i].questions.length + 1, isNew: true}];
+      return tmp
+    })
   };
 
-  const headerActions = [
+  const headerActions = (i) => [
     {
       name: "Single Choice",
-      action: () => addNew(blanks.singleChoice),
+      action: () => addNew(blanks.singleChoice, i),
     },
     {
       name: "Multiple Choice",
-      action: () => addNew(blanks.multipleChoice),
+      action: () => addNew(blanks.multipleChoice, i),
     },
     {
       name: "Essay",
-      action: () => addNew(blanks.essay),
+      action: () => addNew(blanks.essay, i),
     },
     {
       name: "Fill Blanks",
-      action: () => addNew(blanks.fillBlanks),
+      action: () => addNew(blanks.fillBlanks, i),
     },
     {
       name: "Sort",
-      action: () => addNew(blanks.sort),
+      action: () => addNew(blanks.sort, i),
     },
   ];
 
-  const dataMapper = (obj, i) => {
+  const dataMapper = (questionObj, questionI, contentI) => {
+    if(questionObj.isDeleted) return <></>
     const props = {
-      item: "title" in obj ? obj : undefined,
-      submitQ: (data) => questionSubmit(i, data),
-      deleteQ: () => questionDelete(i),
+      item: "title" in questionObj ? questionObj : undefined,
+      submitQ: (data) => questionSubmit(data, questionI, contentI),
+      deleteQ: () => questionDelete(questionI, contentI),
     };
-    switch (obj.questionType) {
+    switch (questionObj.questionType) {
       case "single-choice":
         return <BuilderQuizSingleChoice {...props} />;
       case "multiple-choice":
@@ -108,29 +149,57 @@ const BuilderQuiz = ({ id = "", item = -1 }: any): ReactElement => {
     }
   };
 
-  const questionSubmit = (i, data) =>
-    setBuilderData((prev) => {
-      const copy = [...prev];
-      copy[i] = {
-        ...data,
-        position: i + 1,
-        updatedAt: new Date().getTime(),
-      };
-      return copy;
-    });
+  const questionSubmit = (data, questionI, contentI) => setData(prev=>{
+    const tmp = JSON.parse(JSON.stringify(prev));
+    tmp.contents[contentI].questions[questionI] = {...data, isUpdated: true};
+    return tmp
+  })
 
-  const questionDelete = (indexToDelete) =>
-    setBuilderData((prev) => {
-      const copy = prev.filter((x, i) => i !== indexToDelete);
-      return copy;
-    });
+  const questionDelete = (questionI, contentI) => setData(prev=>{
+    const tmp = JSON.parse(JSON.stringify(prev));
+    const copy = prev.contents[contentI].questions[questionI]
+    tmp.contents[contentI].questions[questionI] = {...copy, isDeleted: true}
+    return tmp
+  })
+
+  const onSave = () => {
+    const idOrg = getOrgId();
+    const iterateQuestion = (idQuiz, arr) => arr.forEach((obj, i) => {
+      const {isNew, isDeleted, isUpdated, _id: idQuestion} = obj;
+      if(isNew && isDeleted) return
+      else if(isNew) dispatch(postQuizQuestion({idOrg, idCourse, idLesson, idQuiz, data: obj}))
+      else if(isDeleted) dispatch(deleteQuizQuestion({idOrg, idCourse, idLesson, idQuiz, idQuestion}))
+      else if(isUpdated) dispatch(updateQuizQuestion({idOrg, idCourse, idLesson, idQuiz, idQuestion, data: obj}))
+    })
+    const iterateContent = (arr) => arr.forEach((obj, i) => {
+      if(obj.contentType !== 'quiz') return;
+      const {isNew, isUpdated, _id: idContent} = obj;
+      if(isNew) return dispatch(postLessonContent({idOrg, idCourse, idLesson, data: obj, callback: (res) => {
+        if(!res) return
+        iterateQuestion(res._id, obj.questions)
+      }}))
+      else if(isUpdated) dispatch(updateLessonContent({idOrg, idCourse, idLesson, idContent, data: obj}));
+      iterateQuestion(idContent, obj.questions)
+    })
+
+    iterateContent(data.contents);
+    const ids = {
+      idOrg: getOrgId(),
+      idCourse: idCourse,
+      idLesson: idLesson
+    }
+    setTimeout(()=>dispatch(getSingleLesson({
+      ...ids,
+      callback: res => initialDispatchCallback(res, ids)
+    })), 1000)
+  }
 
   return (
     <Layout style={{ paddingRight: 50, background: "transparent" }}>
       <PageHeader
         ghost={false}
         title={
-          <StyledText
+          <Text
             u={true}
             fS={16}
             fC={"#635FFA"}
@@ -138,32 +207,36 @@ const BuilderQuiz = ({ id = "", item = -1 }: any): ReactElement => {
             onClick={() => history.push("/learn/quizzes")}
           >
             {"< "}Back to Quizzes
-          </StyledText>
+          </Text>
         }
         extra={[
           <StyledButton
             w={130}
-            onClick={() => history.push("/learn/courses/add")}
+            onClick={() => setData(prev => {
+                const tmp = JSON.parse(JSON.stringify(prev));
+                tmp.contents = [...prev.contents, {...blanks.quiz, position: tmp.contents.length + 1} ]
+                return tmp
+            })}
           >
             <PlusOutlined />
             ADD
           </StyledButton>,
           <Dropdown
-            menu={headerActions}
+            menu={[]}
             title={
               <span style={{ paddingLeft: 50 }}>
-                <StyledText fS={20}>
+                <Text fS={20}>
                   Actions&nbsp;
                   <DownOutlined style={{ fontSize: 15 }} />
-                </StyledText>
+                </Text>
               </span>
             }
           />,
         ]}
         footer={
-          <StyledText fS={25} fC={"#2B2E4A"}>
+          <Text fS={25} fC={"#2B2E4A"}>
             {!loading && data?.title}
-          </StyledText>
+          </Text>
         }
         style={{ background: "none", paddingTop: 8, paddingBottom: 30 }}
       />
@@ -171,54 +244,62 @@ const BuilderQuiz = ({ id = "", item = -1 }: any): ReactElement => {
         <Loading />
       ) : (
         <>
-          <QuizLayout>
-            <Row justify="space-between">
-              <Col flex={5}>
-                <StyledInput
-                  value={data.title}
-                  style={{ marginBottom: 30 }}
-                  placeholder={"Add Title"}
-                  onChange={(e) =>
-                    setData((prev) => {
-                      const tmp = { ...prev };
-                      tmp.title = e.target.value;
-                      return tmp;
-                    })
-                  }
+          {data?.contents.map((obj, contentI) => {
+            if(obj.contentType !== 'quiz') return <></>
+            return (
+              <QuizLayout>
+                <Row justify="space-between">
+                  <Col flex={5}>
+                    <Input
+                      isNaked={true}
+                      value={obj.title}
+                      style={{ marginBottom: 30 }}
+                      placeholder={"Add Title"}
+                      onChange={(e) => setData((prev) => {
+                        const tmp = JSON.parse(JSON.stringify(prev))
+                        tmp.contents[contentI].title = e.target.value
+                        tmp.contents[contentI].isUpdated = true;
+                        return tmp;
+                      })}
+                    />
+                  </Col>
+                  <Col flex={2}></Col>
+                </Row>
+                <TextArea
+                  value={obj.description}
+                  style={{ minHeight: "179px", marginBottom: 30 }}
+                  placeholder="Add Description"
+                  onChange={(e) => setData((prev) => {
+                    const tmp = JSON.parse(JSON.stringify(prev))
+                    tmp.contents[contentI].description = e.target.value
+                    tmp.contents[contentI].isUpdated = true;
+                    return tmp;
+                  })}
                 />
-              </Col>
-              <Col flex={2}></Col>
-            </Row>
-            <StyledTextArea
-              value={data.description}
-              style={{ minHeight: "179px", marginBottom: 30 }}
-              placeholder="Add Description"
-              onChange={(e) => {
-                setData((prev) => {
-                  const tmp = { ...prev };
-                  tmp.description = e.target.value;
-                  return tmp;
-                });
-              }}
-            />
-            <QuestionLayout>
-              {builderData.map(dataMapper)}
-              <Dropdown
-                menu={headerActions}
-                title={
-                  <StyledButton
-                    w={184}
-                    m={"-20px 0 5px 0"}
-                    icon={<PlusOutlined />}
-                  >
-                    <StyledText fC="#fff" fS="18" fW="500">
-                      QUESTION
-                    </StyledText>
-                  </StyledButton>
-                }
-              />
-            </QuestionLayout>
-          </QuizLayout>
+                <QuestionLayout>
+                  {obj.questions.length === 0 ? <></> : 
+                  typeof(obj.questions[0]) !== 'object' ? <Loading/> : (
+                    obj.questions.map((_obj, questionI) => dataMapper(_obj, questionI, contentI))
+                  )}
+                  <Dropdown
+                    menu={headerActions(contentI)}
+                    disabled={obj.questions.length === 0 ? false : typeof(obj.questions[0]) !== 'object'}
+                    title={
+                      <StyledButton
+                        w={184}
+                        m={"-20px 0 5px 0"}
+                        icon={<PlusOutlined />}
+                      >
+                        <Text fC="#fff" fS="18" fW="500">
+                          QUESTION
+                        </Text>
+                      </StyledButton>
+                    }
+                  />
+                </QuestionLayout>
+              </QuizLayout>
+            )
+          })}
           <Row justify="end" style={{ marginTop: 150, marginRight: 30 }}>
             <Col>
               <StyledButton
@@ -231,10 +312,7 @@ const BuilderQuiz = ({ id = "", item = -1 }: any): ReactElement => {
               </StyledButton>
               <StyledButton
                 htmlType="submit"
-                onClick={() => {
-                  console.log("data to integrate: ", data);
-                  history.goBack();
-                }}
+                onClick={onSave}
               >
                 SAVE
               </StyledButton>
