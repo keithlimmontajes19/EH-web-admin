@@ -1,5 +1,5 @@
-import {takeLatest, put, call} from 'redux-saga/effects';
-import {TYPES} from '../actionTypes';
+import { takeLatest, put, call } from 'redux-saga/effects';
+import { TYPES } from '../actionTypes';
 
 import lms_service from 'api/services/lms_service';
 
@@ -43,7 +43,6 @@ export function* getMyCourses(): any {
 
     return Promise.resolve(response);
   } catch (error) {
-    
     yield put({
       type: TYPES.GET_COURSES_LIST_FAILED,
     });
@@ -72,7 +71,7 @@ export function* getAllCourses(): any {
   }
 }
 
-export function* getReviews({payload}: any): any {
+export function* getReviews({ payload }: any): any {
   try {
     const response = yield call(lms_service.getReview, payload);
     yield put({
@@ -90,21 +89,21 @@ export function* getReviews({payload}: any): any {
   }
 }
 
-export function* getCurriculum({payload}: any): any {
-  yield put({type: TYPES.GET_COURSES_CURICULUM_SUCCESS, payload});
+export function* getCurriculum({ payload }: any): any {
+  yield put({ type: TYPES.GET_COURSES_CURICULUM_SUCCESS, payload });
 }
 
-export function* getCurrilumDetails({payload}: any): any {
-  yield put({type: TYPES.GET_CURICULUM_DETAILS_SUCCESS, payload});
+export function* getCurrilumDetails({ payload }: any): any {
+  yield put({ type: TYPES.GET_CURICULUM_DETAILS_SUCCESS, payload });
 }
 
-export function* getLesson({payload}: any): any {
-  const {idList, callback=()=>{}} = payload
+export function* getLesson({ payload }: any): any {
+  const { idList, callback = () => {} } = payload;
   let idCourse;
   let idOrg;
-  if(idList) {
-    idCourse = idList.idCourse
-    idOrg = idList.idOrg
+  if (idList) {
+    idCourse = idList.idCourse;
+    idOrg = idList.idOrg;
   } else {
     idCourse = yield call(courseId);
     idOrg = yield call(organizationId);
@@ -116,20 +115,20 @@ export function* getLesson({payload}: any): any {
       payload: response?.data?.data,
     });
 
-    callback(response?.data?.data)
+    callback(response?.data?.data);
     return Promise.resolve(response);
   } catch (error) {
     yield put({
       type: TYPES.GET_LESSONS_LIST_FAILED,
     });
 
-    callback(false)
+    callback(false);
     return Promise.reject(error);
   }
 }
 
-export function* getSingleLesson({payload}: any): any {
-  const {idOrg, idCourse, idLesson, callback=()=>{}} = payload
+export function* getSingleLesson({ payload }: any): any {
+  const { idOrg, idCourse, idLesson, callback = () => {} } = payload;
 
   try {
     const response = yield call(
@@ -144,38 +143,39 @@ export function* getSingleLesson({payload}: any): any {
       payload: response?.data?.data,
     });
 
-    callback(response?.data?.data)
+    callback(response?.data?.data);
     return Promise.resolve(response);
   } catch (error) {
     yield put({
       type: TYPES.GET_SINGLE_LESSON_FAILED,
     });
-    callback(false)
+    callback(false);
     return Promise.reject(error);
   }
 }
 
-export function* getLessonDetails({payload}: any): any {
-  const {idList, callback=()=>{}} = payload
+export function* getLessonDetails({ payload }: any): any {
+  const { idList, callback = () => {} } = payload;
   let idLesson;
   let idCourse;
   let idOrg;
-  if(idList) {
-    idLesson = idList.idLesson
-    idCourse = idList.idCourse
-    idOrg = idList.idOrg
+  if (idList) {
+    idLesson = idList.idLesson;
+    idCourse = idList.idCourse;
+    idOrg = idList.idOrg;
   } else {
     idLesson = yield call(lessonId);
     idCourse = yield call(courseId);
     idOrg = yield call(organizationId);
   }
 
+  console.log(payload);
   try {
     const response = yield call(
       lms_service.getLessonDetails,
       idOrg,
       idCourse,
-      idLesson,
+      idLesson
     );
 
     yield put({
@@ -183,20 +183,19 @@ export function* getLessonDetails({payload}: any): any {
       payload: response?.data?.data,
     });
 
-    callback(response?.data?.data)
+    callback(response?.data?.data);
     return Promise.resolve(response);
   } catch (error) {
     yield put({
       type: TYPES.GET_CONTENTS_LIST_FAILED,
     });
-    callback(false)
+    callback(false);
     return Promise.reject(error);
   }
 }
 
-
-export function* getQuizQuestions({payload}: any): any {
-  const {idOrg, idCourse, idLesson, idQuiz, callback=()=>{}} = payload
+export function* getQuizQuestions({ payload }: any): any {
+  const { idOrg, idCourse, idLesson, idQuiz, callback = () => {} } = payload;
 
   try {
     const response = yield call(
@@ -211,14 +210,14 @@ export function* getQuizQuestions({payload}: any): any {
       type: TYPES.GET_QUIZ_QUESTIONS_SUCCESS,
       payload: response?.data?.data,
     });
-    
-    callback(response?.data?.data)
+
+    callback(response?.data?.data);
     return Promise.resolve(response);
   } catch (error) {
     yield put({
       type: TYPES.GET_QUIZ_QUESTIONS_FAILED,
     });
-    callback(false)
+    callback(false);
     return Promise.reject(error);
   }
 }
@@ -235,7 +234,7 @@ export function* getTopicDetails(): any {
       idCourse,
       idLesson,
       idTopic,
-      idOrg,
+      idOrg
     );
 
     yield put({
@@ -253,37 +252,32 @@ export function* getTopicDetails(): any {
   }
 }
 
-export function* getTopicId({payload}: any): any {
-  yield put({type: TYPES.ID_GET_TOPIC_SUCCESS, payload});
+export function* getTopicId({ payload }: any): any {
+  yield put({ type: TYPES.ID_GET_TOPIC_SUCCESS, payload });
 }
 
-export function* getLessonId({payload}: any): any {
-  yield put({type: TYPES.ID_GET_LESSON_SUCCESS, payload});
+export function* getLessonId({ payload }: any): any {
+  yield put({ type: TYPES.ID_GET_LESSON_SUCCESS, payload });
 }
 
-export function* getCourse({payload}: any): any {
-  const {callback=()=>{}} = payload
+export function* getCourse({ payload }: any): any {
+  const { callback = () => {} } = payload;
   const idOrg = yield call(organizationId);
   const idCourse = yield call(courseId);
 
   try {
-    const res = yield call(
-      lms_service.getCourse, 
-      idOrg, 
-      idCourse
-    )
+    const res = yield call(lms_service.getCourse, idOrg, idCourse);
 
     yield put({
       type: TYPES.GET_COURSE_SUCCESS,
       payload: res.data,
-    })
-    callback(res.data)
+    });
+    callback(res.data);
   } catch (error) {
-
     yield put({
       type: TYPES.GET_COURSE_FAILED,
-    })
-    callback(false)
+    });
+    callback(false);
   }
 }
 
@@ -300,5 +294,5 @@ export default function* watcher() {
   yield takeLatest(TYPES.GET_COURSES_CURICULUM_REQUEST, getCurriculum);
   yield takeLatest(TYPES.GET_CURICULUM_DETAILS_REQUEST, getCurrilumDetails);
   yield takeLatest(TYPES.GET_DETAILS_LESSONS_LIST_REQUEST, getTopicDetails);
-  yield takeLatest(TYPES.GET_COURSE_REQUEST, getCourse); 
+  yield takeLatest(TYPES.GET_COURSE_REQUEST, getCourse);
 }
