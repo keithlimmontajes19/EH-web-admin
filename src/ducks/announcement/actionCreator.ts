@@ -10,3 +10,8 @@ export const getAllAnnouncement = () => store.dispatch({
 export const getAllOrganizations = () => store.dispatch({
   type: TYPES.LIST_ORGANIZATIONS_REQUEST
 })
+
+export const createAnnoucement = (payload: any) => store.dispatch({
+  type: TYPES.CREATE_ANNOUNCEMENTS_REQUEST,
+  payload
+})

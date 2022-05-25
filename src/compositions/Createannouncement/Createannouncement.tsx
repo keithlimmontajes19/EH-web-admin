@@ -11,13 +11,17 @@ import {
   Row,
   Col,
   Select,
+  Image,
+  Card
 } from "antd";
-
+import './style.css'
+import { theme } from "utils/colors"
 import {
   CalendarOutlined,
   ClockCircleOutlined,
   TeamOutlined,
   PlusOutlined,
+  DownOutlined
 } from "@ant-design/icons";
 import { useState } from "react";
 
@@ -37,16 +41,19 @@ import {
   ViewerContainer,
   PrefixIcon,
   StyledAddBtn,
+  StyledCard
 } from "./styled";
 
 import galleryicon from "../../assets/icons/gallery-icon.svg";
+import fileicon from "../../assets/icons/file-icon.svg"
 import videoicon from "../../assets/icons/video-icon.svg";
 import publishicon from "../../assets/icons/publish-icon.svg";
 import { StyledText } from "compositions/Announcements/styled";
 import CustomeSelect from "components/CustomeSelect";
-import { getAllOrganizations } from "ducks/announcement/actionCreator"
+import { getAllOrganizations, createAnnoucement } from "ducks/announcement/actionCreator"
 import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
+import { ToastContainer } from "react-toastify";
 
 const { MonthPicker, YearPicker } = DatePicker;
 const { Option } = Select;
@@ -84,31 +91,97 @@ const dataprops = {
 const Createannouncement = (props: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imagemodal, setImageModal] = useState(false)
-  const [imageurl, setImageurl] = useState<String>("")
-  const [videourl, setVideourl] = useState<String>("")
+  const [videomodal, setVideoModal] = useState(false)
+  const [imageurl, setImageurl] = useState<String>(null)
+  const [videourl, setVideourl] = useState<String>(null)
   const [title, setTitle] = useState<String>();
   const [description, setDescription] = useState<String>();
   const [starttime, setStartTime] = useState([]);
+  const [startHour, setStartHour] = useState();
+  const [startMinutes, setStartMinutes] = useState();
   const [endtime, setEndTime] = useState<Date>();
-  const [startdate, setStartdate] = useState<Date>();
+  const [startDate, setStartdate] = useState("");
+  const [startMonth, setStartmonth] = useState("");
+  const [startYear, setStartyear] = useState("");
+  const [start, setStart] = useState("")
+  const [end, setend] = useState("")
   const [enddate, setEnddata] = useState<Date>();
-  const [isPublish, setPublish] = useState();
+  const [endmonth, setEndmonth] = useState("");
+  const [endyear, setEndyear] = useState("");
+  const [endHour, setEndhour] = useState("");
+  const [endMinutes, setEndMinutes] = useState();
+  const [isPublish, setPublish] = useState(false);
+  const [selectedorg, setSelectedorg] = useState([]);
+  const [selecteddata, setSelectedData] = useState([]);
+  const [status, setStatus] = useState("inactive")
+  // const [selectedOrgs, setSeletedorgs] = useState({ selected: [], respons: [] });
+
   const { data: Organization }: any = useSelector<RootState>((state) => state.announcement.data)
+  // const [listorg, setListorg] = useState([Organization])
 
-
-  useEffect(() => {
-    // console.log(title, "title");
-    console.log(imageurl)
-    console.log(videourl)
-    console.log(Organization)
-    // console.log(description, "description")
-  }, [title, description, imageurl, videourl, Organization])
-
+  // start annoucement handler here
   const startdatehandler = (date, dateString) => {
-    // console.log(date, dateString)
-    let newdate = new Date(date)
-    setStartdate(newdate)
-    console.log(startdate)
+    setStartdate(dateString)
+  }
+  const startmonthhandler = (month, monthString) => {
+    function getmonth(mon) {
+      return new Date(Date.parse(mon + "1, 2022")).getMonth() + 1
+    }
+    setStartmonth(getmonth(monthString).toString())
+  }
+  const startyearhandler = (year: any, yearString: string) => {
+    setStartyear(yearString)
+  }
+  const starthour = (hour, hourString) => {
+    setStartHour(hourString)
+  }
+  const startminutes = (minutes, minutesString) => {
+    setStartMinutes(minutesString)
+
+  }
+
+  // end annoucement handler here
+  const enddatehandler = (date, dateString) => {
+    setEnddata(dateString)
+  }
+  const endmonthhandler = (month, monthString) => {
+    function getmonth(mon) {
+      return new Date(Date.parse(mon + "1, 2022")).getMonth() + 1
+    }
+    setEndmonth(getmonth(monthString).toString())
+  }
+  const endyearhandler = (year, yearString) => {
+    setEndyear(yearString)
+  }
+
+  const endhour = (hour, hourString) => {
+    setEndhour(hourString)
+  }
+  const endminutes = (minutes, minutesString) => {
+    setEndMinutes(minutesString)
+
+  }
+
+  const addOrg = (e) => {
+    // const value = selectedorg;
+    // const { selected } = selectedOrgs;
+    // console.log("works")
+    // if (e) {
+    //   setSeletedorgs({
+    //     selected: [...selected, value],
+    //     respons: [...selected, value]
+    //   })
+    // }
+    // else {
+    //   setSeletedorgs({
+    //     selected: selected.filter((e) => e !== value),
+    //     respons: selected.filter((e) => e !== value)
+
+    //   })
+    //   setListorg(listorg.filter((e) => e !== value))
+
+    // }
+    setSelectedData(selectedorg)
   }
 
   const imageUploadmodal = () => {
@@ -127,6 +200,33 @@ const Createannouncement = (props: PropsType): ReactElement => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+
+  useEffect(() => {
+    // setend(endyear + '-' + endmonth + '-' + enddate + ' ' + endHour + ':' + endMinutes + ':' + '00')
+    console.log(start, "start")
+    console.log(end, "end")
+    setend(endyear + '-' + endmonth + '-' + enddate + ' ' + endHour + ':' + endMinutes + ':' + '00')
+    setStart(startYear + '-' + startMonth + '-' + startDate + ' ' + startHour + ':' + startMinutes + ':' + '00')
+  }, [startDate, startYear, startMonth, startHour, startMinutes, selectedorg, endyear, endmonth, enddate, endHour, endMinutes])
+
+  const saveAsDraft = () => {
+
+
+    createAnnoucement({
+      title: title,
+      description: description,
+      organization: ["62399761df93fd9598b2eb8c", "6239ffd1cb8440277f2a2b39"],
+      startDate: start,
+      endDate: end,
+      status: status,
+      isPublish: isPublish,
+      videoURL: videourl,
+      imageURL: imageurl
+    })
+    setIsModalVisible(false);
+
+  }
   return (
     <Container>
       <StyledButton onClick={showModal}>Create</StyledButton>
@@ -147,7 +247,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
           >
             Cancle
           </StyledButtonCancle>,
-          <StyledButton>Save As Draft</StyledButton>,
+          <StyledButton onClick={saveAsDraft}>Save As Draft</StyledButton>,
           <StyledButton>
             <img src={publishicon} style={{ paddingRight: "5px" }} />
             Publish
@@ -163,9 +263,16 @@ const Createannouncement = (props: PropsType): ReactElement => {
           }}
         >
           <div>
-            <ImgContainer >
+            <ImgContainer style={{ background: `${(videourl) ? 'black' : ''}` }}>
               {/* <Progress strokeColor="#635ffa" percent={90} /> */}
-
+              {(imageurl === "" && videourl === "") ? <img style={{ width: '50px', height: '50px', margin: '80px 150px', opacity: "0.4" }} src={`${fileicon}`} /> : <>
+                {
+                  (imageurl === "" && videourl) ? <video style={{ width: '360px', height: '240px', borderRadius: '15px' }} controls>
+                    <source src={`${videourl}`} />
+                  </video> :
+                    <Image preview={false} src={`${imageurl}`} style={{ width: '360px', height: '30vh' }} alt="image preview" />
+                }
+              </>}
             </ImgContainer>
           </div>
           <div
@@ -177,7 +284,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
           >
             <ItemContainer onClick={imageUploadmodal} src={galleryicon} />
             <ModalContainer
-              title="enter image Url"
+              title="enter Image Url"
               visible={imagemodal}
               centered
               onOk={() => {
@@ -190,7 +297,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
             >
               <Input
                 placeholder="Enter image url"
-                onChange={(e) => setImageurl(e.target.value)}
+                onChange={(e) => { setImageurl(e.target.value), setVideourl(null) }}
                 style={{
                   borderRadius: "15px",
                   background: "#F8F8F8",
@@ -203,23 +310,25 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 aria-placeholder="screen name 1"
               ></Input>
             </ModalContainer>
-            <ItemContainer onClick={imageUploadmodal} src={videoicon} />
+            <ItemContainer onClick={() => setVideoModal(true)} src={videoicon} />
             <ModalContainer
               title="Enter Video Url"
-              visible={imagemodal}
+              visible={videomodal}
               centered
-              onOk={() => {
-
-                setImageModal(false)
+              onOk={(e) => {
+                setVideoModal(false)
               }}
               onCancel={() => {
-                setImageModal(false)
+                setVideoModal(false)
               }}
 
             >
               <Input
                 placeholder="Sample Announcement_2"
-                onChange={(e) => setVideourl(e.target.value)}
+                onChange={(e) => {
+                  setVideourl(e.target.value)
+                  setImageurl(null)
+                }}
                 style={{
                   borderRadius: "15px",
                   background: "#F8F8F8",
@@ -232,11 +341,6 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 aria-placeholder="screen name 1"
               ></Input>
             </ModalContainer>
-            {/* <Upload accept="images/*" >
-            </Upload> */}
-            {/* <Upload accept="video/*">
-              <ItemContainer src={videoicon} />
-            </Upload> */}
           </div>
         </div>
         <div style={{ marginTop: "20px" }}>
@@ -275,20 +379,24 @@ const Createannouncement = (props: PropsType): ReactElement => {
               <MonthPicker
                 format="MMM"
                 placeholder="Month"
-                onChange={startdatehandler}
-                style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
+                suffixIcon={[<DownOutlined />]}
+                onChange={startmonthhandler}
+                style={{ borderRadius: "10px", width: "90px", margin: "5px" }}
               />
               <DatePicker
                 format={dayFormat}
                 onChange={startdatehandler}
+                suffixIcon={[<DownOutlined />]}
                 placeholder="Date"
-                style={{ borderRadius: "15px", width: "80px", margin: "5px" }}
+                style={{ borderRadius: "10px", width: "80px", margin: "5px" }}
               />
               <YearPicker
                 format="YYYY"
-                onChange={startdatehandler}
+                onChange={startyearhandler}
                 placeholder="Year"
-                style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
+                suffixIcon={[<DownOutlined />]}
+                placement="bottomLeft"
+                style={{ borderRadius: "10px", width: "90px", margin: "5px" }}
               />
             </StartDate>
           </Col>
@@ -299,13 +407,18 @@ const Createannouncement = (props: PropsType): ReactElement => {
               <TimePicker
                 format="HH"
                 placeholder="12"
-                style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
+                onChange={starthour}
+                use12Hours={true}
+                suffixIcon={[]}
+                style={{ borderRadius: "10px", width: "60px", margin: "5px", textAlign: 'center' }}
               />
               :
               <TimePicker
                 format="mm"
+                onChange={startminutes}
+                suffixIcon={[]}
                 placeholder="12"
-                style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
+                style={{ borderRadius: "10px", width: "60px", margin: "5px" }}
               />
             </TimeStart>
           </Col>
@@ -317,18 +430,22 @@ const Createannouncement = (props: PropsType): ReactElement => {
               <CalendarOutlined style={{ padding: "5px" }} />
               <MonthPicker
                 format="MMM"
+                onChange={endmonthhandler}
                 placeholder="Month"
-                style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
+                style={{ borderRadius: "10px", width: "90px", margin: "5px" }}
               />
               <DatePicker
                 format={dayFormat}
+                onChange={enddatehandler}
                 placeholder="Date"
-                style={{ borderRadius: "15px", width: "80px", margin: "5px" }}
+                style={{ borderRadius: "10px", width: "80px", margin: "5px" }}
               />
               <YearPicker
                 format="YYYY"
+                aria-required
+                onChange={endyearhandler}
                 placeholder="Year"
-                style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
+                style={{ borderRadius: "10px", width: "90px", margin: "5px" }}
               />
             </EndDate>
           </Col>
@@ -337,16 +454,21 @@ const Createannouncement = (props: PropsType): ReactElement => {
             <TimeEnd>
               <ClockCircleOutlined />
               <TimePicker
-                format="HH AM/PM"
-                placeholder="12"
+                format="HH"
+                placeholder="00"
+                onChange={endhour}
+                suffixIcon={[]}
                 use12Hours={true}
-                style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
+                style={{ borderRadius: "10px", width: "60px", margin: "5px" }}
               />
               :
               <TimePicker
                 format="mm"
-                placeholder="12"
-                style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
+                onChange={endminutes}
+                suffixIcon={[]}
+                use12Hours={true}
+                placeholder="00"
+                style={{ borderRadius: "10px", width: "60px", margin: "5px" }}
               />
             </TimeEnd>
           </Col>
@@ -361,6 +483,8 @@ const Createannouncement = (props: PropsType): ReactElement => {
               prefixIcon={<TeamOutlined />}
               placeholder="Sample Organization Name"
               style={{ width: "390px", borderRadius: "15px !important" }}
+              onChange={(e) => { setSelectedorg(e) }}
+            // value={Organization}
             >
               {
                 Organization?.map((item, index) => (
@@ -379,12 +503,26 @@ const Createannouncement = (props: PropsType): ReactElement => {
               fontSize: "16px",
               height: "40px",
             }}
+            onClick={addOrg}
           >
             <PlusOutlined />
             ADD
           </Button>
+          {(selecteddata.length === 0) ?
+            '' : selecteddata?.map((item, index) => (
+              <StyledCard
+                bodyStyle={{ padding: '5px' }}
+                key={index}
+              >
+                <p style={{ padding: '0px', margin: '0px' }}>{item}</p>
+              </StyledCard>
+            ))
+          }
+
+
         </Row>
       </ModalContainer>
+      <ToastContainer />
     </Container>
   );
 };

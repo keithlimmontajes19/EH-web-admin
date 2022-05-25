@@ -114,9 +114,9 @@ const TablePages = (props: PropsType): ReactElement => {
       },
     },
   ];
-  useEffect(() => {
-    getPages();
-  }, [rawData]);
+  // useEffect(() => {
+  //   getPages();
+  // }, [rawData]);
   useEffect(() => {
     getPages();
   }, [])

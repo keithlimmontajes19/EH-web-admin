@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { Button, Layout, Modal } from "antd";
+import { Button, Layout, Modal, Card } from "antd";
+import { theme } from "utils/colors";
 
 export const StyledButton: any = styled(Button)`
   background: #635ffa;
@@ -134,6 +135,15 @@ export const StyledAddBtn = styled(Button)`
   backgroud-color: #fff;
   color: #635ffa;
 `;
+
+export const StyledCard = styled(Card)`
+width:390px;
+border-radius:15px;
+backgournd:${theme.LOGIN_LAYOUT};
+text - align: center;
+margin: 5px;
+padding: 5px!important;
+`
 
 export const ViewerContainer = styled.div``;
 
