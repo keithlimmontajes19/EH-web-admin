@@ -77,6 +77,10 @@ export function* editPage({ payload }: AnyAction) {
         toast.success(`Page Edited sucessfully`)
         return Promise.resolve(response);
     } catch (error) {
+
+        yield put({
+            type: TYPES.EDIT_PAGE_FAILED
+        })
         toast.error(error)
         return Promise.reject(error)
     }
@@ -90,9 +94,16 @@ export function* deletePage(pageId): any {
             payload: response?.data
         })
         toast.success("page deleted sucessfully")
+        yield put({
+            type: TYPES.LIST_PAGE_REQUEST,
+            payload: response?.data
+        })
         return Promise.resolve(response);
     }
     catch (error) {
+        yield put({
+            type: TYPES.DELETE_PAGE_FAILED
+        })
         return Promise.reject(error)
     }
 }

@@ -4,6 +4,7 @@ const INITIAL_STATE = {
   data: [],
   loading: false,
   error: false,
+  deletepagedata: []
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -79,6 +80,29 @@ const reducer = (state = INITIAL_STATE, action) => {
         data: [],
         loading: false,
         error: true
+      }
+
+    case TYPES.DELETE_ANNOUNCEMENT_REQUEST:
+      return {
+        ...state,
+        deletepagedata: action.payload,
+        loading: false,
+        error: false
+      }
+    case TYPES.DELETE_ANNOUNCEMENT_SUCCESS:
+      return {
+        ...state,
+        deletepagedata: action.payload,
+        loading: false,
+        error: false,
+
+      }
+    case TYPES.DELETE_ANNOUNCEMENT_FAILED:
+      return {
+        ...state,
+        data: [],
+        loading: false,
+        error: true,
       }
 
     default:

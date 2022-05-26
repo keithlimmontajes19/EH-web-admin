@@ -1,3 +1,6 @@
+
+
+
 import { ReactElement, useEffect } from "react";
 import {
   Modal,
@@ -14,14 +17,15 @@ import {
   Image,
   Card
 } from "antd";
-import './style.css'
+// import './style.css'
 import { theme } from "utils/colors"
 import {
   CalendarOutlined,
   ClockCircleOutlined,
   TeamOutlined,
   PlusOutlined,
-  DownOutlined
+  DownOutlined,
+  EditOutlined
 } from "@ant-design/icons";
 import { useState } from "react";
 
@@ -41,19 +45,21 @@ import {
   ViewerContainer,
   PrefixIcon,
   StyledAddBtn,
-  StyledCard
+  StyledCard,
+  Contentdiv
 } from "./styled";
 
 import galleryicon from "../../assets/icons/gallery-icon.svg";
-import fileicon from "assets/icons/file-icon.svg"
+import fileicon from "../../assets/icons/file-icon.svg"
 import videoicon from "../../assets/icons/video-icon.svg";
 import publishicon from "../../assets/icons/publish-icon.svg";
 import { StyledText } from "compositions/Announcements/styled";
 import CustomeSelect from "components/CustomeSelect";
-import { getAllOrganizations, createAnnoucement } from "ducks/announcement/actionCreator"
+import { getAllOrganizations, createAnnoucement, editAnnoucement } from "ducks/announcement/actionCreator"
 import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
 import { ToastContainer } from "react-toastify";
+import moment from "moment";
 
 const { MonthPicker, YearPicker } = DatePicker;
 const { Option } = Select;
@@ -62,80 +68,61 @@ const { Option } = Select;
 
 const dayFormat = "DD";
 
-const dataprops = {
-  name: "file",
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  progress: {
-    strokeColor: {
-      "0%": "#108ee9",
-      "100%": "#87d068",
-    },
-    strokeWidth: 3,
-    format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
-  },
-};
 
-const Createannouncement = (props: PropsType): ReactElement => {
+const EditAnnouncement = ({ data }: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imagemodal, setImageModal] = useState(false)
   const [videomodal, setVideoModal] = useState(false)
-  const [imageurl, setImageurl] = useState<String>(null)
-  const [videourl, setVideourl] = useState<String>(null)
-  const [title, setTitle] = useState<String>();
-  const [description, setDescription] = useState<String>();
+  const [imageurl, setImageurl] = useState<String>(data.imageURL)
+  const [videourl, setVideourl] = useState<String>(data.videoURL)
+  const [title, setTitle] = useState<string>(data.title);
+  const [description, setDescription] = useState<string>(data.description);
   const [starttime, setStartTime] = useState([]);
-  const [startHour, setStartHour] = useState();
-  const [startMinutes, setStartMinutes] = useState();
+  const [startHour, setStartHour] = useState(moment(data?.start_date));
+  const [startMinutes, setStartMinutes] = useState(moment(data?.start_date));
   const [endtime, setEndTime] = useState<Date>();
-  const [startDate, setStartdate] = useState("");
-  const [startMonth, setStartmonth] = useState("");
-  const [startYear, setStartyear] = useState("");
+  var Date = data?.start_date
+  var b = Date.slice(0, 10);
+  var c = b.split('-');
+  var e = c[Symbol.iterator]();
+
+  const [startYear, setStartyear] = useState(moment(data?.start_date));
+  const [startMonth, setStartmonth] = useState(moment(data?.start_date));
+  const [startDate, setStartdate] = useState(moment(data?.start_date));
   const [start, setStart] = useState("")
   const [end, setend] = useState("")
-  const [enddate, setEnddata] = useState<Date>();
-  const [endmonth, setEndmonth] = useState("");
-  const [endyear, setEndyear] = useState("");
-  const [endHour, setEndhour] = useState("");
-  const [endMinutes, setEndMinutes] = useState();
+
+
+  const [endyear, setEndyear] = useState(moment(data?.end_date));
+  const [endmonth, setEndmonth] = useState(moment(data?.end_date));
+  const [enddate, setEnddate] = useState(moment(data?.end_date));
+  const [endHour, setEndhour] = useState(moment(data?.end_date));
+  const [endMinutes, setEndMinutes] = useState(moment(data?.end_date));
   const [isPublish, setPublish] = useState(false);
   const [selectedorg, setSelectedorg] = useState([]);
   const [selecteddata, setSelectedData] = useState([]);
   const [status, setStatus] = useState("inactive")
-  const [selectedOrgs, setSeletedorgs] = useState([]);
+  const [visible, setVisible] = useState(false);
+  // const [selectedOrgs, setSeletedorgs] = useState({ selected: [], respons: [] });
 
-  const { data: Organization }: any = useSelector<RootState>((state) => state.announcement?.data)
-  const [listorg, setListorg] = useState(Organization)
-  // useEffect(() => {
-
-  // }, [])
-  console.log(listorg, "list org")
-
-
+  const { data: Organization }: any = useSelector<RootState>((state) => state.announcement?.data) || ["0"]
+  // const [listorg, setListorg] = useState([Organization])
+  // console.log(data.start_date.split("T")[0])
   // start annoucement handler here
+  // console.log(startDate)
   const startdatehandler = (date, dateString) => {
     setStartdate(dateString)
   }
   const startmonthhandler = (month, monthString) => {
     function getmonth(mon) {
-      return new Date(Date.parse(mon + "1, 2022")).getMonth() + 1
+      return new Date(Date.parse(mon + "1, 2012")).getMonth() + 1
     }
-    setStartmonth(getmonth(monthString).toString())
+    setStartmonth(getmonth(monthString))
+    console.log(monthString)
   }
-  const startyearhandler = (year: any, yearString: string) => {
+  const startyearhandler = (year: any, yearString) => {
     setStartyear(yearString)
+    console.log(yearString)
   }
   const starthour = (hour, hourString) => {
     setStartHour(hourString)
@@ -147,16 +134,17 @@ const Createannouncement = (props: PropsType): ReactElement => {
 
   // end annoucement handler here
   const enddatehandler = (date, dateString) => {
-    setEnddata(dateString)
+    setEnddate(dateString)
   }
   const endmonthhandler = (month, monthString) => {
     function getmonth(mon) {
       return new Date(Date.parse(mon + "1, 2022")).getMonth() + 1
     }
-    setEndmonth(getmonth(monthString).toString())
+    setEndmonth(getmonth(monthString))
   }
   const endyearhandler = (year, yearString) => {
     setEndyear(yearString)
+    console.log(yearString)
   }
 
   const endhour = (hour, hourString) => {
@@ -164,19 +152,33 @@ const Createannouncement = (props: PropsType): ReactElement => {
   }
   const endminutes = (minutes, minutesString) => {
     setEndMinutes(minutesString)
+    // setend(end + endMinutes + ':' + '00')
+  }
 
+  const handleVisibleChange = (newVisible: boolean) => {
+    setVisible(newVisible);
   }
 
   const addOrg = (e) => {
-    setSelectedData([...selecteddata, selectedorg])
-    // var filterarray = listorg.filter(function (ele) {
-    //   return selectedorg.filter(function (selected_ele) {
-    //     return selected_ele.id == ele.id;
-    //   }).length === 0
-    // })
-    // setListorg(filterarray)
-    // setSelectedData(selectedorg)
+    // const value = selectedorg;
+    // const { selected } = selectedOrgs;
+    // console.log("works")
+    // if (e) {
+    //   setSeletedorgs({
+    //     selected: [...selected, value],
+    //     respons: [...selected, value]
+    //   })
+    // }
+    // else {
+    //   setSeletedorgs({
+    //     selected: selected.filter((e) => e !== value),
+    //     respons: selected.filter((e) => e !== value)
 
+    //   })
+    //   setListorg(listorg.filter((e) => e !== value))
+
+    // }
+    setSelectedData(selectedorg)
   }
 
   const imageUploadmodal = () => {
@@ -203,31 +205,46 @@ const Createannouncement = (props: PropsType): ReactElement => {
     console.log(end, "end")
     setend(endyear + '-' + endmonth + '-' + enddate + ' ' + endHour + ':' + endMinutes + ':' + '00')
     setStart(startYear + '-' + startMonth + '-' + startDate + ' ' + startHour + ':' + startMinutes + ':' + '00')
+
   }, [startDate, startYear, startMonth, startHour, startMinutes, selectedorg, endyear, endmonth, enddate, endHour, endMinutes])
 
   const saveAsDraft = () => {
 
-    // if(title === ""|| description== ""|| organization.length === 0 )
-    createAnnoucement({
+
+    editAnnoucement({
       title: title,
       description: description,
       organization: ["62399761df93fd9598b2eb8c", "6239ffd1cb8440277f2a2b39"],
-      startDate: start,
-      endDate: end,
+      startDate: moment(start).format(),
+      endDate: moment(end).format(),
       status: status,
       isPublish: isPublish,
       videoURL: videourl,
-      imageURL: imageurl
+      imageURL: imageurl,
+      id: data?._id
     })
     setIsModalVisible(false);
-
+    console.log(moment(start).format(), "start date")
+    console.log(moment(end).format(), "end date")
   }
-  return (
+  return (<>
+    <Contentdiv onClick={showModal}>
+      <EditOutlined
+        style={{
+          color: "#635ffa",
+          fontSize: "18px",
+          padding: "10px 10px",
+        }}
+      />
+      Edit
+    </Contentdiv>
     <Container>
-      <StyledButton onClick={showModal}>Create</StyledButton>
+
+
       <ModalContainer
-        title="Create Announcement"
+        title="Edit Announcement"
         visible={isModalVisible}
+        // width={610}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
@@ -260,12 +277,12 @@ const Createannouncement = (props: PropsType): ReactElement => {
           <div>
             <ImgContainer style={{ background: `${(videourl) ? 'black' : ''}` }}>
               {/* <Progress strokeColor="#635ffa" percent={90} /> */}
-              {(imageurl === "" && videourl === "" || (imageurl === null || videourl === null)) ? <img style={{ width: '50px', height: '50px', margin: '80px 150px', opacity: "0.4" }} src={`${fileicon}`} /> : <>
+              {(imageurl === null && videourl === null) ? <img style={{ width: '50px', height: '50px', margin: '80px 150px', opacity: "0.4" }} src={`${fileicon}`} /> : <>
                 {
-                  (videourl) ? <video style={{ width: '360px', height: '240px', borderRadius: '15px' }} controls>
+                  (videourl) ? <video style={{ width: '360px', height: '24vh', borderRadius: '15px', marginTop: '25px' }} controls>
                     <source src={`${videourl}`} />
                   </video> :
-                    <Image preview={false} src={`${imageurl}`} style={{ width: '360px', height: '24vh', borderRadius: '15px' }} alt="image preview" />
+                    <Image preview={false} src={`${imageurl}`} style={{ width: '360px', height: '24vh', }} alt="image preview" />
                 }
               </>}
             </ImgContainer>
@@ -310,7 +327,6 @@ const Createannouncement = (props: PropsType): ReactElement => {
               title="Enter Video Url"
               visible={videomodal}
               centered
-
               onOk={(e) => {
                 setVideoModal(false)
               }}
@@ -351,6 +367,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
             }}
             onChange={(e) => setTitle(e.target.value)}
             size="large"
+            defaultValue={title}
             aria-placeholder="screen name 1"
           ></Input>
           <Input.TextArea
@@ -364,6 +381,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
               margin: "10px 0px",
               fontSize: "14px",
             }}
+            defaultValue={description}
             size="large"
           ></Input.TextArea>
         </div>
@@ -377,11 +395,13 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 placeholder="Month"
                 suffixIcon={[<DownOutlined />]}
                 onChange={startmonthhandler}
+                defaultValue={startMonth}
                 style={{ borderRadius: "10px", width: "90px", margin: "5px" }}
               />
               <DatePicker
-                format={dayFormat}
+                format="DD"
                 onChange={startdatehandler}
+                defaultValue={startDate}
                 suffixIcon={[<DownOutlined />]}
                 placeholder="Date"
                 style={{ borderRadius: "10px", width: "80px", margin: "5px" }}
@@ -389,6 +409,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
               <YearPicker
                 format="YYYY"
                 onChange={startyearhandler}
+                defaultValue={startYear}
                 placeholder="Year"
                 suffixIcon={[<DownOutlined />]}
                 placement="bottomLeft"
@@ -404,6 +425,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 format="HH"
                 placeholder="12"
                 onChange={starthour}
+                defaultValue={startHour}
                 use12Hours={true}
                 suffixIcon={[]}
                 style={{ borderRadius: "10px", width: "60px", margin: "5px", textAlign: 'center' }}
@@ -413,6 +435,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 format="mm"
                 onChange={startminutes}
                 suffixIcon={[]}
+                defaultValue={startMinutes}
                 placeholder="12"
                 style={{ borderRadius: "10px", width: "60px", margin: "5px" }}
               />
@@ -427,6 +450,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
               <MonthPicker
                 format="MMM"
                 onChange={endmonthhandler}
+                defaultValue={endmonth}
                 placeholder="Month"
                 style={{ borderRadius: "10px", width: "90px", margin: "5px" }}
               />
@@ -434,11 +458,13 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 format={dayFormat}
                 onChange={enddatehandler}
                 placeholder="Date"
+                defaultValue={enddate}
                 style={{ borderRadius: "10px", width: "80px", margin: "5px" }}
               />
               <YearPicker
                 format="YYYY"
                 aria-required
+                defaultValue={endyear}
                 onChange={endyearhandler}
                 placeholder="Year"
                 style={{ borderRadius: "10px", width: "90px", margin: "5px" }}
@@ -453,6 +479,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 format="HH"
                 placeholder="00"
                 onChange={endhour}
+                defaultValue={endHour}
                 suffixIcon={[]}
                 use12Hours={true}
                 style={{ borderRadius: "10px", width: "60px", margin: "5px" }}
@@ -462,6 +489,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 format="mm"
                 onChange={endminutes}
                 suffixIcon={[]}
+                defaultValue={endMinutes}
                 use12Hours={true}
                 placeholder="00"
                 style={{ borderRadius: "10px", width: "60px", margin: "5px" }}
@@ -484,7 +512,8 @@ const Createannouncement = (props: PropsType): ReactElement => {
             >
               {
                 Organization?.map((item, index) => (
-                  <Option value={item?.name} key={index}>{item?.name}</Option>
+                  <Option value={item.name} key={index}>{item.name}</Option>
+
                 ))
               }
             </CustomeSelect>
@@ -513,13 +542,12 @@ const Createannouncement = (props: PropsType): ReactElement => {
               </StyledCard>
             ))
           }
-
-
         </Row>
       </ModalContainer>
       <ToastContainer />
     </Container>
+  </>
   );
 };
 
-export default Createannouncement;
+export default EditAnnouncement;

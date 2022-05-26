@@ -1,4 +1,5 @@
 import { store } from 'ducks/store';
+import { TYPE } from 'react-toastify/dist/utils';
 import { TYPES } from './actionTypes';
 
 export const getAnnouncements = () => store.dispatch({
@@ -13,5 +14,13 @@ export const getAllOrganizations = () => store.dispatch({
 
 export const createAnnoucement = (payload: any) => store.dispatch({
   type: TYPES.CREATE_ANNOUNCEMENTS_REQUEST,
+  payload
+})
+export const deleteAnnouncemnet = (id: any) => store.dispatch({
+  type: TYPES.DELETE_ANNOUNCEMENT_REQUEST,
+  id
+})
+export const editAnnoucement = (payload: any) => store.dispatch({
+  type: TYPES.EDIT_ANNOUNCEMENT_REQUEST,
   payload
 })

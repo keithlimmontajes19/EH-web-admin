@@ -172,12 +172,12 @@ const TablePages = (props: PropsType): ReactElement => {
       okType: "danger",
       onOk: () => {
         deletePage(recArr[0]._id)
-        setDataSource((pre) => {
-          return pre
-            .filter((obj) => recArr.every((record) => record.key !== obj.key))
-            .map((obj, i) => ({ ...obj, key: i }));
-        });
-        if (searchInpt !== "") refreshSearchdData();
+        // setDataSource((pre) => {
+        //   return pre
+        //     .filter((obj) => recArr.every((record) => record.key !== obj.key))
+        //     .map((obj, i) => ({ ...obj, key: i }));
+        // });
+        // if (searchInpt !== "") refreshSearchdData();
       },
     });
   };

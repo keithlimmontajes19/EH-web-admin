@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
 import Loading from "components/Loading";
 import { getDashboard } from "ducks/dashboard/actionCreator";
+import { deleteAnnouncemnet } from "ducks/announcement/actionCreator"
 import { getAllAnnouncement, getAnnouncements } from "ducks/announcement/actionCreator"
 import Createannouncement from "compositions/Createannouncement";
 
@@ -37,6 +38,8 @@ import {
   BuildIcon,
 } from "./styled";
 import buildicon from "../../assets/icons/hammer-icon.svg";
+import { ToastContainer } from "react-toastify";
+import EditAnnouncement from "compositions/EditAnnouncement";
 
 const Announcements = (props: PropsType): ReactElement => {
   const { data: rawData }: any = useSelector<RootState>(
@@ -51,7 +54,8 @@ const Announcements = (props: PropsType): ReactElement => {
   const [dataSource, setDataSource] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
-  const [file, setFile] = useState("")
+  const [file, setFile] = useState("");
+  const [visible, setVisible] = useState(false)
 
 
 
@@ -79,18 +83,23 @@ const Announcements = (props: PropsType): ReactElement => {
     pushHistory("/team/annoubcements/createannouncement");
   };
   const onDeleteData = (recArr) => {
-    if (!recArr.length) return;
+    if (!Object.keys(recArr).length) return;
     Modal.confirm({
       title: "Are you sure, you want to delete this record?",
       okText: "Yes",
       okType: "danger",
       onOk: () => {
-        setDataSource((pre) => {
-          return pre
-            .filter((obj) => recArr.every((record) => record.key !== obj.key))
-            .map((obj, i) => ({ ...obj, key: i }));
-        });
-        if (searchInpt !== "") refreshSearchdData();
+        console.log(recArr._id)
+        // getAllAnnouncement();
+
+        deleteAnnouncemnet(recArr._id)
+        // getAnnouncements()
+        // setDataSource((pre) => {
+        //   return pre
+        //     .filter((obj) => recArr.every((record) => record.key !== obj.key))
+        //     .map((obj, i) => ({ ...obj, key: i }));
+        // });
+        // if (searchInpt !== "") refreshSearchdData();
       },
     });
   };
@@ -113,44 +122,7 @@ const Announcements = (props: PropsType): ReactElement => {
     setEditingData(null);
   };
 
-  const content = (
-    <div style={{ fontSize: "18px" }}>
-      <Contentdiv>
-        <BuildIcon
-          src={buildicon}
-          style={{
-            height: "17px",
-            color: "#635ffa",
-            fontSize: "18px",
-            padding: "0px 10px",
-          }}
-        />
-        Builder
-      </Contentdiv>
-      <Contentdiv>
-        <EditOutlined
-          style={{
-            color: "#635ffa",
-            fontSize: "18px",
-            padding: "10px 10px",
-          }}
-        />
-        Edit
-      </Contentdiv>
-      <Contentdiv>
-        <EyeFilled
-          style={{ color: "#635ffa", fontSize: "18px", padding: "10px 10px" }}
-        />
-        View{" "}
-      </Contentdiv>
-      <Contentdiv style={{ padding: "0px" }}>
-        <DeleteOutlined
-          style={{ color: "#635ffa", fontSize: "18px", padding: "10px 10px" }}
-        />
-        Delete
-      </Contentdiv>
-    </div>
-  );
+
 
   const columns = [
     {
@@ -206,14 +178,25 @@ const Announcements = (props: PropsType): ReactElement => {
       dataIndex: "start_date",
       width: "35%",
       maxWidth: "35%",
-      render: (dateadded) => {
+      render: (dateadded, rawData) => {
         return (
           <>
             <PopupContainer>
               <div style={{ fontSize: '16«px' }}>{dateadded.split("T")[0]}</div>
               <Popover
                 trigger="click"
-                content={content}
+                // visible={visible}
+                content={
+                  <div style={{ fontSize: "18px" }}>
+                    <EditAnnouncement data={rawData} />
+                    <Contentdiv style={{ padding: "0px" }} onClick={() => onDeleteData(rawData)}>
+                      <DeleteOutlined
+                        style={{ color: "#635ffa", fontSize: "18px", padding: "10px 10px" }}
+                      />
+                      Delete
+                    </Contentdiv>
+                  </div>
+                }
                 overlayInnerStyle={{ borderRadius: "15px" }}
                 placement="bottom"
               >
@@ -312,6 +295,7 @@ const Announcements = (props: PropsType): ReactElement => {
           />
         </TableContainer>
       </Layout>
+      <ToastContainer />
     </>
   );
 };
