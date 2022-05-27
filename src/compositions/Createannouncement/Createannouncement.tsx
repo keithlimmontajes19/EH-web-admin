@@ -53,7 +53,9 @@ import CustomeSelect from "components/CustomeSelect";
 import { getAllOrganizations, createAnnoucement } from "ducks/announcement/actionCreator"
 import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import Loading from "components/Loading";
+
 
 const { MonthPicker, YearPicker } = DatePicker;
 const { Option } = Select;
@@ -62,67 +64,50 @@ const { Option } = Select;
 
 const dayFormat = "DD";
 
-const dataprops = {
-  name: "file",
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  progress: {
-    strokeColor: {
-      "0%": "#108ee9",
-      "100%": "#87d068",
-    },
-    strokeWidth: 3,
-    format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
-  },
-};
-
 const Createannouncement = (props: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imagemodal, setImageModal] = useState(false)
   const [videomodal, setVideoModal] = useState(false)
   const [imageurl, setImageurl] = useState<String>(null)
   const [videourl, setVideourl] = useState<String>(null)
-  const [title, setTitle] = useState<String>();
-  const [description, setDescription] = useState<String>();
-  const [starttime, setStartTime] = useState([]);
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [startHour, setStartHour] = useState();
   const [startMinutes, setStartMinutes] = useState();
-  const [endtime, setEndTime] = useState<Date>();
   const [startDate, setStartdate] = useState("");
   const [startMonth, setStartmonth] = useState("");
   const [startYear, setStartyear] = useState("");
   const [start, setStart] = useState("")
   const [end, setend] = useState("")
-  const [enddate, setEnddata] = useState<Date>();
+  const [enddate, setEnddata] = useState("");
   const [endmonth, setEndmonth] = useState("");
   const [endyear, setEndyear] = useState("");
   const [endHour, setEndhour] = useState("");
-  const [endMinutes, setEndMinutes] = useState();
+  const [endMinutes, setEndMinutes] = useState("");
   const [isPublish, setPublish] = useState(false);
   const [selectedorg, setSelectedorg] = useState([]);
   const [selecteddata, setSelectedData] = useState([]);
   const [status, setStatus] = useState("inactive")
-  const [selectedOrgs, setSeletedorgs] = useState([]);
+  const [selectedOrgs, setSeletedOrgs] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true)
 
-  const { data: Organization }: any = useSelector<RootState>((state) => state.announcement?.data)
-  const [listorg, setListorg] = useState(Organization)
-  // useEffect(() => {
 
-  // }, [])
-  console.log(listorg, "list org")
+  const { data: Organization }: any = useSelector<RootState>((state) => state.announcement?.data) || [0]
 
+  console.log(Organization)
+  const [listorg, setListorg] = useState([])
+  useEffect(() => {
+    // setListorg(Organization)
+    console.log(selectedOrgs)
+  }, [Organization])
+
+  const filterOptions = Organization?.filter(o => !selectedOrgs.includes(o.name));
+  const filterid = Organization?.filter(o => selectedOrgs.includes(o.name))
+  const id = filterid?.map((item) => {
+    return item._id
+  })
+
+  console.log(filterid)
 
   // start annoucement handler here
   const startdatehandler = (date, dateString) => {
@@ -142,7 +127,6 @@ const Createannouncement = (props: PropsType): ReactElement => {
   }
   const startminutes = (minutes, minutesString) => {
     setStartMinutes(minutesString)
-
   }
 
   // end annoucement handler here
@@ -168,15 +152,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
   }
 
   const addOrg = (e) => {
-    setSelectedData([...selecteddata, selectedorg])
-    // var filterarray = listorg.filter(function (ele) {
-    //   return selectedorg.filter(function (selected_ele) {
-    //     return selected_ele.id == ele.id;
-    //   }).length === 0
-    // })
-    // setListorg(filterarray)
-    // setSelectedData(selectedorg)
-
+    setSelectedData(selectedOrgs)
   }
 
   const imageUploadmodal = () => {
@@ -190,10 +166,20 @@ const Createannouncement = (props: PropsType): ReactElement => {
 
   const handleOk = () => {
     setIsModalVisible(false);
+    setImageurl(null),
+      setVideourl(null),
+      setTitle(""),
+      setDescription("")
+
+
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
+    setImageurl(null),
+      setVideourl(null),
+      setTitle(""),
+      setDescription("")
   };
 
 
@@ -207,11 +193,24 @@ const Createannouncement = (props: PropsType): ReactElement => {
 
   const saveAsDraft = () => {
 
-    // if(title === ""|| description== ""|| organization.length === 0 )
+    if (title === "") {
+      return toast.error("Title is required")
+    }
+    if (description == "") {
+      return toast.error("description is required")
+    }
+    if (startHour === "" || startDate === "" || startMonth === "" || startYear === "" || startMinutes === "") {
+      return toast.error("start date is required")
+    } if (enddate === "" || endHour === "" || endMinutes === "" || endyear === "" || endmonth === "") {
+      return toast.error("end date is required")
+    }
+    if (id.length === 0) {
+      return toast.error("organization is required")
+    }
     createAnnoucement({
       title: title,
       description: description,
-      organization: ["62399761df93fd9598b2eb8c", "6239ffd1cb8440277f2a2b39"],
+      organization: id,
       startDate: start,
       endDate: end,
       status: status,
@@ -220,6 +219,12 @@ const Createannouncement = (props: PropsType): ReactElement => {
       imageURL: imageurl
     })
     setIsModalVisible(false);
+
+  }
+
+  const Publish = () => {
+    setPublish(true)
+    saveAsDraft()
 
   }
   return (
@@ -243,7 +248,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
             Cancle
           </StyledButtonCancle>,
           <StyledButton onClick={saveAsDraft}>Save As Draft</StyledButton>,
-          <StyledButton>
+          <StyledButton onCllick={Publish}>
             <img src={publishicon} style={{ paddingRight: "5px" }} />
             Publish
           </StyledButton>,
@@ -351,6 +356,8 @@ const Createannouncement = (props: PropsType): ReactElement => {
             }}
             onChange={(e) => setTitle(e.target.value)}
             size="large"
+            defaultValue={title}
+            value={title}
             aria-placeholder="screen name 1"
           ></Input>
           <Input.TextArea
@@ -365,6 +372,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
               fontSize: "14px",
             }}
             size="large"
+            value={description}
           ></Input.TextArea>
         </div>
         <Row>
@@ -474,21 +482,24 @@ const Createannouncement = (props: PropsType): ReactElement => {
         </StyledText>
         <Row justify="space-between">
           <ViewerContainer>
-            <CustomeSelect
+            <Select
               size="large"
-              prefixIcon={<TeamOutlined />}
+              mode="multiple"
               placeholder="Sample Organization Name"
               style={{ width: "390px", borderRadius: "15px !important" }}
-              onChange={(e) => { setSelectedorg(e) }}
+              onChange={setSeletedOrgs}
+              value={selectedOrgs}
             // value={Organization}
             >
-              {
-                Organization?.map((item, index) => (
-                  <Option value={item?.name} key={index}>{item?.name}</Option>
+              {(loading && filterOptions?.length === 0) ? <Loading /> :
+
+                filterOptions?.map((item, index) => (
+                  <Select.Option value={item?.name} key={index}>{item?.name}</Select.Option>
                 ))
               }
-            </CustomeSelect>
+            </Select>
           </ViewerContainer>
+          {console.log(listorg)}
           <Button
             style={{
               backgroundColor: "#fff",
@@ -518,7 +529,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
         </Row>
       </ModalContainer>
       <ToastContainer />
-    </Container>
+    </Container >
   );
 };
 

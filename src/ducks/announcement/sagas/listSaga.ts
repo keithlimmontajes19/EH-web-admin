@@ -47,7 +47,13 @@ export function* createAnnoucement(payload: any) {
       type: TYPES.CREATE_ANNOUNCEMENTS_SUCCESS,
       payload: response?.data,
     })
-    toast.success("anncoucemnent created!!")
+
+    if (payload.payload.isPublish) {
+      toast.success("annoucement publish successfully")
+    }
+    else {
+      toast.success("anncoucemnent created!!")
+    }
     yield put({
       type: TYPES.LIST_ANNOUNCEMENTS_REQUEST,
       payload: response?.data,
@@ -116,7 +122,12 @@ export function* editAnnoucement({ payload }: AnyAction) {
       type: TYPES.EDIT_ANNOUNCEMENT_SUCCESS,
       payload: response?.data
     })
-    toast.success("announcement edited successfully")
+    if (payload.isPublish) {
+      toast.success("annoucement publish successfully")
+    }
+    else {
+      toast.success("announcement edited successfully")
+    }
     yield put({
       type: TYPES.LIST_ANNOUNCEMENTS_REQUEST,
       payload: response?.data
