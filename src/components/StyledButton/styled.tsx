@@ -13,7 +13,8 @@ export const StyledComponentButton: any = styled(Button)`
   font-weight: 700;
   p: ${({p} :any) => p ? p : '0'};
   margin: ${({ m }: any) => (m ? m : `0`)};
-
+  overflow-x: hidden;
+  
   &:hover,
   &:active,
   &:focus {
