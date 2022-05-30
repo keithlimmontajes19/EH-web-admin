@@ -49,6 +49,10 @@ import {
   Contentdiv
 } from "./styled";
 
+
+import active from "assets/icons/greendot.svg"
+import inactive from "assets/icons/red-dot.svg"
+import inprogress from "assets/icons/bluedot.svg"
 import galleryicon from "../../assets/icons/gallery-icon.svg";
 import fileicon from "../../assets/icons/file-icon.svg"
 import videoicon from "../../assets/icons/video-icon.svg";
@@ -92,7 +96,7 @@ const EditAnnouncement = ({ data }: PropsType): ReactElement => {
   const [isPublish, setPublish] = useState(false);
   const [selectedorg, setSelectedorg] = useState([]);
   const [selecteddata, setSelectedData] = useState([]);
-  const [status, setStatus] = useState("inactive")
+  const [status, setStatus] = useState(data?.status)
   const [visible, setVisible] = useState(false);
   const [selectedOrgs, setSeletedOrgs] = useState<string[]>([]);
   const { data: Organization }: any = useSelector<RootState>((state) => state.announcement?.data) || [0]
@@ -271,12 +275,12 @@ const EditAnnouncement = ({ data }: PropsType): ReactElement => {
           <div>
             <ImgContainer style={{ background: `${(videourl) ? 'black' : ''}` }}>
               {/* <Progress strokeColor="#635ffa" percent={90} /> */}
-              {(imageurl === null && videourl === null) ? <img style={{ width: '50px', height: '50px', margin: '80px 150px', opacity: "0.4" }} src={`${fileicon}`} /> : <>
+              {(imageurl === null && videourl === null) ? <img style={{ width: '50px', height: '50px', opacity: "0.4" }} src={`${fileicon}`} /> : <>
                 {
                   (videourl) ? <video style={{ width: '360px', height: '24vh', borderRadius: '15px', marginTop: '25px' }} controls>
                     <source src={`${videourl}`} />
                   </video> :
-                    <Image preview={false} src={`${imageurl}`} style={{ width: '360px', height: '24vh', }} alt="image preview" />
+                    <Image preview={false} src={`${imageurl}`} style={{ width: '360px', height: '28vh', borderRadius: '15px' }} alt="image preview" />
                 }
               </>}
             </ImgContainer>
@@ -492,6 +496,32 @@ const EditAnnouncement = ({ data }: PropsType): ReactElement => {
                 style={{ borderRadius: "10px", width: "60px", margin: "5px" }}
               />
             </TimeEnd>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <StyledH4>Status</StyledH4>
+          </Col>
+          <Col>
+            <Select
+              size="large"
+              onChange={(e) => setStatus(e)}
+              style={{ width: '280px', borderRadius: "15px", margin: '29px 0px 5px -12px' }}
+              value={status}
+            >
+              <Option value="in_progress" style={{ fontSize: '14px !important' }}>
+                <img src={inprogress} style={{ padding: '0px 10px 0px 10px' }} />
+                In Progress
+              </Option>
+              <Option value="active">
+                <img src={active} style={{ padding: '0px 10px 0px 10px' }} />
+                Active
+              </Option>
+              <Option value="inactive">
+                <img src={inactive} style={{ padding: '0px 10px 0px 10px' }} />
+                InActive
+              </Option>
+            </Select>
           </Col>
         </Row>
         <StyledText fS={25} style={{ marginBottom: "12px !important" }}>

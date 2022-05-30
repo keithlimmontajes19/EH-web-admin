@@ -62,6 +62,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
   const [loading, setLoading] = useState(true);
   const [points, setPoints] = useState(0);
   const params: Params = useParams()
+  const [title, setTitle] = useState();
   const [addans, setAddanswere] = useState(false)
   const [anslist, setAnsList] = useState([])
 
@@ -148,7 +149,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
         fS={16}
         fC={"#635FFA"}
         fW={500}
-        onClick={() => history.push("/team/forms/:title?")}
+        onClick={() => history.push("/team/forms")}
       >
         {"<"}Back to Fomrs
       </StyledText>

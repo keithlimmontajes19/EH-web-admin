@@ -9,6 +9,7 @@ import onboardingSaga from './onboarding/sagas';
 import announncementSaga from './announcement/sagas';
 import authenticationSaga from './authentication/sagas';
 import pagesSaga from './pages/sagas'
+import formSaga from './forms/sagas'
 
 export default function* rootSaga() {
   yield all([
@@ -22,5 +23,6 @@ export default function* rootSaga() {
     announncementSaga(),
     authenticationSaga(),
     pagesSaga(),
+    formSaga()
   ]);
 }

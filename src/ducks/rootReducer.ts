@@ -8,6 +8,7 @@ import onboarding from './onboarding/reducer';
 import announcement from './announcement/reducer';
 import authentication from './authentication/reducer';
 import pages from './pages/reducer'
+import forms from './forms/reducer'
 
 const rootReducer = combineReducers({
   lms,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   announcement,
   authentication,
   pages,
+  forms
 });
 
 export default rootReducer;

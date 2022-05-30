@@ -46,9 +46,7 @@ const Announcements = (props: PropsType): ReactElement => {
     (state) => state.announcement
   );
   const [loading, setLoading] = useState(true);
-
   const [searchInpt, setSearchInpt] = useState("");
-
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [searchdData, setSearchdData] = useState([]);
   const [dataSource, setDataSource] = useState([]);
@@ -103,6 +101,8 @@ const Announcements = (props: PropsType): ReactElement => {
       },
     });
   };
+
+
   const onSelectChange = (newRowKeys) => {
     console.log("selectedRowKeys changed: ", newRowKeys);
     setSelectedRowKeys(newRowKeys);
@@ -153,7 +153,7 @@ const Announcements = (props: PropsType): ReactElement => {
         if (status === "inactive") {
           color = "red";
         }
-        if (status === "inprogress") {
+        if (status === "in_progress") {
           color = "blue";
         }
 
@@ -238,7 +238,29 @@ const Announcements = (props: PropsType): ReactElement => {
     );
   }, [dataSource]);
 
-  const handleSearch = (e) => { };
+  const handleSearch = (e) => {
+    setSearchInpt(e.target.value);
+    setSelectedRowKeys([]);
+    const pattern = e.target.value
+      .split("")
+      .map((x) => {
+        return `(?=.*${x})`;
+      })
+      .join("");
+    const regX = new RegExp(`${pattern}`, "gi");
+    const tmp = [];
+    dataSource.forEach((record, i) => {
+      if (regX.test(record?.title + " " + record?.department)) tmp.push(i);
+    });
+    if (!tmp.length) return setSearchdData([]);
+    setSearchdData(dataSource.filter((obj) => tmp.includes(obj.key)));
+    console.log(
+      tmp,
+      dataSource.filter((obj) => tmp.includes(obj.key)),
+      e.target.value,
+      searchInpt
+    );
+  };
 
   const rowListener = (record) => ({
     onClick: (event) => {

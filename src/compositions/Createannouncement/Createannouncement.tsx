@@ -44,6 +44,9 @@ import {
   StyledCard
 } from "./styled";
 
+import active from "assets/icons/greendot.svg"
+import inactive from "assets/icons/red-dot.svg"
+import inprogress from "assets/icons/bluedot.svg"
 import galleryicon from "../../assets/icons/gallery-icon.svg";
 import fileicon from "assets/icons/file-icon.svg"
 import videoicon from "../../assets/icons/video-icon.svg";
@@ -55,6 +58,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
 import { toast, ToastContainer } from "react-toastify";
 import Loading from "components/Loading";
+import moment from "moment";
 
 
 const { MonthPicker, YearPicker } = DatePicker;
@@ -68,8 +72,8 @@ const Createannouncement = (props: PropsType): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [imagemodal, setImageModal] = useState(false)
   const [videomodal, setVideoModal] = useState(false)
-  const [imageurl, setImageurl] = useState<String>(null)
-  const [videourl, setVideourl] = useState<String>(null)
+  const [imageurl, setImageurl] = useState<string>('')
+  const [videourl, setVideourl] = useState<string>('')
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [startHour, setStartHour] = useState();
@@ -165,31 +169,45 @@ const Createannouncement = (props: PropsType): ReactElement => {
   };
 
   const handleOk = () => {
-    setIsModalVisible(false);
     setImageurl(null),
       setVideourl(null),
       setTitle(""),
       setDescription("")
+    setImageurl("")
+    setVideourl("")
+    setStatus("")
+    setSeletedOrgs([])
+    setIsModalVisible(false);
+
 
 
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
     setImageurl(null),
       setVideourl(null),
       setTitle(""),
-      setDescription("")
+      setDescription(""),
+      setImageurl(""),
+      setVideourl(""),
+      setStatus(""),
+      setSeletedOrgs([])
+    setIsModalVisible(false);
   };
+  const statushandle = (e) => {
+    setStatus(e)
+  }
+
 
 
   useEffect(() => {
     // setend(endyear + '-' + endmonth + '-' + enddate + ' ' + endHour + ':' + endMinutes + ':' + '00')
     console.log(start, "start")
     console.log(end, "end")
+    console.log(status)
     setend(endyear + '-' + endmonth + '-' + enddate + ' ' + endHour + ':' + endMinutes + ':' + '00')
     setStart(startYear + '-' + startMonth + '-' + startDate + ' ' + startHour + ':' + startMinutes + ':' + '00')
-  }, [startDate, startYear, startMonth, startHour, startMinutes, selectedorg, endyear, endmonth, enddate, endHour, endMinutes])
+  }, [startDate, startYear, status, startMonth, startHour, startMinutes, selectedorg, endyear, endmonth, enddate, endHour, endMinutes])
 
   const saveAsDraft = () => {
 
@@ -219,6 +237,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
       imageURL: imageurl
     })
     setIsModalVisible(false);
+    handleOk();
 
   }
 
@@ -265,12 +284,12 @@ const Createannouncement = (props: PropsType): ReactElement => {
           <div>
             <ImgContainer style={{ background: `${(videourl) ? 'black' : ''}` }}>
               {/* <Progress strokeColor="#635ffa" percent={90} /> */}
-              {(imageurl === "" && videourl === "" || (imageurl === null || videourl === null)) ? <img style={{ width: '50px', height: '50px', margin: '80px 150px', opacity: "0.4" }} src={`${fileicon}`} /> : <>
+              {(imageurl === null && videourl === null || imageurl === '') ? <img style={{ width: '50px', height: '50px', margin: '80px 150px', opacity: "0.4" }} src={`${fileicon}`} /> : <>
                 {
                   (videourl) ? <video style={{ width: '360px', height: '240px', borderRadius: '15px' }} controls>
                     <source src={`${videourl}`} />
                   </video> :
-                    <Image preview={false} src={`${imageurl}`} style={{ width: '360px', height: '24vh', borderRadius: '15px' }} alt="image preview" />
+                    <Image preview={false} src={`${imageurl}`} style={{ width: '360px', height: '28vh', borderRadius: '15px' }} alt="image preview" />
                 }
               </>}
             </ImgContainer>
@@ -289,6 +308,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
               centered
               onOk={() => {
                 setImageModal(false)
+
               }}
               onCancel={() => {
                 setImageModal(false)
@@ -305,6 +325,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
                   height: "38px",
                   margin: "10px 0px",
                 }}
+                value={imageurl}
                 // onChange={(e) => setTitle(e.target.value)}
                 size="large"
                 aria-placeholder="screen name 1"
@@ -337,6 +358,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
                   height: "38px",
                   margin: "10px 0px",
                 }}
+                value={videourl}
                 // onChange={(e) => setTitle(e.target.value)}
                 size="large"
                 aria-placeholder="screen name 1"
@@ -477,6 +499,31 @@ const Createannouncement = (props: PropsType): ReactElement => {
             </TimeEnd>
           </Col>
         </Row>
+        <Row>
+          <Col>
+            <StyledH4>Status</StyledH4>
+          </Col>
+          <Col>
+            <Select
+              size="large"
+              onChange={statushandle}
+              style={{ width: '280px', borderRadius: "15px", margin: '29px 0px 5px -12px' }}
+            >
+              <Option value="in_progress" style={{ fontSize: '14px !important' }}>
+                <img src={inprogress} style={{ padding: '0px 10px 0px 10px' }} />
+                In Progress
+              </Option>
+              <Option value="active">
+                <img src={active} style={{ padding: '0px 10px 0px 10px' }} />
+                Active
+              </Option>
+              <Option value="inactive">
+                <img src={inactive} style={{ padding: '0px 10px 0px 10px' }} />
+                InActive
+              </Option>
+            </Select>
+          </Col>
+        </Row>
         <StyledText fS={25} style={{ marginBottom: "12px !important" }}>
           Viewer
         </StyledText>
@@ -499,7 +546,6 @@ const Createannouncement = (props: PropsType): ReactElement => {
               }
             </Select>
           </ViewerContainer>
-          {console.log(listorg)}
           <Button
             style={{
               backgroundColor: "#fff",

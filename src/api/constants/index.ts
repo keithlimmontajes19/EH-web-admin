@@ -13,3 +13,4 @@ export const ORGANIZATION = '/organizations';
 export const REWARDS = '/rewards/leaderboard';
 export const DASHBOARD = '/dashboard';
 export const ONBOARDING = '/onboarding/mobile/user';
+export const FORMS = '/forms';
