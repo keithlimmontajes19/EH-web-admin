@@ -59,9 +59,10 @@ const MainLayout = (): ReactElement => {
   const history = useHistory();
   const location = useLocation();
   const [selected, setSelected] = useState('1');
+  const [openKeys, setOpenKeys] = useState([]);
   const [listNum, setListNum] = useState(-1);
   const [collapsed, setCollapsed] = useState(true);
-
+  
   const colorCondition = (key: string) => {
     return selected === key ? theme.WHITE : theme.BLACK;
   };
@@ -94,6 +95,11 @@ const MainLayout = (): ReactElement => {
     if (/home/g.test(path)) return setSelected('1');
   }, [location]);
 
+  const handleOpenKeys = (key) => setOpenKeys(prev => {
+    if(openKeys.includes(key)) return prev.filter(n => n !== key);
+    return [...prev, key]
+  })
+
   return (
     <StyledLayout>
       <HeaderStyled>
@@ -109,8 +115,9 @@ const MainLayout = (): ReactElement => {
       </HeaderStyled>
       <Layout>
         <Sider
+          onClick={() => {if(collapsed) setCollapsed(false)}}
           collapsed={collapsed}
-          onMouseOver={() => setCollapsed(false)}
+          // onMouseOver={() => setCollapsed(false)}
           // onMouseLeave={()=>setCollapsed(true)}
           collapsedWidth={100}
           width={250}
@@ -120,6 +127,7 @@ const MainLayout = (): ReactElement => {
             defaultOpenKeys={['sub1']}
             mode="inline"
             onSelect={(e: any) => setSelected(e?.key)}
+            openKeys={openKeys}
           >
             <Menu.Item
               key="1"
@@ -169,8 +177,10 @@ const MainLayout = (): ReactElement => {
                   </span>
                 </span>
               }
-              onTitleClick={() => {
-                pushHistory('/learn');
+              onTitleClick={(e) => {
+                const acceptArr = ['ant-menu-submenu-arrow', 'ant-menu-submenu-title']
+                if(acceptArr.includes(e.domEvent.target.className)) handleOpenKeys('2')
+                else pushHistory('/learn');
               }}
             >
               {learnItems.map((obj, i) => (
@@ -223,8 +233,10 @@ const MainLayout = (): ReactElement => {
                   </span>
                 </span>
               }
-              onTitleClick={() => {
-                pushHistory('/team');
+              onTitleClick={(e) => {
+                const acceptArr = ['ant-menu-submenu-arrow', 'ant-menu-submenu-title']
+                if(acceptArr.includes(e.domEvent.target.className)) handleOpenKeys('3')
+                else pushHistory('/team');
               }}
             >
               {teamItems.map((obj, i) => (
