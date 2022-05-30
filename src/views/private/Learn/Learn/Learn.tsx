@@ -1,4 +1,4 @@
-import { Fragment, ReactElement } from 'react';
+import { Fragment, ReactElement, useEffect } from 'react';
 
 /* components */
 import LearnMaincourse from 'compositions/LearnMaincourse';
@@ -6,11 +6,17 @@ import LearnCurriculum from 'compositions/LearnCurriculum';
 
 /* recuer action */
 import { RootState } from 'ducks/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loading from 'components/Loading';
+import { getMyCourses } from 'ducks/lms/actionCreator';
 
 const Learn = (): ReactElement => {
+  const dispatch = useDispatch();
   const { loading }: any = useSelector<RootState>((state) => state.lms);
+
+  useEffect(()=>{
+    dispatch(getMyCourses());
+  },[])
 
   const content = (
     <Fragment>
