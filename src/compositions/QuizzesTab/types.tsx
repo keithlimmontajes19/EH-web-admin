@@ -2,5 +2,5 @@ export type PropsType = {
   testID?: string,
 };
 export type Params = {
-  title?: string;
+  formtitle?: string;
 }

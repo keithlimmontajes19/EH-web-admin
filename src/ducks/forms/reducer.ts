@@ -58,6 +58,26 @@ const reducer = (state = INITIAL_STATE, action) => {
                 loading: false,
                 error: true
             }
+        case TYPES.DELETE_FORM_REQUEST:
+            return {
+                ...state,
+                loading: true,
+                error: true
+
+            }
+        case TYPES.DELETE_FORM_SUCCESS:
+            return {
+                ...state,
+                data: action.payload,
+                loading: false,
+                error: false
+            }
+        case TYPES.DELETE_FORM_FAILED:
+            return {
+                ...state,
+                loading: false,
+                error: false
+            }
         default:
             return { ...state }
     }

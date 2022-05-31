@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 
 import type { PropsType, Params } from './types';
 import {
@@ -15,8 +15,8 @@ import BuilderQuizMultipleChoice from "compositions/BuilderQuizMultipleChoice"
 import BuilderQuizFillBlanks from "compositions/BuilderQuizFillBlanks"
 import BuilderQuizEssay from 'compositions/BuilderQuizEssay';
 import BuilderQuizSort from 'compositions/BuilderQuizSort'
-import { Col, Input, Layout, PageHeader, Row, Select, Radio } from "antd";
-import { PlusOutlined, DownOutlined, CaretRightOutlined, EditOutlined, PlusCircleFilled } from "@ant-design/icons";
+import { Col, Space, Layout, Input, PageHeader, Row, Select, Radio } from "antd";
+import { PlusOutlined, DownOutlined, CaretRightOutlined, EditOutlined, PlusCircleFilled, MinusCircleFilled } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
 import Loading from "components/Loading";
@@ -27,6 +27,9 @@ import Dropdown from 'components/Dropdown'
 import { blanks } from 'compositions/BuilderQuiz/blanks';
 import { theme } from 'utils/colors';
 import CustomeSelect from 'components/CustomeSelect';
+
+import Text from 'components/Text'
+// import Input from 'components/Input'
 
 const { Option } = Select;
 
@@ -62,11 +65,19 @@ const QuizzesTab = (props: PropsType): ReactElement => {
   const [loading, setLoading] = useState(true);
   const [points, setPoints] = useState(0);
   const params: Params = useParams()
-  const [title, setTitle] = useState();
+  const [title, setTitle] = useState("page 1");
   const [addans, setAddanswere] = useState(false)
+  const [addquestion, setaddQuestion] = useState(false)
   const [anslist, setAnsList] = useState([])
+  const [descreption, setDescreption] = useState("")
+  const [ansgroup, setAnsgroup] = useState({ answere: [], question: "", question_answere: [] })
+  // const [questionlist, setQuestionList] = useState([])
 
-
+  useEffect(() => {
+    console.log(ansgroup),
+      console.log(title),
+      console.log(descreption)
+  }, [ansgroup, title, descreption])
   const ans = () => {
     return (
       <Row>
@@ -79,6 +90,20 @@ const QuizzesTab = (props: PropsType): ReactElement => {
     )
   }
 
+  const ansinputhandler = (e) => {
+    const { checked } = e.target
+    setAnsgroup({ ...ansgroup, answere: [...ansgroup.answere, e.target.value] })
+
+    console.log(ansgroup)
+  }
+  const questionhandler = (e: any) => {
+    setAnsgroup({ ...ansgroup, question: e.target.value })
+  }
+
+  const addQuestion = (e) => {
+    // setQuestionList()
+  }
+
 
   const addAnswere = () => {
     setAddanswere(true)
@@ -87,8 +112,15 @@ const QuizzesTab = (props: PropsType): ReactElement => {
     setAnsList(anslist.concat(
       <Row key={anslist.length}>
         <div style={{ margin: '10px 0px' }}>
-          <Radio>
-            <Input placeholder='Type Answere Here...' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} />
+          <Radio onChange={
+            (e) => {
+              const { checked } = e.target
+              if (checked) {
+                setAnsgroup({ ...ansgroup, question_answere: [...ansgroup.question_answere, e] })
+              }
+            }
+          }>
+            <Input placeholder='Type Answere Here...' defaultValue={ansgroup.question_answere} style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} onChange={ansinputhandler} />
           </Radio>
         </div>
       </Row>
@@ -105,29 +137,17 @@ const QuizzesTab = (props: PropsType): ReactElement => {
     {
       name: "Multiple Choice",
       action: () => addNew(blanks.multipleChoice),
-    },
-    {
-      name: "Essay",
-      action: () => addNew(blanks.essay),
-    },
-    {
-      name: "Fill Blanks",
-      action: () => addNew(blanks.fillBlanks),
-    },
-    {
-      name: "Sort",
-      action: () => addNew(blanks.sort),
-    },
+    }
   ];
-  const dataMapper = (obj, i) => {
+  const dataMapper = (obj, i, contentI) => {
     const props = {
-      // item: "title" in obj ? obj : undefined,
-      // submitQ: (data) => questionSubmit(i, data),
-      // deleteQ: () => questionDelete(i),
+      item: "title" in obj ? obj : undefined,
+      submitQ: (data) => questionSubmit(i, data, contentI),
+      deleteQ: () => questionDelete(i.data, contentI),
     };
     switch (obj.questionType) {
       case "single-choice":
-        return <BuilderQuizSingleChoice />;
+        return <BuilderQuizSingleChoice {...props} />
       case "multiple-choice":
         return <BuilderQuizMultipleChoice {...props} />;
       case "essay":
@@ -140,6 +160,21 @@ const QuizzesTab = (props: PropsType): ReactElement => {
         return <></>;
     }
   };
+
+  const questionSubmit = (data, questionI, contentI) => setData(prev => {
+    const tmp = JSON.parse(JSON.stringify(prev));
+    tmp.contents[contentI].questions[questionI] = { ...data, isUpdated: true }
+  })
+  const questionDelete = (questionI, contentI) => setData(prev => {
+    const tmp = JSON.parse(JSON.stringify(prev));
+    const copy = prev.contents[contentI].questions[questionI]
+    tmp.contents[contentI].questions[questionI] = { ...copy, isDeleted: true }
+    return tmp
+  })
+
+  const saveForm = () => {
+    // create
+  }
 
   return <Layout style={{ paddingRight: 0, background: 'none' }}>
     <PageHeader
@@ -180,7 +215,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
 
     />
     <PageHeader title={
-      <StyledText fC={"#000"} >{params.title || "Page 1"}</StyledText>
+      <StyledText fC={"#000"} >{params.formtitle || "Page 1"}</StyledText>
     } />
     <StyledText>{ }</StyledText>
     {!loading ? (<Loading />) : (
@@ -191,36 +226,38 @@ const QuizzesTab = (props: PropsType): ReactElement => {
               value={data.title}
               style={{ marginBottom: 0 }}
               placeholder={"Add Title"}
-              onChange={(e) =>
-                setData((prev) => {
-                  const tmp = { ...prev };
-                  tmp.title = e.target.value;
-                  return tmp;
-                })
-              }
+              onChange={(e) => setTitle(e.target.value)}
+            // onChange={(e) =>
+            //   setData((prev) => {
+            //     const tmp = { ...prev };
+            //     tmp.title = e.target.value;
+            //     return tmp;
+            //   })
+            // }
             />
           </Col>
         </Row>
 
         <StyledTextArea
-          value={data.description}
+          // value={data.description}
           style={{ minHeight: "179px", marginBottom: 30 }}
           placeholder="Add Description"
-          onChange={(e) => {
-            setData((prev) => {
-              const tmp = { ...prev };
-              tmp.description = e.target.value;
-              return tmp;
-            });
-          }}
+          onChange={(e) => setDescreption(e.target.value)}
+        // onChange={(e) => {
+        //   setData((prev) => {
+        //     const tmp = { ...prev };
+        //     tmp.description = e.target.value;
+        //     return tmp;
+        //   });
+        // }}
         />
         <QuestionLayout>
+
           {(addans === true) ?
             <StyledQuestionContainer>
               <div style={{ margin: '10px 0px' }}>
                 <Row >
-                  <Input placeholder='#Sample Question 1' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none' }} />
-
+                  <Input placeholder='#Sample Question 1' onChange={questionhandler} style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none' }} />
                 </Row>
               </div>
               {anslist}
@@ -228,8 +265,8 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                 <PlusCircleFilled style={{ fontSize: '25px', color: `${theme.PRIMARY}`, margin: '10px 0px 0px 30px' }} />
                 <StyledText fS={25} style={{ cursor: 'pointer' }} onClick={addanswere}>Answere</StyledText>
               </Row>
-              <PageHeader extra={[<StyledButtonCancle onClick={() => (setAddanswere(false))}>Cancle</StyledButtonCancle>, <StyledButton>SAVE</StyledButton>]} />
             </StyledQuestionContainer> :
+
             <StyledButton
               w={184}
               m={"-20px 0 5px 0"}
@@ -241,6 +278,8 @@ const QuizzesTab = (props: PropsType): ReactElement => {
               </StyledText>
             </StyledButton>
           }
+          <PageHeader extra={[<StyledButtonCancle onClick={() => (setAddanswere(false))}>Cancle</StyledButtonCancle>, <StyledButton>SAVE</StyledButton>]} />
+
         </QuestionLayout>
       </QuizLayout >
     )}

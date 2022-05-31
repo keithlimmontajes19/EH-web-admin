@@ -57,7 +57,7 @@ const Navigation = () => {
       {/* <Route exact path="/team/forms/createforms/:formtitle?" component={CreateForm} /> */}
       <Route
         exact
-        path="/team/forms/createforms/:quizees?"
+        path="/team/forms/createforms/:formtitle?"
         component={QuizzesTab}
       />
       <Route

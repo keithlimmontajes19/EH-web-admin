@@ -21,6 +21,7 @@ import { deleteForm, getAllfroms } from "ducks/forms/actionCreator";
 import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
 import moment from "moment";
+import { ToastContainer } from "react-toastify";
 
 
 const data = [
@@ -287,42 +288,21 @@ const Forms = (props: PropsType): ReactElement => {
             onChange={handleSearch}
             prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
-          {data.length === 0 ? (<>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "80px",
-              }}
-            >
-              <img
-                src={NoForms}
-                style={{
-                  height: "109px",
-                  width: "87px",
-                }}
-              ></img>
-              <h3
-                style={{
-                  padding: "10px",
-                  fontWeight: "500",
-                  fontSize: "22px",
-                  color: "#2B2E4A !important",
-                }}
-              >
-                No Forms
-              </h3>
-            </div>
-
-          </>) : <>
-            <Table onRow={rowListener} rowSelection={rowSelection} columns={columns} dataSource={searchInpt !== "" ? searchdData : dataSource} />
-
+          {<>
+            <Table
+              onRow={rowListener}
+              rowSelection={rowSelection}
+              columns={columns}
+              dataSource={searchInpt !== "" ? searchdData : dataSource}
+              loading={{ indicator: <Loading />, spinning: loading }}
+            />
           </>}
         </TableContainer>
+        <ToastContainer />
       </Layout>
     </>
   );
 };
 
 export default Forms;
+``
