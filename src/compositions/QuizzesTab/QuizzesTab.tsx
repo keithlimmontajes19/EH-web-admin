@@ -72,6 +72,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
   const [descreption, setDescreption] = useState("")
   const [ansgroup, setAnsgroup] = useState({ answere: [], question: "", question_answere: [] })
   // const [questionlist, setQuestionList] = useState([])
+  const data1 = { resource: [] }
 
   useEffect(() => {
     console.log(ansgroup),
@@ -108,22 +109,15 @@ const QuizzesTab = (props: PropsType): ReactElement => {
   const addAnswere = () => {
     setAddanswere(true)
   }
-  const addanswere = () => {
+  const addanswere = (i) => {
     setAnsList(anslist.concat(
       <Row key={anslist.length}>
         <div style={{ margin: '10px 0px' }}>
-          <Radio onChange={
-            (e) => {
-              const { checked } = e.target
-              if (checked) {
-                setAnsgroup({ ...ansgroup, question_answere: [...ansgroup.question_answere, e] })
-              }
-            }
-          }>
-            <Input placeholder='Type Answere Here...' defaultValue={ansgroup.question_answere} style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} onChange={ansinputhandler} />
+          <Radio value={ansgroup.answere[i]} >
+            <Input placeholder='Type Answere Here...' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} onChange={ansinputhandler} />
           </Radio>
         </div>
-      </Row>
+      </Row >
     ))
   }
   const addNew = (obj) => {
@@ -260,7 +254,38 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                   <Input placeholder='#Sample Question 1' onChange={questionhandler} style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none' }} />
                 </Row>
               </div>
-              {anslist}
+              <Radio.Group
+                defaultValue={ansgroup.question_answere}
+                onChange={
+                  (e) => {
+                    setAnsgroup({ ...ansgroup, question_answere: [e.target.value] })
+                  }
+                }
+              >
+                {/* {data1?.resource.choices?.map((x, i) => ( */}
+
+                {/* ))} */}
+                <Row justify="start">
+                  <Col style={{ width: 50 }}>
+                    <Radio
+
+                    // value={x} 
+                    />
+                  </Col>
+                  <Col flex={1} style={{ justifyContent: "center", height: 35 }}>
+                    <Input
+                    // isNaked={true}
+                    // value={x}
+                    // placeholder={`Answer #${i + 1}`}
+                    // onChange={(e) => {
+                    //   data.resource.choices[i] = e.target.value;
+                    //   submitQ(data);
+                    // }}
+                    />
+                  </Col>
+                  <Col span={3} />
+                </Row>
+              </Radio.Group>
               <Row>
                 <PlusCircleFilled style={{ fontSize: '25px', color: `${theme.PRIMARY}`, margin: '10px 0px 0px 30px' }} />
                 <StyledText fS={25} style={{ cursor: 'pointer' }} onClick={addanswere}>Answere</StyledText>

@@ -1,98 +1,51 @@
-import { ReactElement } from "react";
-import { useState } from "react";
-
+import { ReactElement, useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import type { PropsType } from "./types";
-import {
-  StyledButton,
-  StyledButtonCreate,
-  ScreensContainer,
-  ModalContainer,
-} from "./styled";
+
+/* styled antd */
+import { Layout, PageHeader, Input, Row, Col } from "antd";
+import { StyledButtonCreate, ModalContainer } from "./styled";
+
+/* components */
 import Screen from "components/Screen";
 import PublishOnBoarding from "compositions/PublishOnBoarding";
 
-import { Layout, PageHeader, Table, Input, Row, Col } from "antd";
-import { useHistory } from "react-router-dom";
+/* reducer action */
+import { RootState } from "ducks/store";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  deleteOnboading,
+  getOneOnboarding,
+  getOnboardingList,
+} from "ducks/onboarding/actionCreator";
 
-const screens = [
-  {
-    title: "title1",
-    descreption:
-      "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete",
-    screentitle: "Screen Name 1",
-  },
-  {
-    title: "title1",
-    descreption:
-      "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete",
-    screentitle: "Screen Name 1",
-  },
-  {
-    title: "title1",
-    descreption:
-      "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete",
-    screentitle: "Screen Name 1",
-  },
-  {
-    title: "title1",
-    descreption:
-      "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete",
-    screentitle: "Screen Name 1",
-  },
-  {
-    title: "title1",
-    descreption:
-      "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete",
-    screentitle: "Screen Name 1",
-  },
-  {
-    title: "title1",
-    descreption:
-      "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete",
-    screentitle: "Screen Name 1",
-  },
-  {
-    title: "title1",
-    descreption:
-      "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete",
-    screentitle: "Screen Name 1",
-  },
-  {
-    title: "title1",
-    descreption:
-      "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete",
-    screentitle: "Screen Name 1",
-  },
-  {
-    title: "title1",
-    descreption:
-      "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete",
-    screentitle: "Screen Name 1",
-  },
-  {
-    title: "title1",
-    descreption:
-      "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete",
-    screentitle: "Screen Name 1",
-  },
-];
 const OnboardingScreens = (props: PropsType): ReactElement => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [screenname, setScreenname] = useState("")
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const [screenname, setScreenname] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const { onboarding_list }: any = useSelector<RootState>(
+    (state) => state.onboarding
+  );
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-
-    history.push(`/team/onboarding/createonboard/${screenname}`)
-  };
-
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+
+  const handleOk = () => {
+    history.push(`/team/onboarding/createonboard/${screenname}`);
+  };
+
+  useEffect(() => {
+    dispatch(getOnboardingList());
+  }, []);
+
   return (
     <>
       <Layout style={{ background: "none" }}>
@@ -103,6 +56,7 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
               <StyledButtonCreate onClick={showModal}>
                 CREATE
               </StyledButtonCreate>
+
               <ModalContainer
                 visible={isModalVisible}
                 title="Create Onboarding Screens"
@@ -123,25 +77,30 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
                   aria-placeholder="Screen Name 1"
                   defaultValue="Screen Name 1"
                   onChange={(e) => setScreenname(e.target.value)}
-                ></Input>
+                />
               </ModalContainer>
             </>,
             <PublishOnBoarding />,
           ]}
         />
-        <Row justify="center">
-          {(screens.length === 0) ? <></> :
 
-            screens?.map((item, index) => (
-              <Col>
-                <Screen
-                  title={item.title}
-                  descreption={item.descreption}
-                  key={index}
-                  screentitle={item.screentitle}
-                />
-              </Col>
-            ))}
+        <Row justify="center">
+          {(onboarding_list?.data || [])?.map((item, index) => (
+            <Col>
+              <Screen
+                key={index}
+                item={item}
+                id={item?._id}
+                name={item?.name}
+                title={item?.title}
+                uri={item?.imageURL}
+                descreption={item?.description}
+                screentitle={item?.screentitle}
+                getOneOnboarding={getOneOnboarding}
+                deleteOnboading={deleteOnboading}
+              />
+            </Col>
+          ))}
         </Row>
       </Layout>
     </>

@@ -1,100 +1,90 @@
-import { ReactElement, useEffect } from "react";
-import { Row, Col, Popover } from "antd";
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
+import { Fragment, ReactElement, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import type { PropsType } from "./types";
+
+/* styled antd */
 import {
-  ImageContainer,
   Img,
-  Description,
   Heading,
   Container,
-  ScreenTitle,
-  Contentdiv
+  NameStyled,
+  Description,
+  ImageContainer,
+  ScreenContainer,
 } from "./styled";
-
-// icons imported here
-
+import { Row, Col, Popconfirm, message } from "antd";
 import imageicon from "assets/icons/image-icon.svg";
 
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons"
+/* icons */
+import { useDispatch } from "react-redux";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-const content = (
-  <div style={{ fontSize: "18px" }}>
-
-    <Contentdiv>
-      <EditOutlined
-        style={{
-          color: "#635ffa",
-          fontSize: "18px",
-          padding: "10px 10px",
-        }}
-      />
-      Edit
-    </Contentdiv>
-
-    <Contentdiv style={{ padding: "0px" }}>
-      <DeleteOutlined
-        style={{ color: "#635ffa", fontSize: "18px", padding: "10px 10px" }}
-      />
-      Delete
-    </Contentdiv>
-  </div>
-);
 const Screen = (props: PropsType): ReactElement => {
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    document.addEventListener("contextmenu", (event) => {
-      // event.preventDefault();
-    });
-  }, [])
+  useEffect(() => {}, []);
+
+  const truncate = (string) => {
+    const delimiter = "...";
+    return string.length > 38 ? string.substr(0, 38) + delimiter : string;
+  };
+
+  const confirm = () => {
+    dispatch(props.deleteOnboading(props.id));
+  };
+
+  const onEdit = () => {
+    dispatch(props.getOneOnboarding(props.item));
+
+    history.push(`/team/onboarding/createonboard/${props.name}`);
+  };
+
   return (
-    <>
-      <ContextMenu id="contextmenu">
+    <Fragment>
+      <Popconfirm
+        okText={
+          <a>
+            <DeleteOutlined />
+            &nbsp; Delete
+          </a>
+        }
+        title={
+          <a onClick={onEdit}>
+            <EditOutlined style={{ marginLeft: -7 }} /> &nbsp; Edit
+          </a>
+        }
+        icon={<></>}
+        placement="right"
+        onConfirm={confirm}
+        showCancel={false}
+        okButtonProps={{ type: "link" }}
+        overlayInnerStyle={{ borderRadius: 10 }}
+      >
+        <ScreenContainer>
+          <Row justify="center" gutter={18}>
+            <Col span={24} style={{ backgroundColor: "transparent" }}>
+              <Container style={{ borderRadius: `${props.borderradius}` }}>
+                <ImageContainer>
+                  <Img
+                    alt="image"
+                    width="201"
+                    height="149"
+                    src={props?.uri || imageicon}
+                    style={{ objectFit: "cover" }}
+                  />
+                </ImageContainer>
 
-        <div style={{ fontSize: "16px", background: '#fff', borderRadius: '15px' }}>
+                <Heading>{props.title}</Heading>
+                <Description>{truncate(props.descreption)}</Description>
+              </Container>
+            </Col>
+          </Row>
+        </ScreenContainer>
+      </Popconfirm>
 
-          <Contentdiv>
-            <EditOutlined
-              style={{
-                color: "#635ffa",
-                fontSize: "14px",
-                padding: "10px 10px",
-              }}
-            />
-            Edit
-          </Contentdiv>
-
-          <Contentdiv style={{ padding: "0px" }}>
-            <DeleteOutlined
-              style={{ color: "#635ffa", fontSize: "16px", padding: "10px 10px" }}
-            />
-            Delete
-          </Contentdiv>
-        </div>
-
-      </ContextMenu>
-      <ContextMenuTrigger id="contextmenu">
-        <Row
-          justify="center"
-          style={{ borderRadius: "15px", background: `#fff`, padding: "15px" }}
-        >
-
-          <Col span={24} >
-            <Container style={{ borderRadius: `${props.borderradius}` }}>
-              {console.log(props.borderradius)}
-              <ImageContainer>
-                <Img src={imageicon} alt="image" />
-              </ImageContainer>
-              <Heading>{props.title}</Heading>
-              <Description>{props.descreption}</Description>
-            </Container>
-            <ScreenTitle>
-              <h4>{props.screentitle}</h4>
-            </ScreenTitle>
-          </Col>
-        </Row>
-      </ContextMenuTrigger>
-    </>
+      <NameStyled>{props?.name}</NameStyled>
+    </Fragment>
   );
 };
 

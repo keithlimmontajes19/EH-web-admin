@@ -5,4 +5,10 @@ export type PropsType = {
   screentitle?: string;
   borderradius?: number;
   background?: string;
+  uri?: string;
+  name?: string;
+  getOneOnboarding?: any;
+  deleteOnboading?: any;
+  id?: string;
+  item?: any;
 };
