@@ -15,8 +15,8 @@ import BuilderQuizMultipleChoice from "compositions/BuilderQuizMultipleChoice"
 import BuilderQuizFillBlanks from "compositions/BuilderQuizFillBlanks"
 import BuilderQuizEssay from 'compositions/BuilderQuizEssay';
 import BuilderQuizSort from 'compositions/BuilderQuizSort'
-import { Col, Space, Layout, Input, PageHeader, Row, Select, Radio } from "antd";
-import { PlusOutlined, DownOutlined, CaretRightOutlined, EditOutlined, PlusCircleFilled, MinusCircleFilled } from "@ant-design/icons";
+import { Col, Space, Layout, PageHeader, Input, Row, Select, Radio } from "antd";
+import { PlusOutlined, DownOutlined, MinusCircleOutlined, CaretRightOutlined, EditOutlined, SaveOutlined, PlusCircleFilled, MinusCircleFilled } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { RootState } from "ducks/store";
 import Loading from "components/Loading";
@@ -26,10 +26,11 @@ import { useHistory } from 'react-router-dom';
 import Dropdown from 'components/Dropdown'
 import { blanks } from 'compositions/BuilderQuiz/blanks';
 import { theme } from 'utils/colors';
-import CustomeSelect from 'components/CustomeSelect';
+
 
 import Text from 'components/Text'
-// import Input from 'components/Input'
+import Input1 from 'components/Input'
+import { createForm } from 'ducks/forms/actionCreator';
 
 const { Option } = Select;
 
@@ -52,74 +53,78 @@ const options = [
   },
 
 ]
-const question = [
 
-]
 
 
 
 const QuizzesTab = (props: PropsType): ReactElement => {
   const history = useHistory();
   const [builderData, setBuilderData] = useState([]);
-  const [data, setData]: any = useState({});
+  const [data, setData]: any = useState({
+    resource: {
+      question_choices: [""],
+      answeres: [],
+      question: ''
+    }
+  });
   const [loading, setLoading] = useState(true);
   const [points, setPoints] = useState(0);
   const params: Params = useParams()
-  const [title, setTitle] = useState("page 1");
+  const [title, setTitle] = useState(params.formtitle);
   const [addans, setAddanswere] = useState(false)
+  const [type, setType] = useState("quize")
   const [addquestion, setaddQuestion] = useState(false)
   const [anslist, setAnsList] = useState([])
-  const [descreption, setDescreption] = useState("")
+  const [description, setDescription] = useState("")
+  const [name, setName] = useState("")
   const [ansgroup, setAnsgroup] = useState({ answere: [], question: "", question_answere: [] })
-  // const [questionlist, setQuestionList] = useState([])
-  const data1 = { resource: [] }
+  const [questionlist, setQuestionList] = useState([])
+
 
   useEffect(() => {
-    console.log(ansgroup),
-      console.log(title),
-      console.log(descreption)
-  }, [ansgroup, title, descreption])
-  const ans = () => {
-    return (
-      <Row>
-        <div style={{ margin: '10px 0px' }}>
-          <Radio>
-            <Input placeholder='Type Answere Here...' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} />
-          </Radio>
-        </div>
-      </Row>
-    )
-  }
+    // console.log(ansgroup),
+    console.log(title),
+      console.log(description),
+      console.log(data)
+  }, [ansgroup, title, data, description])
 
-  const ansinputhandler = (e) => {
-    const { checked } = e.target
-    setAnsgroup({ ...ansgroup, answere: [...ansgroup.answere, e.target.value] })
-
-    console.log(ansgroup)
-  }
   const questionhandler = (e: any) => {
-    setAnsgroup({ ...ansgroup, question: e.target.value })
+    const temp = data?.resource?.question_choices
+    const question = e.target.value
+    // setAnsgroup({ ...ansgroup, question: e.target.value })
+    setData({ ...data, question: question })
   }
-
-  const addQuestion = (e) => {
-    // setQuestionList()
-  }
-
 
   const addAnswere = () => {
     setAddanswere(true)
   }
-  const addanswere = (i) => {
-    setAnsList(anslist.concat(
-      <Row key={anslist.length}>
-        <div style={{ margin: '10px 0px' }}>
-          <Radio value={ansgroup.answere[i]} >
-            <Input placeholder='Type Answere Here...' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} onChange={ansinputhandler} />
-          </Radio>
-        </div>
-      </Row >
-    ))
+  const saveQuestion = () => {
+    const temp = data
+    setQuestionList([...questionlist, { ...temp }])
+    setData({
+      resource: {
+        question_choices: [""],
+        answeres: [],
+      }
+    })
+    console.log(questionlist, "question list")
+    setAddanswere(false)
+
   }
+  const saveForm = () => {
+    createForm({
+      "title": title,
+      "type": type,
+      "item": [{
+        "name": name,
+        "description": description,
+        "quiz_survey_type": "single choice",
+        "quiz_survey_questions": questionlist
+      }],
+
+    })
+  }
+
   const addNew = (obj) => {
     setBuilderData((prev) => [...builderData, JSON.parse(JSON.stringify(obj))]);
   };
@@ -166,10 +171,6 @@ const QuizzesTab = (props: PropsType): ReactElement => {
     return tmp
   })
 
-  const saveForm = () => {
-    // create
-  }
-
   return <Layout style={{ paddingRight: 0, background: 'none' }}>
     <PageHeader
       ghost={false}
@@ -209,7 +210,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
 
     />
     <PageHeader title={
-      <StyledText fC={"#000"} >{params.formtitle || "Page 1"}</StyledText>
+      <StyledText fC={"#000"} >{title || "Page 1"}</StyledText>
     } />
     <StyledText>{ }</StyledText>
     {!loading ? (<Loading />) : (
@@ -217,10 +218,10 @@ const QuizzesTab = (props: PropsType): ReactElement => {
         <Row justify='center' gutter={16} align="middle" style={{ marginBottom: '30px' }}>
           <Col flex="1 1 200px" className="guttor-row">
             <StyledInput
-              value={data.title}
+              value={name}
               style={{ marginBottom: 0 }}
-              placeholder={"Add Title"}
-              onChange={(e) => setTitle(e.target.value)}
+              placeholder={"Add name"}
+              onChange={(e) => setName(e.target.value)}
             // onChange={(e) =>
             //   setData((prev) => {
             //     const tmp = { ...prev };
@@ -236,7 +237,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
           // value={data.description}
           style={{ minHeight: "179px", marginBottom: 30 }}
           placeholder="Add Description"
-          onChange={(e) => setDescreption(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
         // onChange={(e) => {
         //   setData((prev) => {
         //     const tmp = { ...prev };
@@ -246,55 +247,138 @@ const QuizzesTab = (props: PropsType): ReactElement => {
         // }}
         />
         <QuestionLayout>
+          {/* created question maps */}
+          {(questionlist?.length === 0) ? '' :
+            questionlist.map((item, index) => (
+              <StyledQuestionContainer>
+                <div style={{ margin: '10px 0px' }}>
+                  <Row >
+                    <Input1 isNaked={true} placeholder='#Sample Question 1' value={item.question} style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', marginBottom: '20px' }} />
+                  </Row>
+                  <Radio.Group
+                    value={item?.resource?.answers}
+                  // onChange={
+                  // (e) => {
+                  //   setAnsgroup({ ...ansgroup, question_answere: [e.target.value] })
+                  // }
+                  // (e) => {
+                  //   const temp = data?.resource?.question_choices
+                  //   const value = e.target.value
+                  //   setData({ ...data, resource: { question_choices: [...temp], answers: value } })
+                  //   // data.resource.answer = e.target.value
+                  // }
+                  // }
+                  >
+                    {item?.resource?.question_choices?.map((x, i) => (
+                      <Row justify="start">
+                        <Col style={{ width: 50 }}>
+                          <Radio value={x} />
+                        </Col>
+                        <Col flex={1} style={{ justifyContent: "center", height: 35 }}>
+                          <Input1
+                            isNaked={true}
+                            // style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none' }}
+                            defaultValue={x}
+                            placeholder={`Answer #${i + 1}`}
+                          // onChange={(e) => {
+                          //   data.resource.question_choices[i] = e.target.value;
+                          //   // submitQ(data);
+                          // }}
+                          />
+                        </Col>
+                        <Col span={3} />
+                      </Row>
+                    ))}
+
+                  </Radio.Group>
+                </div>
+              </StyledQuestionContainer>
+            ))
+          }
+
+          {/* new question adding here */}
 
           {(addans === true) ?
             <StyledQuestionContainer>
               <div style={{ margin: '10px 0px' }}>
                 <Row >
-                  <Input placeholder='#Sample Question 1' onChange={questionhandler} style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none' }} />
+                  <Input1 isNaked={true} placeholder='#Sample Question 1' onChange={questionhandler} style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none' }} />
                 </Row>
               </div>
               <Radio.Group
-                defaultValue={ansgroup.question_answere}
+                defaultValue={data.resource?.answer}
                 onChange={
+
                   (e) => {
-                    setAnsgroup({ ...ansgroup, question_answere: [e.target.value] })
+                    const temp = data?.resource?.question_choices
+                    const value = e.target.value
+                    setData({ ...data, resource: { question_choices: [...temp], answers: value } })
                   }
                 }
               >
-                {/* {data1?.resource.choices?.map((x, i) => ( */}
+                {data?.resource?.question_choices?.map((x, i) => (
+                  <Row justify="start">
+                    <Col style={{ width: 50 }}>
+                      <Radio value={x} />
+                    </Col>
+                    <Col flex={1} style={{ justifyContent: "center", height: 35 }}>
+                      <Input1
+                        isNaked={true}
+                        defaultValue={x}
+                        placeholder={`Answer #${i + 1}`}
+                        onChange={(e) => {
+                          data.resource.question_choices[i] = e.target.value;
 
-                {/* ))} */}
-                <Row justify="start">
-                  <Col style={{ width: 50 }}>
-                    <Radio
+                        }}
+                      />
+                    </Col>
+                    <Col span={3} />
+                  </Row>
+                ))}
 
-                    // value={x} 
-                    />
-                  </Col>
-                  <Col flex={1} style={{ justifyContent: "center", height: 35 }}>
-                    <Input
-                    // isNaked={true}
-                    // value={x}
-                    // placeholder={`Answer #${i + 1}`}
-                    // onChange={(e) => {
-                    //   data.resource.choices[i] = e.target.value;
-                    //   submitQ(data);
-                    // }}
-                    />
-                  </Col>
-                  <Col span={3} />
-                </Row>
               </Radio.Group>
               <Row>
-                <PlusCircleFilled style={{ fontSize: '25px', color: `${theme.PRIMARY}`, margin: '10px 0px 0px 30px' }} />
-                <StyledText fS={25} style={{ cursor: 'pointer' }} onClick={addanswere}>Answere</StyledText>
+                <StyledButtonCancle style={{ border: 'none', margin: '10px 10px' }}
+                  onClick={() => {
+                    const temp = data.resource.question_choices
+                    setData({ ...data, resource: { question_choices: [...temp, ''] } })
+                  }}
+                >
+                  <>
+                    <PlusCircleFilled style={{ fontSize: '25px', color: `${theme.PRIMARY}`, margin: '10px 0px 0px 0px' }} />
+                    <StyledText fS={25} style={{ cursor: 'pointer' }} >Answere</StyledText>
+                  </>
+                </StyledButtonCancle>
+                <StyledButtonCancle style={{ border: 'none', margin: "10px 10px" }}
+                  onClick={() => {
+                    const temp = data.resource.question_choices
+                    temp.pop()
+                    setData({ ...data, resource: { question_choices: temp } })
+                  }}
+                >
+                  <>
+                    <MinusCircleOutlined style={{ fontSize: '25px', color: `${theme.PRIMARY}`, margin: '10px 0px 0px 0px' }} />
+                    <StyledText fS={25} type="button" style={{ cursor: 'pointer' }} >Answere</StyledText>
+                  </>
+                </StyledButtonCancle>
               </Row>
-            </StyledQuestionContainer> :
+              <Row>
 
+              </Row>
+              < PageHeader extra={[<StyledButtonCancle onClick={() => (setAddanswere(false), setData({
+                resource: {
+                  question_choices: [""],
+                  answeres: [],
+                }
+              }))}>Cancle</StyledButtonCancle>, <StyledButton onClick={saveQuestion}>SAVE</StyledButton>]} />
+            </StyledQuestionContainer> : ''
+
+
+          }
+          <Row>
             <StyledButton
-              w={184}
-              m={"-20px 0 5px 0"}
+              w={160}
+              m={"0px 50px 0px 0px"}
               icon={<PlusOutlined />}
               onClick={addAnswere}
             >
@@ -302,9 +386,17 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                 QUESTION
               </StyledText>
             </StyledButton>
-          }
-          <PageHeader extra={[<StyledButtonCancle onClick={() => (setAddanswere(false))}>Cancle</StyledButtonCancle>, <StyledButton>SAVE</StyledButton>]} />
-
+            <StyledButton
+              w={160}
+              m={"0px 50px 0px 0px"}
+              icon={<SaveOutlined />}
+              onClick={saveForm}
+            >
+              <StyledText fC="#fff" fS="18" fW="500">
+                Save Form
+              </StyledText>
+            </StyledButton>
+          </Row>
         </QuestionLayout>
       </QuizLayout >
     )}

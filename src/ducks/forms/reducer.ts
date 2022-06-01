@@ -78,6 +78,27 @@ const reducer = (state = INITIAL_STATE, action) => {
                 loading: false,
                 error: false
             }
+        case TYPES.CREATE_FORM_REQUEST:
+            return {
+                ...state,
+                data: [],
+                loading: true,
+                error: false
+            }
+        case TYPES.CREATE_FORM_SUCCESS:
+            return {
+                ...state,
+                data: action.payload,
+                loading: false,
+                error: false
+            }
+        case TYPES.CREATE_FORM_FAILED:
+            return {
+                ...state,
+                data: [],
+                loading: false,
+                error: true
+            }
         default:
             return { ...state }
     }

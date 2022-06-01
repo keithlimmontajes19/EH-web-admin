@@ -42,7 +42,7 @@ export function* deleteform(formId): any {
 
 export function* createForm(payload): any {
     try {
-        const response = yield call(form_service.addForm, payload);
+        const response = yield call(form_service.addForm, payload.payload);
         yield put({
             type: TYPES.CREATE_FORM_REQUEST,
             payload: response?.data
@@ -62,4 +62,5 @@ export function* createForm(payload): any {
 export default function* watcher() {
     yield takeLatest(TYPES.GET_ALL_FORM_REQUEST, listforms)
     yield takeLatest(TYPES.DELETE_FORM_REQUEST, deleteform)
+    yield takeLatest(TYPES.CREATE_FORM_REQUEST, createForm)
 }
