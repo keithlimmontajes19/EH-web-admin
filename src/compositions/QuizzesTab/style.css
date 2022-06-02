@@ -1,0 +1,15 @@
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    width: 100%;
+    height: 60px !important;
+    background-color: #E0DFFE !important;
+}
+
+.ant-select-selector .formtype {
+    background-color: #E0DFFE !important;
+}
+
+.ant-select-selection-item {
+    padding-top: 10px !important;
+    font-size: 18px;
+    color: #635FFA;
+}

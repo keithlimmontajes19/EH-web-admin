@@ -40,12 +40,15 @@ export function* deleteform(formId): any {
     }
 }
 
-export function* createForm(payload): any {
+export function* createForm(payload: any) {
     try {
         const response = yield call(form_service.addForm, payload.payload);
         yield put({
-            type: TYPES.CREATE_FORM_REQUEST,
+            type: TYPES.CREATE_FORM_SUCCESS,
             payload: response?.data
+        })
+        yield put({
+            type: TYPES.GET_ALL_FORM_REQUEST,
         })
         toast.success("form added successfully")
         return Promise.resolve(response)
