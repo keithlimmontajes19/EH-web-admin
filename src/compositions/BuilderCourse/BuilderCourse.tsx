@@ -26,6 +26,7 @@ const blankData = {
     name: "NaN$",
     title: "NaN$",
   },
+  points: 10
 };
 
 const BuilderCourse = ({ id = "" }: any): ReactElement => {
@@ -227,28 +228,52 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
             initialValues={{
               t: course.title === "NaN$" ? "" : course.title,
               d: course.description === "NaN$" ? "" : course.description,
-              a:
-                course.instructor.name === "NaN$" ? "" : course.instructor.name,
+              a: course.instructor.name === "NaN$" ? "" : course.instructor.name,
+              p: course.points || ''
             }}
           >
-            <Form.Item
-              name="t"
-              rules={[{ required: true, message: "Enter a title" }]}
-            >
-              <Input
-                placeholder={"Course Title"}
-                value={course.title}
-                onChange={(e) => {
-                  setQueue(true);
-                  setCourse((prev) => {
-                    prev.title = e.target.value;
-                    return prev;
-                  });
-                }}
-              />
-            </Form.Item>
+            <Row>
+              <Col flex={19}>
+                <Form.Item
+                  name="t"
+                  rules={[{ required: true, message: "Enter a title" }]}
+                >
+                  <Input
+                    placeholder={"Course Title"}
+                    value={course.title}
+                    onChange={(e) => {
+                      setQueue(true);
+                      setCourse((prev) => {
+                        prev.title = e.target.value;
+                        return prev;
+                      });
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col flex={0.5} />
+              <Col flex={3}>
+                <Form.Item name="p">
+                  <Input
+                    isNumber={true}
+                    min={0}
+                    max={100}
+                    controls={false}
+                    placeholder={"Points Earned"}
+                    value={course.points}
+                    onChange={(e) => {
+                      setQueue(true);
+                      setCourse((prev) => {
+                        prev.points = e;
+                        return prev;
+                      });
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
             <Row justify="space-between">
-              <Col span={11}>
+              <Col flex={11}>
                 <Form.Item
                   name="d"
                   rules={[{ required: true, message: "Enter a content" }]}
@@ -266,7 +291,8 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={11}>
+              <Col flex={0.5} />
+              <Col flex={11}>
                 <Form.Item
                   name="a"
                   rules={[{ required: true, message: "Enter an author" }]}
