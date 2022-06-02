@@ -127,7 +127,7 @@ const MainLayout = (): ReactElement => {
             defaultOpenKeys={['sub1']}
             mode="inline"
             onSelect={(e: any) => setSelected(e?.key)}
-            openKeys={openKeys}
+            openKeys={collapsed ? [] : openKeys}
           >
             <Menu.Item
               key="1"
