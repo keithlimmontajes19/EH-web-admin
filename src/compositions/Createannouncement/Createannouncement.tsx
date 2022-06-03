@@ -202,9 +202,6 @@ const Createannouncement = (props: PropsType): ReactElement => {
 
   useEffect(() => {
     // setend(endyear + '-' + endmonth + '-' + enddate + ' ' + endHour + ':' + endMinutes + ':' + '00')
-    console.log(start, "start")
-    console.log(end, "end")
-    console.log(status)
     setend(endyear + '-' + endmonth + '-' + enddate + ' ' + endHour + ':' + endMinutes + ':' + '00')
     setStart(startYear + '-' + startMonth + '-' + startDate + ' ' + startHour + ':' + startMinutes + ':' + '00')
   }, [startDate, startYear, status, startMonth, startHour, startMinutes, selectedorg, endyear, endmonth, enddate, endHour, endMinutes])

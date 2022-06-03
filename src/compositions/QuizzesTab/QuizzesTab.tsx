@@ -64,7 +64,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
   const [builderData, setBuilderData] = useState([]);
   const [data, setData]: any = useState({
 
-    question_choices: [""],
+    question_choices: [],
     question: '',
     question_answer: {}
 
@@ -83,9 +83,9 @@ const QuizzesTab = (props: PropsType): ReactElement => {
   const [ansgroup, setAnsgroup] = useState({ answere: [], question: "", question_answere: [] })
   const [questionlist, setQuestionList] = useState([])
   let data1 = {
-    question_choices: [""],
-    question: '',
+    question_choices: {},
     question_answer: {}
+
   }
 
 
@@ -104,8 +104,12 @@ const QuizzesTab = (props: PropsType): ReactElement => {
     // console.log(ansgroup),
     console.log(title),
       console.log(description),
-      console.log(data)
-  }, [ansgroup, title, data, description])
+      console.log(JSON.stringify(data),
+        'data')
+    console.log(questionlist, "question list")
+
+    console.log(JSON.stringify(data1), "data1")
+  }, [ansgroup, title, data, description, questionlist])
 
   const questionhandler = (e: any) => {
     const temp = data?.question_choices
@@ -117,16 +121,17 @@ const QuizzesTab = (props: PropsType): ReactElement => {
     setAddanswere(true)
   }
   const saveQuestion = () => {
-    const temp = data
+    let temp = data
     setQuestionList([...questionlist, { ...temp }])
     setData({
-
       question_choices: [""],
-
     })
-    console.log(questionlist, "question list")
     setAddanswere(false)
 
+  }
+  const addmultiplechoice = () => {
+
+    // addmultiplechoice()
   }
   const saveForm = () => {
     createForm({
@@ -444,7 +449,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                       <Input1 isNaked={true} placeholder='#Sample Question 1' value={item.question} style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', marginBottom: '20px' }} />
                     </Row>
                     <Checkbox.Group
-                      defaultValue={item?.resource?.answers}
+                      defaultValue={item?.question_answer}
                       onChange={
                         // (e) => {
                         //   setAnsgroup({ ...ansgroup, question_answere: [e.target.value] })
@@ -466,10 +471,10 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                             <Input1
                               isNaked={true}
                               // style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none' }}
-                              Value={x}
+                              value={x[i]}
                               placeholder={`Answer #${i + 1}`}
                               onChange={(e) => {
-                                data.question_choices[i] = e.target.value;
+                                // data.question_choices[i] = e.target.value;
                                 // submitQ(data);
                               }}
                             />
@@ -495,14 +500,14 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                     </Row>
                   </div>
                   <Checkbox.Group
-                    defaultValue={data?.answer}
-
+                    // defaultValue={data?.question_answer}
                     onChange={
-
                       (e) => {
-                        const temp = data?.question_choices
-                        const temp1 = data?.answers
-                        setData({ ...data, resource: { question_choices: [...temp], answers: [temp1, e] } })
+                        data1.question_answer = e
+                        // setData({ ...data, question_answer: data1.question_answer })
+                        // const temp = data?.question_choices
+                        // const temp1 = data?.answers
+                        // setData({ ...data, resource: { question_choices: [...temp], answers: [temp1, e] } })
                       }
                     }
                   >
@@ -519,21 +524,21 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                             onChange={(e) => {
 
                               // var a = data.question_choices
-                              // // var b = a
-                              // // data.question_choices[i] = e.target.value
+                              var b: any = e.target.value
+                              data1.question_choices[i] = e.target.value
                               // let temp = data?.question_choices[i + 1]
                               // temp[i].splice()
-                              let temp = data.question_choices[i]
+                              // let temp = data.question_choices
 
                               // data1.question_choices[i] = e.target.value
-                              setData({ question_choices: [...temp, temp[e.target.value]] })
+                              // setData({question_choices: [temp, {i: e.target.value }] })
 
                               // console.log(a.length, "length")
                               // temp = e.target.value
                               // let d = []
                               // // const value = e.target.value
-                              // setData({...data,question_choices:[...data.question_choices,]})
-                              // setData({ ...data, question_choices: [...a, temp] });
+                              // setData({...data, question_choices:[...data.question_choices,]})
+                              // setData({...data, question_choices: [...a, temp] });
                             }}
                           />
                         </Col>
@@ -545,10 +550,12 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                   <Row>
                     <StyledButtonCancle style={{ border: 'none', margin: '10px 10px' }}
                       onClick={() => {
-                        const temp = data.question_choices
-                        // data1.question_choices.push("")
-                        // console.log(data1, "data")
-                        setData({ ...data, question_choices: [...temp, ''] })
+                        const temp = data.question_choice
+                        const d1 = data1.question_choices
+                        const d2 = data.question_choices.filter(o => Object.keys(o).length != 0)
+                        const n1 = [...d2, d1]
+
+                        setData({ ...data, question_choices: n1, question_answer: data1.question_answer })
                       }}
                     >
                       <>
@@ -558,8 +565,9 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                     </StyledButtonCancle>
                     <StyledButtonCancle style={{ border: 'none', margin: "10px 10px" }}
                       onClick={() => {
-                        const temp = data.question_choicesc
+                        const temp = data.question_choices
                         temp.pop()
+                        console.log(temp)
                         setData({ ...data, question_choices: temp })
                       }}
                     >
@@ -572,12 +580,9 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                   <Row>
 
                   </Row>
-                  < PageHeader extra={[<StyledButtonCancle onClick={() => (setAddanswere(false), setData({
-
-                    question_choices: [""],
-
-
-                  }))}>Cancle</StyledButtonCancle>, <StyledButton onClick={saveQuestion}>SAVE</StyledButton>]} />
+                  < PageHeader extra={[<StyledButtonCancle onClick={() => {
+                    setAddanswere(false), setData(...data)
+                  }}>Cancle</StyledButtonCancle>, <StyledButton onClick={saveQuestion}>SAVE</StyledButton>]} />
                 </StyledQuestionContainer> : ''
             }
             <Row>
