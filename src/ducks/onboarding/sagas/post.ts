@@ -46,19 +46,16 @@ export function* postCreativeProvider({ payload }: never) {
 }
 
 export function* deleteOnboarding({ payload }: never) {
-  console.log("calling");
   try {
-    const response = yield call(onboarding_serive.deleteOnboading, payload);
-
-    console.log(response);
+    yield call(onboarding_serive.deleteOnboading, payload);
   } catch (e) {
-    console.log(e.response);
+    return e;
   }
 }
 
-export function* editOnboarding({ payload, id }: never) {
+export function* editOnboarding({ payload }: any) {
   try {
-    const response = yield call(onboarding_serive.editOnboading, id, payload);
+    yield call(onboarding_serive.editOnboading, payload?.id, payload?.values);
   } catch (e) {
     yield put({
       type: TYPES.POST_ONBOARDING_YOU_FAILED,

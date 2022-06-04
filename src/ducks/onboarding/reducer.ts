@@ -94,7 +94,7 @@ const reducer = (state = INITIAL_STATE, action) => {
         onboarding: {},
       };
 
-    case TYPES.GET_ONBOARDING_LIST_SUCCESS:
+    case TYPES.GET_ONE_ONBOARDING_SUCCESS:
       return {
         ...state,
         onboarding: action.payload,

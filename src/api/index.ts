@@ -1,5 +1,5 @@
-import axios from 'axios';
-import {store} from 'ducks/store';
+import axios from "axios";
+import { store } from "ducks/store";
 
 /**
  * ===================================
@@ -8,10 +8,11 @@ import {store} from 'ducks/store';
  */
 
 const config = {
-  baseURL: 'https://engage-hub-platform-dev.herokuapp.com/api/v1',
+  // baseURL: 'https://engage-hub-platform-dev.herokuapp.com/api/v1',
+  baseURL: "http://127.0.0.1:8080/api/v1",
   headers: {
-    'Cache-Control': 'no-cache',
-    'Content-Type': 'application/json; charset=utf-8',
+    "Cache-Control": "no-cache",
+    "Content-Type": "application/json; charset=utf-8",
   },
   timeout: 100000,
 };
@@ -23,22 +24,22 @@ const config = {
  */
 
 export const axiosInstance = axios.create(config);
-export const accessToken = localStorage.getItem('accessToken');
+export const accessToken = localStorage.getItem("accessToken");
 
 axiosInstance.interceptors.request.use(
   async (requestConfig) => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       requestConfig.headers.Authorization = `Bearer ${accessToken}`;
     } else {
-      requestConfig.headers.Authorization = '';
+      requestConfig.headers.Authorization = "";
     }
 
     return requestConfig;
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 axiosInstance.interceptors.response.use(
@@ -46,12 +47,12 @@ axiosInstance.interceptors.response.use(
   async function (error) {
     if (error?.response?.status === 401) {
       localStorage.clear();
-      store.dispatch({type: 'GET_AUTHENTICATION_FAILED'});
+      store.dispatch({ type: "GET_AUTHENTICATION_FAILED" });
       return error;
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default axiosInstance;

@@ -23,8 +23,6 @@ const Screen = (props: PropsType): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  useEffect(() => {}, []);
-
   const truncate = (string) => {
     const delimiter = "...";
     return string.length > 38 ? string.substr(0, 38) + delimiter : string;
@@ -36,8 +34,9 @@ const Screen = (props: PropsType): ReactElement => {
 
   const onEdit = () => {
     dispatch(props.getOneOnboarding(props.item));
-
-    history.push(`/team/onboarding/createonboard/${props.name}`);
+    setTimeout(() => {
+      history.push(`/team/onboarding/createonboard/${props.name}`);
+    }, 100);
   };
 
   return (
