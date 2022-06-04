@@ -4,7 +4,9 @@ const INITIAL_STATE = {
   data: [],
   loading: false,
   error: false,
-  deletepagedata: []
+  deletepagedata: [],
+  // LIST_ORGANIZATIONS_SUCCESS
+  organizations: []
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -70,7 +72,8 @@ const reducer = (state = INITIAL_STATE, action) => {
     case TYPES.LIST_ORGANIZATIONS_SUCCESS:
       return {
         ...state,
-        data: action.payload,
+        data: [...state.data],
+        organizations: action.payload,
         loading: false,
         error: false
       }

@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Tabs } from "antd";
 import { Row, Col } from "antd";
 import { PageHeader } from "antd";
@@ -17,6 +17,7 @@ import reddot from "../../../assets/icons/red-dot.svg";
 import orgicon from "../../../assets/icons/orgicon.svg";
 import clockicon from "../../../assets/icons/clockicon.svg";
 import noannouncment from "../../../assets/images/noannouncement.png";
+import { getAllAnnouncement, getAllOrganizations } from "ducks/announcement/actionCreator"
 
 import type { PropsType } from "./types";
 import {
@@ -36,6 +37,11 @@ import {
   TabContainer,
 } from "./styled";
 import { StyledText } from "compositions/TableDashboards/styled";
+import { useSelector } from "react-redux";
+import { RootState } from "ducks/store";
+import { ColumnType } from "antd/lib/table";
+import moment from "moment";
+import Loading from "components/Loading";
 const { TabPane } = Tabs;
 function callback(key) {
   console.log(key);
@@ -67,6 +73,44 @@ const data = [
     view: "vieved 9 hours ago",
   },
 ];
+
+const columns = [
+  {
+    title: 'Announcement',
+    dataIndex: 'announcement',
+    key: 'announcement',
+    render: announcement => <TableCell style={{ width: "150px" }}>
+      <StatusDot
+        src={
+          announcement.status === "active"
+            ? `${greendot}`
+            : `${reddot}`
+        }
+      />
+      <p>{announcement.title}</p>
+    </TableCell>
+  },
+  {
+    title: 'organizationTeam',
+    dataIndex: 'organizationTeam',
+    key: 'organizationTeam',
+    render: organization => <TableCell style={{ height: "" }}>
+      <StatusDot src={orgicon} style={{ margin: "0px 5px" }} />
+      <h3 style={{ marginBottom: "0px" }}>{organization}</h3>
+    </TableCell>
+  },
+  {
+    title: 'dateadded',
+    dataIndex: 'dateadded',
+    key: 'dateadded',
+    render: dateadded =>
+      <TableCell >
+        <StatusDot src={clockicon} style={{ margin: "0px 5px" }} />
+        <h3 style={{ marginBottom: "0px", width: "150px" }}>{dateadded}</h3>
+      </TableCell>
+  }
+
+]
 
 const tabledata = [
   {
@@ -146,7 +190,65 @@ const tabledata = [
   },
 ];
 
+interface DataType {
+  announcement?: any,
+  dateadded?: any,
+  organizationTeam?: any
+
+}
+
 const Home = (props: PropsType): ReactElement => {
+  const { data: rawData }: any = useSelector<RootState>((state) => state?.announcement)
+  const { data: Organization }: any = useSelector<RootState>((state) => state?.announcement?.organizations)
+  const [loading, setLoading] = useState(true)
+
+  function listorg(orgs) {
+    const data = Organization?.filter(o => orgs.includes(o._id))
+    const data1 = data?.map((item, index) => {
+      return (item.name)
+    })
+    console.log(data1)
+    return data1
+
+  }
+
+  const tabledata1: DataType[] = rawData?.map((item, index) =>
+  (<>
+    announcement: item,
+    dateadded: (
+    <TableCell key={index}>
+      <StatusDot src={clockicon} style={{ margin: "0px 5px" }} />
+      <h3 style={{ marginBottom: "0px" }}>Sept. 11, 2022 11:24 PM</h3>
+    </TableCell>
+    ),
+    organizationTeam: (
+    <TableCell key={index}>
+      <StatusDot src={orgicon} style={{ margin: "0px 5px" }} />
+      <h3 style={{ marginBottom: "0px" }}>{item.title}</h3>
+    </TableCell>
+    {console.log(item, "item")}
+    ),
+  </>
+  ),
+  )
+
+  const data2: DataType[] = rawData?.map((item, index) => {
+    return (
+      {
+        key: index,
+        announcement: item,
+        organizationTeam: moment(item.createdAt).format('L'),
+        dateadded: listorg(item.organization)
+
+      }
+    )
+  })
+  useEffect(() => {
+    getAllAnnouncement();
+    getAllOrganizations();
+    setLoading(false)
+  }, [])
+  console.log(rawData, Organization)
   return (
     <div>
       <RootContainer>
@@ -159,47 +261,12 @@ const Home = (props: PropsType): ReactElement => {
           </Col>
           <Col className="gutter-row" span={12}>
             <TableContainer>
-              <Table dataSource={tabledata}>
-                <Table.Column
-                  title="Announcement"
-                  dataIndex="announcement"
-                  key="announcement"
-                  render={(announcement) => (
-                    <>
-                      <TableCell>
-                        {" "}
-                        <StatusDot
-                          src={
-                            announcement === "green"
-                              ? `${greendot}`
-                              : `${reddot}`
-                          }
-                        />{" "}
-                        Sample Announcement
-                      </TableCell>
-                    </>
-                  )}
-                />
-                <Table.Column
-                  title="organization/Team"
-                  dataIndex="organizationTeam"
-                  key="organizationTeam"
-                  // render={organizationTeam => (
-                  //   <>
-                  //     <StatusDot src={orgicon} />
-
-                  //   </>
-                  // )}
-                />
-                <Table.Column
-                  title="Date Added"
-                  dataIndex="dateadded"
-                  key="dateadded"
-                  // render={dateadded => (
-                  //   <StatusDot src={clockicon} />
-                  // )}
-                />
-              </Table>
+              <Table
+                dataSource={data2}
+                columns={columns}
+                loading={{ indicator: <Loading />, spinning: loading }}
+                pagination={{ pageSize: 4 }}
+              />
             </TableContainer>
           </Col>
         </Row>

@@ -104,8 +104,8 @@ export const TableContainer: any = styled(Layout)`
     }
 }
 .ant-table {
-    
     border-radius:15px;
+    
 }
 .ant-table-thead > tr > th:first-child {
     color: #635FFA !important ;
@@ -129,6 +129,10 @@ export const TableContainer: any = styled(Layout)`
 ul.ant-pagination.ant-table-pagination.ant-table-pagination-right {
     display: none;
 }
+.ant-table-row:hover {
+    box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+  }
 
 `
 export const TabContainer: any = styled(Layout)`
