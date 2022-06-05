@@ -19,12 +19,14 @@ import {
   updateLesson,
   updateLessonContent,
   deleteLessonContent,
+  getCurriculum,
 } from "ducks/lms/actionCreator";
 import Loading from "components/Loading";
 import { useHistory } from "react-router-dom";
 import { AddLesson, EditField, newData } from "./components";
 import StyledButton from "components/StyledButton";
 import Text from "components/Text";
+import ModalCurriculum from "compositions/ModalCurriculum";
 
 function TreeCourse({ course, onAdd, setOnAdd }) {
   const history = useHistory();
@@ -35,6 +37,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   // upto 4 elements, [ onEdit, keyToEdit, onAdd, editFieldMode ]
   const [onEdit, setOnEdit]: any = useState([false]);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewVisible, setViewVisible] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -154,7 +157,9 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                   <EditOutlined
                     onClick={() => setOnEdit([true, _objMakeKey])}
                   />
-                  <EyeFilled />
+                  <EyeFilled 
+                    onClick={() => openView(course)}
+                  />
                   <DeleteOutlined
                     onClick={() => {
                       Modal.confirm({
@@ -446,6 +451,17 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
     setOnAdd(false);
   };
 
+  const openView = (obj) => {
+    dispatch(getCurriculum(obj));
+
+    localStorage.setItem("courseId", obj?._id);
+    setViewVisible(true);
+  }
+  const closeView = () => {
+    setViewVisible(false);
+  }
+
+
   return (
     <>
       <Row justify="space-between">
@@ -484,6 +500,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
           style={{ background: "none " }}
         />
       )}
+      <ModalCurriculum isVisible={viewVisible} isCancel={closeView}/>
     </>
   );
 }

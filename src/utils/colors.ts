@@ -1,11 +1,11 @@
 export const theme = {
   DEFAULT: '#5E5873',
   BLACK: '#2B2E4A',
-  GRAY: '#2B2E4A77',
+  GRAY: '#4C4B7B',
+  SUBTITLE_GRAY: '#A2A1BD',
   WHITE: '#FFFFFF',
   WHITE_MID: '#FDFDFD',
   SIDEBAR_ACTIVE: '#7890FF',
-  SUBTITLE_GRAY: '#B9B9C3',
   ICONS: '#6E6B7B',
   SUB_BLUE: '#7890FF',
   MODAL: '#e9e9e9',
@@ -23,5 +23,7 @@ export const theme = {
   PRIMARY_SMID: '#E8E8FF',
   PRIMARY_LIGHT: '#EFEFFE',
   PRIMARY_SLIGHT: '#F7F7FF',
-  HEADER: '#EFEFFE'
+  HEADER: '#EFEFFE',
+  COINS_GREEN: '#edf8fd',
+  MEDAL_PINK: '#f7f1fe',
 };

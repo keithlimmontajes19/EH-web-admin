@@ -40,7 +40,7 @@ export const getLessonsDetail = (payload={}) => ({
   payload
 });
 
-export const getContents = (payload) => ({
+export const getContents = (payload={}) => ({
   type: TYPES.GET_CONTENTS_LIST_REQUEST,
   payload,
 });

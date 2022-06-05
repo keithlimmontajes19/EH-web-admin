@@ -14,11 +14,12 @@ import {theme} from 'utils/colors';
 // ducks action
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from 'ducks/store';
-import {deleteCourse, deleteLesson, getLessons, getMyCourses, updateCourse, updateLesson} from 'ducks/lms/actionCreator';
+import {deleteCourse, deleteLesson, getCurriculum, getLessons, getMyCourses, updateCourse, updateLesson} from 'ducks/lms/actionCreator';
 import Loading from 'components/Loading';
 import Text from 'components/Text';
 import {useHistory} from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import ModalCurriculum from 'compositions/ModalCurriculum';
 
 function TableTopics() {
   const history = useHistory();
@@ -31,6 +32,7 @@ function TableTopics() {
   const [dataSource, setDataSource] = useState([]);
   const [treeData, setTreeData] = useState([]);
   const [onDispatch, setOnDispatch] = useState(false);
+  const [viewVisible, setViewVisible] = useState(false);
 
   const columns = [
     {
@@ -187,7 +189,7 @@ function TableTopics() {
                       <EditOutlined style={{color: '#635ffa'}} />
                       &nbsp;RENAME
                     </span>
-                    <span>
+                    <span onClick={() => openView(obj)}>
                       <EyeFilled style={{color: '#635ffa'}} />
                       &nbsp;VIEW
                     </span>
@@ -215,7 +217,7 @@ function TableTopics() {
                         <EditOutlined style={{color: '#635ffa'}} />
                         &nbsp;RENAME
                       </span>
-                      <span>
+                      <span onClick={() => openView(obj)}>
                         <EyeFilled style={{color: '#635ffa'}} />
                         &nbsp;VIEW
                       </span>
@@ -385,6 +387,19 @@ function TableTopics() {
     onChange: (newRowKeys) => onSelectChange(newRowKeys, i),
   });
 
+  const openView = (obj) => {
+    console.log('eto GAGO', obj)
+    dispatch(getCurriculum(obj));
+
+    localStorage.setItem("courseId", obj?._id);
+    localStorage.setItem("organizationId", obj?.organizationId);
+    setViewVisible(true);
+  }
+  const closeView = () => {
+    setViewVisible(false);
+  }
+
+
   return (
     <TableContainer
       style={{
@@ -453,6 +468,7 @@ function TableTopics() {
           }}
         />
       </Modal>
+      <ModalCurriculum isVisible={viewVisible} isCancel={closeView}/>
     </TableContainer>
   );
 }

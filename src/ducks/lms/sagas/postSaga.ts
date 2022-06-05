@@ -20,19 +20,21 @@ export function* updateCourse({ payload }: any): any {
     preview,
     instructor,
     callback = () => {},
+    points = false
   } = payload;
   const data = {
     title,
     description,
     body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
     preview: { type: preview.type },
-    instructor,
+    instructor
   };
+  console.log(points)
 
   try {
     const response = yield call(
       lms_service.updateCourse,
-      data,
+      points ? {...data, points} : data,
       idOrg,
       idCourse
     );
