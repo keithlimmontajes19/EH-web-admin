@@ -11,6 +11,8 @@ const onboarding_service = {
   deleteOnboading: (id: string) => api.delete(`${ONBOARDING_ALL}/delete/${id}`),
   editOnboading: (id: string, payload: any) =>
     api.put(`${ONBOARDING_ALL}/edit/${id}`, payload),
+  postOnboarding: (payload: any) =>
+    api.post(`${ONBOARDING_ALL}/create`, payload),
 };
 
 export default onboarding_service;

@@ -31,3 +31,8 @@ export const editOnboarding = (payload: any, id: any) => ({
     id,
   },
 });
+
+export const postOnboarding = (payload: any) => ({
+  type: TYPES.POST_ONBOARDING_REQUEST,
+  payload,
+});

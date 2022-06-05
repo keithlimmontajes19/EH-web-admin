@@ -39,7 +39,7 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
   };
 
   const handleOk = () => {
-    history.push(`/team/onboarding/createonboard/${screenname}`);
+    history.push(`/team/onboarding/create/${screenname}`);
   };
 
   useEffect(() => {
@@ -55,14 +55,14 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
             <StyledButtonCreate onClick={showModal}>CREATE</StyledButtonCreate>
 
             <ModalContainer
+              centered
+              onOk={handleOk}
+              onCancel={handleCancel}
               visible={isModalVisible}
               title="Create Onboarding Screens"
-              onCancel={handleCancel}
-              onOk={handleOk}
-              centered
             >
               <Input
-                placeholder="Sample Announcement_2"
+                size="large"
                 style={{
                   borderRadius: "15px",
                   background: "#F8F8F8",
@@ -70,9 +70,7 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
                   height: "38px",
                   margin: "10px 0px",
                 }}
-                size="large"
-                aria-placeholder="Screen Name 1"
-                defaultValue="Screen Name 1"
+                placeholder="Enter onboarding name"
                 onChange={(e) => setScreenname(e.target.value)}
               />
             </ModalContainer>

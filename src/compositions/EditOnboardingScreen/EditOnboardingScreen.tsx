@@ -5,7 +5,6 @@ import { Link, useParams } from "react-router-dom";
 /* styles antd */
 import {
   StyledText,
-  // UploadButton,
   ContainerImg,
   StyledButton,
   ImgaeContainer,
@@ -28,7 +27,7 @@ import { RootState } from "ducks/store";
 import { useSelector, useDispatch } from "react-redux";
 import { editOnboarding } from "ducks/onboarding/actionCreator";
 
-const OnBoardingScreen = (props: PropsType): ReactElement => {
+const EditOnboardingScreen = (props: PropsType): ReactElement => {
   const dispatch = useDispatch();
   const params: Params = useParams();
 
@@ -152,4 +151,4 @@ const OnBoardingScreen = (props: PropsType): ReactElement => {
   );
 };
 
-export default OnBoardingScreen;
+export default EditOnboardingScreen;

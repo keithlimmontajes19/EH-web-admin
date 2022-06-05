@@ -35,7 +35,7 @@ const Screen = (props: PropsType): ReactElement => {
   const onEdit = () => {
     dispatch(props.getOneOnboarding(props.item));
     setTimeout(() => {
-      history.push(`/team/onboarding/createonboard/${props.name}`);
+      history.push(`/team/onboarding/edit/${props.name}`);
     }, 100);
   };
 
@@ -55,8 +55,8 @@ const Screen = (props: PropsType): ReactElement => {
         }
         icon={<></>}
         placement="right"
-        onConfirm={confirm}
         showCancel={false}
+        onConfirm={confirm}
         okButtonProps={{ type: "link" }}
         overlayInnerStyle={{ borderRadius: 10 }}
       >
