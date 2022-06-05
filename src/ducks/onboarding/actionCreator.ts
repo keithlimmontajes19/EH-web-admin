@@ -24,8 +24,15 @@ export const deleteOnboading = (payload: any) => ({
   payload,
 });
 
-export const editOnboarding = (payload: any, id) => ({
+export const editOnboarding = (payload: any, id: any) => ({
   type: TYPES.EDIT_ONBOARDING_REQUEST,
+  payload: {
+    values: payload,
+    id,
+  },
+});
+
+export const postOnboarding = (payload: any) => ({
+  type: TYPES.POST_ONBOARDING_REQUEST,
   payload,
-  id,
 });

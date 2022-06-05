@@ -11,13 +11,13 @@ import Screen from "components/Screen";
 import PublishOnBoarding from "compositions/PublishOnBoarding";
 
 /* reducer action */
-import { RootState } from "ducks/store";
-import { useSelector, useDispatch } from "react-redux";
 import {
   deleteOnboading,
   getOneOnboarding,
   getOnboardingList,
 } from "ducks/onboarding/actionCreator";
+import { RootState } from "ducks/store";
+import { useSelector, useDispatch } from "react-redux";
 
 const OnboardingScreens = (props: PropsType): ReactElement => {
   const history = useHistory();
@@ -39,7 +39,7 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
   };
 
   const handleOk = () => {
-    history.push(`/team/onboarding/createonboard/${screenname}`);
+    history.push(`/team/onboarding/create/${screenname}`);
   };
 
   useEffect(() => {
@@ -47,63 +47,57 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
   }, []);
 
   return (
-    <>
-      <Layout style={{ background: "none" }}>
-        <PageHeader
-          ghost={false}
-          extra={[
-            <>
-              <StyledButtonCreate onClick={showModal}>
-                CREATE
-              </StyledButtonCreate>
+    <Layout style={{ background: "none" }}>
+      <PageHeader
+        ghost={false}
+        extra={[
+          <>
+            <StyledButtonCreate onClick={showModal}>CREATE</StyledButtonCreate>
 
-              <ModalContainer
-                visible={isModalVisible}
-                title="Create Onboarding Screens"
-                onCancel={handleCancel}
-                onOk={handleOk}
-                centered
-              >
-                <Input
-                  placeholder="Sample Announcement_2"
-                  style={{
-                    borderRadius: "15px",
-                    background: "#F8F8F8",
-                    width: "485px",
-                    height: "38px",
-                    margin: "10px 0px",
-                  }}
-                  size="large"
-                  aria-placeholder="Screen Name 1"
-                  defaultValue="Screen Name 1"
-                  onChange={(e) => setScreenname(e.target.value)}
-                />
-              </ModalContainer>
-            </>,
-            <PublishOnBoarding />,
-          ]}
-        />
-
-        <Row justify="center">
-          {(onboarding_list?.data || [])?.map((item, index) => (
-            <Col>
-              <Screen
-                key={index}
-                item={item}
-                id={item?._id}
-                name={item?.name}
-                title={item?.title}
-                uri={item?.imageURL}
-                descreption={item?.description}
-                screentitle={item?.screentitle}
-                getOneOnboarding={getOneOnboarding}
-                deleteOnboading={deleteOnboading}
+            <ModalContainer
+              centered
+              onOk={handleOk}
+              onCancel={handleCancel}
+              visible={isModalVisible}
+              title="Create Onboarding Screens"
+            >
+              <Input
+                size="large"
+                style={{
+                  borderRadius: "15px",
+                  background: "#F8F8F8",
+                  width: "485px",
+                  height: "38px",
+                  margin: "10px 0px",
+                }}
+                placeholder="Enter onboarding name"
+                onChange={(e) => setScreenname(e.target.value)}
               />
-            </Col>
-          ))}
-        </Row>
-      </Layout>
-    </>
+            </ModalContainer>
+          </>,
+          <PublishOnBoarding />,
+        ]}
+      />
+
+      <Row justify="center">
+        {(onboarding_list?.data || [])?.map((item, index) => (
+          <Col>
+            <Screen
+              key={index}
+              item={item}
+              id={item?._id}
+              name={item?.name}
+              title={item?.title}
+              uri={item?.imageURL}
+              descreption={item?.description}
+              screentitle={item?.screentitle}
+              getOneOnboarding={getOneOnboarding}
+              deleteOnboading={deleteOnboading}
+            />
+          </Col>
+        ))}
+      </Row>
+    </Layout>
   );
 };
 

@@ -23,5 +23,5 @@ export function* getOneOnboarding({ payload }: never) {
 
 export default function* watcher() {
   yield takeLatest(TYPES.GET_ONBOARDING_LIST_REQUEST, getOnboardingList);
-  yield takeLatest(TYPES.GET_ONE_ONBOARDING_REQUEST, getOnboardingList);
+  yield takeLatest(TYPES.GET_ONE_ONBOARDING_REQUEST, getOneOnboarding);
 }
