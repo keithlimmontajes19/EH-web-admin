@@ -28,20 +28,23 @@ export const ImageContainer = styled.div`
 export const Img = styled.img``;
 
 export const Heading = styled.div`
-  margin: 10px 0px;
-  padding: 10px 60px;
+  text-align: center;
+  max-width: 200px;
+  min-width: 200px;
   background: #f7f7f7;
-  max-width: 220px;
+  min-height: 50px;
+  margin: 10px 0px;
+  padding: 2px;
 `;
 
 export const Description = styled.div`
-  max-width: 220px;
   margin: 0px 10px;
   max-width: 200px;
-  max-height 149px;
+  min-width: 200px;
+  max-height 100px;
+  min-height: 100px;
   text-align: center;
   background: #f7f7f7;
-  padding: 20px
 `;
 
 export const ScreenTitle = styled.div`

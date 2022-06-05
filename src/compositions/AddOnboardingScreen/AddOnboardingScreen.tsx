@@ -5,7 +5,6 @@ import { Link, useParams } from "react-router-dom";
 /* styles antd */
 import {
   StyledText,
-  // UploadButton,
   ContainerImg,
   StyledButton,
   ImgaeContainer,
@@ -26,27 +25,19 @@ import { RedoOutlined, MoreOutlined } from "@ant-design/icons";
 /* reducer action */
 import { RootState } from "ducks/store";
 import { useSelector, useDispatch } from "react-redux";
-import { editOnboarding } from "ducks/onboarding/actionCreator";
+import { postOnboarding } from "ducks/onboarding/actionCreator";
 
-const OnBoardingScreen = (props: PropsType): ReactElement => {
+const AddOnboardingScreen = (props: PropsType): ReactElement => {
   const dispatch = useDispatch();
   const params: Params = useParams();
 
-  const { onboarding }: any = useSelector<RootState>(
-    (states) => states.onboarding
-  );
-
   const [imageUrl, setImageUrl] = useState("");
   const [values, setValues] = useState({
-    name: onboarding?.name,
-    title: onboarding?.title,
-    imageURL: onboarding?.imageURL,
-    description: onboarding?.description,
+    name: params?.screenname || "",
+    title: "",
+    imageURL: "",
+    description: "",
   });
-
-  useEffect(() => {
-    setImageUrl(onboarding?.imageURL);
-  }, []);
 
   return (
     <>
@@ -81,9 +72,7 @@ const OnBoardingScreen = (props: PropsType): ReactElement => {
               paddingRight: "24px",
             }}
           />,
-          <StyledButton
-            onClick={() => dispatch(editOnboarding(values, onboarding?._id))}
-          >
+          <StyledButton onClick={() => dispatch(postOnboarding(values))}>
             Save
           </StyledButton>,
           <StyledButtonCancle>Cancel</StyledButtonCancle>,
@@ -94,7 +83,7 @@ const OnBoardingScreen = (props: PropsType): ReactElement => {
       />
 
       <MainScreenContainer>
-        <StyledText>{params.screenname || ""}</StyledText>
+        <StyledText>{params?.screenname || ""}</StyledText>
 
         <ScreenContainer>
           <div style={{ padding: "30px 30px 0px 30px", marginBottom: 10 }}>
@@ -152,4 +141,4 @@ const OnBoardingScreen = (props: PropsType): ReactElement => {
   );
 };
 
-export default OnBoardingScreen;
+export default AddOnboardingScreen;

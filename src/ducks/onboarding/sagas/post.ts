@@ -2,7 +2,7 @@ import { takeLatest, put, call } from "redux-saga/effects";
 import { TYPES } from "../actionTypes";
 import onboarding_serive from "api/services/onboaring_service";
 
-export function* postOnboarding({ payload }: never) {
+export function* postOnboardingYou({ payload }: never) {
   try {
     const response = yield call(onboarding_serive.postOnboardingYou, payload);
 
@@ -63,9 +63,20 @@ export function* editOnboarding({ payload }: any) {
   }
 }
 
+export function* postOnboarding({ payload }: any) {
+  try {
+    yield call(onboarding_serive.postOnboarding, payload);
+  } catch (e) {
+    yield put({
+      type: TYPES.POST_ONBOARDING_FAILED,
+    });
+  }
+}
+
 export default function* watcher() {
-  yield takeLatest(TYPES.POST_ONBOARDING_YOU_REQUEST, postOnboarding);
-  yield takeLatest(TYPES.POST_CREATIVE_PROVIDER_REQUEST, postCreativeProvider);
-  yield takeLatest(TYPES.DELETE_ONBOARDING_REQUEST, deleteOnboarding);
   yield takeLatest(TYPES.EDIT_ONBOARDING_REQUEST, editOnboarding);
+  yield takeLatest(TYPES.POST_ONBOARDING_REQUEST, postOnboarding);
+  yield takeLatest(TYPES.DELETE_ONBOARDING_REQUEST, deleteOnboarding);
+  yield takeLatest(TYPES.POST_ONBOARDING_YOU_REQUEST, postOnboardingYou);
+  yield takeLatest(TYPES.POST_CREATIVE_PROVIDER_REQUEST, postCreativeProvider);
 }
