@@ -50,17 +50,49 @@ export function* postCreativeProvider({ payload }: never) {
 export function* deleteOnboarding({ payload }: never) {
   try {
     yield call(onboarding_serive.deleteOnboading, payload);
+    yield put({ type: TYPES.GET_ONBOARDING_LIST_REQUEST });
+    yield put({
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "success",
+        message: "Delete onboarding success!",
+      },
+    });
   } catch (e) {
-    return e;
+    yield put({
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "error",
+        message: "Delete onboarding failed!",
+      },
+    });
   }
 }
 
 export function* editOnboarding({ payload }: any) {
   try {
     yield call(onboarding_serive.editOnboading, payload?.id, payload?.values);
+    yield put({
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "success",
+        message: "Edit onboarding success!",
+      },
+    });
   } catch (e) {
     yield put({
       type: TYPES.POST_ONBOARDING_YOU_FAILED,
+    });
+    yield put({
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "success",
+        message: "Edit onboarding failed!",
+      },
     });
   }
 }
@@ -68,9 +100,25 @@ export function* editOnboarding({ payload }: any) {
 export function* postOnboarding({ payload }: any) {
   try {
     yield call(onboarding_serive.postOnboarding, payload);
+    yield put({
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "success",
+        message: "Create onboarding success!",
+      },
+    });
   } catch (e) {
     yield put({
       type: TYPES.POST_ONBOARDING_FAILED,
+    });
+    yield put({
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "error",
+        message: "Create onboarding failed!",
+      },
     });
   }
 }

@@ -46,6 +46,8 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
     dispatch(getOnboardingList());
   }, []);
 
+  const titleChecker = screenname.length > 0;
+
   return (
     <Layout style={{ background: "none" }}>
       <PageHeader
@@ -55,9 +57,16 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
             <StyledButtonCreate onClick={showModal}>CREATE</StyledButtonCreate>
             <ModalContainer
               centered
+              okText="Create"
               onOk={handleOk}
               onCancel={handleCancel}
+              maskClosable={false}
               visible={isModalVisible}
+              cancelButtonProps={{ hidden: true }}
+              okButtonProps={{
+                disabled: titleChecker ? false : true,
+                ghost: titleChecker ? false : true,
+              }}
               title="Create Onboarding Screens"
             >
               <Input
@@ -92,6 +101,7 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
               screentitle={item?.screentitle}
               getOneOnboarding={getOneOnboarding}
               deleteOnboading={deleteOnboading}
+              getOnboardingList={getOnboardingList}
             />
           </Col>
         ))}

@@ -72,10 +72,16 @@ const PublishOnBoarding = (props: PropsType): ReactElement => {
                   height: 100,
                   borderRadius: 100,
                   textAlign: "center",
-                  backgroundColor: "#635FFA",
+                  backgroundColor: "#b1aee8",
                 }}
               >
-                <h1 style={{ color: "#fff", padding: "25px 0px" }}>
+                <h1
+                  style={{
+                    fontSize: 40,
+                    color: "#635FFA",
+                    padding: "19px 0px",
+                  }}
+                >
                   {isPublish && findIndex + 1}
                 </h1>
               </div>
@@ -83,7 +89,13 @@ const PublishOnBoarding = (props: PropsType): ReactElement => {
           </Row>
         )}
 
-        <Row justify="center" gutter={18}>
+        <Row
+          justify="center"
+          gutter={18}
+          style={{
+            opacity: isPublish ? 0.3 : 1,
+          }}
+        >
           <Col span={24} style={{ backgroundColor: "transparent" }}>
             <Container style={{ borderRadius: 10 }}>
               <ImageContainer>
@@ -115,6 +127,7 @@ const PublishOnBoarding = (props: PropsType): ReactElement => {
         centered
         width={1000}
         visible={visible}
+        maskClosable={false}
         title="Publish Onboarding Screens"
         onCancel={() => setVisible(false)}
         footer={[

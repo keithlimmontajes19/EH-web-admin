@@ -12,7 +12,7 @@ import {
   ImageContainer,
   ScreenContainer,
 } from "./styled";
-import { Row, Col, Popconfirm, message } from "antd";
+import { Row, Col, Popconfirm } from "antd";
 import imageicon from "assets/icons/image-icon.svg";
 
 /* icons */
@@ -23,9 +23,9 @@ const Screen = (props: PropsType): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const truncate = (string) => {
+  const truncate = (string, count) => {
     const delimiter = "...";
-    return string.length > 38 ? string.substr(0, 38) + delimiter : string;
+    return string.length > count ? string.substr(0, count) + delimiter : string;
   };
 
   const confirm = () => {
@@ -44,13 +44,14 @@ const Screen = (props: PropsType): ReactElement => {
       <Popconfirm
         okText={
           <a>
-            <DeleteOutlined />
-            &nbsp; Delete
+            <DeleteOutlined /> &nbsp;{" "}
+            <span style={{ color: "#4C4B7B" }}>Delete</span>
           </a>
         }
         title={
           <a onClick={onEdit}>
-            <EditOutlined style={{ marginLeft: -7 }} /> &nbsp; Edit
+            <EditOutlined style={{ marginLeft: -7 }} /> &nbsp;{" "}
+            <span style={{ color: "#4C4B7B" }}>Edit</span>
           </a>
         }
         icon={<></>}
@@ -74,8 +75,8 @@ const Screen = (props: PropsType): ReactElement => {
                   />
                 </ImageContainer>
 
-                <Heading>{props.title}</Heading>
-                <Description>{truncate(props.descreption)}</Description>
+                <Heading>{truncate(props.title, 10)}</Heading>
+                <Description>{truncate(props.descreption, 38)}</Description>
               </Container>
             </Col>
           </Row>
