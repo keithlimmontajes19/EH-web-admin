@@ -1,3 +1,4 @@
 export type PropsType = {
-  testID?: string,
+  testID?: string;
+  data?: any;
 };

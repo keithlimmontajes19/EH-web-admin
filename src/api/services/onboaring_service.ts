@@ -7,7 +7,8 @@ const onboarding_service = {
   postCreativeProvider: (params) =>
     api.post(`${HOME}/onboarding-creative`, params),
 
-  publishOnboading: () => api.patch(`${ONBOARDING_ALL}/publish`),
+  publishOnboading: (payload: any) =>
+    api.patch(`${ONBOARDING_ALL}/publish`, payload),
   deleteOnboading: (id: string) => api.delete(`${ONBOARDING_ALL}/delete/${id}`),
   editOnboading: (id: string, payload: any) =>
     api.put(`${ONBOARDING_ALL}/edit/${id}`, payload),

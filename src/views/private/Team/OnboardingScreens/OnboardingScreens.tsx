@@ -53,7 +53,6 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
         extra={[
           <>
             <StyledButtonCreate onClick={showModal}>CREATE</StyledButtonCreate>
-
             <ModalContainer
               centered
               onOk={handleOk}
@@ -75,7 +74,7 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
               />
             </ModalContainer>
           </>,
-          <PublishOnBoarding />,
+          <PublishOnBoarding data={onboarding_list} />,
         ]}
       />
 
