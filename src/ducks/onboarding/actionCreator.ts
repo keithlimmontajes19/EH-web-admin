@@ -36,3 +36,8 @@ export const postOnboarding = (payload: any) => ({
   type: TYPES.POST_ONBOARDING_REQUEST,
   payload,
 });
+
+export const publishOnboarding = (payload: any) => ({
+  type: TYPES.PUBLISH_ONBOARDING_REQUEST,
+  payload,
+});

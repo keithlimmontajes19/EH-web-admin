@@ -29,22 +29,28 @@ export const Img = styled.img``;
 
 export const Heading = styled.div`
   text-align: center;
-  max-width: 200px;
-  min-width: 200px;
+  max-width: 201px;
+  min-width: 201px;
   background: #f7f7f7;
-  min-height: 50px;
+  min-height: 35px;
   margin: 10px 0px;
   padding: 2px;
+  color: #4c4b7b;
+  font-weight: 700;
+  font-size: 20px;
 `;
 
 export const Description = styled.div`
   margin: 0px 10px;
-  max-width: 200px;
-  min-width: 200px;
-  max-height 100px;
-  min-height: 100px;
+  max-width: 201px;
+  min-width: 201px;
+  max-height 109px;
+  min-height: 109px;
   text-align: center;
   background: #f7f7f7;
+  color: #4C4B7B;
+  font-weight: 400;
+  font-size: 18px;
 `;
 
 export const ScreenTitle = styled.div`
@@ -62,11 +68,11 @@ export const ScreenContainer = styled.div`
 `;
 
 export const NameStyled = styled.p`
-  font-style: normal;
-  font-size: 18px;
+  font-weight: 400;
+  font-size: 20px;
   color: #4c4b7b;
   text-align: center;
-  margin-top: 15px;
+  margin-top: 5px;
   margin-bottom: 27px;
   margin-left: -20px;
 `;

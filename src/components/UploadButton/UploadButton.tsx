@@ -26,7 +26,16 @@ const App = ({ values, setValues, setImageUrl }: any) => {
 
   return (
     <Upload {...uploadProps}>
-      <Button style={{ borderRadius: 15, fontWeight: 700 }}>Upload</Button>
+      <Button
+        style={{
+          borderRadius: 15,
+          fontWeight: 500,
+          color: "#635FFA",
+          border: "1px solid #635FFA",
+        }}
+      >
+        Upload
+      </Button>
     </Upload>
   );
 };

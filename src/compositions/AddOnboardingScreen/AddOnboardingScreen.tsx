@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 import type { PropsType, Params } from "./types";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 
 /* styles antd */
 import {
@@ -23,12 +23,12 @@ import galleryicon from "assets/icons/gallery-icon.svg";
 import { RedoOutlined, MoreOutlined } from "@ant-design/icons";
 
 /* reducer action */
-import { RootState } from "ducks/store";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { postOnboarding } from "ducks/onboarding/actionCreator";
 
 const AddOnboardingScreen = (props: PropsType): ReactElement => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const params: Params = useParams();
 
   const [imageUrl, setImageUrl] = useState("");
@@ -75,7 +75,9 @@ const AddOnboardingScreen = (props: PropsType): ReactElement => {
           <StyledButton onClick={() => dispatch(postOnboarding(values))}>
             Save
           </StyledButton>,
-          <StyledButtonCancle>Cancel</StyledButtonCancle>,
+          <StyledButtonCancle onClick={() => history.goBack()}>
+            Cancel
+          </StyledButtonCancle>,
           <MoreOutlined
             style={{ color: `${theme.DEFAULT}`, cursor: "pointer" }}
           />,

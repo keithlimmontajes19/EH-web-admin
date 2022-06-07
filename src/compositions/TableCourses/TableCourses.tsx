@@ -11,10 +11,11 @@ import {SpaceDiv, TableContainer} from './styled';
 // ducks action
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from 'ducks/store';
-import {updateCourse, getMyCourses, deleteCourse} from 'ducks/lms/actionCreator';
+import {updateCourse, getMyCourses, deleteCourse, getCurriculum} from 'ducks/lms/actionCreator';
 import Loading from 'components/Loading';
 import Text from 'components/Text';
 import {useHistory} from 'react-router-dom';
+import ModalCurriculum from 'compositions/ModalCurriculum';
 
 function TableCourses() {
   const history = useHistory();
@@ -24,6 +25,7 @@ function TableCourses() {
   const [editingData, setEditingData] = useState(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [dataSource, setDataSource] = useState([]);
+  const [viewVisible, setViewVisible] = useState(false);
   
   const columns = [
     {
@@ -61,7 +63,7 @@ function TableCourses() {
                 &nbsp;RENAME
               </span>
               <SpaceDiv w={'5%'}>@</SpaceDiv>
-              <span>
+              <span onClick={()=> openView(record)}>
                 <EyeFilled style={{color: '#635ffa'}} />
                 &nbsp;VIEW
               </span>
@@ -183,6 +185,17 @@ function TableCourses() {
     },
   });
 
+  const openView = (obj) => {
+    localStorage.setItem("courseId", obj?._id);
+    localStorage.setItem("organizationId", obj?.organizationId);
+
+    dispatch(getCurriculum(obj));
+    setViewVisible(true);
+  }
+  const closeView = () => {
+    setViewVisible(false);
+  }
+
   return (
     <TableContainer
       style={{
@@ -218,6 +231,7 @@ function TableCourses() {
           }}
         />
       </Modal>
+      <ModalCurriculum isVisible={viewVisible} isCancel={closeView}/>
     </TableContainer>
   );
 }

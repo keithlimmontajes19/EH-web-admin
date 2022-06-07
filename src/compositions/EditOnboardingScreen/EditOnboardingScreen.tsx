@@ -1,6 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 import type { PropsType, Params } from "./types";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
 /* styles antd */
 import {
@@ -29,6 +29,7 @@ import { editOnboarding } from "ducks/onboarding/actionCreator";
 
 const EditOnboardingScreen = (props: PropsType): ReactElement => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const params: Params = useParams();
 
   const { onboarding }: any = useSelector<RootState>(
@@ -85,7 +86,9 @@ const EditOnboardingScreen = (props: PropsType): ReactElement => {
           >
             Save
           </StyledButton>,
-          <StyledButtonCancle>Cancel</StyledButtonCancle>,
+          <StyledButtonCancle onClick={() => history.goBack()}>
+            Cancel
+          </StyledButtonCancle>,
           <MoreOutlined
             style={{ color: `${theme.DEFAULT}`, cursor: "pointer" }}
           />,
@@ -119,6 +122,7 @@ const EditOnboardingScreen = (props: PropsType): ReactElement => {
                 borderColor: "none",
                 textAlign: "center",
                 background: "#F8F8F8",
+                color: "#4C4B7B",
               }}
               placeholder="Title"
               value={values?.title}
@@ -137,6 +141,7 @@ const EditOnboardingScreen = (props: PropsType): ReactElement => {
                 textAlign: "center",
                 padding: "0px 32px",
                 background: "#F8F8F8",
+                color: "#4C4B7B",
               }}
               placeholder="Description"
               value={values?.description}

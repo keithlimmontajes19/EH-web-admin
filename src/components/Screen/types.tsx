@@ -11,4 +11,5 @@ export type PropsType = {
   deleteOnboading?: any;
   id?: string;
   item?: any;
+  getOnboardingList?: any;
 };
