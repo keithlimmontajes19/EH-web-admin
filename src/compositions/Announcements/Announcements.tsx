@@ -1,282 +1,41 @@
-import { ReactElement } from "react";
-import {
-  PageHeader,
-  Breadcrumb,
-  Layout,
-  Table,
-  Modal,
-  Tag,
-  Popover,
-} from "antd";
-import { Link, useHistory } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { ReactElement, useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import type { PropsType } from "./types";
+
+/* styled */
+import { StyledText, StyledInput, TableContainer } from "./styled";
+
+/* reducer action */
 import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from "react-redux";
+import { getAnnouncements } from "ducks/announcement/actionCreator";
+
+/* antd icons */
+import { columns } from "./columns";
+import { Table, Layout, PageHeader } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+
+/* components */
 import Loading from "components/Loading";
-import { getDashboard } from "ducks/dashboard/actionCreator";
 import Createannouncement from "compositions/Createannouncement";
 
-import {
-  SearchOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  EyeFilled,
-  MoreOutlined,
-} from "@ant-design/icons";
+const Announcements = (props: PropsType): ReactElement => {
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-import type { PropsType } from "./types";
-// import { SearchOutlined } from "@ant-design/icons";
-import {
-  StyledText,
-  StyledButton,
-  StyledInput,
-  TableContainer,
-  PopupContainer,
-  Contentdiv,
-  BuildIcon,
-} from "./styled";
-import buildicon from "../../assets/icons/hammer-icon.svg";
-
-const Announcements = (props: PropsType): ReactElement => { 
-  const { data: rawData }: any = useSelector<RootState>(
-    (state) => state.dashboard
+  const { data, loading }: any = useSelector<RootState>(
+    (state) => state.announcement
   );
-  const [loading, setLoading] = useState(true);
 
   const [searchInpt, setSearchInpt] = useState("");
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [searchdData, setSearchdData] = useState([]);
   const [dataSource, setDataSource] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingData, setEditingData] = useState(null);
-const [file, setFile] = useState("")
-
-const handlechnage = () =>{
-
-}
-
-
-  const history = useHistory();
-  const pushHistory = (route: string) => {
-    history.push(route);
-  };
-
-  const onAddData = () => {
-    const newKey = dataSource.length;
-    const newData = {
-      _id: newKey,
-      key: newKey,
-      name: "Name " + newKey,
-      email: newKey + "@gmail.com",
-      department: "Address " + newKey,
-    };
-    setDataSource((pre) => {
-      return [];
-    });
-    console.log("add");
-    pushHistory("/team/annoubcements/createannouncement");
-  };
-  const onDeleteData = (recArr) => {
-    if (!recArr.length) return;
-    Modal.confirm({
-      title: "Are you sure, you want to delete this record?",
-      okText: "Yes",
-      okType: "danger",
-      onOk: () => {
-        setDataSource((pre) => {
-          return pre
-            .filter((obj) => recArr.every((record) => record.key !== obj.key))
-            .map((obj, i) => ({ ...obj, key: i }));
-        });
-        if (searchInpt !== "") refreshSearchdData();
-      },
-    });
-  };
-  const onSelectChange = (newRowKeys) => {
-    console.log("selectedRowKeys changed: ", newRowKeys);
-    setSelectedRowKeys(newRowKeys);
-  };
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  };
-
-  const onEditData = (record) => {
-    setIsEditing(true);
-    setEditingData({ ...record });
-  };
-  const resetEditing = () => {
-    setIsEditing(false);
-    setEditingData(null);
-  };
-
-  const data = [
-    {
-      key: "1",
-      name: "page1",
-      department: "Sample Department",
-      status: ["active"],
-      dateadded: "17/12/2022",
-    },
-    {
-      key: "2",
-      name: "page3",
-      department: "Sample Department",
-      status: ["inactive"],
-      dateadded: "17/02/2022",
-    },
-    {
-      key: "3",
-      name: "page3",
-      department: "Sample Department",
-      status: ["inactive"],
-      dateadded: "04/10/2022",
-    },
-    {
-      key: "4",
-      name: "page3",
-      department: "Sample Department",
-      status: ["inprogress"],
-      dateadded: "07/01/2022",
-    },
-  ];
-
-  const content = (
-    <div style={{ fontSize: "18px" }}>
-      <Contentdiv>
-        <BuildIcon
-          src={buildicon}
-          style={{
-            height: "17px",
-            color: "#635ffa",
-            fontSize: "18px",
-            padding: "0px 10px",
-          }}
-        />
-        Builder
-      </Contentdiv>
-      <Contentdiv>
-        <EditOutlined
-          style={{
-            color: "#635ffa",
-            fontSize: "18px",
-            padding: "10px 10px",
-          }}
-        />
-        Edit
-      </Contentdiv>
-      <Contentdiv>
-        <EyeFilled
-          style={{ color: "#635ffa", fontSize: "18px", padding: "10px 10px" }}
-        />
-        View{" "}
-      </Contentdiv>
-      <Contentdiv style={{ padding: "0px" }}>
-        <DeleteOutlined
-          style={{ color: "#635ffa", fontSize: "18px", padding: "10px 10px" }}
-        />
-        Delete
-      </Contentdiv>
-    </div>
-  );
-
-  const columns = [
-    {
-      key: "1",
-      title: <StyledText fS={20}>TITLE</StyledText>,
-      dataIndex: "name",
-      width: "35%",
-      maxWidth: "35%",
-    },
-    {
-      key: "2",
-      title: <StyledText fS={20}>DEPARTMENT</StyledText>,
-      dataIndex: "department",
-      width: "35%",
-      maxWidth: "35%",
-    },
-    {
-      key: "3",
-      title: <StyledText fS={20}>STATUS</StyledText>,
-      dataIndex: "status",
-      width: "35%",
-      maxWidth: "35%",
-      render: (status) => (
-        <>
-          {status?.map((tag) => {
-            let color: string = "green";
-            if (tag === "active") {
-              color = "green";
-            }
-            if (tag === "inactive") {
-              color = "red";
-            }
-            if (tag === "inprogress") {
-              color = "blue";
-            }
-
-            return (
-              <Tag
-                color={color}
-                style={{
-                  borderRadius: "15px",
-                  fontSize: "16px",
-                  padding: "10px 30px",
-                }}
-                key={tag}
-              >
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      key: "4",
-      title: <StyledText fS={20}>DATEADDED</StyledText>,
-      dataIndex: "dateadded",
-      width: "35%",
-      maxWidth: "35%",
-      render: (dateadded) => {
-        return (
-          <>
-            <PopupContainer>
-              <div>{dateadded}</div>
-              <Popover
-                trigger="click"
-                content={content}
-                overlayInnerStyle={{ borderRadius: "15px" }}
-                placement="bottom"
-              >
-                <MoreOutlined
-                  style={{
-                    color: "#635FFA",
-                    paddingLeft: "5px",
-                  }}
-                />
-              </Popover>
-            </PopupContainer>
-          </>
-        );
-      },
-    },
-  ];
+  const [searchdData, setSearchdData] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   useEffect(() => {
-    getDashboard();
+    dispatch(getAnnouncements());
   }, []);
-  useEffect(() => {
-    if (!rawData.length) return;
-    setDataSource(
-      rawData.map((obj, i) => ({
-        ...obj,
-        key: i,
-      }))
-    );
-    setLoading(false);
-  }, [rawData]);
+
   useEffect(() => {
     if (searchInpt === "") return;
     setSearchdData(
@@ -288,7 +47,14 @@ const handlechnage = () =>{
     );
   }, [dataSource]);
 
-  const handleSearch = (e) => {};
+  const onSelectChange = (newRowKeys) => {
+    setSelectedRowKeys(newRowKeys);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
   const rowListener = (record) => ({
     onClick: (event) => {
@@ -304,14 +70,7 @@ const handlechnage = () =>{
     },
   });
 
-  const refreshSearchdData = () => {
-    console.log("refresh");
-    setSearchdData(
-      dataSource.filter((record) =>
-        searchdData.some((obj) => obj.key === record.key)
-      )
-    );
-  };
+  const handleSearch = (e) => {};
 
   return (
     <>
@@ -337,10 +96,10 @@ const handlechnage = () =>{
           />
 
           <Table
+            dataSource={data}
+            columns={columns}
             onRow={rowListener}
             rowSelection={rowSelection}
-            columns={columns}
-            dataSource={data}
             loading={{ indicator: <Loading />, spinning: loading }}
           />
         </TableContainer>

@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from "react";
 
 /* styles and ant design */
 import {
@@ -16,10 +16,10 @@ import {
   ClockCircleOutlined,
   UserOutlined,
   SearchOutlined,
-} from '@ant-design/icons';
-import { theme } from 'utils/colors';
-import { Layout, Menu, Avatar, Input, Row } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
+} from "@ant-design/icons";
+import { theme } from "utils/colors";
+import { Layout, Menu, Avatar, Input, Row } from "antd";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   HeaderStyled,
   StyledLayout,
@@ -30,39 +30,39 @@ import {
   SearchIcon,
   StyledMenu,
   ItemTextDiv,
-} from './styled';
+} from "./styled";
 
-import searchicon from '../../../assets/icons/search-icon.svg';
+import searchicon from "../../../assets/icons/search-icon.svg";
 
 const { Search } = Input;
 
 /* components */
-import NavigationContent from 'navigations/privateRoute';
+import NavigationContent from "navigations/privateRoute";
 
 const { Sider, Content } = Layout;
 
 const teamItems = [
-  { name: 'Dashboards', link: 'dashboards', icon: AppstoreOutlined },
-  { name: 'Pages', link: 'pages', icon: FileTextOutlined },
-  { name: 'Announcements', link: 'announcements', icon: NotificationOutlined },
-  { name: 'Forms', link: 'forms', icon: PaperClipOutlined },
-  { name: 'OnboardingScreens', link: 'onboarding', icon: ExpandOutlined },
+  { name: "Dashboards", link: "dashboards", icon: AppstoreOutlined },
+  { name: "Pages", link: "pages", icon: FileTextOutlined },
+  { name: "Announcements", link: "announcements", icon: NotificationOutlined },
+  { name: "Forms", link: "forms", icon: PaperClipOutlined },
+  { name: `Onboarding \nScreens`, link: "onboarding", icon: ExpandOutlined },
 ];
 const learnItems = [
-  { name: 'Courses', link: 'courses', icon: FolderOutlined },
-  { name: 'Lessons', link: 'lessons', icon: BookOutlined },
-  { name: 'Topics', link: 'topics', icon: FolderOpenOutlined },
-  { name: 'Quizzes', link: 'quizzes', icon: ClockCircleOutlined },
+  { name: "Courses", link: "courses", icon: FolderOutlined },
+  { name: "Lessons", link: "lessons", icon: BookOutlined },
+  { name: "Topics", link: "topics", icon: FolderOpenOutlined },
+  { name: "Quizzes", link: "quizzes", icon: ClockCircleOutlined },
 ];
 
 const MainLayout = (): ReactElement => {
   const history = useHistory();
   const location = useLocation();
-  const [selected, setSelected] = useState('1');
+  const [selected, setSelected] = useState("1");
   const [openKeys, setOpenKeys] = useState([]);
   const [listNum, setListNum] = useState(-1);
   const [collapsed, setCollapsed] = useState(true);
-  
+
   const colorCondition = (key: string) => {
     return selected === key ? theme.WHITE : theme.BLACK;
   };
@@ -75,30 +75,31 @@ const MainLayout = (): ReactElement => {
     const path = location.pathname;
 
     if (/learn/g.test(path)) {
-      setSelected('2');
+      setSelected("2");
       setListNum(-1);
       learnItems.forEach((o: any, i: number) => {
-        const regX = new RegExp(o.link, 'g');
+        const regX = new RegExp(o.link, "g");
         if (regX.test(path)) setListNum(i);
       });
       return;
     }
     if (/team/g.test(path)) {
-      setSelected('3');
+      setSelected("3");
       setListNum(-1);
       teamItems.forEach((o: any, i: number) => {
-        const regX = new RegExp(o.link, 'g');
+        const regX = new RegExp(o.link, "g");
         if (regX.test(path)) return setListNum(i);
       });
       return;
     }
-    if (/home/g.test(path)) return setSelected('1');
+    if (/home/g.test(path)) return setSelected("1");
   }, [location]);
 
-  const handleOpenKeys = (key) => setOpenKeys(prev => {
-    if(openKeys.includes(key)) return prev.filter(n => n !== key);
-    return [...prev, key]
-  })
+  const handleOpenKeys = (key) =>
+    setOpenKeys((prev) => {
+      if (openKeys.includes(key)) return prev.filter((n) => n !== key);
+      return [...prev, key];
+    });
 
   return (
     <StyledLayout>
@@ -107,15 +108,17 @@ const MainLayout = (): ReactElement => {
           <Input
             size="large"
             placeholder="search"
-            style={{ borderRadius: '10px', width: '497px', height: '48px' }}
-            prefix={<SearchOutlined style={{ color: '#635ffa' }} />}
+            style={{ borderRadius: "10px", width: "497px", height: "48px" }}
+            prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
         </Searchdiv>
-        <Avatar size={64} icon={<UserOutlined style={{ padding: '0px' }} />} />
+        <Avatar size={64} icon={<UserOutlined style={{ padding: "0px" }} />} />
       </HeaderStyled>
       <Layout>
         <Sider
-          onClick={() => {if(collapsed) setCollapsed(false)}}
+          onClick={() => {
+            if (collapsed) setCollapsed(false);
+          }}
           collapsed={collapsed}
           // onMouseOver={() => setCollapsed(false)}
           // onMouseLeave={()=>setCollapsed(true)}
@@ -123,29 +126,29 @@ const MainLayout = (): ReactElement => {
           width={250}
         >
           <StyledMenu
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+            defaultSelectedKeys={["1"]}
+            defaultOpenKeys={["sub1"]}
             mode="inline"
             onSelect={(e: any) => setSelected(e?.key)}
             openKeys={collapsed ? [] : openKeys}
           >
             <Menu.Item
               key="1"
-              style={selected === '1' && MenuItemOnSelect}
-              onClick={() => pushHistory('/home')}
+              style={selected === "1" && MenuItemOnSelect}
+              onClick={() => pushHistory("/home")}
             >
               <HomeOutlined
                 style={{
                   fontSize: 20,
                   marginTop: 4,
-                  color: colorCondition('1'),
+                  color: colorCondition("1"),
                 }}
               />
               <span
                 style={{
                   fontSize: 16,
                   fontWeight: 700,
-                  color: colorCondition('1'),
+                  color: colorCondition("1"),
                 }}
               >
                 Home
@@ -153,7 +156,7 @@ const MainLayout = (): ReactElement => {
             </Menu.Item>
 
             <StyledSubMenu
-              active={selected === '2' ? 1 : 0}
+              active={selected === "2" ? 1 : 0}
               collapsed={collapsed}
               key="2"
               // style={selected === '2' && MenuItemOnSelect}
@@ -163,14 +166,14 @@ const MainLayout = (): ReactElement => {
                     style={{
                       fontSize: 20,
                       marginTop: 4,
-                      color: colorCondition('2'),
+                      color: colorCondition("2"),
                     }}
                   />
                   <span
                     style={{
                       fontSize: 16,
                       fontWeight: 700,
-                      color: colorCondition('2'),
+                      color: colorCondition("2"),
                     }}
                   >
                     Learn
@@ -178,23 +181,27 @@ const MainLayout = (): ReactElement => {
                 </span>
               }
               onTitleClick={(e) => {
-                const acceptArr = ['ant-menu-submenu-arrow', 'ant-menu-submenu-title']
-                if(acceptArr.includes(e.domEvent.target.className)) handleOpenKeys('2')
-                else pushHistory('/learn');
+                const acceptArr = [
+                  "ant-menu-submenu-arrow",
+                  "ant-menu-submenu-title",
+                ];
+                if (acceptArr.includes(e.domEvent.target.className))
+                  handleOpenKeys("2");
+                else pushHistory("/learn");
               }}
             >
               {learnItems.map((obj, i) => (
                 <Menu.Item
-                  key={'learn-' + i}
+                  key={"learn-" + i}
                   onClick={() => {
                     setListNum(listNum);
-                    pushHistory('/learn/' + obj.link);
+                    pushHistory("/learn/" + obj.link);
                   }}
                   style={{
-                    height: '20px',
-                    paddingTop: '25px',
-                    paddingBottom: '25px',
-                    color: listNum === i && selected === '2' ? '#635ffa' : '',
+                    height: "20px",
+                    paddingTop: "25px",
+                    paddingBottom: "25px",
+                    color: listNum === i && selected === "2" ? "#635ffa" : "",
                   }}
                 >
                   <obj.icon
@@ -209,7 +216,7 @@ const MainLayout = (): ReactElement => {
             </StyledSubMenu>
 
             <StyledSubMenu
-              active={selected === '3' ? 1 : 0}
+              active={selected === "3" ? 1 : 0}
               collapsed={collapsed}
               key="3"
               // style={selected === '3' && MenuItemOnSelect}
@@ -219,14 +226,14 @@ const MainLayout = (): ReactElement => {
                     style={{
                       fontSize: 20,
                       marginTop: 4,
-                      color: colorCondition('3'),
+                      color: colorCondition("3"),
                     }}
                   />
                   <span
                     style={{
                       fontSize: 16,
                       fontWeight: 700,
-                      color: colorCondition('3'),
+                      color: colorCondition("3"),
                     }}
                   >
                     Team
@@ -234,23 +241,27 @@ const MainLayout = (): ReactElement => {
                 </span>
               }
               onTitleClick={(e) => {
-                const acceptArr = ['ant-menu-submenu-arrow', 'ant-menu-submenu-title']
-                if(acceptArr.includes(e.domEvent.target.className)) handleOpenKeys('3')
-                else pushHistory('/team');
+                const acceptArr = [
+                  "ant-menu-submenu-arrow",
+                  "ant-menu-submenu-title",
+                ];
+                if (acceptArr.includes(e.domEvent.target.className))
+                  handleOpenKeys("3");
+                else pushHistory("/team");
               }}
             >
               {teamItems.map((obj, i) => (
                 <Menu.Item
-                  key={'team-' + i}
+                  key={"team-" + i}
                   onClick={() => {
                     setListNum(listNum);
-                    pushHistory('/team/' + obj.link);
+                    pushHistory("/team/" + obj.link);
                   }}
                   style={{
-                    height: '20px',
-                    paddingTop: '25px',
-                    paddingBottom: '25px',
-                    color: listNum === i && selected === '3' ? '#635ffa' : '',
+                    height: "20px",
+                    paddingTop: "25px",
+                    paddingBottom: "25px",
+                    color: listNum === i && selected === "3" ? "#635ffa" : "",
                   }}
                 >
                   <obj.icon
@@ -265,9 +276,9 @@ const MainLayout = (): ReactElement => {
             </StyledSubMenu>
             <div
               style={{
-                width: '100%',
-                height: '100%',
-                cursor: 'pointer',
+                width: "100%",
+                height: "100%",
+                cursor: "pointer",
               }}
               onClick={() => setCollapsed(!collapsed)}
             />
