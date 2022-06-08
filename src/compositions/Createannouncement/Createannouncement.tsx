@@ -1,86 +1,82 @@
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
+import type { PropsType } from "./types";
+
 import {
-  Modal,
-  Button,
-  Upload,
-  message,
-  Progress,
-  Input,
-  DatePicker,
-  TimePicker,
   Row,
   Col,
+  Input,
+  Button,
   Select,
+  Upload,
+  message,
+  DatePicker,
+  TimePicker,
+  Image,
 } from "antd";
+import type { UploadProps } from "antd";
 
 import {
-  CalendarOutlined,
-  ClockCircleOutlined,
   TeamOutlined,
   PlusOutlined,
+  CalendarOutlined,
+  ClockCircleOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
+import { StyledText } from "compositions/Announcements/styled";
 
-import type { PropsType } from "./types";
 import {
-  StyledButton,
-  Container,
-  ModalContainer,
-  StyledButtonCancle,
-  ImgContainer,
-  ItemContainer,
-  StartDate,
   EndDate,
-  TimeStart,
   TimeEnd,
   StyledH4,
+  TimeStart,
+  Container,
+  StartDate,
+  StyledButton,
+  ImgContainer,
+  ItemContainer,
+  ModalContainer,
   ViewerContainer,
-  PrefixIcon,
-  StyledAddBtn,
+  StyledButtonCancle,
 } from "./styled";
 
-import galleryicon from "../../assets/icons/gallery-icon.svg";
-import videoicon from "../../assets/icons/video-icon.svg";
-import publishicon from "../../assets/icons/publish-icon.svg";
-import { StyledText } from "compositions/Announcements/styled";
 import CustomeSelect from "components/CustomeSelect";
+import videoicon from "assets/icons/video-icon.svg";
+import galleryicon from "assets/icons/gallery-icon.svg";
+import publishicon from "assets/icons/publish-icon.svg";
+
+import moment from "moment";
+import ReactPlayer from "react-player";
 
 const { MonthPicker, YearPicker } = DatePicker;
 const { Option } = Select;
 
-  
-
 const dayFormat = "DD";
 
-const dataprops = {
-  name: "file",
-  action: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
-  headers: {
-    authorization: "authorization-text",
-  },
-  onChange(info) {
-    if (info.file.status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === "done") {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  progress: {
-    strokeColor: {
-      "0%": "#108ee9",
-      "100%": "#87d068",
-    },
-    strokeWidth: 3,
-    format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
-  },
-};
-
 const Createannouncement = (props: PropsType): ReactElement => {
+  const [start, setStart] = useState({
+    start_min: "",
+    start_hour: "",
+    start_date: "",
+    start_year: "",
+    start_month: "",
+  });
+  const [end, setEnd] = useState({
+    end_min: "",
+    end_hour: "",
+    end_date: "",
+    end_year: "",
+    end_month: "",
+  });
+  const [fileId, setFileId] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
+  const [isImage, setIsimage] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
+
+  const uploadProps: UploadProps = {
+    maxCount: 1,
+    name: "file",
+    showUploadList: false,
+    action: "http://localhost:8080/api/v1/upload",
+  };
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -91,27 +87,65 @@ const Createannouncement = (props: PropsType): ReactElement => {
   };
 
   const handleCancel = () => {
+    clearIdUrl();
     setIsModalVisible(false);
   };
+
+  const clearIdUrl = () => {
+    setFileId("");
+    setFileUrl("");
+    setStart({
+      start_min: "",
+      start_hour: "",
+      start_date: "",
+      start_year: "",
+      start_month: "",
+    });
+    setEnd({
+      end_min: "",
+      end_hour: "",
+      end_date: "",
+      end_year: "",
+      end_month: "",
+    });
+  };
+
+  const onChangeImageVideo = (info, type) => {
+    if (info.file.status === "done") {
+      const fileURL = info?.file?.response?.data?.url;
+      const fileID = info?.file?.response?.data?.uid;
+
+      type === "image" ? setIsimage(true) : setIsimage(false);
+
+      setFileId(fileID);
+      setFileUrl(fileURL);
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === "error") {
+      clearIdUrl();
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  };
+
   return (
     <Container>
       <StyledButton onClick={showModal}>Create</StyledButton>
       <ModalContainer
-        title="Create Announcement"
-        visible={isModalVisible}
         onOk={handleOk}
+        afterClose={clearIdUrl}
         onCancel={handleCancel}
+        visible={isModalVisible}
+        title="Create Announcement"
         footer={[
           <StyledButtonCancle
+            onClick={handleCancel}
             style={{
-              background: "#fff",
-              color: "#635ffa",
               width: "100 px",
+              color: "#635ffa",
+              background: "#fff",
               border: "1px solid #635ffa ",
             }}
-            onClick={handleCancel}
           >
-            Cancle
+            Cancel
           </StyledButtonCancle>,
           <StyledButton>Save As Draft</StyledButton>,
           <StyledButton>
@@ -131,8 +165,24 @@ const Createannouncement = (props: PropsType): ReactElement => {
           <div>
             <ImgContainer>
               {/* <Progress strokeColor="#635ffa" percent={90} /> */}
+              {isImage ? (
+                <Image src={fileUrl} height="100%" width="100%" />
+              ) : (
+                <ReactPlayer
+                  playing
+                  width={360}
+                  height="28vh"
+                  url={[
+                    {
+                      src: fileUrl,
+                      type: "video/mp4",
+                    },
+                  ]}
+                />
+              )}
             </ImgContainer>
           </div>
+
           <div
             style={{
               display: "flex",
@@ -140,17 +190,27 @@ const Createannouncement = (props: PropsType): ReactElement => {
               justifyContent: "space-around",
             }}
           >
-            <Upload accept="images/*" >
+            <Upload
+              {...uploadProps}
+              accept="image/*"
+              onChange={(args) => onChangeImageVideo(args, "image")}
+            >
               <ItemContainer src={galleryicon} />
             </Upload>
-            <Upload accept="video/*">
+
+            <Upload
+              {...uploadProps}
+              accept="video/*"
+              onChange={(args) => onChangeImageVideo(args, "video")}
+            >
               <ItemContainer src={videoicon} />
             </Upload>
           </div>
         </div>
+
         <div style={{ marginTop: "20px" }}>
           <Input
-            placeholder="Sample Announcement_2"
+            placeholder="Input Announcement title"
             style={{
               borderRadius: "15px",
               background: "#F8F8F8",
@@ -160,9 +220,10 @@ const Createannouncement = (props: PropsType): ReactElement => {
             }}
             size="large"
             aria-placeholder="screen name 1"
-          ></Input>
+          />
+
           <Input.TextArea
-            placeholder="Type Announcement"
+            placeholder="Input description Announcement"
             style={{
               borderRadius: "15px",
               background: "#F8F8F8",
@@ -172,30 +233,50 @@ const Createannouncement = (props: PropsType): ReactElement => {
               fontSize: "14px",
             }}
             size="large"
-          ></Input.TextArea>
+          />
         </div>
+
         <Row>
           <Col flex={2}>
             <StyledH4>Start Date</StyledH4>
             <StartDate>
               <CalendarOutlined style={{ padding: "5px" }} />
               <MonthPicker
-                format="MMM"
+                format="MM"
                 placeholder="Month"
+                onChange={(_date, dateString) =>
+                  setStart({
+                    ...start,
+                    start_month: dateString,
+                  })
+                }
                 style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
               />
               <DatePicker
                 format={dayFormat}
                 placeholder="Date"
+                onChange={(_date, dateString) =>
+                  setStart({
+                    ...start,
+                    start_date: dateString,
+                  })
+                }
                 style={{ borderRadius: "15px", width: "80px", margin: "5px" }}
               />
               <YearPicker
                 format="YYYY"
                 placeholder="Year"
+                onChange={(_date, dateString) =>
+                  setStart({
+                    ...start,
+                    start_year: dateString,
+                  })
+                }
                 style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
               />
             </StartDate>
           </Col>
+
           <Col flex={3}>
             <StyledH4>Start Time</StyledH4>
             <TimeStart>
@@ -203,39 +284,71 @@ const Createannouncement = (props: PropsType): ReactElement => {
               <TimePicker
                 format="HH"
                 placeholder="12"
+                onChange={(_date, dateString) =>
+                  setStart({
+                    ...start,
+                    start_hour: dateString,
+                  })
+                }
                 style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
               />
               :
               <TimePicker
                 format="mm"
-                placeholder="12"
+                placeholder="59"
+                onChange={(_date, dateString) =>
+                  setStart({
+                    ...start,
+                    start_hour: dateString,
+                  })
+                }
                 style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
               />
             </TimeStart>
           </Col>
         </Row>
+
         <Row>
           <Col flex={2}>
             <StyledH4>End Date</StyledH4>
             <EndDate>
               <CalendarOutlined style={{ padding: "5px" }} />
               <MonthPicker
-                format="MMM"
+                format="MM"
                 placeholder="Month"
+                onChange={(_date, dateString) =>
+                  setEnd({
+                    ...end,
+                    end_month: dateString,
+                  })
+                }
                 style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
               />
               <DatePicker
                 format={dayFormat}
                 placeholder="Date"
+                onChange={(_date, dateString) =>
+                  setEnd({
+                    ...end,
+                    end_date: dateString,
+                  })
+                }
                 style={{ borderRadius: "15px", width: "80px", margin: "5px" }}
               />
               <YearPicker
                 format="YYYY"
                 placeholder="Year"
+                onChange={(_date, dateString) =>
+                  setEnd({
+                    ...end,
+                    end_year: dateString,
+                  })
+                }
                 style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
               />
             </EndDate>
           </Col>
+
           <Col flex={3}>
             <StyledH4>End Time</StyledH4>
             <TimeEnd>
@@ -244,20 +357,34 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 format="HH AM/PM"
                 placeholder="12"
                 use12Hours={true}
+                onChange={(_date, dateString) =>
+                  setEnd({
+                    ...end,
+                    end_hour: dateString,
+                  })
+                }
                 style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
               />
               :
               <TimePicker
                 format="mm"
-                placeholder="12"
+                placeholder="59"
+                onChange={(_date, dateString) =>
+                  setEnd({
+                    ...end,
+                    end_min: dateString,
+                  })
+                }
                 style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
               />
             </TimeEnd>
           </Col>
         </Row>
+
         <StyledText fS={25} style={{ marginBottom: "12px !important" }}>
           Viewer
         </StyledText>
+
         <Row justify="space-between">
           <ViewerContainer>
             <CustomeSelect
@@ -271,6 +398,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
               <Option value="option1">Option 3</Option>
             </CustomeSelect>
           </ViewerContainer>
+
           <Button
             style={{
               backgroundColor: "#fff",

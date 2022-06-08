@@ -95,7 +95,6 @@ export const StyledButtonCancle = styled(Button)`
 `;
 export const ImgContainer = styled(Layout)`
   width: 360px;
-  // padding: 150px;
   height: 28vh;
   border-radius: 15px;
 `;

@@ -77,9 +77,9 @@ const Announcements = (props: PropsType): ReactElement => {
       <Layout style={{ paddingRight: 50, background: "transparent" }}>
         <PageHeader
           ghost={false}
-          title={<StyledText fS={30}>Announcements</StyledText>}
-          style={{ background: "none", paddingTop: 8 }}
           extra={[<Createannouncement />]}
+          style={{ background: "none", paddingTop: 8 }}
+          title={<StyledText fS={30}>Announcements</StyledText>}
         />
         <TableContainer
           style={{
