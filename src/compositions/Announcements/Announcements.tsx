@@ -8,7 +8,10 @@ import { StyledText, StyledInput, TableContainer } from "./styled";
 /* reducer action */
 import { RootState } from "ducks/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getAnnouncements } from "ducks/announcement/actionCreator";
+import {
+  getAnnouncements,
+  deleteAnnouncements,
+} from "ducks/announcement/actionCreator";
 
 /* antd icons */
 import { columns } from "./columns";
@@ -17,6 +20,7 @@ import { SearchOutlined } from "@ant-design/icons";
 
 /* components */
 import Loading from "components/Loading";
+import EditAnnouncement from "compositions/EditAnnouncement";
 import Createannouncement from "compositions/Createannouncement";
 
 const Announcements = (props: PropsType): ReactElement => {
@@ -27,6 +31,8 @@ const Announcements = (props: PropsType): ReactElement => {
     (state) => state.announcement
   );
 
+  const [selected, setSelected] = useState({});
+  const [editShow, setEditShow] = useState(false);
   const [searchInpt, setSearchInpt] = useState("");
   const [dataSource, setDataSource] = useState([]);
   const [searchdData, setSearchdData] = useState([]);
@@ -89,18 +95,28 @@ const Announcements = (props: PropsType): ReactElement => {
           }}
         >
           <StyledInput
-            placeholder="Search Pages"
-            defaultValue={searchInpt}
             onChange={handleSearch}
+            defaultValue={searchInpt}
+            placeholder="Search Pages"
             prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
-
           <Table
             dataSource={data}
-            columns={columns}
+            columns={columns(
+              dispatch,
+              deleteAnnouncements,
+              setSelected,
+              setEditShow
+            )}
             onRow={rowListener}
-            rowSelection={rowSelection}
+            // rowSelection={rowSelection}
             loading={{ indicator: <Loading />, spinning: loading }}
+          />
+
+          <EditAnnouncement
+            selected={selected}
+            editShow={editShow}
+            setEditShow={setEditShow}
           />
         </TableContainer>
       </Layout>

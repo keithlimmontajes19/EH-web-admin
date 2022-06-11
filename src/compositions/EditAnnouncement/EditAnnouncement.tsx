@@ -17,7 +17,6 @@ import type { UploadProps } from "antd";
 
 import {
   TeamOutlined,
-  PlusOutlined,
   CalendarOutlined,
   ClockCircleOutlined,
 } from "@ant-design/icons";
@@ -38,6 +37,7 @@ import {
   StyledButtonCancle,
 } from "./styled";
 
+import moment from "moment";
 import ReactPlayer from "react-player";
 import CustomeSelect from "components/CustomeSelect";
 import videoicon from "assets/icons/video-icon.svg";
@@ -46,7 +46,7 @@ import publishicon from "assets/icons/publish-icon.svg";
 
 /* reducer action */
 import {
-  postAnnouncements,
+  putAnnouncements,
   getOrganizations,
 } from "ducks/announcement/actionCreator";
 import { RootState } from "ducks/store";
@@ -57,7 +57,8 @@ const { Option } = Select;
 
 const dayFormat = "DD";
 
-const Createannouncement = (props: PropsType): ReactElement => {
+const EditAnnouncement = (props: PropsType): ReactElement => {
+  const { selected, editShow, setEditShow } = props;
   const dispatch = useDispatch();
 
   const [end, setEnd] = useState({
@@ -78,10 +79,11 @@ const Createannouncement = (props: PropsType): ReactElement => {
   const [title, setTitle] = useState("");
   const [fileId, setFileId] = useState("");
   const [fileUrl, setFileUrl] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState("");
   const [isImage, setIsimage] = useState(false);
   const [description, setDescription] = useState("");
   const [organization, setOrganization] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const { organizations }: any = useSelector<RootState>(
     (state) => state.announcement
@@ -94,17 +96,13 @@ const Createannouncement = (props: PropsType): ReactElement => {
     action: "http://localhost:8080/api/v1/upload",
   };
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
   const handleOk = () => {
-    setIsModalVisible(false);
+    setEditShow(false);
   };
 
   const handleCancel = () => {
     clearIdUrl();
-    setIsModalVisible(false);
+    setEditShow(false);
   };
 
   const clearIdUrl = () => {
@@ -143,40 +141,81 @@ const Createannouncement = (props: PropsType): ReactElement => {
   };
 
   const handleSubmit = (status: any) => {
-    const { end_min, end_hour, end_date, end_year, end_month } = end;
-    const { start_min, start_hour, start_date, start_year, start_month } =
-      start;
-
     const payload = {
       title: title,
       status: status,
       description: description,
       organization: organization,
-      startDate: `${start_year}-${start_month}-${start_date} ${start_hour}:${start_min}:00`,
-      endDate: `${end_year}-${end_month}-${end_date} ${end_hour}:${end_min}:00`,
+      startDate: startDate,
+      endDate: endDate,
       isPublish: status === "active" ? true : false,
       videoURL: !isImage ? fileId : null,
       imageURL: isImage ? fileId : null,
     };
 
-    dispatch(postAnnouncements(payload));
-    setTimeout(() => setIsModalVisible(false), 1000);
+    dispatch(putAnnouncements(selected?._id, payload));
+    setTimeout(() => setEditShow(false), 1000);
   };
 
   useEffect(() => {
     dispatch(getOrganizations());
   }, []);
 
+  useEffect(() => {
+    const newObjectOrganization = (selected?.organization || []).map(
+      (item) => item?._id
+    );
+
+    setStart({
+      start_min: moment(selected?.startDate).format("mm"),
+      start_hour: moment(selected?.startDate).format("HH"),
+      start_date: moment(selected?.startDate).format("DD"),
+      start_year: moment(selected?.startDate).format("YYYY"),
+      start_month: moment(selected?.startDate).format("MM"),
+    });
+    setEnd({
+      end_min: moment(selected?.endDate).format("mm"),
+      end_hour: moment(selected?.endDate).format("HH"),
+      end_date: moment(selected?.endDate).format("DD"),
+      end_year: moment(selected?.endDate).format("YYYY"),
+      end_month: moment(selected?.endDate).format("MM"),
+    });
+
+    setTitle(selected?.title);
+    setStartDate(selected?.startDate);
+    setDescription(selected?.description);
+    setOrganization(newObjectOrganization);
+    setIsimage(selected?.imageURL ? true : false);
+    setFileUrl(selected?.imageURL ? selected?.imageURL : selected?.videoURL);
+  }, [selected, editShow]);
+
+  useEffect(() => {
+    const { start_hour, start_date, start_year, start_month } = start;
+    const completeDate = `${start_year}-${start_month}-${start_date} ${start_hour}:${start.start_min}:00`;
+    setStartDate(completeDate);
+  }, [
+    start.start_min,
+    start.start_hour,
+    start.start_date,
+    start.start_year,
+    start.start_month,
+  ]);
+
+  useEffect(() => {
+    const { end_hour, end_date, end_year, end_month } = end;
+    const completeDate = `${end_year}-${end_month}-${end_date} ${end_hour}:${end.end_min}:00`;
+    setEndDate(completeDate);
+  }, [end.end_min, end.end_hour, end.end_date, end.end_year, end.end_month]);
+
   return (
     <Container>
-      <StyledButton onClick={showModal}>Create</StyledButton>
       <ModalContainer
         onOk={handleOk}
         maskClosable={false}
         afterClose={clearIdUrl}
         onCancel={handleCancel}
-        visible={isModalVisible}
-        title="Create Announcement"
+        visible={editShow}
+        title="Edit Announcement"
         footer={[
           <StyledButtonCancle
             onClick={handleCancel}
@@ -255,51 +294,58 @@ const Createannouncement = (props: PropsType): ReactElement => {
         <div style={{ marginTop: "20px" }}>
           <Input
             style={{
-              borderRadius: "15px",
-              background: "#F8F8F8",
               width: "485px",
               height: "38px",
               margin: "10px 0px",
+              borderRadius: "15px",
+              background: "#F8F8F8",
             }}
             size="large"
-            onChange={(e) => setTitle(e.target.value)}
+            value={title}
             placeholder="Input Announcement title"
+            onChange={(e) => setTitle(e.target.value)}
           />
 
           <Input.TextArea
             style={{
-              borderRadius: "15px",
-              background: "#F8F8F8",
               width: "485px",
               height: "auto",
               margin: "10px 0px",
-              fontSize: "14px",
+              borderRadius: "15px",
+              background: "#F8F8F8",
             }}
             size="large"
-            onChange={(e) => setDescription(e.target.value)}
+            value={description}
             placeholder="Input description Announcement"
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
 
         <Row>
           <Col flex={2}>
             <StyledH4>Start Date</StyledH4>
+
             <StartDate>
               <CalendarOutlined style={{ padding: "5px" }} />
               <MonthPicker
                 format="MM"
                 placeholder="Month"
-                onChange={(_date, dateString) =>
+                allowClear={false}
+                value={moment(startDate)}
+                onChange={(_date, dateString) => {
                   setStart({
                     ...start,
                     start_month: dateString,
-                  })
-                }
+                  });
+                }}
                 style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
               />
+
               <DatePicker
                 format={dayFormat}
                 placeholder="Date"
+                allowClear={false}
+                value={moment(startDate)}
                 onChange={(_date, dateString) =>
                   setStart({
                     ...start,
@@ -308,9 +354,12 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 }
                 style={{ borderRadius: "15px", width: "80px", margin: "5px" }}
               />
+
               <YearPicker
                 format="YYYY"
                 placeholder="Year"
+                allowClear={false}
+                value={moment(startDate)}
                 onChange={(_date, dateString) =>
                   setStart({
                     ...start,
@@ -324,11 +373,14 @@ const Createannouncement = (props: PropsType): ReactElement => {
 
           <Col flex={3}>
             <StyledH4>Start Time</StyledH4>
+
             <TimeStart>
               <ClockCircleOutlined />
               <TimePicker
                 format="HH"
-                placeholder="12"
+                placeholder="24"
+                allowClear={false}
+                value={moment(startDate)}
                 onChange={(_date, dateString) =>
                   setStart({
                     ...start,
@@ -341,6 +393,8 @@ const Createannouncement = (props: PropsType): ReactElement => {
               <TimePicker
                 format="mm"
                 placeholder="59"
+                allowClear={false}
+                value={moment(startDate)}
                 onChange={(_date, dateString) =>
                   setStart({
                     ...start,
@@ -358,9 +412,12 @@ const Createannouncement = (props: PropsType): ReactElement => {
             <StyledH4>End Date</StyledH4>
             <EndDate>
               <CalendarOutlined style={{ padding: "5px" }} />
+
               <MonthPicker
                 format="MM"
                 placeholder="Month"
+                allowClear={false}
+                value={moment(endDate)}
                 onChange={(_date, dateString) =>
                   setEnd({
                     ...end,
@@ -369,8 +426,11 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 }
                 style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
               />
+
               <DatePicker
                 format={dayFormat}
+                allowClear={false}
+                value={moment(endDate)}
                 placeholder="Date"
                 onChange={(_date, dateString) =>
                   setEnd({
@@ -380,8 +440,11 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 }
                 style={{ borderRadius: "15px", width: "80px", margin: "5px" }}
               />
+
               <YearPicker
                 format="YYYY"
+                allowClear={false}
+                value={moment(endDate)}
                 placeholder="Year"
                 onChange={(_date, dateString) =>
                   setEnd({
@@ -396,23 +459,27 @@ const Createannouncement = (props: PropsType): ReactElement => {
 
           <Col flex={3}>
             <StyledH4>End Time</StyledH4>
+
             <TimeEnd>
               <ClockCircleOutlined />
               <TimePicker
                 format="HH"
-                placeholder="12"
-                use12Hours={true}
-                onChange={(_date, dateString) =>
+                allowClear={false}
+                value={moment(endDate)}
+                placeholder="24"
+                onChange={(_date, dateString) => {
                   setEnd({
                     ...end,
                     end_hour: dateString,
-                  })
-                }
+                  });
+                }}
                 style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
               />
               :
               <TimePicker
                 format="mm"
+                allowClear={false}
+                value={moment(endDate)}
                 placeholder="59"
                 onChange={(_date, dateString) =>
                   setEnd({
@@ -436,6 +503,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
               size="large"
               mode="multiple"
               prefixIcon={<TeamOutlined />}
+              value={organization}
               onChange={(e) => setOrganization(e)}
               placeholder={
                 <span style={{ marginLeft: 20 }}>Organization Name</span>
@@ -454,24 +522,10 @@ const Createannouncement = (props: PropsType): ReactElement => {
               })}
             </CustomeSelect>
           </ViewerContainer>
-
-          {/* <Button
-            style={{
-              backgroundColor: "#fff",
-              color: "#635ffa",
-              border: "1px solid #635ffa",
-              padding: "0px 10px",
-              fontSize: "16px",
-              height: "40px",
-            }}
-          >
-            <PlusOutlined />
-            ADD
-          </Button> */}
         </Row>
       </ModalContainer>
     </Container>
   );
 };
 
-export default Createannouncement;
+export default EditAnnouncement;

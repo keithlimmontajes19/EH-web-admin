@@ -1,62 +1,20 @@
-/* antd icons styled*/
-import { Tag, Popover } from "antd";
-import { BuildIcon, Contentdiv, StyledText, PopupContainer } from "./styled";
-
-import {
-  EyeFilled,
-  MoreOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
-
+/* antd icons styled */
 import moment from "moment";
-import buildicon from "../../assets/icons/hammer-icon.svg";
-
-export const content = (
-  <div style={{ fontSize: "18px" }}>
-    <Contentdiv>
-      <BuildIcon
-        src={buildicon}
-        style={{
-          height: "17px",
-          color: "#635ffa",
-          fontSize: "18px",
-          padding: "0px 10px",
-        }}
-      />
-      Builder
-    </Contentdiv>
-    <Contentdiv>
-      <EditOutlined
-        style={{
-          color: "#635ffa",
-          fontSize: "18px",
-          padding: "10px 10px",
-        }}
-      />
-      Edit
-    </Contentdiv>
-    <Contentdiv>
-      <EyeFilled
-        style={{ color: "#635ffa", fontSize: "18px", padding: "10px 10px" }}
-      />
-      View{" "}
-    </Contentdiv>
-    <Contentdiv style={{ padding: "0px" }}>
-      <DeleteOutlined
-        style={{ color: "#635ffa", fontSize: "18px", padding: "10px 10px" }}
-      />
-      Delete
-    </Contentdiv>
-  </div>
-);
+import { Tag, Popover } from "antd";
+import { Contentdiv, StyledText, PopupContainer } from "./styled";
+import { MoreOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const convertSnakeCase = (string) => {
-  const word = string.replace("_", " ");
+  const word = string ? string.replace("_", " ") : "";
   return word.charAt(0).toUpperCase() + word.slice(1);
 };
 
-export const columns: any = [
+export const columns = (
+  dispatch,
+  deleteAnnouncements,
+  setSelected,
+  setEditShow
+): any => [
   {
     key: "1",
     title: <StyledText fS={20}>TITLE</StyledText>,
@@ -70,7 +28,11 @@ export const columns: any = [
     render: (record: any) => {
       return (
         <span>
-          {(record || []).map((item) => convertSnakeCase(item?.name))}
+          {(record || []).map((item, index) => {
+            return `${convertSnakeCase(item?.name)}${
+              record.length > 1 && index !== record.length - 1 ? ", " : ""
+            }`;
+          })}
         </span>
       );
     },
@@ -119,15 +81,48 @@ export const columns: any = [
   },
   {
     key: "5",
+    dataIndex: "_id",
     align: "center",
     width: 50,
-    render: () => {
+    render: (record, object) => {
       return (
         <>
           <PopupContainer>
             <Popover
               trigger="click"
-              content={content}
+              content={
+                <div style={{ fontSize: "18px" }}>
+                  <Contentdiv
+                    onClick={() => {
+                      console.log("object", object);
+                      setEditShow(true);
+                      setSelected(object);
+                    }}
+                  >
+                    <EditOutlined
+                      style={{
+                        color: "#635ffa",
+                        fontSize: "18px",
+                        padding: "10px 10px",
+                      }}
+                    />
+                    Edit
+                  </Contentdiv>
+                  <Contentdiv
+                    style={{ padding: "0px" }}
+                    onClick={() => dispatch(deleteAnnouncements(record))}
+                  >
+                    <DeleteOutlined
+                      style={{
+                        color: "#635ffa",
+                        fontSize: "18px",
+                        padding: "10px 10px",
+                      }}
+                    />
+                    Delete
+                  </Contentdiv>
+                </div>
+              }
               overlayInnerStyle={{ borderRadius: "15px" }}
               placement="bottom"
             >
