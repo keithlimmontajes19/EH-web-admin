@@ -3,6 +3,7 @@ import {all} from 'redux-saga/effects';
 import lmsSaga from './lms/sagas';
 import teamSaga from './teams/sagas';
 import alertSaga from './alert/sagas';
+import formSaga from './forms/sagas';
 import dashboardSaga from './dashboard/sagas';
 import authSaga from './authentication/sagas';
 import onboardingSaga from './onboarding/sagas';
@@ -14,6 +15,7 @@ export default function* rootSaga() {
     lmsSaga(),
     teamSaga(),
     authSaga(),
+    formSaga(),
     alertSaga(),
     alertSaga(),
     dashboardSaga(),

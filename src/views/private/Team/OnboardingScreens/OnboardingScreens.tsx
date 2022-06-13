@@ -1,29 +1,29 @@
-import { ReactElement, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import type { PropsType } from "./types";
+import { ReactElement, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import type { PropsType } from './types';
 
 /* styled antd */
-import { Layout, PageHeader, Input, Row, Col } from "antd";
-import { StyledButtonCreate, ModalContainer } from "./styled";
+import { Layout, PageHeader, Input, Row, Col } from 'antd';
+import { StyledButtonCreate, ModalContainer, InputStyles } from './styled';
 
 /* components */
-import Screen from "components/Screen";
-import PublishOnBoarding from "compositions/PublishOnBoarding";
+import Screen from 'components/Screen';
+import PublishOnBoarding from 'compositions/PublishOnBoarding';
 
 /* reducer action */
 import {
   deleteOnboading,
   getOneOnboarding,
   getOnboardingList,
-} from "ducks/onboarding/actionCreator";
-import { RootState } from "ducks/store";
-import { useSelector, useDispatch } from "react-redux";
+} from 'ducks/onboarding/actionCreator';
+import { RootState } from 'ducks/store';
+import { useSelector, useDispatch } from 'react-redux';
 
 const OnboardingScreens = (props: PropsType): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [screenname, setScreenname] = useState("");
+  const [screenname, setScreenname] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const { onboarding_list }: any = useSelector<RootState>(
@@ -49,7 +49,7 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
   const titleChecker = screenname.length > 0;
 
   return (
-    <Layout style={{ background: "none" }}>
+    <Layout style={{ background: 'none' }}>
       <PageHeader
         ghost={false}
         extra={[
@@ -71,13 +71,7 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
             >
               <Input
                 size="large"
-                style={{
-                  borderRadius: "15px",
-                  background: "#F8F8F8",
-                  width: "485px",
-                  height: "38px",
-                  margin: "10px 0px",
-                }}
+                style={InputStyles}
                 placeholder="Enter onboarding name"
                 onChange={(e) => setScreenname(e.target.value)}
               />

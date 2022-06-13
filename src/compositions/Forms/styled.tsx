@@ -1,12 +1,13 @@
-import styled from "styled-components";
-import { Layout, Input, Button, Modal } from "antd";
+import styled from 'styled-components';
+import { Layout, Input, Button, Modal } from 'antd';
 
 export const Container = styled.div``;
 
-export const TableContainer: any = styled(Layout)`
+export const TableContainer: any = styled<any>(Layout)`
   .ant-table {
     background: transparent;
   }
+
   .ant-layout {
     backgroud: none !important;
   }
@@ -25,12 +26,19 @@ export const TableContainer: any = styled(Layout)`
     height: 60px;
   }
 
+  .ant-table thead tr .ant-table-cell {
+    background: #635ffa15;
+  }
+
+  .ant-table-tbody > tr > td {
+    background: ${(props): any => (props.hasData ? '#635ffa15' : '#fff')};
+  }
+
   .ant-table-cell {
     font-size: 20px;
     font-weight: 400;
     color: #2b2e4a;
     overflow: hidden;
-    background: #635ffa15;
   }
 
   .ant-table-row > .ant-table-cell:nth-child(3) {
@@ -51,7 +59,7 @@ export const TableContainer: any = styled(Layout)`
   }
 
   tbody:before {
-    content: "@";
+    content: '@';
     display: block;
     line-height: 20px;
     text-indent: -99999px;
@@ -144,6 +152,7 @@ export const StyledInput: any = styled(Input)`
   font-size: 14px;
   font-weight: 400;
 `;
+
 export const StyledText: any = styled.span`
   color: ${({ fC }: any) => (fC ? fC : `#635FFA`)};
   font-size: ${({ fS }: any) => (fS ? fS : 28)}px;
@@ -159,15 +168,17 @@ export const StyledButton: any = styled(Button)`
   font-size: 20px;
   font-weight: 700;
 `;
-export const StyledButtonResult: any = styled(Button)`
-  background: #fff;
-  color: #635ffa;
+
+export const StyledButtonResult: any = styled.button`
   width: 166px;
   height: 48px;
-  border-radius: 8px;
   font-size: 20px;
   font-weight: 700;
+  border-radius: 8px;
+  background-color: #fff !important;
+  color: #635ffa !important;
 `;
+
 export const ModalContainer = styled(Modal)`
   .ant-modal-content {
     border-radius: 15px;
@@ -178,9 +189,9 @@ export const ModalContainer = styled(Modal)`
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
   }
+
   .ant-modal-title {
     margin: 0;
-    /* color: rgb(54 52 137); */
     color: #635ffa;
     font-weight: 700;
     font-size: 25px;
@@ -223,4 +234,40 @@ export const ModalContainer = styled(Modal)`
     cursor: pointer;
     border: none;
   }
+`;
+
+export const HeaderStyles = {
+  padding: '10px',
+  fontSize: '22px',
+  fontWeight: '500',
+  color: '#2B2E4A !important',
+};
+
+export const DivEmptyStyles: any = {
+  display: 'flex',
+  alignItems: 'center',
+  flexDirection: 'column',
+  backgroundColor: '#fff',
+  padding: 120,
+};
+
+export const ImgEmptyStyles = {
+  width: '87px',
+  height: '109px',
+};
+
+export const InputCreateStyles = {
+  width: '485px',
+  height: '38px',
+  margin: '10px 0px',
+  borderRadius: '15px',
+  background: '#F8F8F8',
+};
+
+export const TextStyled = styled.span`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 25px;
+  color: #4c4b7b;
 `;
