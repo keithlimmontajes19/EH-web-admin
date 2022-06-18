@@ -5,6 +5,7 @@ import teamSaga from './teams/sagas';
 import alertSaga from './alert/sagas';
 import formSaga from './forms/sagas';
 import dashboardSaga from './dashboard/sagas';
+import pageSaga from './pages/sagas';
 import authSaga from './authentication/sagas';
 import onboardingSaga from './onboarding/sagas';
 import announncementSaga from './announcement/sagas';
@@ -19,6 +20,7 @@ export default function* rootSaga() {
     alertSaga(),
     alertSaga(),
     dashboardSaga(),
+    pageSaga(),
     onboardingSaga(),
     announncementSaga(),
     authenticationSaga(),

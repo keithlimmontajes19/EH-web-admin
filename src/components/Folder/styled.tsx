@@ -9,7 +9,6 @@ export const Container = styled.div`
 export const Folderimg = styled.img`
     cursor:pointer;
     padding:25px;
-    
     `
 
 export const BodyContainer = styled.div`

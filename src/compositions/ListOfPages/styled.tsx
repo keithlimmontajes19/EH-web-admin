@@ -42,31 +42,25 @@ export const ModalContainer = styled(Modal)`
   }
 
   .ant-btn {
-    background: #635ffa;
-    color: #fff;
-    width: 120px;
-    height: 48px;
+    width: 145px;
+    height: 40px;
     border-radius: 8px;
     font-size: 20px;
     font-weight: 700;
     text-align: center;
-    justify-contet: center;
+    justify-content: center;
     cursor: pointer;
     border: none;
   }
 
-  .ant-btn ant-btn-primary {
+  .ant-btn-default {
+    color: #635ffa;
+    background: none;
+  }
+
+  .ant-btn-primary {
     background: #635ffa;
     color: #fff;
-    width: 166px;
-    height: 48px;
-    border-radius: 8px;
-    font-size: 20px;
-    font-weight: 700;
-    text-align: center;
-    justify-contet: center;
-    cursor: pointer;
-    border: none;
   }
 `;
 

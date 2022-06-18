@@ -23,20 +23,24 @@ export function* listDashboard(): any {
 }
 
 export function* getOneDashboard({ payload }: any): any {
+  const { dashboardId, callback=()=>{}} = payload
+  
   try {
-    const response = yield call(dashboard_service.getOneDashboard, payload);
+    const response = yield call(dashboard_service.getOneDashboard, dashboardId);
 
     yield put({
       type: TYPES.GET_ONE_DASHBOARD_SUCCESS,
       payload: response?.data,
     });
 
+    callback(response?.data)
     return Promise.resolve(response);
   } catch (error) {
     yield put({
       type: TYPES.GET_ONE_DASHBOARD_FAILED,
     });
 
+    callback(false)
     return Promise.reject(error);
   }
 }

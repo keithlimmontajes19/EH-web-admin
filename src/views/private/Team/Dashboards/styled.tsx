@@ -61,25 +61,6 @@ export const HeaderContainer = styled.div`
   padding: 25px;
   border-radius: 15px;
 `;
-export const AddContainer = styled.div`
-  background: #e0dffe;
-
-  @media screen and (max-width: 1600px) {
-     {
-      padding: 200px !important;
-    }
-  }
-  padding: 300px;
-  border-radius: 15px;
-  align-items: center;
-  margin-right: 15px;
-`;
-export const PlusImg = styled.img`
-  height: 100%;
-  width: 100%;
-  max-height: 144px;
-  cursor: pointer;
-`;
 export const FlexWrap = styled.div`
   flex: 1;
   display: flex;

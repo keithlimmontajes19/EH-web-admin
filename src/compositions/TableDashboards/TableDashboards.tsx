@@ -1,26 +1,31 @@
-import { Table, Modal, Input, PageHeader, Layout } from 'antd';
-import { useEffect, useState } from 'react';
+import { Table, Modal, Input, PageHeader, Layout } from "antd";
+import { useEffect, useState } from "react";
 import {
   SearchOutlined,
   EditOutlined,
   DeleteOutlined,
   EyeFilled,
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 import {
   StyledButton,
   StyledInput,
   StyledText,
   TableContainer,
-} from './styled';
-import { useHistory } from 'react-router-dom';
+} from "./styled";
+import { useHistory } from "react-router-dom";
 
 // ducks action
-import { useSelector } from 'react-redux';
-import { RootState } from 'ducks/store';
-import { getDashboard } from 'ducks/dashboard/actionCreator';
-import Loading from 'components/Loading';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "ducks/store";
+import {
+  deleteDashboard,
+  getDashboard,
+  updateDashboard,
+} from "ducks/dashboard/actionCreator";
+import Loading from "components/Loading";
 
 function TableDashboards() {
+  const dispatch = useDispatch();
   const { data: rawData }: any = useSelector<RootState>(
     (state) => state.dashboard
   );
@@ -30,7 +35,7 @@ function TableDashboards() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [searchdData, setSearchdData] = useState([]);
-  const [searchInpt, setSearchInpt] = useState('');
+  const [searchInpt, setSearchInpt] = useState("");
 
   const history = useHistory();
 
@@ -40,17 +45,17 @@ function TableDashboards() {
 
   const columns = [
     {
-      key: '1',
+      key: "1",
       title: <StyledText fS={20}>TITLE</StyledText>,
-      dataIndex: 'name',
-      width: '35%',
-      maxWidth: '35%',
+      dataIndex: "name",
+      width: "35%",
+      maxWidth: "35%",
     },
     {
-      key: '2',
+      key: "2",
       title: <StyledText fS={20}>DEPARTMENT</StyledText>,
-      dataIndex: 'organization',
-      maxWidth: '25%',
+      dataIndex: "organization",
+      maxWidth: "25%",
       render: (record: any) => {
         return (
           <>
@@ -62,17 +67,19 @@ function TableDashboards() {
       },
     },
     {
-      key: '3',
+      key: "3",
       title: (
-        <div style={{ textAlign: 'right' }}>
+        <div style={{ textAlign: "right" }}>
           <span
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
             onClick={() => {
-              onDeleteData(selectedRowKeys.map((key) => ({ key: key })));
+              onDeleteData(
+                dataSource.filter((obj) => selectedRowKeys.includes(obj.key))
+              );
               setSelectedRowKeys([]);
             }}
           >
-            <DeleteOutlined style={{ color: '#635ffa' }} />
+            <DeleteOutlined style={{ color: "#635ffa" }} />
             <StyledText fC="inherit" fS={20}>
               DELETE
             </StyledText>
@@ -85,21 +92,19 @@ function TableDashboards() {
           <>
             <div className="row-actions">
               <span onClick={() => onEditData(record)}>
-                <EditOutlined style={{ color: '#635ffa' }} />
+                <EditOutlined style={{ color: "#635ffa" }} />
                 &nbsp;RENAME
               </span>
               &nbsp; &nbsp; &nbsp;
               <span
-                onClick={() =>
-                  pushHistory(`/team/dashboards/create/addbord?${record?._id}`)
-                }
+                onClick={() => pushHistory(`/team/dashboards/${record?._id}`)}
               >
-                <EyeFilled style={{ color: '#635ffa' }} />
+                <EyeFilled style={{ color: "#635ffa" }} />
                 &nbsp;VIEW
               </span>
               &nbsp; &nbsp; &nbsp;
               <span onClick={() => onDeleteData([record])}>
-                <DeleteOutlined style={{ color: '#635ffa' }} />
+                <DeleteOutlined style={{ color: "#635ffa" }} />
                 &nbsp;DELETE
               </span>
             </div>
@@ -110,11 +115,11 @@ function TableDashboards() {
   ];
 
   useEffect(() => {
-    getDashboard();
+    dispatch(getDashboard());
   }, []);
 
   useEffect(() => {
-    if (!rawData.length) return;
+    if (!rawData) return;
     setDataSource(
       rawData.map((obj, i) => ({
         ...obj,
@@ -125,7 +130,7 @@ function TableDashboards() {
   }, [rawData]);
 
   useEffect(() => {
-    if (searchInpt === '') return;
+    if (searchInpt === "") return;
     setSearchdData(
       dataSource.filter((obj) => {
         return searchdData.some((objX) => {
@@ -134,35 +139,29 @@ function TableDashboards() {
       })
     );
   }, [dataSource]);
-
-  const onAddData = () => {
-    const newKey = dataSource.length;
-    const newData = {
-      _id: newKey,
-      key: newKey,
-      name: 'Name ' + newKey,
-      email: newKey + '@gmail.com',
-      department: 'Address ' + newKey,
-    };
-    setDataSource((pre) => {
-      return [...pre, newData];
-    });
-    console.log('add');
-    pushHistory('/team/dashboards/create');
-  };
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
     Modal.confirm({
-      title: 'Are you sure, you want to delete this record?',
-      okText: 'Yes',
-      okType: 'danger',
+      title: "Are you sure, you want to delete this record?",
+      okText: "Yes",
+      okType: "danger",
       onOk: () => {
+        function recurseDispatch(count = 0) {
+          if (count >= recArr.length) return;
+          localStorage.setItem("dashboardId", recArr[count]._id);
+          dispatch(
+            deleteDashboard({
+              callback: () => recurseDispatch(count + 1),
+            })
+          );
+        }
+        recurseDispatch();
         setDataSource((pre) => {
           return pre
             .filter((obj) => recArr.every((record) => record.key !== obj.key))
             .map((obj, i) => ({ ...obj, key: i }));
         });
-        if (searchInpt !== '') refreshSearchdData();
+        if (searchInpt !== "") refreshSearchdData();
       },
     });
   };
@@ -175,7 +174,6 @@ function TableDashboards() {
     setEditingData(null);
   };
   const onSelectChange = (newRowKeys) => {
-    console.log('selectedRowKeys changed: ', newRowKeys);
     setSelectedRowKeys(newRowKeys);
   };
   const rowSelection = {
@@ -184,7 +182,7 @@ function TableDashboards() {
   };
   const rowListener = (record) => ({
     onClick: (event) => {
-      if (event.target.localName != 'td') {
+      if (event.target.localName != "td") {
         event.stopPropagation();
         return;
       }
@@ -199,27 +197,20 @@ function TableDashboards() {
     setSearchInpt(e.target.value);
     setSelectedRowKeys([]);
     const pattern = e.target.value
-      .split('')
+      .split("")
       .map((x) => {
         return `(?=.*${x})`;
       })
-      .join('');
-    const regX = new RegExp(`${pattern}`, 'gi');
+      .join("");
+    const regX = new RegExp(`${pattern}`, "gi");
     const tmp = [];
     dataSource.forEach((record, i) => {
-      if (regX.test(record?.name + ' ' + record?.department)) tmp.push(i);
+      if (regX.test(record?.name + " " + record?.department)) tmp.push(i);
     });
     if (!tmp.length) return setSearchdData([]);
     setSearchdData(dataSource.filter((obj) => tmp.includes(obj.key)));
-    console.log(
-      tmp,
-      dataSource.filter((obj) => tmp.includes(obj.key)),
-      e.target.value,
-      searchInpt
-    );
   };
   const refreshSearchdData = () => {
-    console.log('refresh');
     setSearchdData(
       dataSource.filter((record) =>
         searchdData.some((obj) => obj.key === record.key)
@@ -227,31 +218,35 @@ function TableDashboards() {
     );
   };
   return (
-    <Layout style={{ paddingRight: 50, background: 'transparent' }}>
+    <Layout style={{ paddingRight: 50, background: "transparent" }}>
       <PageHeader
         ghost={false}
         title={<StyledText fS={30}>Dashboards</StyledText>}
-        style={{ background: 'none', paddingTop: 8 }}
-        extra={[<StyledButton onClick={onAddData}>Create</StyledButton>]}
+        style={{ background: "none", paddingTop: 8 }}
+        extra={[
+          <StyledButton onClick={() => pushHistory("/team/dashboards/create")}>
+            Create
+          </StyledButton>,
+        ]}
       />
       <TableContainer
         style={{
           paddingLeft: 30,
           paddingRight: 24,
-          background: 'transparent',
+          background: "transparent",
         }}
       >
         <StyledInput
           placeholder="Search Dashboards"
           defaultValue={searchInpt}
           onChange={handleSearch}
-          prefix={<SearchOutlined style={{ color: '#635ffa' }} />}
+          prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
         />
         <Table
           onRow={rowListener}
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={searchInpt !== '' ? searchdData : dataSource}
+          dataSource={searchInpt !== "" ? searchdData : dataSource}
           loading={{ indicator: <Loading />, spinning: loading }}
         />
         <Modal
@@ -262,9 +257,11 @@ function TableDashboards() {
             resetEditing();
           }}
           onOk={() => {
+            localStorage.setItem("dashboardId", editingData._id);
+            dispatch(updateDashboard({ data: editingData }));
+
             setDataSource((pre) => {
               return pre.map((obj) => {
-                console.log(obj);
                 if (obj._id === editingData._id) {
                   return editingData;
                 } else {
@@ -281,15 +278,6 @@ function TableDashboards() {
             onChange={(e) => {
               setEditingData((pre) => {
                 return { ...pre, name: e.target.value };
-              });
-            }}
-          />
-          <Input
-            value={editingData?.department}
-            prefix="Department: "
-            onChange={(e) => {
-              setEditingData((pre) => {
-                return { ...pre, department: e.target.value };
               });
             }}
           />

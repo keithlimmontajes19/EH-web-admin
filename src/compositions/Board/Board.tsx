@@ -1,20 +1,325 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect, useState } from "react";
 
-import type { PropsType } from './types';
-import { Row, Col } from 'antd';
+import { Row, Col, Modal } from "antd";
 
-import {
-  BoardContainer,
-  HeaderContainer,
-  BodyContainer,
-  Darkdot,
-} from './styled';
-import Folder from 'components/Folder';
-import File from 'components/File';
-import { EllipsisOutlined } from '@ant-design/icons';
+import { BoardContainer, HeaderContainer, BodyContainer } from "./styled";
+import Folder from "components/Folder";
+import File from "components/File";
+import { EllipsisOutlined } from "@ant-design/icons";
+import Dropdown from "components/Dropdown";
+import { theme } from "utils/colors";
+import Loading from "components/Loading";
+import { useDispatch } from "react-redux";
+import { getPages } from "ducks/pages/actionCreator";
 
-const Board = (props: PropsType): ReactElement => {
-  const { item } = props;
+const Board = ({
+  index,
+  item,
+  saveBoard,
+  deleteBoard,
+  setPageState,
+  setEditInput,
+}): ReactElement => {
+  const dispatch = useDispatch();
+  const [viewItem, setViewItem]: any = useState(false);
+  const [focusItem, setFocusItem] = useState([-1]);
+  const [selectedItem, setSelectedItem] = useState(-1);
+  const [onDispatch, setOnDispatch] = useState(false);
+
+  useEffect(() => {
+    if (focusItem[0] === -1) return setViewItem(false);
+
+    const copy = JSON.parse(JSON.stringify(item));
+    iterateFindItem(copy, "board_items", focusItem, 0, (objResult) => {
+      const { obj } = objResult;
+      const isPage = "item_type" in obj ? obj.item_type === "page" : false;
+      setViewItem({ ...objResult, isPage });
+      if (
+        isPage &&
+        (obj.item_pages.length > 0
+          ? typeof obj.item_pages[0] === "string"
+          : false)
+      ) {
+        setOnDispatch(true);
+        viewPageDispatchFilter({ ...objResult, isPage });
+      }
+    });
+  }, [focusItem, item]);
+
+  const iterateFindItem = (
+    obj,
+    objKey,
+    indexArr,
+    count,
+    callback,
+    prev = null
+  ) => {
+    if (indexArr.length === count)
+      return callback({ obj, objKey, index: count - 1, indexArr, prev });
+    const nextObj = obj[objKey][indexArr[count]];
+    const nextObjKey = "item_pages";
+    return iterateFindItem(
+      nextObj,
+      nextObjKey,
+      indexArr,
+      count + 1,
+      callback,
+      obj
+    );
+  };
+
+  const viewPageDispatchFilter = (targetObj) => {
+    dispatch(
+      getPages({
+        callback: (res) => {
+          if (!res) return;
+          const copy = JSON.parse(JSON.stringify(targetObj));
+          copy.obj = {
+            ...viewItem.obj,
+            item_pages: res.filter((obj) =>
+              targetObj.obj.item_pages.includes(obj._id)
+            ),
+          };
+          setViewItem(copy);
+          setOnDispatch(false);
+        },
+      })
+    );
+  };
+
+  const mainActions = [
+    {
+      name: "Rename Board",
+      action: () =>
+        setEditInput({
+          isVisible: true,
+          title: "Rename " + item?.board_name,
+          inputVal: item?.board_name,
+          callback: (e) => saveBoard(index, { ...item, board_name: e }),
+        }),
+    },
+    {
+      name: "Delete Board",
+      action: () =>
+        Modal.confirm({
+          title: "Delete " + item?.board_name,
+          onOk: () => deleteBoard(index),
+        }),
+    },
+  ];
+
+  const defaultActions = [
+    {
+      name: "Add Folder",
+      action: () => {
+        const title = viewItem ? viewItem?.obj?.item_name : item?.board_name;
+        setEditInput({
+          isVisible: true,
+          title: "Add Folder to " + title,
+          inputVal: "",
+          callback: (e) => {
+            const copy = JSON.parse(JSON.stringify(item));
+            const blank = {
+              item_name: e,
+              item_pages: [],
+              item_type: "folder",
+            };
+            if (viewItem) {
+              iterateFindItem(
+                copy,
+                "board_items",
+                viewItem.indexArr,
+                0,
+                ({ obj, objKey, index }) => {
+                  const newArr = [...obj[objKey], blank];
+                  obj[objKey] = newArr;
+                }
+              );
+            } else {
+              const newItems = [...copy.board_items, blank];
+              copy.board_items = newItems;
+            }
+            saveBoard(index, copy);
+          },
+        });
+      },
+    },
+    {
+      name: "Add File",
+      action: () => {
+        const title = viewItem ? viewItem?.obj?.item_name : item?.board_name;
+        setEditInput({
+          isVisible: true,
+          title: "Add File to " + title,
+          inputVal: "",
+          callback: (e) => {
+            const copy = JSON.parse(JSON.stringify(item));
+            const blank = {
+              item_name: e,
+              item_pages: [],
+              item_type: "page",
+            };
+            if (viewItem) {
+              iterateFindItem(
+                copy,
+                "board_items",
+                viewItem.indexArr,
+                0,
+                ({ obj, objKey, index }) => {
+                  const newArr = [...obj[objKey], blank];
+                  obj[objKey] = newArr;
+                }
+              );
+            } else {
+              const newItems = [...copy.board_items, blank];
+              copy.board_items = newItems;
+            }
+            saveBoard(index, copy);
+          },
+        });
+      },
+    },
+  ];
+  const defaultViewActions = () => {
+    const pageActions = [
+      {
+        name: "Add Page",
+        action: () =>
+          setPageState({
+            isVisible: true,
+            defaultVal: item?.board_items[focusItem[0]]?.item_pages.map(
+              (obj) => obj._id
+            ),
+            callback: (result) => {
+              const copy = JSON.parse(JSON.stringify(item));
+              iterateFindItem(
+                copy,
+                "board_items",
+                viewItem.indexArr,
+                0,
+                ({ obj, objKey, index }) => {
+                  const newArr = [
+                    ...obj[objKey],
+                    ...result.map((_obj) => _obj?._id),
+                  ];
+                  obj[objKey] = newArr;
+                }
+              );
+              saveBoard(index, copy);
+            },
+          }),
+      },
+    ];
+    if (viewItem.isPage) return pageActions;
+    return defaultActions;
+  };
+
+  const selectedActions = [
+    {
+      name: "Rename Selected",
+      action: () => {
+        const title = viewItem
+          ? viewItem?.obj?.item_pages[selectedItem]?.item_name
+          : item?.board_items[selectedItem]?.item_name;
+        setEditInput({
+          isVisible: true,
+          title: "Rename " + title,
+          inputVal: title,
+          callback: (e) => {
+            const copy = JSON.parse(JSON.stringify(item));
+            setSelectedItem(-1);
+            if (viewItem) {
+              iterateFindItem(
+                copy,
+                "board_items",
+                viewItem.indexArr,
+                0,
+                ({ obj, objKey }) => {
+                  const targetChildItem = obj[objKey][selectedItem];
+                  targetChildItem.item_name = e;
+                }
+              );
+            } else {
+              const targetItem = copy?.board_items[selectedItem];
+              targetItem.item_name = e;
+            }
+            saveBoard(index, copy);
+          },
+        });
+      },
+    },
+    {
+      name: "Delete Selected",
+      action: () => {
+        const title = viewItem
+          ? viewItem?.obj?.item_pages[selectedItem]?.item_name
+          : item?.board_items[selectedItem]?.item_name;
+        Modal.confirm({
+          title: "Delete " + title,
+          onOk: () => {
+            const copy = JSON.parse(JSON.stringify(item));
+            setSelectedItem(-1);
+            if (viewItem) {
+              iterateFindItem(
+                copy,
+                "board_items",
+                viewItem.indexArr,
+                0,
+                ({ obj, objKey, index }) => {
+                  const newArr = [...obj[objKey]];
+                  obj[objKey] = newArr.filter((obj, i) => i !== selectedItem);
+                }
+              );
+            } else {
+              copy.board_items = item.board_items.filter(
+                (obj, i) => i !== selectedItem
+              );
+            }
+            saveBoard(index, copy);
+          },
+        });
+      },
+    },
+  ];
+  const selectedViewActions = () => {
+    const pageActions = [
+      {
+        name: "Remove Selected",
+        action: () => {
+          if (onDispatch) return;
+          Modal.confirm({
+            title: "Remove " + viewItem?.obj.item_pages[selectedItem]?.title,
+            onOk: () => {
+              const copy = JSON.parse(JSON.stringify(item));
+              setSelectedItem(-1);
+              iterateFindItem(
+                copy,
+                "board_items",
+                viewItem.indexArr,
+                0,
+                ({ obj, objKey, index }) => {
+                  const newArr = [...obj[objKey]];
+                  obj[objKey] = newArr.filter((obj, i) => i !== selectedItem);
+                }
+              );
+              saveBoard(index, copy);
+            },
+          });
+        },
+      },
+    ];
+    if (viewItem.isPage) return pageActions;
+    return selectedActions;
+  };
+
+  const headerActions = (mode) =>
+    mode
+      ? focusItem[0] === -1
+        ? defaultActions
+        : defaultViewActions()
+      : focusItem[0] === -1
+      ? selectedActions
+      : selectedViewActions();
 
   return (
     <>
@@ -22,20 +327,78 @@ const Board = (props: PropsType): ReactElement => {
         <BoardContainer>
           <HeaderContainer>
             <h2>{item?.board_name}</h2>
-            <div style={{ fontSize: 30 }}>
-              <EllipsisOutlined />
-            </div>
+            <Dropdown
+              menu={[...mainActions, ...headerActions(selectedItem === -1)]}
+              title={
+                <div style={{ fontSize: 30 }}>
+                  <EllipsisOutlined />
+                </div>
+              }
+            />
           </HeaderContainer>
-
-          <BodyContainer>
+          <div
+            style={{
+              color: theme.LIGHT_GRAY,
+              height: 50,
+              padding: 20,
+              visibility: viewItem ? "visible" : "hidden",
+              textDecoration: "underline",
+            }}
+          >
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                const prev = [...focusItem];
+                prev.pop();
+                setFocusItem(prev.length === 0 ? [-1] : prev);
+                setOnDispatch(false);
+              }}
+            >
+              &lt; Back to{" "}
+              {viewItem
+                ? viewItem.prev?.item_name || viewItem.prev?.board_name
+                : ""}
+            </span>
+          </div>
+          <BodyContainer
+            onClick={(e: any) => {
+              if (e.target.localName === "div") setSelectedItem(-1);
+            }}
+          >
             <Row justify="space-around">
-              {(item?.board_items || []).map((pages, index) => {
-                return pages?.item_type === 'folder' ? (
-                  <Folder key={index} pages={pages} />
-                ) : (
-                  <File name={pages?.item_name} />
-                );
-              })}
+              {onDispatch ? (
+                <Loading />
+              ) : (
+                (viewItem
+                  ? viewItem.obj[viewItem.objKey] || []
+                  : item?.board_items
+                ).map((pages, index) => {
+                  return (
+                    <span
+                      onDoubleClick={() => {
+                        setSelectedItem(-1);
+                        if (viewItem ? viewItem?.isPage : false) return;
+                        if (focusItem[0] === -1) return setFocusItem([index]);
+                        setFocusItem((prev) => [...prev, index]);
+                      }}
+                      onClick={() =>
+                        setSelectedItem((prev) => (prev === index ? -1 : index))
+                      }
+                      style={{
+                        background:
+                          index === selectedItem ? theme.PRIMARY_LIGHT : "none",
+                        borderRadius: 15,
+                      }}
+                    >
+                      {pages?.item_type === "folder" ? (
+                        <Folder key={index} pages={pages} />
+                      ) : (
+                        <File name={pages?.item_name || pages?.title} />
+                      )}
+                    </span>
+                  );
+                })
+              )}
             </Row>
           </BodyContainer>
         </BoardContainer>

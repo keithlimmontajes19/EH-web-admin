@@ -10,8 +10,6 @@ import Topics from "views/private/Learn/Topics";
 import Quizzes from "views/private/Learn/Quizzes";
 
 import Dashboards from "views/private/Team/Dashboards";
-import CreateDashboard from "views/private/Team/Dashboards/CreateDashboard";
-import AddBoard from "views/private/Team/Dashboards/AddBoard";
 import Pages from "views/private/Team/Pages";
 import Createpage from "compositions/Createpage";
 import Announcements from "views/private/Team/Announcements";
@@ -34,19 +32,10 @@ const Navigation = () => {
       <Route path="/learn/courses/:page?/:subpage?" component={Courses} />
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
       <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
-      <Route
-        path="/learn/quizzes/:page?/:subpage?/:item?"
-        component={Quizzes}
-      />
+      <Route path="/learn/quizzes/:page?/:subpage?/:item?" component={Quizzes} />
 
-      <Route exact path="/team" component={() => <h1></h1>} />
-      <Route
-        exact
-        path="/team/dashboards/create/addbord"
-        component={AddBoard}
-      />
-      <Route exact path="/team/dashboards" component={Dashboards} />
-      <Route exact path="/team/dashboards/create" component={CreateDashboard} />
+      <Route exact path="/team" component={() => <h1>team index page here</h1>} />
+      <Route path="/team/dashboards/:page?/:subpage?" component={Dashboards} />
       <Route exact path="/team/pages" component={Pages} />
       <Route exact path="/team/pages/createpage" component={Createpage} />
       <Route
