@@ -73,6 +73,7 @@ export const TableContainer: any = styled(Layout)`
     font-size: 20px;
     font-weight: 400;
     color: #2b2e4a;
+    padding: 0 16px;
     overflow: hidden;
     background: #635ffa15;
   }

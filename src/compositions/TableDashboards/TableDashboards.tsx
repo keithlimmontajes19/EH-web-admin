@@ -60,7 +60,7 @@ function TableDashboards() {
         return (
           <>
             {(record || []).map((item) => (
-              <p>{item?.name} &nbsp;</p>
+              <>{item?.name} &nbsp;</>
             ))}
           </>
         );
@@ -225,7 +225,7 @@ function TableDashboards() {
         style={{ background: "none", paddingTop: 8 }}
         extra={[
           <StyledButton onClick={() => pushHistory("/team/dashboards/create")}>
-            Create
+            CREATE
           </StyledButton>,
         ]}
       />
