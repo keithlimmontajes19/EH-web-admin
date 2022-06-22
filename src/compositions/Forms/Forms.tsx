@@ -1,10 +1,12 @@
-import { ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { ReactElement, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import {
   StyledText,
   StyledInput,
+  ButtonLabel,
   StyledButton,
+  ButtonStyled,
   HeaderStyles,
   DivEmptyStyles,
   TableContainer,
@@ -12,35 +14,31 @@ import {
   ImgEmptyStyles,
   InputCreateStyles,
   StyledButtonResult,
-} from './styled';
+} from "./styled";
 
-import NoForms from 'assets/icons/NoFormsIcon.svg';
-import { Layout, PageHeader, Table, Input } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { columns } from "./columns";
+import { SearchOutlined } from "@ant-design/icons";
+import { Layout, PageHeader, Table, Input } from "antd";
 
-import { columns } from './columns';
-import Results from 'compositions/Results';
+import Results from "compositions/Results";
+import NoForms from "assets/icons/NoFormsIcon.svg";
 
 /* reducer action */
-import { RootState } from 'ducks/store';
-import { useSelector, useDispatch } from 'react-redux';
-import { getForms } from 'ducks/forms/actionCreator';
+import { RootState } from "ducks/store";
+import { useSelector, useDispatch } from "react-redux";
+import { getForms, deleteForm } from "ducks/forms/actionCreator";
 
 const Forms = (): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [formtitle, setFormName] = useState('');
+  const [formtitle, setFormName] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const {
     forms: { data, loading },
   }: any = useSelector<RootState>((states) => states.forms);
-
-  useEffect(() => {
-    dispatch(getForms());
-  }, []);
 
   const modalShowClose = () => setIsModalVisible(!isModalVisible);
 
@@ -58,10 +56,14 @@ const Forms = (): ReactElement => {
     onChange: onSelectChange,
   };
 
+  useEffect(() => {
+    dispatch(getForms());
+  }, []);
+
   return (
     <>
-      <Layout style={{ paddingRight: 50, background: 'transparent' }}>
-        <TableContainer style={{ background: 'none' }} hasData={data.length}>
+      <Layout style={{ paddingRight: 50, background: "transparent" }}>
+        <TableContainer style={{ background: "none" }} hasData={data.length}>
           <PageHeader
             ghost={false}
             title={<StyledText fS={30}>Forms</StyledText>}
@@ -72,9 +74,7 @@ const Forms = (): ReactElement => {
                   SEE RESULTS
                 </StyledButtonResult>
               ) : (
-                <>
-                  <Results />
-                </>
+                <Results />
               ),
               <>
                 <StyledButton onClick={modalShowClose}>CREATE</StyledButton>
@@ -82,8 +82,14 @@ const Forms = (): ReactElement => {
                   centered
                   onOk={handleOk}
                   title="Create Forms"
+                  maskClosable={false}
                   visible={isModalVisible}
                   onCancel={modalShowClose}
+                  footer={[
+                    <ButtonStyled onClick={handleOk}>
+                      <ButtonLabel>CREATE</ButtonLabel>
+                    </ButtonStyled>,
+                  ]}
                 >
                   <Input
                     size="large"
@@ -98,15 +104,15 @@ const Forms = (): ReactElement => {
 
           <StyledInput
             placeholder="Search Forms"
-            prefix={<SearchOutlined style={{ color: '#635ffa' }} />}
+            prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
 
           <Table
-            rowKey="-id"
+            rowKey="_id"
             dataSource={data}
             loading={loading}
             pagination={false}
-            columns={columns()}
+            columns={columns(selectedRowKeys, dispatch, deleteForm)}
             rowSelection={rowSelection}
             locale={{
               emptyText: (
