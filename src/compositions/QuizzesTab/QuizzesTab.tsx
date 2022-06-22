@@ -1,191 +1,128 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useEffect, useState } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import type { PropsType } from "./types";
 
-import type { PropsType, Params } from './types';
 import {
-  QuestionLayout,
-  QuizLayout,
-  StyledButton,
-  StyledInput,
+  FormText,
   StyledText,
+  StyledInput,
+  StyledButton,
+  MainContainer,
+  QuestionLayout,
   StyledTextArea,
-  StyledSelect, StyledQuestionContainer, StyledButtonCancle
-} from './styled';
-import BuilderQuizSingleChoice from "compositions/BuilderQuizSingleChoice"
-import BuilderQuizMultipleChoice from "compositions/BuilderQuizMultipleChoice"
-import BuilderQuizFillBlanks from "compositions/BuilderQuizFillBlanks"
-import BuilderQuizEssay from 'compositions/BuilderQuizEssay';
-import BuilderQuizSort from 'compositions/BuilderQuizSort'
-import { Col, Input, Layout, PageHeader, Row, Select, Radio } from "antd";
-import { PlusOutlined, DownOutlined, CaretRightOutlined, EditOutlined, PlusCircleFilled } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+  CheckboxStyled,
+  StyledButtonCancle,
+  SelectStyledComponent,
+  StyledQuestionContainer,
+} from "./styled";
+
+import { theme } from "utils/colors";
+import { Col, Input, Layout, PageHeader, Row } from "antd";
+import { PlusOutlined, PlusCircleFilled } from "@ant-design/icons";
+
 import { RootState } from "ducks/store";
-import Loading from "components/Loading";
-import { useParams } from 'react-router-dom';
+import { postForm } from "ducks/forms/actionCreator";
+import { useDispatch, useSelector } from "react-redux";
 
-import { useHistory } from 'react-router-dom';
-import Dropdown from 'components/Dropdown'
-import { blanks } from 'compositions/BuilderQuiz/blanks';
-import { theme } from 'utils/colors';
-import CustomeSelect from 'components/CustomeSelect';
-
-const { Option } = Select;
-
-const options = [
-  {
-    name: 'sigle-choice',
-    value: 'single-choice'
-  },
-  {
-    name: 'multiple-choice',
-    value: 'multiple-choice'
-  },
-  {
-    name: 'easy',
-    value: 'easy'
-  },
-  {
-    name: 'fill-in-the-blanks',
-    value: 'fill-in-the-blanks'
-  },
-
-]
-const question = [
-
-]
-
-
+import Dropdown from "components/Dropdown";
 
 const QuizzesTab = (props: PropsType): ReactElement => {
   const history = useHistory();
-  const [builderData, setBuilderData] = useState([]);
+  const dispatch = useDispatch();
+  const params: any = useParams();
+
+  const [answer, setAnswer] = useState([]);
   const [data, setData]: any = useState({});
-  const [loading, setLoading] = useState(true);
-  const [points, setPoints] = useState(0);
-  const params: Params = useParams()
-  const [addans, setAddanswere] = useState(false)
-  const [anslist, setAnsList] = useState([])
+  const [formType, setFormType] = useState("");
+  const [question, setQuestion] = useState("");
+  const [addans, setAddanswere] = useState(false);
+  const [questionAnswer, setQuestionAnswer] = useState([]);
 
-
-  const ans = () => {
-    return (
-      <Row>
-        <div style={{ margin: '10px 0px' }}>
-          <Radio>
-            <Input placeholder='Type Answere Here...' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} />
-          </Radio>
-        </div>
-      </Row>
-    )
-  }
-
-
-  const addAnswere = () => {
-    setAddanswere(true)
-  }
-  const addanswere = () => {
-    setAnsList(anslist.concat(
-      <Row key={anslist.length}>
-        <div style={{ margin: '10px 0px' }}>
-          <Radio>
-            <Input placeholder='Type Answere Here...' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none', color: `${theme.PRIMARY}` }} />
-          </Radio>
-        </div>
-      </Row>
-    ))
-  }
-  const addNew = (obj) => {
-    setBuilderData((prev) => [...builderData, JSON.parse(JSON.stringify(obj))]);
-  };
   const headerActions = [
     {
-      name: "Single Choice",
-      action: () => addNew(blanks.singleChoice),
+      name: "Quiz",
+      action: () => setFormType("Quiz"),
     },
     {
-      name: "Multiple Choice",
-      action: () => addNew(blanks.multipleChoice),
-    },
-    {
-      name: "Essay",
-      action: () => addNew(blanks.essay),
-    },
-    {
-      name: "Fill Blanks",
-      action: () => addNew(blanks.fillBlanks),
-    },
-    {
-      name: "Sort",
-      action: () => addNew(blanks.sort),
+      name: "Survey",
+      action: () => setFormType("Survey"),
     },
   ];
-  const dataMapper = (obj, i) => {
-    const props = {
-      // item: "title" in obj ? obj : undefined,
-      // submitQ: (data) => questionSubmit(i, data),
-      // deleteQ: () => questionDelete(i),
-    };
-    switch (obj.questionType) {
-      case "single-choice":
-        return <BuilderQuizSingleChoice />;
-      case "multiple-choice":
-        return <BuilderQuizMultipleChoice {...props} />;
-      case "essay":
-        return <BuilderQuizEssay {...props} />;
-      case "sorting":
-        return <BuilderQuizSort {...props} />;
-      case "fill-in-the-blanks":
-        return <BuilderQuizFillBlanks {...props} />;
-      default:
-        return <></>;
+
+  const showQuestion = () => setAddanswere(true);
+  const addAnwers = () => setAnswer([...answer, ""]);
+
+  const addQuestionAnswer = (item, checked) => {
+    const values = Array.from(questionAnswer);
+
+    if (checked) {
+      const itemExists = values.find((x) => x === item);
+      !itemExists && values.push(item);
+
+      setQuestionAnswer(values);
+    } else {
+      const findIndex = values.findIndex((x) => x === item);
+      const sliceItem = values.slice(0, findIndex);
+
+      setQuestionAnswer(sliceItem);
     }
   };
 
-  return <Layout style={{ paddingRight: 0, background: 'none' }}>
-    <PageHeader
-      ghost={false}
-      title={<StyledText
-        u={true}
-        fS={16}
-        fC={"#635FFA"}
-        fW={500}
-        onClick={() => history.push("/team/forms/:title?")}
-      >
-        {"<"}Back to Fomrs
-      </StyledText>
+  const handleSubmit = () => {
+    const items = {
+      title: data?.title,
+      type: formType.toLowerCase(),
+      description: data?.description,
+      items: [
+        {
+          name: data?.title,
+          description: data?.description,
+          quiz_survey_type: "multiple_choice",
+          quiz_survey_questions: [
+            {
+              point: 0,
+              question: question,
+              answers: questionAnswer,
+              question_answer: answer,
+              question_choices: answer,
+            },
+          ],
+        },
+      ],
+    };
 
-      }
-      extra={
-        [
-          <StyledButton
-            w={130}
-          // onClick={() => history.push("/learn/courses/add")}
+    dispatch(postForm(items));
+  };
+
+  return (
+    <Layout style={{ paddingRight: 50, background: "none" }}>
+      <PageHeader
+        ghost={false}
+        title={
+          <StyledText
+            fS={16}
+            fW={500}
+            u={true}
+            fC={"#635FFA"}
+            onClick={() => history.push("/team/forms")}
           >
-            <PlusOutlined />
-            ADD
-          </StyledButton>,
-          <Dropdown
-            menu={headerActions}
-            title={
-              <span style={{ paddingLeft: 50 }}>
-                <StyledText fS={20}>
-                  Actions&nbsp;
-                  <DownOutlined style={{ fontSize: 15 }} />
-                </StyledText>
-              </span>
-            }
-          />,
-        ]
-      }
+            {"<"} Back to Forms
+          </StyledText>
+        }
+      />
 
-    />
-    <PageHeader title={
-      <StyledText fC={"#000"} >{params.title || "Page 1"}</StyledText>
-    } />
-    <StyledText>{ }</StyledText>
-    {!loading ? (<Loading />) : (
-      <QuizLayout>
-        <Row justify='center' gutter={16} align="middle" style={{ marginBottom: '30px' }}>
-          <Col flex="1 1 200px" className="guttor-row">
+      <PageHeader
+        title={<StyledText fC={"#000"}>{params?.formName || ""}</StyledText>}
+      />
+
+      <MainContainer>
+        <Row
+          gutter={16}
+          align="middle"
+          justify="center"
+          style={{ marginBottom: "30px" }}
+        >
+          <Col span={17}>
             <StyledInput
               value={data.title}
               style={{ marginBottom: 0 }}
@@ -196,6 +133,21 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                   tmp.title = e.target.value;
                   return tmp;
                 })
+              }
+            />
+          </Col>
+
+          <Col span={7}>
+            <Dropdown
+              menu={headerActions}
+              title={
+                <SelectStyledComponent>
+                  <FormText
+                    background={formType.length ? "#2B2E4A" : "darkgray"}
+                  >
+                    {formType.length ? formType : "Select Type"}
+                  </FormText>
+                </SelectStyledComponent>
               }
             />
           </Col>
@@ -213,38 +165,107 @@ const QuizzesTab = (props: PropsType): ReactElement => {
             });
           }}
         />
-        <QuestionLayout>
-          {(addans === true) ?
-            <StyledQuestionContainer>
-              <div style={{ margin: '10px 0px' }}>
-                <Row >
-                  <Input placeholder='#Sample Question 1' style={{ width: '500px', borderBottom: '1px solid black', borderLeft: 'none', borderRight: 'none', borderTop: 'none' }} />
 
+        <QuestionLayout>
+          {addans === true ? (
+            <StyledQuestionContainer>
+              <div style={{ margin: "10px 0px" }}>
+                <Row>
+                  <Input
+                    placeholder="Sample Question #1"
+                    style={{
+                      width: "500px",
+                      borderTop: "none",
+                      borderLeft: "none",
+                      borderRight: "none",
+                      color: "#4C4B7B",
+                      borderBottom: "1px solid #A2A1BD",
+                      fontSize: 18,
+                    }}
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value)}
+                  />
                 </Row>
               </div>
-              {anslist}
+
+              {/**
+               * ===============
+               * QUESTION ANSWER
+               * ===============
+               * */}
+              {answer.map((item, index) => (
+                <Row key={index}>
+                  <div style={{ margin: "10px 0px" }}>
+                    <CheckboxStyled
+                      onChange={(e) =>
+                        addQuestionAnswer(item, e.target.checked)
+                      }
+                    >
+                      <Input
+                        style={{
+                          width: "500px",
+                          borderTop: "none",
+                          borderLeft: "none",
+                          borderRight: "none",
+                          color: "#4C4B7B",
+                          borderBottom: "1px solid #A2A1BD",
+                          fontSize: 18,
+                        }}
+                        placeholder="Type Answer Here..."
+                        onChange={(e) => {
+                          let originalObjets = Array.from(answer);
+                          originalObjets[index] = e.target.value;
+
+                          setAnswer(originalObjets);
+                        }}
+                      />
+                    </CheckboxStyled>
+                  </div>
+                </Row>
+              ))}
+
               <Row>
-                <PlusCircleFilled style={{ fontSize: '25px', color: `${theme.PRIMARY}`, margin: '10px 0px 0px 30px' }} />
-                <StyledText fS={25} style={{ cursor: 'pointer' }} onClick={addanswere}>Answere</StyledText>
+                <PlusCircleFilled
+                  style={{
+                    fontSize: "25px",
+                    color: `${theme.PRIMARY}`,
+                    margin: "10px 0px 0px 30px",
+                  }}
+                />
+                <StyledText
+                  fS={25}
+                  onClick={addAnwers}
+                  style={{ cursor: "pointer", marginTop: 3 }}
+                >
+                  ANSWER
+                </StyledText>
               </Row>
-              <PageHeader extra={[<StyledButtonCancle onClick={() => (setAddanswere(false))}>Cancle</StyledButtonCancle>, <StyledButton>SAVE</StyledButton>]} />
-            </StyledQuestionContainer> :
+
+              <PageHeader
+                extra={[
+                  <StyledButtonCancle onClick={() => setAddanswere(false)}>
+                    CANCEL
+                  </StyledButtonCancle>,
+                  <StyledButton onClick={handleSubmit}>SAVE</StyledButton>,
+                ]}
+              />
+            </StyledQuestionContainer>
+          ) : (
             <StyledButton
               w={184}
               m={"-20px 0 5px 0"}
-              icon={<PlusOutlined />}
-              onClick={addAnswere}
+              onClick={showQuestion}
+              icon={<PlusOutlined style={{ fontWeight: "900" }} />}
             >
               <StyledText fC="#fff" fS="18" fW="500">
                 QUESTION
               </StyledText>
             </StyledButton>
-          }
+          )}
         </QuestionLayout>
-      </QuizLayout >
-    )}
-
-  </Layout >;
+      </MainContainer>
+    </Layout>
+  );
 };
 
-export default QuizzesTab; ``
+export default QuizzesTab;

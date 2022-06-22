@@ -1,7 +1,7 @@
-import { takeLatest, put, call } from 'redux-saga/effects';
-import { TYPES } from '../actionTypes';
+import { takeLatest, put, call } from "redux-saga/effects";
+import { TYPES } from "../actionTypes";
 
-import form_service from 'api/services/form_service';
+import form_service from "api/services/form_service";
 
 export function* deleteForms({ payload }: any) {
   try {
@@ -11,6 +11,7 @@ export function* deleteForms({ payload }: any) {
       payload: response?.data,
     });
 
+    yield put({ type: TYPES.LIST_FORMS_REQUEST });
     return Promise.resolve(response);
   } catch (error) {
     yield put({

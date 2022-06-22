@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Layout, Input, Button, Modal } from 'antd';
+import styled from "styled-components";
+import { Layout, Input, Button, Modal } from "antd";
 
 export const Container = styled.div``;
 
@@ -31,7 +31,7 @@ export const TableContainer: any = styled<any>(Layout)`
   }
 
   .ant-table-tbody > tr > td {
-    background: ${(props): any => (props.hasData ? '#635ffa15' : '#fff')};
+    background: ${(props): any => (props.hasData ? "#635ffa15" : "#fff")};
   }
 
   .ant-table-cell {
@@ -59,7 +59,7 @@ export const TableContainer: any = styled<any>(Layout)`
   }
 
   tbody:before {
-    content: '@';
+    content: "@";
     display: block;
     line-height: 20px;
     text-indent: -99999px;
@@ -237,31 +237,31 @@ export const ModalContainer = styled(Modal)`
 `;
 
 export const HeaderStyles = {
-  padding: '10px',
-  fontSize: '22px',
-  fontWeight: '500',
-  color: '#2B2E4A !important',
+  padding: "10px",
+  fontSize: "22px",
+  fontWeight: "500",
+  color: "#2B2E4A !important",
 };
 
 export const DivEmptyStyles: any = {
-  display: 'flex',
-  alignItems: 'center',
-  flexDirection: 'column',
-  backgroundColor: '#fff',
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column",
+  backgroundColor: "#fff",
   padding: 120,
 };
 
 export const ImgEmptyStyles = {
-  width: '87px',
-  height: '109px',
+  width: "87px",
+  height: "109px",
 };
 
 export const InputCreateStyles = {
-  width: '485px',
-  height: '38px',
-  margin: '10px 0px',
-  borderRadius: '15px',
-  background: '#F8F8F8',
+  width: "485px",
+  height: "38px",
+  margin: "10px 0px",
+  borderRadius: "15px",
+  background: "#F8F8F8",
 };
 
 export const TextStyled = styled.span`
@@ -270,4 +270,19 @@ export const TextStyled = styled.span`
   font-size: 20px;
   line-height: 25px;
   color: #4c4b7b;
+`;
+
+export const ButtonStyled = styled.button`
+  width: 110px;
+  height: 48px;
+  border-radius: 8px;
+  background: #635ffa;
+`;
+
+export const ButtonLabel = styled.span`
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  text-align: right;
 `;
