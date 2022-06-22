@@ -1,10 +1,10 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
-import TablePages from "../TablePages";
+import BuilderPage from "../BuilderPage";
 
-describe("TablePages", () => {
+describe("BuilderPage", () => {
   it("Should work as expected", () => {
-    const all = render(<TablePages />);
+    const all = render(<BuilderPage />);
     expect(all.toJSON()).toMatchSnapshot();
   });
 });

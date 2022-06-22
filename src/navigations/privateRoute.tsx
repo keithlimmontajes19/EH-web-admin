@@ -9,8 +9,8 @@ import Lessons from "views/private/Learn/Lessons";
 import Quizzes from "views/private/Learn/Quizzes";
 
 import Forms from "compositions/Forms";
-import Pages from "views/private/Team/Pages";
 import Dashboards from "views/private/Team/Dashboards";
+import Pages from "views/private/Team/Pages";
 import Announcements from "views/private/Team/Announcements";
 
 import OnBoardingScreen from "compositions/OnBoardingScreen";
@@ -37,7 +37,8 @@ const Navigation = () => {
       <Route path="/learn/quizzes/:page?/:subpage?/:item?" component={Quizzes} />
 
       <Route exact path="/team" component={() => <h1>team index page here</h1>} />
-      
+      <Route path="/team/dashboards/:page?/:subpage?" component={Dashboards} />
+      <Route path="/team/pages/:page?/:subpage?" component={Pages} />
       <Route
         exact
         component={QuizzesTab}
@@ -45,8 +46,6 @@ const Navigation = () => {
       />
       
       <Route exact path="/team/forms" component={Forms} />
-      <Route path="/team/pages/:page?/:subpage?" component={Pages} />
-      <Route path="/team/dashboards/:page?/:subpage?" component={Dashboards} />
       <Route exact path="/team/announcements" component={Announcements} />
       <Route exact path="/team/onboarding" component={OnboardingScreens} />
 
