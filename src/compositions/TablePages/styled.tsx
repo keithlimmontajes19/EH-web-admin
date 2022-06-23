@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Button, Input, Layout } from "antd";
+import { theme } from "utils/colors";
 
 export const Container = styled.div``;
 export const StyledText: any = styled.span`
@@ -64,20 +65,19 @@ export const TableContainer: any = styled(Layout)`
   }
 
   .ant-table-thead,
-  .ant-table-row {
+  .ant-table-row,
+  .ant-table-cell {
     height: 60px;
+    padding: 0;
   }
 
   .ant-table-cell {
     font-size: 20px;
     font-weight: 400;
     color: #2b2e4a;
+    padding: 0px;
     overflow: hidden;
     background: #635ffa15;
-  }
-
-  .ant-table-row > .ant-table-cell:nth-child(3) {
-    font-size: 18px;
   }
 
   .ant-table-row-selected > .ant-table-cell {
@@ -166,6 +166,37 @@ export const TableContainer: any = styled(Layout)`
     font-size: 18px;
     font-weight: 500;
     cursor: pointer;
+  }
+
+  .ant-collapse-header,
+  .ant-no-collapse {
+    font-size: 20px;
+    font-weight: 700;
+    color: ${theme.BLACK} !important;
+  }
+
+  .ant-collapse-header > div {
+    display: flex;
+    align-items: center;
+    width: 33px;
+    height: 33px;
+  }
+
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    padding: 12px 0;
+  }
+
+  .ant-collapse-header .anticon {
+    padding-right: 0px;
+    padding-left: 15px;
+  }
+
+  .ant-collapse-content-box {
+    margin-top: -20px;
+    padding: 0 5px;
+  }
+  .ant-collapse-content-box > p {
+    margin-bottom: 0.5em;
   }
 `;
 

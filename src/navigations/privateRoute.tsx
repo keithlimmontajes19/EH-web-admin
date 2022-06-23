@@ -9,12 +9,9 @@ import Lessons from "views/private/Learn/Lessons";
 import Quizzes from "views/private/Learn/Quizzes";
 
 import Forms from "compositions/Forms";
-import Pages from "views/private/Team/Pages";
-import Createpage from "compositions/Createpage";
 import Dashboards from "views/private/Team/Dashboards";
+import Pages from "views/private/Team/Pages";
 import Announcements from "views/private/Team/Announcements";
-import AddBoard from "views/private/Team/Dashboards/AddBoard";
-import CreateDashboard from "views/private/Team/Dashboards/CreateDashboard";
 
 import OnBoardingScreen from "compositions/OnBoardingScreen";
 import AddOnboardingScreen from "compositions/AddOnboardingScreen";
@@ -37,14 +34,19 @@ const Navigation = () => {
       <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
       <Route path="/learn/courses/:page?/:subpage?" component={Courses} />
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
-      <Route component={Quizzes} path="/learn/quizzes/:page?/:subpage?/:item" />
+      <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
+      <Route
+        path="/learn/quizzes/:page?/:subpage?/:item?"
+        component={Quizzes}
+      />
 
       <Route
         exact
-        path="/team/dashboards/create/addbord"
-        component={AddBoard}
+        path="/team"
+        component={() => <h1>team index page here</h1>}
       />
-
+      <Route path="/team/dashboards/:page?/:subpage?" component={Dashboards} />
+      <Route path="/team/pages/:page?/:subpage?" component={Pages} />
       <Route
         exact
         component={QuizzesTab}
@@ -57,12 +59,8 @@ const Navigation = () => {
       />
 
       <Route exact path="/team/forms" component={Forms} />
-      <Route exact path="/team/pages" component={Pages} />
-      <Route exact path="/team/dashboards" component={Dashboards} />
       <Route exact path="/team/announcements" component={Announcements} />
-      <Route exact path="/team/pages/createpage" component={Createpage} />
       <Route exact path="/team/onboarding" component={OnboardingScreens} />
-      <Route exact path="/team/dashboards/create" component={CreateDashboard} />
 
       <Route
         exact
