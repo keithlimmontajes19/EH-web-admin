@@ -1,5 +1,6 @@
 export type PropsType = {
   testID?: string;
-  foldertitle: string;
-  pages?: any;
+};
+export type Params = {
+  pagename?: string;
 };

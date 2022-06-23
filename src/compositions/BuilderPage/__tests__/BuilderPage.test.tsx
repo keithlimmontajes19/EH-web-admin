@@ -1,10 +1,10 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
-import ListOfPages from "../ListOfPages";
+import BuilderPage from "../BuilderPage";
 
-describe("ListOfPages", () => {
+describe("BuilderPage", () => {
   it("Should work as expected", () => {
-    const all = render(<ListOfPages />);
+    const all = render(<BuilderPage />);
     expect(all.toJSON()).toMatchSnapshot();
   });
 });
