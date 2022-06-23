@@ -19,6 +19,7 @@ import OnboardingScreens from "views/private/Team/OnboardingScreens";
 import EditOnboardingScreen from "compositions/EditOnboardingScreen";
 
 import QuizzesTab from "compositions/QuizzesTab";
+import EditForm from "compositions/EditForm";
 import BuilderQuiz from "compositions/BuilderQuiz";
 
 const Navigation = () => {
@@ -34,9 +35,16 @@ const Navigation = () => {
       <Route path="/learn/courses/:page?/:subpage?" component={Courses} />
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
       <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
-      <Route path="/learn/quizzes/:page?/:subpage?/:item?" component={Quizzes} />
+      <Route
+        path="/learn/quizzes/:page?/:subpage?/:item?"
+        component={Quizzes}
+      />
 
-      <Route exact path="/team" component={() => <h1>team index page here</h1>} />
+      <Route
+        exact
+        path="/team"
+        component={() => <h1>team index page here</h1>}
+      />
       <Route path="/team/dashboards/:page?/:subpage?" component={Dashboards} />
       <Route path="/team/pages/:page?/:subpage?" component={Pages} />
       <Route
@@ -44,7 +52,12 @@ const Navigation = () => {
         component={QuizzesTab}
         path="/team/forms/createforms/:formName"
       />
-      
+      <Route
+        exact
+        component={EditForm}
+        path="/team/forms/editforms/:formName"
+      />
+
       <Route exact path="/team/forms" component={Forms} />
       <Route exact path="/team/announcements" component={Announcements} />
       <Route exact path="/team/onboarding" component={OnboardingScreens} />
