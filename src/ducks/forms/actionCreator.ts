@@ -1,4 +1,4 @@
-import { TYPES } from './actionTypes';
+import { TYPES } from "./actionTypes";
 
 export const getForms = () => ({
   type: TYPES.LIST_FORMS_REQUEST,
@@ -14,11 +14,11 @@ export const postForm = (payload) => ({
   payload,
 });
 
-export const putForm = (id, payload) => ({
+export const putForm = (id, data) => ({
   type: TYPES.PUT_FORMS_REQUEST,
   payload: {
     id,
-    payload,
+    data,
   },
 });
 

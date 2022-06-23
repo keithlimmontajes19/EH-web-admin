@@ -22,6 +22,7 @@ import OnboardingScreens from "views/private/Team/OnboardingScreens";
 import EditOnboardingScreen from "compositions/EditOnboardingScreen";
 
 import QuizzesTab from "compositions/QuizzesTab";
+import EditForm from "compositions/EditForm";
 import BuilderQuiz from "compositions/BuilderQuiz";
 
 const Navigation = () => {
@@ -48,6 +49,11 @@ const Navigation = () => {
         exact
         component={QuizzesTab}
         path="/team/forms/createforms/:formName"
+      />
+      <Route
+        exact
+        component={EditForm}
+        path="/team/forms/editforms/:formName"
       />
 
       <Route exact path="/team/forms" component={Forms} />

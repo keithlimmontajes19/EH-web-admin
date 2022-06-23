@@ -286,3 +286,22 @@ export const ButtonLabel = styled.span`
   line-height: 28px;
   text-align: right;
 `;
+
+export const PopupContainer = styled.div`\
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:space-between;
+`;
+
+export const Contentdiv = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin-right: 25px;
+  opacity: 0.8;
+  cursor: pointer;
+  font-weight: 400;
+  color: #4c4b7b;
+  font-size: 18px;
+`;

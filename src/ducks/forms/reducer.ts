@@ -1,4 +1,4 @@
-import { TYPES } from './actionTypes';
+import { TYPES } from "./actionTypes";
 
 const INITIAL_STATE = {
   forms: {
@@ -59,7 +59,7 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         form: {
-          data: [],
+          data: {},
           loading: true,
           error: false,
         },
@@ -79,7 +79,7 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         form: {
-          data: [],
+          data: {},
           loading: false,
           error: true,
         },

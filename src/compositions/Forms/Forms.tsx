@@ -26,7 +26,7 @@ import NoForms from "assets/icons/NoFormsIcon.svg";
 /* reducer action */
 import { RootState } from "ducks/store";
 import { useSelector, useDispatch } from "react-redux";
-import { getForms, deleteForm } from "ducks/forms/actionCreator";
+import { getForms, deleteForm, getOneForm } from "ducks/forms/actionCreator";
 
 const Forms = (): ReactElement => {
   const history = useHistory();
@@ -112,7 +112,13 @@ const Forms = (): ReactElement => {
             dataSource={data}
             loading={loading}
             pagination={false}
-            columns={columns(selectedRowKeys, dispatch, deleteForm)}
+            columns={columns(
+              selectedRowKeys,
+              dispatch,
+              deleteForm,
+              history,
+              getOneForm
+            )}
             rowSelection={rowSelection}
             locale={{
               emptyText: (
