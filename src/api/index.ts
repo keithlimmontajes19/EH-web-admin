@@ -8,8 +8,8 @@ import { store } from "ducks/store";
  */
 
 const config = {
-  // baseURL: 'https://engage-hub-platform-dev.herokuapp.com/api/v1',
-  baseURL: "http://localhost:8080/api/v1",
+  baseURL: "https://engage-hub-platform-dev.herokuapp.com/api/v1",
+  // baseURL: "http://localhost:8080/api/v1",
   headers: {
     "Cache-Control": "no-cache",
     "Content-Type": "application/json; charset=utf-8",
