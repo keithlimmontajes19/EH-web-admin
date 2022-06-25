@@ -1,29 +1,35 @@
-import { ReactElement, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import type { PropsType } from './types';
+import { ReactElement, useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import type { PropsType } from "./types";
 
 /* styled antd */
-import { Layout, PageHeader, Input, Row, Col } from 'antd';
-import { StyledButtonCreate, ModalContainer, InputStyles } from './styled';
+import {
+  HeaderStyles,
+  DivEmptyStyles,
+  ImgEmptyStyles,
+} from "compositions/Announcements/styled";
+import { Layout, PageHeader, Input, Row, Col } from "antd";
+import { StyledButtonCreate, ModalContainer, InputStyles } from "./styled";
 
 /* components */
-import Screen from 'components/Screen';
-import PublishOnBoarding from 'compositions/PublishOnBoarding';
+import Screen from "components/Screen";
+import PublishOnBoarding from "compositions/PublishOnBoarding";
+import NoScreenImage from "assets/images/no-screens-table.png";
 
 /* reducer action */
 import {
   deleteOnboading,
   getOneOnboarding,
   getOnboardingList,
-} from 'ducks/onboarding/actionCreator';
-import { RootState } from 'ducks/store';
-import { useSelector, useDispatch } from 'react-redux';
+} from "ducks/onboarding/actionCreator";
+import { RootState } from "ducks/store";
+import { useSelector, useDispatch } from "react-redux";
 
 const OnboardingScreens = (props: PropsType): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [screenname, setScreenname] = useState('');
+  const [screenname, setScreenname] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const { onboarding_list }: any = useSelector<RootState>(
@@ -49,7 +55,7 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
   const titleChecker = screenname.length > 0;
 
   return (
-    <Layout style={{ background: 'none' }}>
+    <Layout style={{ background: "none" }}>
       <PageHeader
         ghost={false}
         extra={[
@@ -81,25 +87,32 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
         ]}
       />
 
-      <Row justify="center">
-        {(onboarding_list?.data || [])?.map((item, index) => (
-          <Col>
-            <Screen
-              key={index}
-              item={item}
-              id={item?._id}
-              name={item?.name}
-              title={item?.title}
-              uri={item?.imageURL}
-              descreption={item?.description}
-              screentitle={item?.screentitle}
-              getOneOnboarding={getOneOnboarding}
-              deleteOnboading={deleteOnboading}
-              getOnboardingList={getOnboardingList}
-            />
-          </Col>
-        ))}
-      </Row>
+      {!onboarding_list?.data.length ? (
+        <div style={DivEmptyStyles}>
+          <img src={NoScreenImage} style={ImgEmptyStyles}></img>
+          <h3 style={HeaderStyles}>No Screens</h3>
+        </div>
+      ) : (
+        <Row justify="center">
+          {(onboarding_list?.data || [])?.map((item, index) => (
+            <Col>
+              <Screen
+                key={index}
+                item={item}
+                id={item?._id}
+                name={item?.name}
+                title={item?.title}
+                uri={item?.imageURL}
+                descreption={item?.description}
+                screentitle={item?.screentitle}
+                getOneOnboarding={getOneOnboarding}
+                deleteOnboading={deleteOnboading}
+                getOnboardingList={getOnboardingList}
+              />
+            </Col>
+          ))}
+        </Row>
+      )}
     </Layout>
   );
 };

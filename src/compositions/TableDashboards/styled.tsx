@@ -50,9 +50,13 @@ export const StyledButton: any = styled(Button)`
   font-weight: 700;
 `;
 
-export const TableContainer: any = styled(Layout)`
+export const TableContainer: any = styled<any>(Layout)`
   .ant-table {
     background: transparent;
+  }
+
+  .ant-layout {
+    backgroud: none !important;
   }
 
   .ant-table-cell::before {
@@ -69,13 +73,19 @@ export const TableContainer: any = styled(Layout)`
     height: 60px;
   }
 
+  .ant-table thead tr .ant-table-cell {
+    background: #635ffa15;
+  }
+
+  .ant-table-tbody > tr > td {
+    background: ${(props): any => (props.hasData ? "#635ffa15" : "#fff")};
+  }
+
   .ant-table-cell {
     font-size: 20px;
     font-weight: 400;
     color: #2b2e4a;
-    padding: 0 16px;
     overflow: hidden;
-    background: #635ffa15;
   }
 
   .ant-table-row > .ant-table-cell:nth-child(3) {
@@ -168,5 +178,13 @@ export const TableContainer: any = styled(Layout)`
     font-size: 18px;
     font-weight: 500;
     cursor: pointer;
+  }
+
+  // pophover css here
+
+  .ant-popover-inner {
+    background-color: #fff;
+    background-clip: padding-box;
+    border-radius: 15px !important;
   }
 `;
