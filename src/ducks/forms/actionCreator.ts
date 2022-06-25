@@ -26,3 +26,7 @@ export const deleteForm = (payload) => ({
   type: TYPES.DELETE_FORMS_REQUEST,
   payload,
 });
+
+export const getAllResults = () => ({
+  type: TYPES.GET_ALL_RESULTS_REQUEST,
+});

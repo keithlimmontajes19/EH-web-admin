@@ -67,9 +67,9 @@ const EditForm = (props: PropsType): ReactElement => {
       setQuestionAnswer(values);
     } else {
       const findIndex = values.findIndex((x) => x === item);
-      const sliceItem = values.slice(0, findIndex);
+      values.splice(findIndex, 1);
 
-      setQuestionAnswer(sliceItem);
+      setQuestionAnswer(values);
     }
   };
 
