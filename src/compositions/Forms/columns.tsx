@@ -22,7 +22,7 @@ export const columns: any = (
     dataIndex: "title",
     width: "35%",
     maxWidth: "35%",
-    render: (record) => <TextStyled>{record.toUpperCase()}</TextStyled>,
+    render: (record) => <TextStyled>{record}</TextStyled>,
   },
   {
     key: 2,
@@ -40,7 +40,11 @@ export const columns: any = (
     align: "center",
     width: "35%",
     maxWidth: "35%",
-    render: (record) => moment(record).format("MM/DD/YYYY"),
+    render: (record) => (
+      <span style={{ color: "#4C4B7B", fontSize: 16 }}>
+        {moment(record).format("MM/DD/YYYY")}
+      </span>
+    ),
   },
   {
     key: 4,

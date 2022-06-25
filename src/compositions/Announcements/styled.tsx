@@ -177,3 +177,11 @@ export const Contentdiv = styled.div`
 `;
 
 export const BuildIcon = styled.img``;
+
+export const TextStyled = styled.span`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 25px;
+  color: #4c4b7b;
+`;

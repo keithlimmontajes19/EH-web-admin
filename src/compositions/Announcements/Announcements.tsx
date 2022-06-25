@@ -106,10 +106,12 @@ const Announcements = (props: PropsType): ReactElement => {
               dispatch,
               deleteAnnouncements,
               setSelected,
-              setEditShow
+              setEditShow,
+              selectedRowKeys
             )}
+            rowKey="_id"
             onRow={rowListener}
-            // rowSelection={rowSelection}
+            rowSelection={rowSelection}
             loading={{ indicator: <Loading />, spinning: loading }}
           />
 

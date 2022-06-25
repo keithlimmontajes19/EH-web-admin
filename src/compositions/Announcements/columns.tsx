@@ -1,8 +1,14 @@
 /* antd icons styled */
 import moment from "moment";
+
+import {
+  MoreOutlined,
+  EditOutlined,
+  DeleteFilled,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { Tag, Popover } from "antd";
-import { Contentdiv, StyledText, PopupContainer } from "./styled";
-import { MoreOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Contentdiv, StyledText, PopupContainer, TextStyled } from "./styled";
 
 const convertSnakeCase = (string) => {
   const word = string ? string.replace("_", " ") : "";
@@ -13,12 +19,14 @@ export const columns = (
   dispatch,
   deleteAnnouncements,
   setSelected,
-  setEditShow
+  setEditShow,
+  selectedRowKeys
 ): any => [
   {
     key: "1",
     title: <StyledText fS={20}>TITLE</StyledText>,
     dataIndex: "title",
+    render: (record: string) => <TextStyled>{record}</TextStyled>,
   },
   {
     key: "2",
@@ -27,7 +35,7 @@ export const columns = (
     dataIndex: "organization",
     render: (record: any) => {
       return (
-        <span>
+        <span style={{ color: "#4C4B7B", fontSize: 16 }}>
           {(record || []).map((item, index) => {
             return `${convertSnakeCase(item?.name)}${
               record.length > 1 && index !== record.length - 1 ? ", " : ""
@@ -77,12 +85,27 @@ export const columns = (
     align: "center",
     title: <StyledText fS={20}>DATE ADDED</StyledText>,
     dataIndex: "createdAt",
-    render: (record) => moment(record).format("MM/DD/Y"),
+    render: (record) => (
+      <span style={{ color: "#4C4B7B", fontSize: 16 }}>
+        {moment(record).format("MM/DD/Y")}
+      </span>
+    ),
   },
   {
     key: "5",
     dataIndex: "_id",
     align: "center",
+    title: (
+      <a
+        onClick={() => {
+          selectedRowKeys.forEach((item) => {
+            setTimeout(() => dispatch(deleteAnnouncements(item)), 500);
+          });
+        }}
+      >
+        <DeleteFilled style={{ color: "#635ffa" }} />
+      </a>
+    ),
     width: 50,
     render: (record, object) => {
       return (
