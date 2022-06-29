@@ -25,6 +25,7 @@ import SETTING_ICON from "assets/icons/setting-icon.png";
 
 import ProfileEditUser from "compositions/ProfileEditUser";
 import ProfileEditTeam from "compositions/ProfileEditTeam";
+import ProfileInviteUser from "compositions/ProfileInviteUser";
 
 const ProfileDetails = (): ReactElement => {
   const history = useHistory();
@@ -88,7 +89,9 @@ const ProfileDetails = (): ReactElement => {
           style={{ background: theme.HEADER }}
           extra={[
             <StyledCancel>REMOVE</StyledCancel>,
-            <StyledInvite>INVITE</StyledInvite>,
+            <StyledInvite onClick={() => setInviteModal(true)}>
+              INVITE
+            </StyledInvite>,
           ]}
           title={
             <StyledInput
@@ -103,14 +106,15 @@ const ProfileDetails = (): ReactElement => {
       <StyledTable
         rowkey="_id"
         pagination={false}
-        columns={columns(setEditUserModal)}
         onRow={rowListener}
         dataSource={DUMMY_DATA}
         rowSelection={rowSelection}
+        columns={columns(setEditUserModal)}
       />
 
       <ProfileEditUser visible={editUserModal} setVisible={setEditUserModal} />
       <ProfileEditTeam visible={editTeamModal} setVisible={setEditTeamModal} />
+      <ProfileInviteUser visible={inviteModal} setVisible={setInviteModal} />
     </Container>
   );
 };
