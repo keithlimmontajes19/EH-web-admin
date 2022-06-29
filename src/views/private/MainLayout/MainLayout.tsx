@@ -1,43 +1,40 @@
 import { ReactElement, useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
 /* styles and ant design */
 import {
-  TeamOutlined,
-  HomeOutlined,
-  PlaySquareOutlined,
-  FileTextOutlined,
-  ExpandOutlined,
-  NotificationOutlined,
-  PaperClipOutlined,
-  AppstoreOutlined,
-  FolderOutlined,
-  BookOutlined,
-  FolderOpenOutlined,
-  ClockCircleOutlined,
-  UserOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { theme } from "utils/colors";
-import { Layout, Menu, Avatar, Input, Row } from "antd";
-import { useHistory, useLocation } from "react-router-dom";
-import {
-  HeaderStyled,
-  StyledLayout,
-  StyledSubMenu,
-  LayoutStyles,
-  MenuItemOnSelect,
   Searchdiv,
-  SearchIcon,
   StyledMenu,
   ItemTextDiv,
+  HeaderStyled,
+  StyledLayout,
+  LayoutStyles,
+  StyledSubMenu,
+  MenuItemOnSelect,
 } from "./styled";
 
-import searchicon from "../../../assets/icons/search-icon.svg";
-
-const { Search } = Input;
+import {
+  TeamOutlined,
+  HomeOutlined,
+  BookOutlined,
+  UserOutlined,
+  ExpandOutlined,
+  FolderOutlined,
+  SearchOutlined,
+  FileTextOutlined,
+  AppstoreOutlined,
+  PaperClipOutlined,
+  PlaySquareOutlined,
+  FolderOpenOutlined,
+  ClockCircleOutlined,
+  NotificationOutlined,
+} from "@ant-design/icons";
+import { theme } from "utils/colors";
+import { Layout, Menu, Avatar, Input } from "antd";
 
 /* components */
 import NavigationContent from "navigations/privateRoute";
+import PopoverProfile from "compositions/PopoverProfile";
 
 const { Sider, Content } = Layout;
 
@@ -48,6 +45,7 @@ const teamItems = [
   { name: "Forms", link: "forms", icon: PaperClipOutlined },
   { name: `Onboarding \nScreens`, link: "onboarding", icon: ExpandOutlined },
 ];
+
 const learnItems = [
   { name: "Courses", link: "courses", icon: FolderOutlined },
   { name: "Lessons", link: "lessons", icon: BookOutlined },
@@ -108,11 +106,17 @@ const MainLayout = (): ReactElement => {
           <Input
             size="large"
             placeholder="search"
-            style={{ borderRadius: "10px", width: "497px", height: "48px" }}
             prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
+            style={{ borderRadius: "10px", width: "497px", height: "48px" }}
           />
         </Searchdiv>
-        <Avatar size={64} icon={<UserOutlined style={{ padding: "0px" }} />} />
+
+        <PopoverProfile name="Keith Lim Montajes" organization="Organization">
+          <Avatar
+            size={64}
+            icon={<UserOutlined style={{ padding: "0px" }} />}
+          />
+        </PopoverProfile>
       </HeaderStyled>
       <Layout>
         <Sider
@@ -120,8 +124,6 @@ const MainLayout = (): ReactElement => {
             if (collapsed) setCollapsed(false);
           }}
           collapsed={collapsed}
-          // onMouseOver={() => setCollapsed(false)}
-          // onMouseLeave={()=>setCollapsed(true)}
           collapsedWidth={100}
           width={250}
         >
