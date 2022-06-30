@@ -6,17 +6,17 @@ import { List } from "antd";
 import { Table, Tag, Space } from "antd";
 
 // image imported here
-import listicon1 from "../../../assets/icons/recent-icon-1.svg";
-import listicon2 from "../../../assets/icons/recent-icon-2.svg";
-import listicon3 from "../../../assets/icons/recent-icon-3.svg";
-import listicon4 from "../../../assets/icons/recent-icon-4.svg";
-import viewicon from "../../../assets/icons/viewicon.svg";
-import doticon from "../../../assets/icons/dot-icon.svg";
-import greendot from "../../../assets/icons/greendot.svg";
-import reddot from "../../../assets/icons/red-dot.svg";
-import orgicon from "../../../assets/icons/orgicon.svg";
-import clockicon from "../../../assets/icons/clockicon.svg";
-import noannouncment from "../../../assets/images/noannouncement.png";
+import listicon1 from "assets/icons/recent-icon-1.svg";
+import listicon2 from "assets/icons/recent-icon-2.svg";
+import listicon3 from "assets/icons/recent-icon-3.svg";
+import listicon4 from "assets/icons/recent-icon-4.svg";
+import viewicon from "assets/icons/viewicon.svg";
+import doticon from "assets/icons/dot-icon.svg";
+import greendot from "assets/icons/greendot.svg";
+import reddot from "assets/icons/red-dot.svg";
+import orgicon from "assets/icons/orgicon.svg";
+import clockicon from "assets/icons/clockicon.svg";
+import noannouncment from "assets/images/noannouncement.png";
 
 import type { PropsType } from "./types";
 import {
