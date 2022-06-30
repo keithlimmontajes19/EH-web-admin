@@ -3,12 +3,18 @@ import { useHistory } from "react-router-dom";
 import type { PropsType } from "./types";
 
 /* styled antd */
+import {
+  HeaderStyles,
+  DivEmptyStyles,
+  ImgEmptyStyles,
+} from "compositions/Announcements/styled";
 import { Layout, PageHeader, Input, Row, Col } from "antd";
-import { StyledButtonCreate, ModalContainer } from "./styled";
+import { StyledButtonCreate, ModalContainer, InputStyles } from "./styled";
 
 /* components */
 import Screen from "components/Screen";
 import PublishOnBoarding from "compositions/PublishOnBoarding";
+import NoScreenImage from "assets/images/no-screens-table.png";
 
 /* reducer action */
 import {
@@ -71,13 +77,7 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
             >
               <Input
                 size="large"
-                style={{
-                  borderRadius: "15px",
-                  background: "#F8F8F8",
-                  width: "485px",
-                  height: "38px",
-                  margin: "10px 0px",
-                }}
+                style={InputStyles}
                 placeholder="Enter onboarding name"
                 onChange={(e) => setScreenname(e.target.value)}
               />
@@ -87,25 +87,32 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
         ]}
       />
 
-      <Row justify="center">
-        {(onboarding_list?.data || [])?.map((item, index) => (
-          <Col>
-            <Screen
-              key={index}
-              item={item}
-              id={item?._id}
-              name={item?.name}
-              title={item?.title}
-              uri={item?.imageURL}
-              descreption={item?.description}
-              screentitle={item?.screentitle}
-              getOneOnboarding={getOneOnboarding}
-              deleteOnboading={deleteOnboading}
-              getOnboardingList={getOnboardingList}
-            />
-          </Col>
-        ))}
-      </Row>
+      {!onboarding_list?.data.length ? (
+        <div style={DivEmptyStyles}>
+          <img src={NoScreenImage} style={ImgEmptyStyles}></img>
+          <h3 style={HeaderStyles}>No Screens</h3>
+        </div>
+      ) : (
+        <Row justify="center">
+          {(onboarding_list?.data || [])?.map((item, index) => (
+            <Col>
+              <Screen
+                key={index}
+                item={item}
+                id={item?._id}
+                name={item?.name}
+                title={item?.title}
+                uri={item?.imageURL}
+                descreption={item?.description}
+                screentitle={item?.screentitle}
+                getOneOnboarding={getOneOnboarding}
+                deleteOnboading={deleteOnboading}
+                getOnboardingList={getOnboardingList}
+              />
+            </Col>
+          ))}
+        </Row>
+      )}
     </Layout>
   );
 };

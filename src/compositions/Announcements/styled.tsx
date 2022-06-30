@@ -11,11 +11,13 @@ export const StyledButton: any = styled(Button)`
   font-size: 20px;
   font-weight: 700;
 `;
+
 export const StyledText: any = styled.span`
   color: ${({ fC }: any) => (fC ? fC : `#635FFA`)};
-  font-size: ${({ fS }: any) => (fS ? fS : 28)}px;
+  font-size: ${({ fS }: any) => (fS ? fS : 20)}px;
   font-weight: ${({ fW }: any) => (fW ? fW : 700)};
 `;
+
 export const StyledInput: any = styled(Input)`
   width: 497px;
   height: 48px;
@@ -27,9 +29,13 @@ export const StyledInput: any = styled(Input)`
   font-weight: 400;
 `;
 
-export const TableContainer: any = styled(Layout)`
+export const TableContainer: any = styled<any>(Layout)`
   .ant-table {
     background: transparent;
+  }
+
+  .ant-layout {
+    backgroud: none !important;
   }
 
   .ant-table-cell::before {
@@ -46,12 +52,19 @@ export const TableContainer: any = styled(Layout)`
     height: 60px;
   }
 
+  .ant-table thead tr .ant-table-cell {
+    background: #635ffa15;
+  }
+
+  .ant-table-tbody > tr > td {
+    background: ${(props): any => (props.hasData ? "#635ffa15" : "#fff")};
+  }
+
   .ant-table-cell {
     font-size: 20px;
     font-weight: 400;
     color: #2b2e4a;
     overflow: hidden;
-    background: #635ffa15;
   }
 
   .ant-table-row > .ant-table-cell:nth-child(3) {
@@ -160,8 +173,8 @@ export const PopupContainer = styled.div`\
   flex-direction:row;
   align-items:center;
   justify-content:space-between;
-
 `;
+
 export const Contentdiv = styled.div`
   display: flex;
   align-items: center;
@@ -169,7 +182,37 @@ export const Contentdiv = styled.div`
   margin-right: 25px;
   opacity: 0.8;
   cursor: pointer;
-  font-weight: 700;
-  color: ;
+  font-weight: 400;
+  color: #4c4b7b;
+  font-size: 18px;
 `;
+
 export const BuildIcon = styled.img``;
+
+export const TextStyled = styled.span`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 25px;
+  color: #4c4b7b;
+`;
+
+export const HeaderStyles = {
+  padding: "10px",
+  fontSize: "22px",
+  fontWeight: "500",
+  color: "#2B2E4A !important",
+};
+
+export const DivEmptyStyles: any = {
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column",
+  backgroundColor: "#fff",
+  padding: 120,
+};
+
+export const ImgEmptyStyles = {
+  width: "87px",
+  height: "109px",
+};

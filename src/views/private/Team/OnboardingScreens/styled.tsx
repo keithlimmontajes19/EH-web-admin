@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { Button, Layout, Modal } from "antd";
-import { isExportDeclaration } from "typescript";
+import styled from 'styled-components';
+import { Button, Layout, Modal } from 'antd';
+import { isExportDeclaration } from 'typescript';
 
 export const Container = styled.div``;
 
@@ -61,7 +61,7 @@ export const TableContainer: any = styled(Layout)`
   }
 
   tbody:before {
-    content: "@";
+    content: '@';
     display: block;
     line-height: 20px;
     text-indent: -99999px;
@@ -159,6 +159,7 @@ export const ScreensContainer = styled(Layout)`
   align-itmes: center;
   justify-content: space-evenly;
 `;
+
 export const ModalContainer = styled(Modal)`
   .ant-modal-content {
     border-radius: 15px;
@@ -215,3 +216,11 @@ export const ModalContainer = styled(Modal)`
     border: none;
   }
 `;
+
+export const InputStyles = {
+  width: '485px',
+  height: '38px',
+  margin: '10px 0px',
+  borderRadius: '15px',
+  background: '#F8F8F8',
+};

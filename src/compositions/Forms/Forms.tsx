@@ -1,175 +1,141 @@
-import { ReactElement, useState } from "react";
-import type { PropsType } from "./types";
-import {
-  StyledText,
-  StyledButton,
-  StyledInput,
-  StyledButtonResult,
-  TableContainer,
-  ModalContainer,
-} from "./styled";
-import { Layout, PageHeader, Table, Input, Empty } from "antd";
-import { History } from "history";
-import NoForms from 'assets/icons/NoFormsIcon.svg'
-import Results from "compositions/Results";
-
-import { SearchOutlined, DeleteFilled } from "@ant-design/icons";
+import { ReactElement, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
-const columns = [
-  {
-    key: "1",
-    title: <StyledText fS={20}>TITLE</StyledText>,
-    dataIndex: "title",
-    width: "35%",
-    maxWidth: "35%",
-  },
-  {
-    key: "2",
-    title: <StyledText fS={20}>FORM TYPE</StyledText>,
-    dataIndex: "formtype",
-    width: "35%",
-    maxWidth: "35%",
-  },
-  {
-    key: "3",
-    title: <StyledText fS={20}>DATEADDED</StyledText>,
-    dataIndex: "date",
-    width: "35%",
-    maxWidth: "35%",
-  },
-  {
-    key: 4,
-    title: <DeleteFilled style={{ color: "#635ffa" }} />,
-    width: "15%",
-    maxWidth: "15%",
-  },
-];
+import {
+  StyledText,
+  StyledInput,
+  ButtonLabel,
+  StyledButton,
+  ButtonStyled,
+  HeaderStyles,
+  DivEmptyStyles,
+  TableContainer,
+  ModalContainer,
+  ImgEmptyStyles,
+  InputCreateStyles,
+  StyledButtonResult,
+} from "./styled";
 
-const data = [
-  {
-    key: 1,
-    title: "sample_survey",
-    formtype: "SURVEY",
-    date: "05/05/2022",
-  },
-  {
-    key: 2,
-    title: "sample_survey2",
-    formtype: "SURVEY",
-    date: "06/05/2022",
-  },
-  {
-    key: 3,
-    title: "test3",
-    formtype: "QUIZE",
-    date: "07/05/2022",
-  },
-];
+import { columns } from "./columns";
+import { SearchOutlined } from "@ant-design/icons";
+import { Layout, PageHeader, Table, Input } from "antd";
 
-const Forms = (props: PropsType): ReactElement => {
+import Results from "compositions/Results";
+import NoForms from "assets/icons/NoFormsIcon.svg";
+
+/* reducer action */
+import {
+  getForms,
+  deleteForm,
+  getOneForm,
+  getAllResults,
+} from "ducks/forms/actionCreator";
+import { RootState } from "ducks/store";
+import { useSelector, useDispatch } from "react-redux";
+
+const Forms = (): ReactElement => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const [formtitle, setFormName] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [formtitle, setFormName] = useState("")
-  const history = useHistory()
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+  const {
+    results,
+    forms: { data, loading },
+  }: any = useSelector<RootState>((states) => states.forms);
+
+  const modalShowClose = () => setIsModalVisible(!isModalVisible);
 
   const handleOk = () => {
     setIsModalVisible(false);
-    history.push(`/team/forms/createforms/${formtitle}`)
-
+    history.push(`/team/forms/createforms/${formtitle}`);
   };
 
-  const handleCancel = () => {
-    setIsModalVisible(false);
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
   };
 
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
+  useEffect(() => {
+    dispatch(getForms());
+    dispatch(getAllResults());
+  }, []);
 
   return (
     <>
       <Layout style={{ paddingRight: 50, background: "transparent" }}>
-        <TableContainer style={{ background: "none" }}>
+        <TableContainer style={{ background: "none" }} hasData={data.length}>
           <PageHeader
             ghost={false}
             title={<StyledText fS={30}>Forms</StyledText>}
-            style={{ background: "none", paddingTop: 8 }}
+            style={{ paddingTop: 8 }}
             extra={[
               data.length === 0 ? (
-                <StyledButtonResult>See Results</StyledButtonResult>
+                <StyledButtonResult type="default">
+                  SEE RESULTS
+                </StyledButtonResult>
               ) : (
-                <>
-                  <Results />
-                </>
+                <Results data={results?.data} loading={results?.loading} />
               ),
               <>
-                <StyledButton onClick={showModal}>Create</StyledButton>
+                <StyledButton onClick={modalShowClose}>CREATE</StyledButton>
                 <ModalContainer
-                  visible={isModalVisible}
-                  title="Create Forms"
-                  onCancel={handleCancel}
-                  onOk={handleOk}
                   centered
+                  onOk={handleOk}
+                  title="Create Forms"
+                  maskClosable={false}
+                  visible={isModalVisible}
+                  onCancel={modalShowClose}
+                  footer={[
+                    <ButtonStyled onClick={handleOk}>
+                      <ButtonLabel>CREATE</ButtonLabel>
+                    </ButtonStyled>,
+                  ]}
                 >
                   <Input
-                    placeholder="Sample Announcement_2"
-                    style={{
-                      borderRadius: "15px",
-                      background: "#F8F8F8",
-                      width: "485px",
-                      height: "38px",
-                      margin: "10px 0px",
-
-                    }}
-                    onChange={(e) => setFormName(e.target.value)}
                     size="large"
-                    aria-placeholder="Form Name 1"
-                    defaultValue="Form Name 1"
-                  ></Input>
+                    style={InputCreateStyles}
+                    placeholder="Input form name"
+                    onChange={(e) => setFormName(e.target.value)}
+                  />
                 </ModalContainer>
               </>,
             ]}
           />
+
           <StyledInput
             placeholder="Search Forms"
-            // defaultValue={"search here"}
-            // onChange={handleSearch}
             prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
-          {data.length === 0 ? (<>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: "80px",
-              }}
-            >
-              <img
-                src={NoForms}
-                style={{
-                  height: "109px",
-                  width: "87px",
-                }}
-              ></img>
-              <h3
-                style={{
-                  padding: "10px",
-                  fontWeight: "500",
-                  fontSize: "22px",
-                  color: "#2B2E4A !important",
-                }}
-              >
-                No Forms
-              </h3>
-            </div>
 
-          </>) : <>
-            <Table columns={columns} dataSource={data} />
-
-          </>}
+          <Table
+            rowKey="_id"
+            dataSource={data}
+            loading={loading}
+            pagination={false}
+            columns={columns(
+              selectedRowKeys,
+              dispatch,
+              deleteForm,
+              history,
+              getOneForm
+            )}
+            rowSelection={rowSelection}
+            locale={{
+              emptyText: (
+                <div style={DivEmptyStyles}>
+                  <img src={NoForms} style={ImgEmptyStyles}></img>
+                  <h3 style={HeaderStyles}>No Forms</h3>
+                </div>
+              ),
+            }}
+          />
         </TableContainer>
       </Layout>
     </>

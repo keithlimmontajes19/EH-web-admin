@@ -1,5 +1,15 @@
 import { ReactElement } from "react";
-import { Table, Modal, Input, PageHeader, Layout } from "antd";
+import {
+  Table,
+  Modal,
+  Input,
+  PageHeader,
+  Layout,
+  Space,
+  Row,
+  Collapse,
+  Spin,
+} from "antd";
 import { useEffect, useState } from "react";
 import Collapsetab from "components/Collapsetab";
 import {
@@ -7,14 +17,10 @@ import {
   EditOutlined,
   DeleteOutlined,
   EyeFilled,
+  EnterOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
-import {
-  StyledButton,
-  StyledInput,
-  StyledText,
-  TableContainer,
-  BuildIcon,
-} from "./styled";
+import { StyledButton, StyledInput, TableContainer, BuildIcon } from "./styled";
 
 // icons imorted here
 import nopages from "../../assets/icons/nopages.svg";
@@ -23,17 +29,15 @@ import hammericon from "../../assets/icons/hammer-icon.svg";
 import type { PropsType } from "./types";
 import { useHistory } from "react-router-dom";
 
-import { } from "./styled";
-
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "ducks/store";
-import { getDashboard } from "ducks/dashboard/actionCreator";
+import Text from "components/Text";
 import Loading from "components/Loading";
+import { deletePage, getPages, updatePage } from "ducks/pages/actionCreator";
+import { theme } from "utils/colors";
 
 const TablePages = (props: PropsType): ReactElement => {
-  const { data: rawData }: any = useSelector<RootState>(
-    (state) => state.dashboard
-  );
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
@@ -47,38 +51,79 @@ const TablePages = (props: PropsType): ReactElement => {
   const pushHistory = (route: string) => {
     history.push(route);
   };
+
+  const makeTitle = (record) => {
+    const { forms } = record;
+    const testA = forms ? forms.length > 0 : false;
+    const toCollapse = (arr) => (
+      <Collapse ghost>
+        <Collapse.Panel header={record?.title} key="2">
+          {typeof arr[0] !== "object" ? (
+            <p>
+              <EnterOutlined
+                style={{
+                  transform: "scale(-1,1)",
+                  margin: "0 10px 0 21px",
+                }}
+              />
+              <Spin indicator={<LoadingOutlined spin />} />
+            </p>
+          ) : (
+            arr.map(({ title }) => (
+              <p>
+                <EnterOutlined
+                  style={{
+                    transform: "scale(-1,1)",
+                    margin: "0 10px 0 21px",
+                  }}
+                />
+                <span style={{ color: theme.BLACK }}>{String(title)}</span>
+              </p>
+            ))
+          )}
+        </Collapse.Panel>
+      </Collapse>
+    );
+    return testA ? (
+      toCollapse(forms)
+    ) : (
+      <span className="ant-no-collapse" style={{ marginLeft: 34 }}>
+        {record.title}
+      </span>
+    );
+  };
   const columns = [
     {
       key: "1",
-      title: <StyledText fS={20}>TITLE</StyledText>,
-      dataIndex: "name",
-      width: "35%",
-      maxWidth: "35%",
-    },
-
-    {
-      key: "3",
       title: (
-        <div style={{ textAlign: "right" }}>
-          <span
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              onDeleteData(selectedRowKeys.map((key) => ({ key: key })));
-              setSelectedRowKeys([]);
-            }}
-          >
-            <DeleteOutlined style={{ color: "#635ffa" }} />
-            <StyledText fC="inherit" fS={20}>
-              DELETE
-            </StyledText>
-          </span>
-        </div>
+        <Row align="middle" justify="space-between">
+          <Text fS={20} m="0 0 0 30px">
+            TITLE
+          </Text>
+          <div style={{ textAlign: "right" }}>
+            <span
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                onDeleteData(
+                  dataSource.filter((obj) => selectedRowKeys.includes(obj.key))
+                );
+                setSelectedRowKeys([]);
+              }}
+            >
+              <DeleteOutlined style={{ color: "#635ffa" }} />
+              <Text fC="inherit" fS={20}>
+                DELETE
+              </Text>
+            </span>
+          </div>
+        </Row>
       ),
       minWidth: 350,
-      render: (record) => {
-        return (
-          <>
-            <div className="row-actions">
+      render: (rec, record, iB) => ({
+        children: (
+          <Row align="middle" justify="space-between">
+            {makeTitle(record)}
+            <Space className="row-actions" size={"middle"}>
               <span onClick={() => onEditData(record)}>
                 <EditOutlined style={{ color: "#635ffa" }} />
                 &nbsp;RENAME
@@ -89,7 +134,11 @@ const TablePages = (props: PropsType): ReactElement => {
                 &nbsp;VIEW
               </span>
               &nbsp; &nbsp; &nbsp;
-              <span onClick={() => onEditData(record)}>
+              <span
+                onClick={() =>
+                  pushHistory(`/team/pages/builder/${record?._id}`)
+                }
+              >
                 <BuildIcon src={hammericon} style={{ color: "#635ffa" }} />
                 &nbsp;BUILDER
               </span>
@@ -98,16 +147,18 @@ const TablePages = (props: PropsType): ReactElement => {
                 <DeleteOutlined style={{ color: "#635ffa" }} />
                 &nbsp;DELETE
               </span>
-            </div>
-            {/* <Collapsetab title="page1" /> */}
-          </>
-        );
-      },
+            </Space>
+          </Row>
+        ),
+      }),
     },
   ];
   useEffect(() => {
-    getDashboard();
+    dispatch(getPages());
   }, []);
+
+  const { data: rawData }: any = useSelector<RootState>((state) => state.pages);
+
   useEffect(() => {
     if (!rawData.length) return;
     setDataSource(
@@ -118,6 +169,7 @@ const TablePages = (props: PropsType): ReactElement => {
     );
     setLoading(false);
   }, [rawData]);
+
   useEffect(() => {
     if (searchInpt === "") return;
     setSearchdData(
@@ -129,21 +181,6 @@ const TablePages = (props: PropsType): ReactElement => {
     );
   }, [dataSource]);
 
-  const onAddData = () => {
-    const newKey = dataSource.length;
-    const newData = {
-      _id: newKey,
-      key: newKey,
-      name: "Name " + newKey,
-      email: newKey + "@gmail.com",
-      department: "Address " + newKey,
-    };
-    setDataSource((pre) => {
-      return [];
-    });
-    console.log("add");
-    pushHistory("/team/pages/createpage");
-  };
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
     Modal.confirm({
@@ -151,6 +188,16 @@ const TablePages = (props: PropsType): ReactElement => {
       okText: "Yes",
       okType: "danger",
       onOk: () => {
+        function recurseDispatch(count = 0) {
+          if (count >= recArr.length) return;
+          dispatch(
+            deletePage({
+              pageId: recArr[count]?._id,
+              callback: () => recurseDispatch(count + 1),
+            })
+          );
+        }
+        recurseDispatch();
         setDataSource((pre) => {
           return pre
             .filter((obj) => recArr.every((record) => record.key !== obj.key))
@@ -169,7 +216,6 @@ const TablePages = (props: PropsType): ReactElement => {
     setEditingData(null);
   };
   const onSelectChange = (newRowKeys) => {
-    console.log("selectedRowKeys changed: ", newRowKeys);
     setSelectedRowKeys(newRowKeys);
   };
   const rowSelection = {
@@ -201,19 +247,12 @@ const TablePages = (props: PropsType): ReactElement => {
     const regX = new RegExp(`${pattern}`, "gi");
     const tmp = [];
     dataSource.forEach((record, i) => {
-      if (regX.test(record?.name + " " + record?.department)) tmp.push(i);
+      if (regX.test(record?.title)) tmp.push(i);
     });
     if (!tmp.length) return setSearchdData([]);
     setSearchdData(dataSource.filter((obj) => tmp.includes(obj.key)));
-    console.log(
-      tmp,
-      dataSource.filter((obj) => tmp.includes(obj.key)),
-      e.target.value,
-      searchInpt
-    );
   };
   const refreshSearchdData = () => {
-    console.log("refresh");
     setSearchdData(
       dataSource.filter((record) =>
         searchdData.some((obj) => obj.key === record.key)
@@ -225,9 +264,13 @@ const TablePages = (props: PropsType): ReactElement => {
       <Layout style={{ paddingRight: 50, background: "transparent" }}>
         <PageHeader
           ghost={false}
-          title={<StyledText fS={30}>Pages</StyledText>}
+          title={<Text fS={30}>Pages</Text>}
           style={{ background: "none", paddingTop: 8 }}
-          extra={[<StyledButton onClick={onAddData}>Create</StyledButton>]}
+          extra={[
+            <StyledButton onClick={() => pushHistory("/team/pages/create")}>
+              CREATE
+            </StyledButton>,
+          ]}
         />
         <TableContainer
           style={{
@@ -288,9 +331,16 @@ const TablePages = (props: PropsType): ReactElement => {
               resetEditing();
             }}
             onOk={() => {
+              console.log("gago");
+              dispatch(
+                updatePage({
+                  data: editingData,
+                  pageId: editingData?._id,
+                })
+              );
+
               setDataSource((pre) => {
                 return pre.map((obj) => {
-                  console.log(obj);
                   if (obj._id === editingData._id) {
                     return editingData;
                   } else {
@@ -302,11 +352,11 @@ const TablePages = (props: PropsType): ReactElement => {
             }}
           >
             <Input
-              value={editingData?.name}
+              value={editingData?.title}
               prefix="Title: "
               onChange={(e) => {
                 setEditingData((pre) => {
-                  return { ...pre, name: e.target.value };
+                  return { ...pre, title: e.target.value };
                 });
               }}
             />

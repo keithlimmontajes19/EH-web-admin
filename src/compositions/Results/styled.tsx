@@ -1,40 +1,40 @@
-import styled from 'styled-components';
-import { Button, Modal } from 'antd';
-import { theme } from 'utils/colors';
+import styled from "styled-components";
+import { Button, Modal } from "antd";
+import { theme } from "utils/colors";
 
-export const Container = styled.div`
-
-`;
+export const Container = styled.div``;
 
 export const StyledButton: any = styled(Button)`
   background: ${theme.PRIMARY};
   color: #fff;
   width: 166px;
-  height: 48px;
+  max-height: 48px;
   border-radius: 8px;
   font-size: 20px;
   font-weight: 700;
+  overflow-y: scroll;
 `;
+
 export const StyledTextHeading: any = styled.span`
-color: ${theme.PRIMARY};
+  color: ${theme.PRIMARY};
   width: 166px;
   height: 48px;
-  
+
   font-size: 20px;
   font-weight: 700;
-`
+`;
 
 export const StyledText: any = styled.span`
-margin: 0;
-    /* color: rgb(54 52 137); */
-    color: ${theme.GRAY};
-    font-weight: 700;
-    font-size: 25px;
-    line-height: 22px;
-    word-wrap: break-word;
-`
+  margin: 0;
+  /* color: rgb(54 52 137); */
+  color: ${theme.GRAY};
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 22px;
+  word-wrap: break-word;
+`;
 
-export const ModalContainer = styled(Modal)`
+export const ModalContainer: any = styled(Modal)`
   .ant-modal-content {
     border-radius: 15px;
     padding: 2px;
@@ -89,4 +89,14 @@ export const ModalContainer = styled(Modal)`
     cursor: pointer;
     border: none;
   }
+`;
+
+export const StyledButtonResult: any = styled.button`
+  width: 166px;
+  height: 48px;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 8px;
+  background-color: #fff !important;
+  color: #635ffa !important;
 `;

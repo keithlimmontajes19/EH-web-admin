@@ -1,1 +1,1 @@
-export {default} from './TableDashboards';
+export { default } from "./TableDashboards";

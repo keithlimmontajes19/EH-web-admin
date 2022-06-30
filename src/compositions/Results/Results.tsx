@@ -1,118 +1,132 @@
-import { ReactElement } from 'react';
-import { useState } from 'react';
-import type { PropsType } from './types';
-import { Modal, Button, Row, Col, Collapse, } from 'antd';
-import { EnterOutlined, CaretDownOutlined } from "@ant-design/icons"
-import { theme } from 'utils/colors';
-import ReactApexChart from 'react-apexcharts'
-import { AgChartsReact } from "ag-charts-react"
+import { Fragment, ReactElement, useState } from "react";
+import type { PropsType } from "./types";
 
-import { StyledButton, ModalContainer, StyledText, StyledTextHeading, Container } from './styled';
+import { theme } from "utils/colors";
+import { Row, Col, Collapse } from "antd";
+import { EnterOutlined } from "@ant-design/icons";
+import { AgChartsReact } from "ag-charts-react";
 
-const data = [
-  { title: ['Sample Survey_1'], participates: 49 },
+import {
+  Container,
+  StyledText,
+  ModalContainer,
+  StyledTextHeading,
+  StyledButtonResult,
+} from "./styled";
 
-];
-
-const pages = [<>Page1</>, "page2", "page3", "page4"]
-var options = {
-  data: [
-    {
-      label: "Sample Answere A",
-      value: 50
-    },
-    {
-      label: "Sample Answere B",
-      value: 25
-    },
-    {
-      label: " Sample Answere C",
-      value: 25
-    }
-  ],
-  series: [
-    {
-      type: "pie",
-      angleKey: "value",
-      labelKey: "label",
-      strokes: "none",
-      fills: ["#AB70F1", "#FF4545", "#FF755B"],
-
-
-    }
-  ],
-  highlightStyle: {
-    fill: "#AB70F1"
-  }
-}
-
-const series = {
-  type: "pie",
-  angleKey: "value",
-  labelKey: "label"
-
-}
 const Results = (props: PropsType): ReactElement => {
+  const { data } = props;
   const [visible, setVisible] = useState(false);
 
-  const toCollapse = (arr, title) => (
-    <Collapse ghost expandIconPosition="right">
+  const toCollapse = (item) => {
+    const colors = [];
 
-      {arr.map((t) => (<>
-        <Collapse.Panel header={<>
-          <Row>
-            <Col><p style={{ padding: '0px !important', margin: '0px' }}>{title}</p><h2 style={{ color: theme.GRAY }}> <EnterOutlined
+    if (item?.statistics) {
+      (item?.statistics || []).forEach((color) => {
+        const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+        colors.push(randomColor);
+      });
+    }
+
+    const options = {
+      data: item?.statistics,
+      series: [
+        {
+          type: "pie",
+          strokes: "none",
+          angleKey: "value",
+          labelKey: "label",
+          fills: colors,
+        },
+      ],
+    };
+
+    return (
+      <Collapse ghost expandIconPosition="right">
+        <Collapse.Panel
+          key={item?._id}
+          header={
+            <Row>
+              <Col>
+                <p style={{ padding: "0px !important", margin: "0px" }}>
+                  {item?.title}
+                </p>
+                {(item?.form || []).map((form) => {
+                  return (
+                    <h2 style={{ color: theme.GRAY }} key={form?._id}>
+                      <EnterOutlined
+                        style={{
+                          margin: "0 10px 0 10px",
+                          transform: "scale(-1,1)",
+                        }}
+                      />
+                      {form?.title}
+                    </h2>
+                  );
+                })}
+              </Col>
+            </Row>
+          }
+        >
+          {item?.form.length ? (
+            <Fragment>
+              {(item?.form || []).map((form) => {
+                return (
+                  <Row justify="end" key={form?._id}>
+                    <Col span={24}>
+                      <StyledTextHeading>
+                        Sample Qusestion #1 ?
+                      </StyledTextHeading>
+                    </Col>
+                  </Row>
+                );
+              })}
+
+              <Row justify="end">
+                <StyledText>{item?.answer.length} Participate</StyledText>
+              </Row>
+              <AgChartsReact options={options} />
+            </Fragment>
+          ) : (
+            <p
               style={{
-                transform: 'scale(-1,1)',
-                margin: '0 10px 0 10px',
+                fontSize: 18,
+                color: "#e6e6e6",
+                textAlign: "center",
               }}
-            />{title}</h2></Col>
-          </Row>
-        </>} key="1" >
-          <Row justify='end' >
-            <Col span={24}>
-              <StyledTextHeading> Sample Qusestion #1 ?</StyledTextHeading>
-            </Col>
-
-          </Row>
-          <Row justify='end'>
-            <StyledText>
-              {t.participates} Participate
-            </StyledText>
-          </Row>
-          <AgChartsReact options={options} />
-
+            >
+              No results found.
+            </p>
+          )}
         </Collapse.Panel>
-      </>
-      ))}
+      </Collapse>
+    );
+  };
 
-    </Collapse >
-  )
-  return <>
+  return (
+    <Fragment>
+      <StyledButtonResult onClick={() => setVisible(true)}>
+        SEE RESULTS
+      </StyledButtonResult>
 
-    <StyledButton onClick={() => setVisible(true)}>
-      See Results
-    </StyledButton>
-    <ModalContainer
-      title="RESULTS"
-      centered
-      visible={visible}
-      onCancel={() => setVisible(false)}
-      onOk={() => setVisible(false)}
-      width={1000}
-      footer={[<StyledButton onClick={() => setVisible(false)}>Publish</StyledButton>]}
-    >
-      <Container>
-        {pages.map((title) => (
-          <>
-            {toCollapse(data, title)}
-          </>
-        ))}
-      </Container>
-
-    </ModalContainer>
-
-  </>;
+      <ModalContainer
+        centered
+        width={1000}
+        footer={false}
+        title="RESULTS"
+        visible={visible}
+        maskClosable={false}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+      >
+        <Container>
+          {(data || []).map((item: any) => (
+            <div key={item?._id}>{toCollapse(item)}</div>
+          ))}
+        </Container>
+      </ModalContainer>
+    </Fragment>
+  );
 };
 
 export default Results;

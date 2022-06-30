@@ -1,15 +1,23 @@
-import { ReactElement } from "react";
+import { Fragment, ReactElement } from "react";
 
-import type { PropsType } from "./types";
+import type { Params, PropsType } from "./types";
 import {} from "./styled";
 
 import TablePages from "compositions/TablePages";
+import { useParams } from "react-router-dom";
+import BuilderPage from "compositions/BuilderPage";
 
 const Pages = (props: PropsType): ReactElement => {
+  const params: Params = useParams();
+
   return (
-    <>
-      <TablePages />
-    </>
+    <Fragment>
+      {params.page ? (
+        <BuilderPage />
+      ) : (
+        <TablePages />
+      )}
+    </Fragment>
   );
 };
 

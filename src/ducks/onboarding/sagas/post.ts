@@ -74,6 +74,7 @@ export function* deleteOnboarding({ payload }: never) {
 export function* editOnboarding({ payload }: any) {
   try {
     yield call(onboarding_serive.editOnboading, payload?.id, payload?.values);
+    yield put({ type: TYPES.GET_ONBOARDING_LIST_REQUEST });
     yield put({
       type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
       payload: {
@@ -100,6 +101,7 @@ export function* editOnboarding({ payload }: any) {
 export function* postOnboarding({ payload }: any) {
   try {
     yield call(onboarding_serive.postOnboarding, payload);
+    yield put({ type: TYPES.GET_ONBOARDING_LIST_REQUEST });
     yield put({
       type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
       payload: {
@@ -134,6 +136,8 @@ export function* publishOnboarding({ payload }: any) {
     yield call(onboarding_serive.publishOnboading, {
       onboarding: data,
     });
+
+    yield put({ type: TYPES.GET_ONBOARDING_LIST_REQUEST });
 
     yield put({
       type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
