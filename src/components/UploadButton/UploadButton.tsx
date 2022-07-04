@@ -17,7 +17,7 @@ const App = ({
    * LOCAL URL http://localhost:8080/api/v1/upload
    * =============================================================
    */
-  const baseURL = "https://engage-hub-platform-dev.herokuapp.com/api/v1";
+  const baseURL = "https://engage-hub-platform-dev.herokuapp.com/api/v1/upload";
 
   const uploadProps: UploadProps = {
     maxCount: 1,

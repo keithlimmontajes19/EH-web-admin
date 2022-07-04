@@ -48,6 +48,11 @@ const PublishOnBoarding = (props: PropsType): ReactElement => {
     }
   };
 
+  const truncate = (string, count) => {
+    const delimiter = "...";
+    return string.length > count ? string.substr(0, count) + delimiter : string;
+  };
+
   const Screens = (item) => {
     const isPublish = selected.includes(item?._id);
     const findIndex = selected.findIndex((x) => x === item?._id);
@@ -108,8 +113,8 @@ const PublishOnBoarding = (props: PropsType): ReactElement => {
                 />
               </ImageContainer>
 
-              <Heading>{item?.title}</Heading>
-              <Description>{item?.description}</Description>
+              <Heading>{truncate(item?.title, 10)}</Heading>
+              <Description>{truncate(item?.description, 38)}</Description>
             </Container>
           </Col>
         </Row>

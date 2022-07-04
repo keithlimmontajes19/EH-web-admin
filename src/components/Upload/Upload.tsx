@@ -1,30 +1,30 @@
-import {ReactElement} from 'react';
-import type {PropsType} from './types';
+import { ReactElement } from "react";
+import type { PropsType } from "./types";
 
-import {StyledText} from './styled';
-import {Upload, message} from 'antd';
+import { StyledText } from "./styled";
+import { Upload, message } from "antd";
 
-const {Dragger} = Upload;
+const { Dragger } = Upload;
 
 const UploadComponent = (props: PropsType): ReactElement => {
-  const {setFileList} = props;
-  const accessToken = localStorage.getItem('accessToken');
-  const API_URL = 'http://localhost:8080/api/file/post';
-  // const API_URL = 'https://noblemen.herokuapp.com/api/file/post';
+  const { setFileList } = props;
+  const accessToken = localStorage.getItem("accessToken");
+  // const API_URL = 'http://localhost:8080/api/file/post';
+  const API_URL = "https://noblemen.herokuapp.com/api/file/post";
 
   const uploadInnerProps = {
-    name: 'file',
+    name: "file",
     multiple: true,
     action: API_URL,
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
     onChange(info) {
-      const {status} = info.file;
-      if (status === 'done') {
+      const { status } = info.file;
+      if (status === "done") {
         filterGetIDs(info.fileList);
         message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
+      } else if (status === "error") {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
