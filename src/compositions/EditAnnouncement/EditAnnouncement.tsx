@@ -140,6 +140,20 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
     }
   };
 
+  const checkifIncludeHttp = (value: string, type: boolean) => {
+    const hasHttp = value.includes("http");
+
+    if (hasHttp && type) {
+      return selected?.videoId;
+    }
+
+    if (hasHttp && !type) {
+      return selected?.imageId;
+    }
+
+    return value;
+  };
+
   const handleSubmit = (status: any) => {
     const payload = {
       title: title,
@@ -149,8 +163,8 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
       startDate: startDate,
       endDate: endDate,
       isPublish: status === "active" ? true : false,
-      videoURL: !isImage ? fileId : null,
-      imageURL: isImage ? fileId : null,
+      videoURL: !isImage ? checkifIncludeHttp(fileId, true) : null,
+      imageURL: isImage ? checkifIncludeHttp(fileId, false) : null,
     };
 
     dispatch(putAnnouncements(selected?._id, payload));
@@ -170,15 +184,15 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
       start_min: moment(selected?.startDate).format("mm"),
       start_hour: moment(selected?.startDate).format("HH"),
       start_date: moment(selected?.startDate).format("DD"),
-      start_year: moment(selected?.startDate).format("YYYY"),
       start_month: moment(selected?.startDate).format("MM"),
+      start_year: moment(selected?.startDate).format("YYYY"),
     });
     setEnd({
       end_min: moment(selected?.endDate).format("mm"),
       end_hour: moment(selected?.endDate).format("HH"),
       end_date: moment(selected?.endDate).format("DD"),
-      end_year: moment(selected?.endDate).format("YYYY"),
       end_month: moment(selected?.endDate).format("MM"),
+      end_year: moment(selected?.endDate).format("YYYY"),
     });
 
     setTitle(selected?.title);
@@ -186,6 +200,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
     setDescription(selected?.description);
     setOrganization(newObjectOrganization);
     setIsimage(selected?.imageURL ? true : false);
+    setFileId(selected?.imageURL ? selected?.imageId : selected?.videoId);
     setFileUrl(selected?.imageURL ? selected?.imageURL : selected?.videoURL);
   }, [selected, editShow]);
 
