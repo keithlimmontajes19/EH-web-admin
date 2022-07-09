@@ -29,9 +29,13 @@ export const StyledInput: any = styled(Input)`
   font-weight: 400;
 `;
 
-export const TableContainer: any = styled(Layout)`
+export const TableContainer: any = styled<any>(Layout)`
   .ant-table {
     background: transparent;
+  }
+
+  .ant-layout {
+    backgroud: none !important;
   }
 
   .ant-table-cell::before {
@@ -48,12 +52,19 @@ export const TableContainer: any = styled(Layout)`
     height: 60px;
   }
 
+  .ant-table thead tr .ant-table-cell {
+    background: #635ffa15;
+  }
+
+  .ant-table-tbody > tr > td {
+    background: ${(props): any => (props.hasData ? "#635ffa15" : "#fff")};
+  }
+
   .ant-table-cell {
     font-size: 20px;
     font-weight: 400;
     color: #2b2e4a;
     overflow: hidden;
-    background: #635ffa15;
   }
 
   .ant-table-row > .ant-table-cell:nth-child(3) {
@@ -177,3 +188,31 @@ export const Contentdiv = styled.div`
 `;
 
 export const BuildIcon = styled.img``;
+
+export const TextStyled = styled.span`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 25px;
+  color: #4c4b7b;
+`;
+
+export const HeaderStyles = {
+  padding: "10px",
+  fontSize: "22px",
+  fontWeight: "500",
+  color: "#2B2E4A !important",
+};
+
+export const DivEmptyStyles: any = {
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column",
+  backgroundColor: "#fff",
+  padding: 120,
+};
+
+export const ImgEmptyStyles = {
+  width: "87px",
+  height: "109px",
+};

@@ -24,9 +24,14 @@ import Results from "compositions/Results";
 import NoForms from "assets/icons/NoFormsIcon.svg";
 
 /* reducer action */
+import {
+  getForms,
+  deleteForm,
+  getOneForm,
+  getAllResults,
+} from "ducks/forms/actionCreator";
 import { RootState } from "ducks/store";
 import { useSelector, useDispatch } from "react-redux";
-import { getForms, deleteForm } from "ducks/forms/actionCreator";
 
 const Forms = (): ReactElement => {
   const history = useHistory();
@@ -37,6 +42,7 @@ const Forms = (): ReactElement => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const {
+    results,
     forms: { data, loading },
   }: any = useSelector<RootState>((states) => states.forms);
 
@@ -58,6 +64,7 @@ const Forms = (): ReactElement => {
 
   useEffect(() => {
     dispatch(getForms());
+    dispatch(getAllResults());
   }, []);
 
   return (
@@ -74,7 +81,7 @@ const Forms = (): ReactElement => {
                   SEE RESULTS
                 </StyledButtonResult>
               ) : (
-                <Results />
+                <Results data={results?.data} loading={results?.loading} />
               ),
               <>
                 <StyledButton onClick={modalShowClose}>CREATE</StyledButton>
@@ -112,7 +119,13 @@ const Forms = (): ReactElement => {
             dataSource={data}
             loading={loading}
             pagination={false}
-            columns={columns(selectedRowKeys, dispatch, deleteForm)}
+            columns={columns(
+              selectedRowKeys,
+              dispatch,
+              deleteForm,
+              history,
+              getOneForm
+            )}
             rowSelection={rowSelection}
             locale={{
               emptyText: (

@@ -4,12 +4,26 @@ import {} from "./styled";
 import { Upload, message, Button } from "antd";
 import type { UploadProps } from "antd";
 
-const App = ({ values, setValues, setImageUrl }: any) => {
+const App = ({
+  values,
+  setValues,
+  setImageUrl,
+  placeholder = "Upload",
+  border = "1px solid #635FFA",
+}: any) => {
+  /**
+   * =============================================================
+   * MAIN URL https://engage-hub-platform-dev.herokuapp.com/api/v1
+   * LOCAL URL http://localhost:8080/api/v1/upload
+   * =============================================================
+   */
+  const baseURL = "https://engage-hub-platform-dev.herokuapp.com/api/v1/upload";
+
   const uploadProps: UploadProps = {
     maxCount: 1,
     name: "file",
+    action: baseURL,
     showUploadList: false,
-    action: "http://localhost:8080/api/v1/upload",
     onChange(info) {
       if (info.file.status === "done") {
         const fileUrl = info?.file?.response?.data?.url;
@@ -28,13 +42,13 @@ const App = ({ values, setValues, setImageUrl }: any) => {
     <Upload {...uploadProps}>
       <Button
         style={{
-          borderRadius: 15,
+          border: border,
           fontWeight: 500,
           color: "#635FFA",
-          border: "1px solid #635FFA",
+          borderRadius: 15,
         }}
       >
-        Upload
+        {placeholder}
       </Button>
     </Upload>
   );

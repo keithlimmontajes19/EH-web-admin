@@ -3,15 +3,22 @@ import { useHistory } from "react-router-dom";
 import type { PropsType } from "./types";
 
 /* styled */
-import { StyledText, StyledInput, TableContainer } from "./styled";
+import {
+  StyledText,
+  StyledInput,
+  HeaderStyles,
+  TableContainer,
+  DivEmptyStyles,
+  ImgEmptyStyles,
+} from "./styled";
 
 /* reducer action */
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
 import {
   getAnnouncements,
   deleteAnnouncements,
 } from "ducks/announcement/actionCreator";
+import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from "react-redux";
 
 /* antd icons */
 import { columns } from "./columns";
@@ -22,6 +29,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import Loading from "components/Loading";
 import EditAnnouncement from "compositions/EditAnnouncement";
 import Createannouncement from "compositions/Createannouncement";
+import NoAnnouncement from "assets/images/no-announcement-table.png";
 
 const Announcements = (props: PropsType): ReactElement => {
   const history = useHistory();
@@ -88,6 +96,7 @@ const Announcements = (props: PropsType): ReactElement => {
           title={<StyledText fS={30}>Announcements</StyledText>}
         />
         <TableContainer
+          hasData={data.length}
           style={{
             paddingLeft: 30,
             paddingRight: 24,
@@ -100,17 +109,28 @@ const Announcements = (props: PropsType): ReactElement => {
             placeholder="Search Pages"
             prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
           />
+
           <Table
             dataSource={data}
             columns={columns(
               dispatch,
               deleteAnnouncements,
               setSelected,
-              setEditShow
+              setEditShow,
+              selectedRowKeys
             )}
+            rowKey="_id"
             onRow={rowListener}
-            // rowSelection={rowSelection}
-            loading={{ indicator: <Loading />, spinning: loading }}
+            rowSelection={rowSelection}
+            loading={loading}
+            locale={{
+              emptyText: (
+                <div style={DivEmptyStyles}>
+                  <img src={NoAnnouncement} style={ImgEmptyStyles}></img>
+                  <h3 style={HeaderStyles}>No Announcement</h3>
+                </div>
+              ),
+            }}
           />
 
           <EditAnnouncement

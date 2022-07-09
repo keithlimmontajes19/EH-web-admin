@@ -1,11 +1,13 @@
 import { Table, Modal, Input, PageHeader, Layout } from "antd";
 import { useEffect, useState } from "react";
 import {
-  SearchOutlined,
-  EditOutlined,
-  DeleteOutlined,
   EyeFilled,
+  DeleteFilled,
+  EditOutlined,
+  SearchOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
+
 import {
   StyledButton,
   StyledInput,
@@ -79,8 +81,8 @@ function TableDashboards() {
               setSelectedRowKeys([]);
             }}
           >
-            <DeleteOutlined style={{ color: "#635ffa" }} />
-            <StyledText fC="inherit" fS={20}>
+            <DeleteFilled style={{ color: "#635ffa" }} />
+            <StyledText fC="inherit" fS={18} fw={700}>
               DELETE
             </StyledText>
           </span>
@@ -139,6 +141,7 @@ function TableDashboards() {
       })
     );
   }, [dataSource]);
+
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
     Modal.confirm({
@@ -229,7 +232,9 @@ function TableDashboards() {
           </StyledButton>,
         ]}
       />
+
       <TableContainer
+        hasData={dataSource.length}
         style={{
           paddingLeft: 30,
           paddingRight: 24,
@@ -242,6 +247,7 @@ function TableDashboards() {
           onChange={handleSearch}
           prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
         />
+
         <Table
           onRow={rowListener}
           rowSelection={rowSelection}
@@ -249,6 +255,7 @@ function TableDashboards() {
           dataSource={searchInpt !== "" ? searchdData : dataSource}
           loading={{ indicator: <Loading />, spinning: loading }}
         />
+
         <Modal
           title="Rename"
           visible={isEditing}
