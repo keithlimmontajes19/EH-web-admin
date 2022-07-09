@@ -3,7 +3,6 @@ import { useHistory, useLocation } from "react-router-dom";
 
 /* styles and ant design */
 import {
-  BarChartOutlined,
   Searchdiv,
   StyledMenu,
   ItemTextDiv,
@@ -22,6 +21,7 @@ import {
   ExpandOutlined,
   FolderOutlined,
   SearchOutlined,
+  BarChartOutlined,
   FileTextOutlined,
   AppstoreOutlined,
   PaperClipOutlined,
