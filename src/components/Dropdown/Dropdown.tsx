@@ -46,7 +46,7 @@ const Dropdown = ({menu = [], title = <></>, disabled = false}) => {
   const menued = (
     <Menu>
       {menu.map((obj, i) => (
-        <Menu.Item onClick={obj.action}>{obj.name}</Menu.Item>
+        <Menu.Item key={i} onClick={obj.action}>{obj.name}</Menu.Item>
       ))}
     </Menu>
   );
