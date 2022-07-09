@@ -2,6 +2,7 @@ import { ReactElement, useEffect, useState } from "react";
 
 /* styles and ant design */
 import {
+  BarChartOutlined,
   TeamOutlined,
   HomeOutlined,
   PlaySquareOutlined,
@@ -53,6 +54,7 @@ const learnItems = [
   { name: "Lessons", link: "lessons", icon: BookOutlined },
   { name: "Topics", link: "topics", icon: FolderOpenOutlined },
   { name: "Quizzes", link: "quizzes", icon: ClockCircleOutlined },
+  { name: "Reports", link: "reports", icon: BarChartOutlined },
 ];
 
 const MainLayout = (): ReactElement => {

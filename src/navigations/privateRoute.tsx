@@ -7,6 +7,7 @@ import Topics from "views/private/Learn/Topics";
 import Courses from "views/private/Learn/Courses";
 import Lessons from "views/private/Learn/Lessons";
 import Quizzes from "views/private/Learn/Quizzes";
+import Reports from "views/private/Learn/Reports";
 
 import Forms from "compositions/Forms";
 import Dashboards from "views/private/Team/Dashboards";
@@ -35,6 +36,7 @@ const Navigation = () => {
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
       <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
       <Route path="/learn/quizzes/:page?/:subpage?/:item?" component={Quizzes} />
+      <Route path="/learn/reports/:page?/:subpage?" component={Reports} />
 
       <Route exact path="/team" component={() => <h1>team index page here</h1>} />
       <Route path="/team/dashboards/:page?/:subpage?" component={Dashboards} />
