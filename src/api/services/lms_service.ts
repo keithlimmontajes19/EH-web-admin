@@ -196,6 +196,38 @@ const auth_services = {
     api.delete(
       `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${quizId}/questions/${questionId}`
     ),
+  postCourseView: (
+    payload: any,
+    organizationId: string,
+  ) => 
+    api.post(
+      `${ORGANIZATION}/${organizationId}/course-reports/course-views`,
+      payload
+    ),
+  getCourseView: (
+    organizationId: string,
+  ) => 
+    api.get(
+      `${ORGANIZATION}/${organizationId}/course-reports/course-views`,
+    ),
+  getCourseReportsStats: () => api.get(`course-reports/stats`),
+  getAllUserReports: () => api.get(`user-reports`),
+  getUserCourseReports: (
+    organizationId: string,
+    userId: string,
+  ) =>
+    api.get(
+      `${ORGANIZATION}/${organizationId}/course-reports/user/${userId}`
+    ),
+  getUserCourseReportsDetails: (
+    organizationId: string,
+    userId: string,
+    courseId: string,
+  ) => 
+    api.get(
+      `${ORGANIZATION}/${organizationId}/course-reports/user/${userId}/course/${courseId}`
+    ),
+  getUserDetails: (userId: string) => api.get(`${USERS}/${userId}`),
 };
 
 export default auth_services;

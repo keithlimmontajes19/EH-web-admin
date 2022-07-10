@@ -21,6 +21,7 @@ import {
   ExpandOutlined,
   FolderOutlined,
   SearchOutlined,
+  BarChartOutlined,
   FileTextOutlined,
   AppstoreOutlined,
   PaperClipOutlined,
@@ -51,6 +52,7 @@ const learnItems = [
   { name: "Lessons", link: "lessons", icon: BookOutlined },
   { name: "Topics", link: "topics", icon: FolderOpenOutlined },
   { name: "Quizzes", link: "quizzes", icon: ClockCircleOutlined },
+  { name: "Reports", link: "reports", icon: BarChartOutlined },
 ];
 
 const MainLayout = (): ReactElement => {

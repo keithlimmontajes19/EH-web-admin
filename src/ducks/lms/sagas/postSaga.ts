@@ -426,22 +426,49 @@ export function* postQuizQuestion({ payload }: any): any {
   }
 }
 
+export function* postCourseView({ payload }: any): any {
+  const { course, user, idOrg, callback = () => {} } = payload;
+  const data = {
+    course,
+    user
+  };
+
+  try {
+    const response = yield call(
+      lms_service.postCourseView,
+      data,
+      idOrg
+    );
+    yield put({
+      type: TYPES.POST_COURSE_VIEW_SUCCESS,
+      payload: response.data,
+    });
+
+    callback(response);
+    return Promise.resolve(response);
+  } catch (error) {
+    yield put({
+      type: TYPES.POST_COURSE_VIEW_FAILED,
+    });
+
+    callback(false);
+    return Promise.reject(error);
+  }
+}
+
 export default function* watcher() {
   yield takeLatest(TYPES.PUT_UPDATE_COURSE_REQUEST, updateCourse);
   yield takeLatest(TYPES.POST_COURSE_REQUEST, postCourse);
-
   yield takeLatest(TYPES.PUT_UPDATE_LESSON_REQUEST, updateLesson);
   yield takeLatest(TYPES.POST_LESSON_REQUEST, postLesson);
-
   yield takeLatest(
     TYPES.PUT_UPDATE_LESSON_CONTENT_REQUEST,
     updateLessonContent
   );
   yield takeLatest(TYPES.POST_LESSON_CONTENT_REQUEST, postLessonContent);
-
   yield takeLatest(TYPES.PUT_UPDATE_TOPIC_CONTENT_REQUEST, updateTopicContent);
   yield takeLatest(TYPES.POST_TOPIC_CONTENT_REQUEST, postTopicContent);
-
   yield takeLatest(TYPES.PUT_UPDATE_QUIZ_QUESTION_REQUEST, updateQuizQuestion);
   yield takeLatest(TYPES.POST_QUIZ_QUESTION_REQUEST, postQuizQuestion);
+  yield takeLatest(TYPES.POST_COURSE_VIEW_REQUEST, postCourseView);
 }
