@@ -1,5 +1,6 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import { TYPES } from '../actionTypes';
+import { TYPES as ALERT_TYPES } from "ducks/alert/actionTypes";
 
 import dashboard_service from 'api/services/dashboard_service';
 
@@ -25,26 +26,35 @@ function filterDashboardData(data) {
 }
 
 export function* postDashboard({payload}: any): any {
-  const {data, callback} = payload
-  
+  const {data, callback=()=>{}} = payload
+
   try {
     const response = yield call(
         dashboard_service.createDashboard,
         filterDashboardData(data)
     );
 
+    yield put({type: TYPES.LIST_DASHBOARD_REQUEST})
     yield put({
-      type: TYPES.POST_DASHBOARD_SUCCESS,
-      payload: response?.data,
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "success",
+        message: `${data?.name} successfully created`,
+      },
     });
-
+    console.log(data)
     callback(response?.data)
     return Promise.resolve(response);
   } catch (error) {
     yield put({
-      type: TYPES.POST_DASHBOARD_FAILED,
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "error",
+        message: `${data?.name} failed to create`,
+      },
     });
-
     callback(false)
     return Promise.reject(error);
   }
@@ -52,7 +62,7 @@ export function* postDashboard({payload}: any): any {
 
 export function* updateDashboard({payload}: any): any {
   const idDashboard = yield call(dashboardId)
-  const {data, callback} = payload
+  const {data, callback=()=>{}} = payload
 
   try {
     const response = yield call(
@@ -60,17 +70,25 @@ export function* updateDashboard({payload}: any): any {
         idDashboard,
         filterDashboardData(data)
     );
-
     yield put({
-      type: TYPES.PUT_UPDATE_DASHBOARD_SUCCESS,
-      payload: response?.data,
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "success",
+        message: `${response?.data?.name} successfully updated`,
+      },
     });
 
     callback(response?.data)
     return Promise.resolve(response);
   } catch (error) {
     yield put({
-      type: TYPES.PUT_UPDATE_DASHBOARD_FAILED,
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "error",
+        message: `${data?.name} failed to update`,
+      },
     });
 
     callback(false)

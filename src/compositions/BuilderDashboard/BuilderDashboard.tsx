@@ -5,7 +5,7 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import plusicon from "assets/icons/plus-Icon.svg";
 
 /* styles antd */
-import { Breadcrumb, Col, Input, Modal, PageHeader } from "antd";
+import { Breadcrumb, Col, Input, message, Modal, PageHeader } from "antd";
 import { RootContainer, FlexWrap, AddContainer, PlusImg } from "./styled";
 import {
   RedoOutlined,
@@ -26,7 +26,6 @@ import { RootState } from "ducks/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getOneDashboard,
-  postDashboard,
   updateDashboard,
 } from "ducks/dashboard/actionCreator";
 import StyledButton from "components/StyledButton";
@@ -40,7 +39,7 @@ const BuilderDashboard = () => {
 
   const [loading, setLoading] = useState(true);
   const [onDispatch, setOnDispatch] = useState(false);
-  const [forceEdit, setForceEdit] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData]: any = useState(false);
   const [pageState, setPageState]: any = useState({
     isVisible: false,
@@ -60,20 +59,11 @@ const BuilderDashboard = () => {
   );
 
   useEffect(() => {
-    if (params?.page === "create") {
-      setEditedData({
-        name: "New Dashboard",
-        isPublish: true,
-        boards: [],
-        organization: [],
-      });
-      setLoading(false);
-    } else
-      dispatch(
+    dispatch(
         getOneDashboard({
           dashboardId: params?.page,
           callback: (res) => {
-            if (!res) return;
+            if (!res) return message.success('Something went wrong');;
             setLoading(false);
             setEditedData(false);
             setOnDispatch(false);
@@ -83,44 +73,22 @@ const BuilderDashboard = () => {
   }, []);
 
   const handlePublish = () => {
-    if (!editedData) return;
-    if (onDispatch) return;
+    if (!editedData || onDispatch) return;
 
     setOnDispatch(true);
-    if (params?.page === "create")
-      return dispatch(
-        postDashboard({
-          data: editedData,
-          callback: (res) => {
-            if (!res) return;
-            history.replace("team/dashboards/" + res._id);
-            dispatch(
-              getOneDashboard({
-                dashboardId: res._id,
-                callback: (res) => {
-                  if (!res) return;
-                  setLoading(false);
-                  setEditedData(false);
-                  setOnDispatch(false);
-                },
-              })
-            );
-          },
-        })
-      );
-
     localStorage.setItem("dashboardId", editedData._id);
     dispatch(
       updateDashboard({
         data: editedData,
         callback: (res) => {
-          if (!res) return;
+          if (!res) return
           dispatch(
             getOneDashboard({
               dashboardId: params?.page,
               callback: (res) => {
-                if (!res) return;
+                if (!res) return message.success('Something went wrong');
                 setLoading(false);
+                setIsEditing(false)
                 setEditedData(false);
                 setOnDispatch(false);
               },
@@ -223,26 +191,29 @@ const BuilderDashboard = () => {
       title={
         <StyledText
           onClick={() => {
-            const title = editedData
-              ? editedData?.name
-              : single_dashboard?.data?.length
-              ? single_dashboard?.data[0].name
-              : "";
-            setEditInput({
-              isVisible: true,
-              title: "Rename " + title,
-              inputVal: title,
-              callback: handleRenameDashboard,
-            });
+            if(editedData || isEditing) {
+              const title = editedData
+                ? editedData?.name
+                : single_dashboard?.data?.length
+                ? single_dashboard?.data[0].name
+                : "";
+              setEditInput({
+                isVisible: true,
+                title: "Rename " + title,
+                inputVal: title,
+                callback: handleRenameDashboard,
+              });
+            } 
           }}
         >
-          <span style={{ cursor: "pointer" }}>
+          <span style={{ cursor: isEditing ? "pointer" : "auto" }}>
             {editedData
               ? editedData?.name
               : single_dashboard?.data?.length
               ? single_dashboard?.data[0].name
               : ""}
           </span>
+          {isEditing && <>{' '}<EditOutlined style={{color: theme.HEADINGS}}/></>}
         </StyledText>
       }
       extra={[
@@ -253,7 +224,7 @@ const BuilderDashboard = () => {
             cursor: "pointer",
           }}
         />,
-        editedData || forceEdit ? (
+        editedData || isEditing ? (
           <>
             <StyledButton w={134} onClick={handleBoardAdd}>
               <PlusOutlined /> BOARD
@@ -261,7 +232,7 @@ const BuilderDashboard = () => {
             <StyledButton
               m="0 15px"
               onClick={handlePublish}
-              disabled={forceEdit && !editedData}
+              disabled={isEditing && !editedData}
             >
               {onDispatch ? <LoadingOutlined spin /> : <CheckOutlined />}{" "}
               PUBLISH
@@ -275,7 +246,7 @@ const BuilderDashboard = () => {
                 if (params.page === "create")
                   return history.push("/team/dashboards/");
                 setEditedData(false);
-                setForceEdit(false);
+                setIsEditing(false);
               }}
             >
               CANCEL
@@ -283,7 +254,7 @@ const BuilderDashboard = () => {
           </>
         ) : (
           <>
-            <StyledButton w={106} onClick={() => setForceEdit(true)}>
+            <StyledButton w={106} onClick={() => setIsEditing(true)}>
               <EditOutlined /> EDIT
             </StyledButton>
             <MoreOutlined
@@ -333,19 +304,12 @@ const BuilderDashboard = () => {
                 setEditInput={setEditInput}
               />
             ))}
-            {editedData || forceEdit ? (
+            {editedData || isEditing ? (
               (
                 editedData
                   ? editedData?.boards?.length % 2 === 0
                   : single_dashboard?.data?.length % 2 === 0
-              ) ? (
-                <>
-                  <BlankBoardFiller scalable={false} />
-                  <BlankBoardFiller scalable={false} />
-                </>
-              ) : (
-                <BlankBoardFiller scalable={true} />
-              )
+              ) ? <BlankBoardFiller scalable={false} /> : <BlankBoardFiller scalable={true} />
             ) : (
               <></>
             )}
