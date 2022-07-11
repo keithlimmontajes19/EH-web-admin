@@ -1,5 +1,6 @@
 import { Layout, Modal, Button } from "antd";
 import styled from "styled-components";
+import { theme } from "utils/colors";
 
 export const Container = styled(Layout)`
   border-radius: 15px;
@@ -61,6 +62,28 @@ export const ModalContainer = styled(Modal)`
   .ant-btn-primary {
     background: #635ffa;
     color: #fff;
+  }
+
+  .ant-row {
+    min-height: 60px;
+  }
+  
+  .ant-checkbox-group {
+    margin-left: 20px;
+  }
+  
+  .ant-checkbox-wrapper, .ant-collapse-header {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .ant-collapse-header {
+    padding: 12px 5px !important;
+  }  
+
+  .ant-collapse-content {
+    font-weight: 400;
+    margin-top: -20px !important;
   }
 `;
 

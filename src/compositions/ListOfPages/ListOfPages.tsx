@@ -1,15 +1,10 @@
 import React, { ReactElement, useEffect, useState } from "react";
-import { Modal, Button, Collapse, Checkbox, Row, Spin } from "antd";
-import type { PropsType } from "./types";
-import { StyledButton } from "compositions/TableDashboards/styled";
-import { Container, ModalContainer } from "./styled";
+import { Collapse, Checkbox, Row, Spin } from "antd";
+import { ModalContainer } from "./styled";
 import {
   EnterOutlined,
-  EditOutlined,
   LoadingOutlined,
 } from "@ant-design/icons";
-import Collapsetab from "components/Collapsetab";
-import { render } from "@testing-library/react";
 import { theme } from "utils/colors";
 import { getOnePage, getPages } from "ducks/pages/actionCreator";
 import { useDispatch } from "react-redux";
@@ -64,7 +59,7 @@ const ListOfPages = ({
               <EnterOutlined
                 style={{
                   transform: "scale(-1,1)",
-                  margin: "0 10px 0 21px",
+                  margin: "0 0 0 21px",
                 }}
               />
               <Spin indicator={<LoadingOutlined spin />} />
@@ -75,7 +70,7 @@ const ListOfPages = ({
                 <EnterOutlined
                   style={{
                     transform: "scale(-1,1)",
-                    margin: "0 10px 0 21px",
+                    margin: "0 0 0 21px",
                   }}
                 />
                 <span style={{ color: theme.BLACK }}>{String(title)}</span>
@@ -88,14 +83,14 @@ const ListOfPages = ({
     return testA ? (
       toCollapse(forms)
     ) : (
-      <span className="ant-no-collapse" style={{ marginLeft: 36 }}>
+      <span className="ant-no-collapse" style={{ marginLeft: 30 }}>
         {record.title}
       </span>
     );
   };
 
   const okHandler = () => {
-    const filteredId = selectedData.filter((id) => !defaultVal.includes(id));
+    const filteredId = selectedData.filter((id) => !defaultVal?.includes(id));
     const result = data.filter((item) => filteredId.includes(item._id));
     setSelectedData([]);
     handleOk(result);
@@ -116,8 +111,8 @@ const ListOfPages = ({
     >
       <Checkbox.Group value={selectedData} onChange={(e) => setSelectedData(e)}>
         {data.map((item, i) => (
-          <Row key={i}>
-            <Checkbox value={item._id} disabled={defaultVal.includes(item._id)}>
+          <Row key={i} align="middle">
+            <Checkbox value={item._id} disabled={defaultVal?.includes(item._id)}>
               {makeTitle(item)}
             </Checkbox>
           </Row>

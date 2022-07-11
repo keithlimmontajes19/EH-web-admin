@@ -1,5 +1,6 @@
 import { Button, Input, Layout } from "antd";
 import styled from "styled-components";
+import { theme } from "utils/colors";
 
 export const Container = styled.div``;
 
@@ -69,8 +70,14 @@ export const TableContainer: any = styled<any>(Layout)`
   }
 
   .ant-table-thead,
-  .ant-table-row {
+  .ant-table-row,
+  .ant-table-cell {
     height: 60px;
+    padding: 0;
+  }
+
+  tr > td:nth-child(2), tr > th:nth-child(2) {
+    padding-left: 20px;
   }
 
   .ant-table thead tr .ant-table-cell {
@@ -83,8 +90,9 @@ export const TableContainer: any = styled<any>(Layout)`
 
   .ant-table-cell {
     font-size: 20px;
-    font-weight: 400;
-    color: #2b2e4a;
+    font-weight: 700;
+    color: ${theme.HEADINGS};
+    padding: 0px;
     overflow: hidden;
   }
 

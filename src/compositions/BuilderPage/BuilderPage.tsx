@@ -1,16 +1,11 @@
 import { ReactElement, useEffect, useState } from "react";
 import "draft-js/dist/Draft.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-// import './index.css';
-import { Params } from "./types";
+
 import {
   PageHeader,
   Breadcrumb,
-  Row,
-  Col,
   Layout,
-  InputNumber,
-  Button,
   Modal,
   Input,
 } from "antd";
@@ -24,7 +19,7 @@ import {
 
 import Text from "components/Text";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import type { PropsType } from "./types";
 import { EditorContainer, StyledButton, StyledButtonCancle } from "./styled";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -34,7 +29,6 @@ import {
   EditorState,
   convertToRaw,
   convertFromRaw,
-  ContentState,
 } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";

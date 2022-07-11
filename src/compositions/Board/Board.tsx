@@ -10,7 +10,6 @@ import Dropdown from "components/Dropdown";
 import { theme } from "utils/colors";
 import Loading from "components/Loading";
 import { useDispatch } from "react-redux";
-import { getPages } from "ducks/pages/actionCreator";
 
 const Board = ({
   index,
@@ -31,18 +30,7 @@ const Board = ({
 
     const copy = JSON.parse(JSON.stringify(item));
     iterateFindItem(copy, "board_items", focusItem, 0, (objResult) => {
-      const { obj } = objResult;
-      const isPage = "item_type" in obj ? obj.item_type === "page" : false;
-      setViewItem({ ...objResult, isPage });
-      if (
-        isPage &&
-        (obj.item_pages.length > 0
-          ? typeof obj.item_pages[0] === "string"
-          : false)
-      ) {
-        setOnDispatch(true);
-        viewPageDispatchFilter({ ...objResult, isPage });
-      }
+      setViewItem({ ...objResult });
     });
   }, [focusItem, item]);
 
@@ -68,25 +56,6 @@ const Board = ({
     );
   };
 
-  const viewPageDispatchFilter = (targetObj) => {
-    dispatch(
-      getPages({
-        callback: (res) => {
-          if (!res) return;
-          const copy = JSON.parse(JSON.stringify(targetObj));
-          copy.obj = {
-            ...viewItem.obj,
-            item_pages: res.filter((obj) =>
-              targetObj.obj.item_pages.includes(obj._id)
-            ),
-          };
-          setViewItem(copy);
-          setOnDispatch(false);
-        },
-      })
-    );
-  };
-
   const mainActions = [
     {
       name: "Rename Board",
@@ -107,219 +76,157 @@ const Board = ({
         }),
     },
   ];
-
-  const defaultActions = [
-    {
-      name: "Add Folder",
-      action: () => {
-        const title = viewItem ? viewItem?.obj?.item_name : item?.board_name;
-        setEditInput({
-          isVisible: true,
-          title: "Add Folder to " + title,
-          inputVal: "",
-          callback: (e) => {
-            const copy = JSON.parse(JSON.stringify(item));
-            const blank = {
-              item_name: e,
-              item_pages: [],
-              item_type: "folder",
-            };
-            if (viewItem) {
-              iterateFindItem(
-                copy,
-                "board_items",
-                viewItem.indexArr,
-                0,
-                ({ obj, objKey, index }) => {
-                  const newArr = [...obj[objKey], blank];
-                  obj[objKey] = newArr;
-                }
-              );
-            } else {
-              const newItems = [...copy.board_items, blank];
-              copy.board_items = newItems;
-            }
-            saveBoard(index, copy);
-          },
-        });
-      },
-    },
-    {
-      name: "Add File",
-      action: () => {
-        const title = viewItem ? viewItem?.obj?.item_name : item?.board_name;
-        setEditInput({
-          isVisible: true,
-          title: "Add File to " + title,
-          inputVal: "",
-          callback: (e) => {
-            const copy = JSON.parse(JSON.stringify(item));
-            const blank = {
-              item_name: e,
-              item_pages: [],
-              item_type: "page",
-            };
-            if (viewItem) {
-              iterateFindItem(
-                copy,
-                "board_items",
-                viewItem.indexArr,
-                0,
-                ({ obj, objKey, index }) => {
-                  const newArr = [...obj[objKey], blank];
-                  obj[objKey] = newArr;
-                }
-              );
-            } else {
-              const newItems = [...copy.board_items, blank];
-              copy.board_items = newItems;
-            }
-            saveBoard(index, copy);
-          },
-        });
-      },
-    },
-  ];
-  const defaultViewActions = () => {
-    const pageActions = [
+  
+  const defaultActions = () => {
+    let directory = []
+    if(viewItem) iterateFindItem(item, "board_items", viewItem.indexArr, 0, ({ obj, objKey }) => {directory = obj[objKey]})
+    else directory = item?.board_items
+    return [
       {
-        name: "Add Page",
-        action: () =>
-          setPageState({
+        name: "Add Folder",
+        action: () => {
+          const title = viewItem ? viewItem?.obj?.item_name : item?.board_name;
+          setEditInput({
             isVisible: true,
-            defaultVal: item?.board_items[focusItem[0]]?.item_pages.map(
-              (obj) => obj._id
-            ),
-            callback: (result) => {
+            title: "Add Folder to " + title,
+            inputVal: "",
+            callback: (e) => {
               const copy = JSON.parse(JSON.stringify(item));
-              iterateFindItem(
-                copy,
-                "board_items",
-                viewItem.indexArr,
-                0,
-                ({ obj, objKey, index }) => {
-                  const newArr = [
-                    ...obj[objKey],
-                    ...result.map((_obj) => _obj?._id),
-                  ];
-                  obj[objKey] = newArr;
-                }
-              );
+              const blank = {
+                item_name: e,
+                item_pages: [],
+                item_type: "folder",
+              };
+              if (viewItem) {
+                iterateFindItem(
+                  copy,
+                  "board_items",
+                  viewItem.indexArr,
+                  0,
+                  ({ obj, objKey, index }) => {
+                    const newArr = [...obj[objKey], blank];
+                    obj[objKey] = newArr;
+                  }
+                );
+              } else {
+                const newItems = [...copy.board_items, blank];
+                copy.board_items = newItems;
+              }
               saveBoard(index, copy);
             },
+          });
+        },
+      },
+      {
+        name: "Add Page",
+        action: () => 
+          setPageState({
+            isVisible: true,
+            defaultVal: directory.filter(itemObj => itemObj?.item_type === "page").map(pageObj => pageObj?.item_pageId),
+            callback: (result) => {
+              const copy = JSON.parse(JSON.stringify(item));
+              const convertedResult = result.map(pageObj => ({
+                item_name: pageObj?.title,
+                item_type: "page",
+                item_pageId: pageObj?._id
+              }))
+  
+              if (viewItem) {
+                iterateFindItem(
+                  copy,
+                  "board_items",
+                  viewItem.indexArr,
+                  0,
+                  ({ obj, objKey, index }) => {
+                    const newArr = [...obj[objKey], ...convertedResult];
+                    obj[objKey] = newArr;
+                  }
+                );
+              } else {
+                const newItems = [...copy.board_items, ...convertedResult];
+                copy.board_items = newItems;
+              }
+              saveBoard(index, copy);
+            }
           }),
       },
-    ];
-    if (viewItem.isPage) return pageActions;
-    return defaultActions;
+    ]
   };
-
-  const selectedActions = [
-    {
-      name: "Rename Selected",
-      action: () => {
-        const title = viewItem
-          ? viewItem?.obj?.item_pages[selectedItem]?.item_name
-          : item?.board_items[selectedItem]?.item_name;
-        setEditInput({
-          isVisible: true,
-          title: "Rename " + title,
-          inputVal: title,
-          callback: (e) => {
-            const copy = JSON.parse(JSON.stringify(item));
-            setSelectedItem(-1);
-            if (viewItem) {
-              iterateFindItem(
-                copy,
-                "board_items",
-                viewItem.indexArr,
-                0,
-                ({ obj, objKey }) => {
-                  const targetChildItem = obj[objKey][selectedItem];
-                  targetChildItem.item_name = e;
-                }
-              );
-            } else {
-              const targetItem = copy?.board_items[selectedItem];
-              targetItem.item_name = e;
-            }
-            saveBoard(index, copy);
-          },
-        });
-      },
-    },
-    {
-      name: "Delete Selected",
-      action: () => {
-        const title = viewItem
-          ? viewItem?.obj?.item_pages[selectedItem]?.item_name
-          : item?.board_items[selectedItem]?.item_name;
-        Modal.confirm({
-          title: "Delete " + title,
-          onOk: () => {
-            const copy = JSON.parse(JSON.stringify(item));
-            setSelectedItem(-1);
-            if (viewItem) {
-              iterateFindItem(
-                copy,
-                "board_items",
-                viewItem.indexArr,
-                0,
-                ({ obj, objKey, index }) => {
-                  const newArr = [...obj[objKey]];
-                  obj[objKey] = newArr.filter((obj, i) => i !== selectedItem);
-                }
-              );
-            } else {
-              copy.board_items = item.board_items.filter(
-                (obj, i) => i !== selectedItem
-              );
-            }
-            saveBoard(index, copy);
-          },
-        });
-      },
-    },
-  ];
-  const selectedViewActions = () => {
+  const selectedActions = () => {
+    const _item = viewItem ? viewItem?.obj : item?.board_items[selectedItem]
+    console.log(_item)
     const pageActions = [
       {
-        name: "Remove Selected",
+        name: `${_item.item_type === 'folder' ? 'Delete' : 'Remove'} Selected`,
         action: () => {
           if (onDispatch) return;
           Modal.confirm({
-            title: "Remove " + viewItem?.obj.item_pages[selectedItem]?.title,
+            title: "Remove " + _item?.item_name,
             onOk: () => {
               const copy = JSON.parse(JSON.stringify(item));
               setSelectedItem(-1);
-              iterateFindItem(
-                copy,
-                "board_items",
-                viewItem.indexArr,
-                0,
-                ({ obj, objKey, index }) => {
-                  const newArr = [...obj[objKey]];
-                  obj[objKey] = newArr.filter((obj, i) => i !== selectedItem);
-                }
-              );
+              if (viewItem) {
+                iterateFindItem(
+                  copy,
+                  "board_items",
+                  viewItem.indexArr,
+                  0,
+                  ({ obj, objKey, index }) => {
+                    const newArr = [...obj[objKey]];
+                    obj[objKey] = newArr.filter((obj, i) => i !== selectedItem);
+                  }
+                );
+              } else {
+                copy.board_items = item.board_items.filter(
+                  (obj, i) => i !== selectedItem
+                );
+              }
               saveBoard(index, copy);
             },
           });
         },
       },
     ];
-    if (viewItem.isPage) return pageActions;
-    return selectedActions;
+    if (_item?.item_type === 'page') return pageActions;
+    return [
+      {
+        name: "Rename Selected",
+        action: () => {
+          const title = viewItem
+            ? viewItem?.obj?.item_pages[selectedItem]?.item_name
+            : item?.board_items[selectedItem]?.item_name;
+          setEditInput({
+            isVisible: true,
+            title: "Rename " + title,
+            inputVal: title,
+            callback: (e) => {
+              const copy = JSON.parse(JSON.stringify(item));
+              setSelectedItem(-1);
+              if (viewItem) {
+                iterateFindItem(
+                  copy,
+                  "board_items",
+                  viewItem.indexArr,
+                  0,
+                  ({ obj, objKey }) => {
+                    const targetChildItem = obj[objKey][selectedItem];
+                    targetChildItem.item_name = e;
+                  }
+                );
+              } else {
+                const targetItem = copy?.board_items[selectedItem];
+                targetItem.item_name = e;
+              }
+              saveBoard(index, copy);
+            },
+          });
+        },
+      },
+      ...pageActions
+    ];
   };
 
-  const headerActions = (mode) =>
-    mode
-      ? focusItem[0] === -1
-        ? defaultActions
-        : defaultViewActions()
-      : focusItem[0] === -1
-      ? selectedActions
-      : selectedViewActions();
+  const headerActions = (mode) => mode ? defaultActions() : selectedActions()
 
   return (
     <>
@@ -377,7 +284,7 @@ const Board = ({
                     <span
                       onDoubleClick={() => {
                         setSelectedItem(-1);
-                        if (viewItem ? viewItem?.isPage : false) return;
+                        if (pages.item_type === 'page') return;
                         if (focusItem[0] === -1) return setFocusItem([index]);
                         setFocusItem((prev) => [...prev, index]);
                       }}

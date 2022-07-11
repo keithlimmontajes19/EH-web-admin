@@ -1,5 +1,6 @@
 import { takeLatest, put, call } from "redux-saga/effects";
 import { TYPES } from "../actionTypes";
+import { TYPES as ALERT_TYPES} from "ducks/alert/actionTypes"
 import page_service from "api/services/pages_service";
 
 function filterPageData(data) {
@@ -20,15 +21,24 @@ export function* addPage({ payload }: any) {
   try {
     const response = yield call(page_service.addPage, filterPageData(data));
     yield put({
-      type: TYPES.ADD_PAGE_SUCCESS,
-      payload: response?.data,
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "success",
+        message: `${response?.data?.title} successfully created`,
+      },
     });
 
     callback(response?.data);
     return Promise.resolve(response);
   } catch (error) {
     yield put({
-      type: TYPES.ADD_PAGE_FAILED,
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "error",
+        message: `${data?.title} failed to create`,
+      },
     });
 
     callback(false);
@@ -44,17 +54,25 @@ export function* editPage({ payload }: any) {
       filterPageData(data),
       pageId
     );
-
     yield put({
-      type: TYPES.EDIT_PAGE_SUCCESS,
-      payload: response?.data,
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "success",
+        message: `${response?.data?.title} successfully updated`,
+      },
     });
 
     callback(response?.data);
     return Promise.resolve(response);
   } catch (error) {
     yield put({
-      type: TYPES.EDIT_PAGE_FAILED,
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "error",
+        message: `${data?.title} failed to update`,
+      },
     });
 
     callback(false);
