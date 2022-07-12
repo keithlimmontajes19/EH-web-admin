@@ -73,8 +73,8 @@ export const TableContainer: any = styled(Layout)`
 
   .ant-table-cell {
     font-size: 20px;
-    font-weight: 400;
-    color: #2b2e4a;
+    font-weight: 700;
+    color: ${theme.HEADINGS};
     padding: 0px;
     overflow: hidden;
     background: #635ffa15;
@@ -188,7 +188,11 @@ export const TableContainer: any = styled(Layout)`
 
   .ant-collapse-header .anticon {
     padding-right: 0px;
-    padding-left: 15px;
+    padding-left: 6px;
+  }
+
+  .ant-collapse-header > div {
+    width: 23px
   }
 
   .ant-collapse-content-box {

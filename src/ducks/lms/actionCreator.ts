@@ -139,3 +139,38 @@ export const deleteQuizQuestion = (payload) => ({
   type: TYPES.DELETE_QUIZ_QUESTION_REQUEST,
   payload
 })
+
+export const postCourseView = (payload) => ({
+  type: TYPES.POST_COURSE_VIEW_REQUEST,
+  payload
+})
+
+export const getCourseView = (payload) => ({
+  type: TYPES.GET_COURSE_VIEW_REQUEST,
+  payload
+})
+
+export const getCourseReportsStats = (payload) => ({
+  type: TYPES.GET_COURSE_REPORTS_STATS_REQUEST,
+  payload
+})
+
+export const getAllUserReports = (payload) => ({
+  type: TYPES.GET_ALL_USER_REPORTS_REQUEST,
+  payload
+})
+
+export const getUserCourseReports = (payload) => ({
+  type: TYPES.GET_USER_COURSE_REPORTS_REQUEST,
+  payload
+})
+
+export const getUserCourseReportsDetails = (payload) => ({
+  type: TYPES.GET_USER_COURSE_REPORTS_DETAILS_REQUEST,
+  payload
+})
+
+export const getUserDetails = (payload) => ({
+  type: TYPES.GET_COURSE_USER_DETAILS_REQUEST,
+  payload
+})

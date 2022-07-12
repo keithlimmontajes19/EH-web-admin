@@ -7,6 +7,7 @@ import Topics from "views/private/Learn/Topics";
 import Courses from "views/private/Learn/Courses";
 import Lessons from "views/private/Learn/Lessons";
 import Quizzes from "views/private/Learn/Quizzes";
+import Reports from "views/private/Learn/Reports";
 
 import Forms from "compositions/Forms";
 import Pages from "views/private/Team/Pages";
@@ -54,10 +55,9 @@ const Navigation = () => {
       <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
       <Route path="/learn/courses/:page?/:subpage?" component={Courses} />
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
-      <Route
-        path="/learn/quizzes/:page?/:subpage?/:item?"
-        component={Quizzes}
-      />
+      <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
+      <Route path="/learn/quizzes/:page?/:subpage?/:item?" component={Quizzes} />
+      <Route path="/learn/reports/:page?/:subpage?" component={Reports} />
 
       {/**
        * =============

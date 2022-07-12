@@ -1,4 +1,4 @@
-import { Fragment, ReactElement } from "react";
+import { Fragment, ReactElement, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import {
@@ -16,8 +16,21 @@ import ORG_IMAGE from "assets/icons/organization.png";
 
 import { DUMMY_DATA } from "./data";
 
+/* reducer action */
+import { useSelector, useDispatch } from "react-redux";
+import { getListOrganization } from "ducks/organization/actionCreator";
+
 const ProfileOrganization = (): ReactElement => {
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const states: any = useSelector<any>((state) => state.organization);
+
+  console.log(states);
+
+  useEffect(() => {
+    dispatch(getListOrganization());
+  }, []);
 
   return (
     <Fragment>

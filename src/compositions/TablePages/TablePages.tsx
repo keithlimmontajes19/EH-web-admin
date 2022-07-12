@@ -63,7 +63,7 @@ const TablePages = (props: PropsType): ReactElement => {
               <EnterOutlined
                 style={{
                   transform: "scale(-1,1)",
-                  margin: "0 10px 0 21px",
+                  margin: "0 10px 0 10px",
                 }}
               />
               <Spin indicator={<LoadingOutlined spin />} />
@@ -74,7 +74,7 @@ const TablePages = (props: PropsType): ReactElement => {
                 <EnterOutlined
                   style={{
                     transform: "scale(-1,1)",
-                    margin: "0 10px 0 21px",
+                    margin: "0 10px 0 10px",
                   }}
                 />
                 <span style={{ color: theme.BLACK }}>{String(title)}</span>
@@ -87,7 +87,7 @@ const TablePages = (props: PropsType): ReactElement => {
     return testA ? (
       toCollapse(forms)
     ) : (
-      <span className="ant-no-collapse" style={{ marginLeft: 34 }}>
+      <span className="ant-no-collapse" style={{ marginLeft: 24 }}>
         {record.title}
       </span>
     );
@@ -97,7 +97,7 @@ const TablePages = (props: PropsType): ReactElement => {
       key: "1",
       title: (
         <Row align="middle" justify="space-between">
-          <Text fS={20} m="0 0 0 30px">
+          <Text fS={20} m="0 0 0 20px">
             TITLE
           </Text>
           <div style={{ textAlign: "right" }}>
@@ -331,7 +331,6 @@ const TablePages = (props: PropsType): ReactElement => {
               resetEditing();
             }}
             onOk={() => {
-              console.log("gago");
               dispatch(
                 updatePage({
                   data: editingData,

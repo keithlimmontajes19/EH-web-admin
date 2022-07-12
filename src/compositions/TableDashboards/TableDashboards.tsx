@@ -25,13 +25,13 @@ import {
   updateDashboard,
 } from "ducks/dashboard/actionCreator";
 import Loading from "components/Loading";
+import CreateDashboard from "../CreateDashboard";
 
 function TableDashboards() {
   const dispatch = useDispatch();
-  const { data: rawData }: any = useSelector<RootState>(
+  const { data: rawData, loading }: any = useSelector<RootState>(
     (state) => state.dashboard
   );
-  const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -128,7 +128,6 @@ function TableDashboards() {
         key: i,
       }))
     );
-    setLoading(false);
   }, [rawData]);
 
   useEffect(() => {
@@ -226,11 +225,7 @@ function TableDashboards() {
         ghost={false}
         title={<StyledText fS={30}>Dashboards</StyledText>}
         style={{ background: "none", paddingTop: 8 }}
-        extra={[
-          <StyledButton onClick={() => pushHistory("/team/dashboards/create")}>
-            CREATE
-          </StyledButton>,
-        ]}
+        extra={[<CreateDashboard />]}
       />
 
       <TableContainer
@@ -264,18 +259,21 @@ function TableDashboards() {
             resetEditing();
           }}
           onOk={() => {
-            localStorage.setItem("dashboardId", editingData._id);
-            dispatch(updateDashboard({ data: editingData }));
-
-            setDataSource((pre) => {
-              return pre.map((obj) => {
-                if (obj._id === editingData._id) {
-                  return editingData;
-                } else {
-                  return obj;
-                }
+            const copyEdited = JSON.parse(JSON.stringify(editingData));
+            localStorage.setItem("dashboardId", copyEdited._id);
+            const callback = (res) => {
+              if (!res) return;
+              setDataSource((pre) => {
+                return pre.map((obj) => {
+                  if (obj._id === copyEdited._id) {
+                    return copyEdited;
+                  } else {
+                    return obj;
+                  }
+                });
               });
-            });
+            };
+            dispatch(updateDashboard({ data: copyEdited, callback }));
             resetEditing();
           }}
         >
