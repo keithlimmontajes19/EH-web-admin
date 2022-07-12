@@ -1,5 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 /* styles and ant design */
 import {
@@ -58,6 +59,11 @@ const learnItems = [
 const MainLayout = (): ReactElement => {
   const history = useHistory();
   const location = useLocation();
+
+  const { user_details: data }: any = useSelector<any>(
+    (states) => states.authentication
+  );
+
   const [selected, setSelected] = useState("1");
   const [openKeys, setOpenKeys] = useState([]);
   const [listNum, setListNum] = useState(-1);
@@ -116,7 +122,8 @@ const MainLayout = (): ReactElement => {
         <PopoverProfile name="Keith Lim Montajes" organization="Organization">
           <Avatar
             size={64}
-            icon={<UserOutlined style={{ padding: "0px" }} />}
+            src={data?.profile?.avatar || ""}
+            // icon={<UserOutlined style={{ padding: "0px" }} />}
           />
         </PopoverProfile>
       </HeaderStyled>

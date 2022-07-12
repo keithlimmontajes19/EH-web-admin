@@ -1,15 +1,9 @@
 import { ReactElement, useEffect, useState } from "react";
 import type { PropsType } from "./types";
 
-import {
-  Row,
-  Input,
-  Select,
-} from "antd";
+import { Row, Input, Select } from "antd";
 
-import {
-  TeamOutlined,
-} from "@ant-design/icons";
+import { TeamOutlined } from "@ant-design/icons";
 import { StyledText } from "compositions/Announcements/styled";
 
 import {
@@ -35,7 +29,7 @@ import { postDashboard } from "ducks/dashboard/actionCreator";
 
 const { Option } = Select;
 
-const Createannouncement = (props: PropsType): ReactElement => {
+const CreateDashboard = (props: PropsType): ReactElement => {
   const dispatch = useDispatch();
 
   const [title, setTitle] = useState("");
@@ -59,7 +53,6 @@ const Createannouncement = (props: PropsType): ReactElement => {
   };
 
   const handleSubmit = (status: any) => {
-
     const dataPayload = {
       name: title,
       isPublish: status === "active" ? true : false,
@@ -67,7 +60,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
       organization: organization,
     };
 
-    dispatch(postDashboard({data: dataPayload}));
+    dispatch(postDashboard({ data: dataPayload }));
     setTimeout(() => setIsModalVisible(false), 1000);
   };
 
@@ -119,7 +112,11 @@ const Createannouncement = (props: PropsType): ReactElement => {
           />
         </div>
 
-        <StyledText fS={20} fC={theme.HEADINGS} style={{ marginBottom: "12px !important" }}>
+        <StyledText
+          fS={20}
+          fC={theme.HEADINGS}
+          style={{ marginBottom: "12px !important" }}
+        >
           Viewer
         </StyledText>
 
@@ -153,4 +150,4 @@ const Createannouncement = (props: PropsType): ReactElement => {
   );
 };
 
-export default Createannouncement;
+export default CreateDashboard;

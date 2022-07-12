@@ -1,4 +1,4 @@
-import {TYPES} from './actionTypes';
+import { TYPES } from "./actionTypes";
 
 const INITIAL_STATE = {
   error: false,
@@ -6,12 +6,7 @@ const INITIAL_STATE = {
   authenticated: false,
   data: {},
   password_change: 0,
-  user_details: {
-    data: [],
-    ongoingCourses: [],
-    completedCourses: [],
-    myCourses: [],
-  },
+  user_details: {},
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -59,16 +54,11 @@ const reducer = (state = INITIAL_STATE, action) => {
     case TYPES.GET_USER_DETAILS_FAILED:
       return {
         ...state,
-        user_details: {
-          data: action.data,
-          ongoingCourses: action.ongoingCourses,
-          completedCourses: action.completedCourses,
-          myCourses: action.myCourses,
-        },
+        user_details: {},
       };
 
     default:
-      return {...state};
+      return { ...state };
   }
 };
 

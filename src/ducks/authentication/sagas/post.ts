@@ -1,14 +1,14 @@
-import {takeLatest, put, call} from 'redux-saga/effects';
-import {TYPES} from '../actionTypes';
+import { takeLatest, put, call } from "redux-saga/effects";
+import { TYPES } from "../actionTypes";
 
-import auth_services from 'api/services/auth_services';
-import history from 'utils/history';
+import auth_services from "api/services/auth_services";
+import history from "utils/history";
 
-export function* postLogin({payload}: never) {
+export function* postLogin({ payload }: never) {
   try {
     const response = yield call(auth_services.postLogin, payload);
-    localStorage.setItem('accessToken', response?.data?.accessToken);
-    localStorage.setItem('userId', response?.data?.userId);
+    localStorage.setItem("accessToken", response?.data?.accessToken);
+    localStorage.setItem("userId", response?.data?.userId);
 
     yield put({
       type: TYPES.GET_AUTHENTICATION_SUCCESS,
@@ -22,14 +22,14 @@ export function* postLogin({payload}: never) {
   }
 }
 
-export function* postSignup({payload}: never) {
+export function* postSignup({ payload }: never) {
   try {
     yield call(auth_services.postSignup, payload);
-    yield put({type: TYPES.POST_SIGNUP_SUCCESS});
+    yield put({ type: TYPES.POST_SIGNUP_SUCCESS });
 
-    yield call(history.push, '/?register=true');
+    yield call(history.push, "/?register=true");
   } catch (e) {
-    yield put({type: TYPES.POST_SIGNUP_FAILED});
+    yield put({ type: TYPES.POST_SIGNUP_FAILED });
   }
 }
 
@@ -38,12 +38,12 @@ export function* tokenChecker() {
     const response = yield call(auth_services.tokenChecker);
 
     if (response.data.code === 110) {
-      yield put({type: TYPES.GET_AUTHENTICATION_FAILED});
+      yield put({ type: TYPES.GET_AUTHENTICATION_FAILED });
     } else {
-      yield put({type: TYPES.GET_AUTHENTICATION_SUCCESS});
+      yield put({ type: TYPES.GET_AUTHENTICATION_SUCCESS });
     }
   } catch (e) {
-    yield put({type: TYPES.GET_AUTHENTICATION_FAILED});
+    yield put({ type: TYPES.GET_AUTHENTICATION_FAILED });
   }
 }
 
@@ -54,34 +54,22 @@ const filterCourses = (organizations: Array<any>, status: string) => {
       if (y?.status === status) {
         courses.push(y);
       }
-    }),
+    })
   );
   return courses;
 };
 
 export function* getUserDetails() {
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
   try {
     const response = yield call(auth_services.getUser, userId);
 
-    const data = response?.data?.data ? response?.data?.data : {};
-    const ongoingCourses = filterCourses(data?.organizations, 'ongoing');
-    const completedCourses = filterCourses(data?.organizations, 'completed');
-    const myCourses = data?.organizations.length
-      ? data?.organizations[0].courses
-      : [];
-
     yield put({
       type: TYPES.GET_USER_DETAILS_SUCCESS,
-      payload: {
-        data,
-        ongoingCourses,
-        completedCourses,
-        myCourses: myCourses.slice(0, 3),
-      },
+      payload: response?.data?.data,
     });
   } catch (e) {
-    yield put({type: TYPES.GET_USER_DETAILS_FAILED});
+    yield put({ type: TYPES.GET_USER_DETAILS_FAILED });
   }
 }
 

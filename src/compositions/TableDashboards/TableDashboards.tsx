@@ -25,7 +25,7 @@ import {
   updateDashboard,
 } from "ducks/dashboard/actionCreator";
 import Loading from "components/Loading";
-import CreateDashboard from "compositions/CreateDashboard";
+import CreateDashboard from "../CreateDashboard";
 
 function TableDashboards() {
   const dispatch = useDispatch();
@@ -259,10 +259,10 @@ function TableDashboards() {
             resetEditing();
           }}
           onOk={() => {
-            const copyEdited = JSON.parse(JSON.stringify(editingData))
+            const copyEdited = JSON.parse(JSON.stringify(editingData));
             localStorage.setItem("dashboardId", copyEdited._id);
-            const callback = (res) => { 
-              if(!res) return
+            const callback = (res) => {
+              if (!res) return;
               setDataSource((pre) => {
                 return pre.map((obj) => {
                   if (obj._id === copyEdited._id) {
@@ -272,7 +272,7 @@ function TableDashboards() {
                   }
                 });
               });
-            }
+            };
             dispatch(updateDashboard({ data: copyEdited, callback }));
             resetEditing();
           }}
