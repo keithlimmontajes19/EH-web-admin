@@ -1,31 +1,31 @@
-import { Table, Modal, Input, PageHeader, Layout } from "antd";
-import { useEffect, useState } from "react";
+import { Table, Modal, Input, PageHeader, Layout } from 'antd';
+import { useEffect, useState } from 'react';
 import {
   EyeFilled,
   DeleteFilled,
   EditOutlined,
   SearchOutlined,
   DeleteOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
 import {
   StyledButton,
   StyledInput,
   StyledText,
   TableContainer,
-} from "./styled";
-import { useHistory } from "react-router-dom";
+} from './styled';
+import { useHistory } from 'react-router-dom';
 
 // ducks action
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'ducks/store';
 import {
   deleteDashboard,
   getDashboard,
   updateDashboard,
-} from "ducks/dashboard/actionCreator";
-import Loading from "components/Loading";
-import CreateDashboard from "../CreateDashboard";
+} from 'ducks/dashboard/actionCreator';
+import Loading from 'components/Loading';
+import CreateDashboard from '../CreateDashboard';
 
 function TableDashboards() {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ function TableDashboards() {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [searchdData, setSearchdData] = useState([]);
-  const [searchInpt, setSearchInpt] = useState("");
+  const [searchInpt, setSearchInpt] = useState('');
 
   const history = useHistory();
 
@@ -47,17 +47,17 @@ function TableDashboards() {
 
   const columns = [
     {
-      key: "1",
+      key: '1',
       title: <StyledText fS={20}>TITLE</StyledText>,
-      dataIndex: "name",
-      width: "35%",
-      maxWidth: "35%",
+      dataIndex: 'name',
+      width: '35%',
+      maxWidth: '35%',
     },
     {
-      key: "2",
+      key: '2',
       title: <StyledText fS={20}>DEPARTMENT</StyledText>,
-      dataIndex: "organization",
-      maxWidth: "25%",
+      dataIndex: 'organization',
+      maxWidth: '25%',
       render: (record: any) => {
         return (
           <>
@@ -69,11 +69,11 @@ function TableDashboards() {
       },
     },
     {
-      key: "3",
+      key: '3',
       title: (
-        <div style={{ textAlign: "right" }}>
+        <div style={{ textAlign: 'right' }}>
           <span
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             onClick={() => {
               onDeleteData(
                 dataSource.filter((obj) => selectedRowKeys.includes(obj.key))
@@ -81,7 +81,7 @@ function TableDashboards() {
               setSelectedRowKeys([]);
             }}
           >
-            <DeleteFilled style={{ color: "#635ffa" }} />
+            <DeleteFilled style={{ color: '#635ffa' }} />
             <StyledText fC="inherit" fS={18} fw={700}>
               DELETE
             </StyledText>
@@ -94,19 +94,19 @@ function TableDashboards() {
           <>
             <div className="row-actions">
               <span onClick={() => onEditData(record)}>
-                <EditOutlined style={{ color: "#635ffa" }} />
+                <EditOutlined style={{ color: '#635ffa' }} />
                 &nbsp;RENAME
               </span>
               &nbsp; &nbsp; &nbsp;
               <span
                 onClick={() => pushHistory(`/team/dashboards/${record?._id}`)}
               >
-                <EyeFilled style={{ color: "#635ffa" }} />
+                <EyeFilled style={{ color: '#635ffa' }} />
                 &nbsp;VIEW
               </span>
               &nbsp; &nbsp; &nbsp;
               <span onClick={() => onDeleteData([record])}>
-                <DeleteOutlined style={{ color: "#635ffa" }} />
+                <DeleteOutlined style={{ color: '#635ffa' }} />
                 &nbsp;DELETE
               </span>
             </div>
@@ -131,7 +131,7 @@ function TableDashboards() {
   }, [rawData]);
 
   useEffect(() => {
-    if (searchInpt === "") return;
+    if (searchInpt === '') return;
     setSearchdData(
       dataSource.filter((obj) => {
         return searchdData.some((objX) => {
@@ -144,13 +144,13 @@ function TableDashboards() {
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
     Modal.confirm({
-      title: "Are you sure, you want to delete this record?",
-      okText: "Yes",
-      okType: "danger",
+      title: 'Are you sure, you want to delete this record?',
+      okText: 'Yes',
+      okType: 'danger',
       onOk: () => {
         function recurseDispatch(count = 0) {
           if (count >= recArr.length) return;
-          localStorage.setItem("dashboardId", recArr[count]._id);
+          localStorage.setItem('dashboardId', recArr[count]._id);
           dispatch(
             deleteDashboard({
               callback: () => recurseDispatch(count + 1),
@@ -163,7 +163,7 @@ function TableDashboards() {
             .filter((obj) => recArr.every((record) => record.key !== obj.key))
             .map((obj, i) => ({ ...obj, key: i }));
         });
-        if (searchInpt !== "") refreshSearchdData();
+        if (searchInpt !== '') refreshSearchdData();
       },
     });
   };
@@ -184,7 +184,7 @@ function TableDashboards() {
   };
   const rowListener = (record) => ({
     onClick: (event) => {
-      if (event.target.localName != "td") {
+      if (event.target.localName != 'td') {
         event.stopPropagation();
         return;
       }
@@ -199,15 +199,15 @@ function TableDashboards() {
     setSearchInpt(e.target.value);
     setSelectedRowKeys([]);
     const pattern = e.target.value
-      .split("")
+      .split('')
       .map((x) => {
         return `(?=.*${x})`;
       })
-      .join("");
-    const regX = new RegExp(`${pattern}`, "gi");
+      .join('');
+    const regX = new RegExp(`${pattern}`, 'gi');
     const tmp = [];
     dataSource.forEach((record, i) => {
-      if (regX.test(record?.name + " " + record?.department)) tmp.push(i);
+      if (regX.test(record?.name + ' ' + record?.department)) tmp.push(i);
     });
     if (!tmp.length) return setSearchdData([]);
     setSearchdData(dataSource.filter((obj) => tmp.includes(obj.key)));
@@ -220,11 +220,11 @@ function TableDashboards() {
     );
   };
   return (
-    <Layout style={{ paddingRight: 50, background: "transparent" }}>
+    <Layout style={{ paddingRight: 50, background: 'transparent' }}>
       <PageHeader
         ghost={false}
         title={<StyledText fS={30}>Dashboards</StyledText>}
-        style={{ background: "none", paddingTop: 8 }}
+        style={{ background: 'none', paddingTop: 8 }}
         extra={[<CreateDashboard />]}
       />
 
@@ -233,22 +233,23 @@ function TableDashboards() {
         style={{
           paddingLeft: 30,
           paddingRight: 24,
-          background: "transparent",
+          background: 'transparent',
         }}
       >
         <StyledInput
           placeholder="Search Dashboards"
           defaultValue={searchInpt}
           onChange={handleSearch}
-          prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
+          prefix={<SearchOutlined style={{ color: '#635ffa' }} />}
         />
 
         <Table
           onRow={rowListener}
           rowSelection={rowSelection}
           columns={columns}
-          dataSource={searchInpt !== "" ? searchdData : dataSource}
-          loading={{ indicator: <Loading />, spinning: loading }}
+          dataSource={searchInpt !== '' ? searchdData : dataSource}
+          // loading={{ indicator: <Loading />, spinning: loading }}
+          loading={loading}
         />
 
         <Modal
@@ -260,7 +261,7 @@ function TableDashboards() {
           }}
           onOk={() => {
             const copyEdited = JSON.parse(JSON.stringify(editingData));
-            localStorage.setItem("dashboardId", copyEdited._id);
+            localStorage.setItem('dashboardId', copyEdited._id);
             const callback = (res) => {
               if (!res) return;
               setDataSource((pre) => {

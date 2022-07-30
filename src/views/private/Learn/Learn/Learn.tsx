@@ -14,9 +14,9 @@ const Learn = (): ReactElement => {
   const dispatch = useDispatch();
   const { loading }: any = useSelector<RootState>((state) => state.lms);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(getMyCourses());
-  },[])
+  }, []);
 
   const content = (
     <Fragment>

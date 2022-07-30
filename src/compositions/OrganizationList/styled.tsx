@@ -70,3 +70,32 @@ export const RatingText = styled.span`
   margin-left: 7px;
   margin-top: 3px;
 `;
+
+export const StyledTitle = styled.p`
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+  color: #4c4b7b;
+`;
+
+export const AvatarContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 150px;
+  opacity: 0.5;
+  height: 150px;
+  border-radius: 150px;
+  background: #635ffa;
+  align-items: center;
+`;
+
+export const StyledName = styled.span`
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  margin-top: 26px;
+  color: #4c4b7b;
+`;

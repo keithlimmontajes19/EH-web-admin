@@ -1,6 +1,6 @@
-import {ReactElement} from 'react';
-import {useDispatch} from 'react-redux';
-import {useHistory} from 'react-router-dom';
+import { ReactElement } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 /* styled */
 import {
@@ -13,7 +13,7 @@ import {
   FlexSpaceBetween,
   ProgressContainer,
 } from './styled';
-import {Image} from 'antd';
+import { Image } from 'antd';
 
 /* images */
 // import SampleImage from 'assets/images/image.png';
@@ -21,9 +21,9 @@ import {Image} from 'antd';
 import UserImage from 'assets/images/user-icon.png';
 
 /* recuer action */
-import {RootState} from 'ducks/store';
-import {useSelector} from 'react-redux';
-import {getCurriculum} from 'ducks/lms/actionCreator';
+import { RootState } from 'ducks/store';
+import { useSelector } from 'react-redux';
+import { getCurriculum } from 'ducks/lms/actionCreator';
 
 /* components */
 import IconImage from 'components/IconImage';
@@ -33,7 +33,7 @@ const LearnCurriculum = (): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const {ongoingCourses}: any = useSelector<RootState>((state) => state.lms);
+  const { ongoingCourses }: any = useSelector<RootState>((state) => state.lms);
 
   return (
     <CardStyled>
@@ -50,7 +50,8 @@ const LearnCurriculum = (): ReactElement => {
               history.push('/learn/curriculum');
               localStorage.setItem('courseId', item?._id);
               localStorage.setItem('organizationId', item?.organizationId);
-            }}>
+            }}
+          >
             <Image
               width={90}
               height={90}

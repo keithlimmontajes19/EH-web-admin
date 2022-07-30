@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 
 import {
@@ -6,14 +6,16 @@ import {
   Container,
   RatingText,
   UserStyles,
+  StyledName,
+  StyledTitle,
   TitleCourse,
   SubtitleText,
   FlexContainer,
   ImageContainer,
   RatingContainer,
+  AvatarContainer,
 } from './styled';
 import { Image } from 'antd';
-import { useDispatch } from 'react-redux';
 import { NO_IMAGE } from 'utils/constants';
 import { useHistory } from 'react-router-dom';
 import { getCurriculum } from 'ducks/lms/actionCreator';
@@ -24,10 +26,12 @@ import RatingStar from 'components/RatingStar';
 import USER_LOGO from 'assets/images/user-icon.png';
 import LEFT_ARROW from 'assets/icons/left-icon.png';
 import RIGHT_ARROW from 'assets/icons/right-icon.png';
+import ORGANIZATION from 'assets/icons/organization.png';
 
 /* recuer action */
 import { RootState } from 'ducks/store';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getListOrganization } from 'ducks/organization/actionCreator';
 
 const LeftArrow = () => {
   const { scrollPrev } = React.useContext(VisibilityContext);
@@ -71,58 +75,43 @@ const RightArrow = () => {
 
 const Card = ({ item, itemId, onClick }) => {
   const visibility = React.useContext(VisibilityContext);
-  const history = useHistory();
-  const dispatch = useDispatch();
-
   visibility.isItemVisible(itemId);
 
   return (
-    <Container
-      onClick={() => {
-        onClick(visibility);
-        dispatch(getCurriculum(item));
-
-        localStorage.setItem('courseId', item?._id);
-        localStorage.setItem('organizationId', item?.organizationId);
-        history.push('/learn/courses/builder/' + item?._id);
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        marginRight: 122,
       }}
-      tabIndex={0}
     >
-      <Image
-        width={380}
-        height={180}
-        preview={false}
-        src={item?.preview?.ref ? item?.preview?.ref : NO_IMAGE}
-      />
-      <TitleCourse>{item?.title}</TitleCourse>
-      <FlexRow>
-        <FlexContainer>
-          <ImageContainer>
-            <IconImage
-              width={10}
-              height={12}
-              source={USER_LOGO}
-              styles={UserStyles}
-            />
-          </ImageContainer>
-          <SubtitleText>
-            {item?.instructor?.title} {item?.instructor?.name}
-          </SubtitleText>
-        </FlexContainer>
-        <RatingContainer>
-          <FlexRow>
-            <RatingStar count={1} outOf={1} />
-            <RatingText>{item?.averageUserRating || 1}</RatingText>
-          </FlexRow>
-        </RatingContainer>
-      </FlexRow>
-    </Container>
+      <AvatarContainer>
+        <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+          <IconImage source={ORGANIZATION} width={40} height={53} />
+        </div>
+      </AvatarContainer>
+
+      <StyledName>{item?.name || ''}</StyledName>
+    </div>
   );
 };
 
-const MainCourseList = () => {
-  const { data }: any = useSelector<RootState>((state) => state.lms);
+const OrganizationList = () => {
+  const dispatch = useDispatch();
+
+  const { organizations }: any = useSelector<RootState>(
+    (state) => state.organization
+  );
+
+  const { data, loading } = organizations;
   const [selected, setSelected] = React.useState([]);
+
+  useEffect(() => {
+    dispatch(getListOrganization());
+  }, []);
 
   const isItemSelected = (id) => !!selected.find((el) => el === id);
   const handleClick = (id) => () => {
@@ -136,25 +125,28 @@ const MainCourseList = () => {
   };
 
   return (
-    <ScrollMenu
-      LeftArrow={() => (data?.length ? LeftArrow() : <></>)}
-      RightArrow={() => (data?.length ? RightArrow() : <></>)}
-      options={{
-        ratio: 0.9,
-        rootMargin: '5px',
-        threshold: [0.01, 0.05, 0.5, 0.75, 0.95, 1],
-      }}
-    >
-      {(data || []).map((item) => (
-        <Card
-          item={item}
-          key={item?._id}
-          itemId={item?._id}
-          onClick={handleClick(item?._id)}
-        />
-      ))}
-    </ScrollMenu>
+    <Fragment>
+      <StyledTitle>Organizations</StyledTitle>
+      <ScrollMenu
+        LeftArrow={() => (data?.length ? LeftArrow() : <></>)}
+        RightArrow={() => (data?.length ? RightArrow() : <></>)}
+        options={{
+          ratio: 0.9,
+          rootMargin: '5px',
+          threshold: [0.01, 0.05, 0.5, 0.75, 0.95, 1],
+        }}
+      >
+        {(data || []).map((item) => (
+          <Card
+            item={item}
+            key={item?._id}
+            itemId={item?._id}
+            onClick={handleClick(item?._id)}
+          />
+        ))}
+      </ScrollMenu>
+    </Fragment>
   );
 };
 
-export default MainCourseList;
+export default OrganizationList;
