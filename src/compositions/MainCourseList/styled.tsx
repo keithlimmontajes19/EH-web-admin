@@ -1,4 +1,4 @@
-import {theme} from 'utils/colors';
+import { theme } from 'utils/colors';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -30,8 +30,11 @@ export const ImageContainer = styled.div`
   margin-top: ${1}px;
 `;
 
-export const UserStyles = {marginTop: 3};
-export const ImageStyles = {borderTopRightRadius: 20, borderTopLeftRadius: 20};
+export const UserStyles = { marginTop: 3 };
+export const ImageStyles = {
+  borderTopRightRadius: 20,
+  borderTopLeftRadius: 20,
+};
 
 export const TitleCourse = styled.span`
   font-weight: 700;

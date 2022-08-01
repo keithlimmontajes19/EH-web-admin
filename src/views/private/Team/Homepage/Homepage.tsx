@@ -14,6 +14,7 @@ import {
 
 import { columns } from "./columns";
 import { Row, Col, Tabs } from "antd";
+
 import NO_ANNOUNCEMENT from "assets/images/noannouncement.png";
 
 const { TabPane } = Tabs;
