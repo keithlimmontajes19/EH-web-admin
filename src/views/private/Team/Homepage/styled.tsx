@@ -104,3 +104,23 @@ export const TabitemContainer = styled.p`
   margin-top: 50px;
   text-align: center;
 `;
+
+export const HeaderStyles = {
+  padding: "10px",
+  fontSize: "22px",
+  fontWeight: "500",
+  color: "#2B2E4A !important",
+};
+
+export const DivEmptyStyles: any = {
+  display: "flex",
+  alignItems: "center",
+  flexDirection: "column",
+  backgroundColor: "#fff",
+  padding: 30,
+};
+
+export const ImgEmptyStyles = {
+  width: "87px",
+  height: "109px",
+};

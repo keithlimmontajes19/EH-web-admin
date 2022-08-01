@@ -1,5 +1,15 @@
-#root{
+#root {
   overflow: hidden;
 }
 
 @import '~gleap/build/index.min.css';
+
+.react-horizontal-scrolling-menu--scroll-container {
+  display: flex;
+  height: max-content;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  position: relative;
+  width: 100%;
+}

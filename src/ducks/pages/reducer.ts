@@ -1,4 +1,4 @@
-import { TYPES } from "./actionTypes";
+import { TYPES } from './actionTypes';
 
 const INITIAL_STATE = {
   data: [],
@@ -26,7 +26,6 @@ const reducer = (state = INITIAL_STATE, action) => {
     case TYPES.LIST_PAGE_REQUEST:
       return {
         ...state,
-        data: [],
         loading: true,
         error: false,
       };
