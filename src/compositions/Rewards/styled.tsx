@@ -1,9 +1,10 @@
-import { Button } from 'antd';
-import styled from 'styled-components';
-import { theme } from 'utils/colors';
+import { Button, Table } from "antd";
+import { theme } from "utils/colors";
+
+import styled from "styled-components";
 
 export const Container = styled.div`
-  width: 570px;
+  width: 95%;
   min-height: 452px;
   max-height: 452px;
   overflow-y: scroll;
@@ -85,7 +86,7 @@ export const Leaderboard = styled.p`
   font-weight: 700;
   font-size: 20px;
   line-height: 25px;
-  color: #635ffa;
+  color: #4c4b7b;
   margin-top: 17px;
   margin-left: 21px;
 `;
@@ -114,4 +115,11 @@ export const SubText = styled.span`
   line-height: 22px;
   color: #1d2d3a;
   opacity: 0.5;
+`;
+
+export const StyledTable = styled(Table)`
+  .ant-table-thead > tr > th {
+    background: none;
+  }
+  border: none;
 `;

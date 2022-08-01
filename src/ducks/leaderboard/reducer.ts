@@ -1,4 +1,4 @@
-import { TYPES } from './actionTypes';
+import { TYPES } from "./actionTypes";
 
 const INITIAL_STATE = {
   data: [],
@@ -15,7 +15,7 @@ const reducer = (state = INITIAL_STATE, action) => {
      * **/
     case TYPES.GET_LEADERBOARDS_REQUEST:
       return {
-        data: [],
+        ...state,
         loading: true,
         error: false,
       };

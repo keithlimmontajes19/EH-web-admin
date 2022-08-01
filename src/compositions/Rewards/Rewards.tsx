@@ -1,39 +1,28 @@
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from "react";
 
-import {
-  SubTitle,
-  CoinText,
-  MedalText,
-  Container,
-  Leaderboard,
-  ButtonStyled,
-  TextContainer,
-  CoinsContainer,
-  MedalContainer,
-  ContainerStyles,
-} from './styled';
-import { Col, Row, Table } from 'antd';
+import { Table } from "antd";
+import { Container, Leaderboard, ContainerStyles, StyledTable } from "./styled";
 
 /* reducer action */
-import { RootState } from 'ducks/store';
-import { useSelector } from 'react-redux';
+import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from "react-redux";
+import { getLeaderboards } from "ducks/leaderboard/actionCreator";
 
-import IconImage from 'components/IconImage';
-import COIN_LOGO from 'assets/icons/coin-icon.png';
-import MEDAL_LOGO from 'assets/icons/medal-icon.png';
-
-import { columns } from './columns';
+import { columns } from "./columns";
 
 const Rewards = (): ReactElement => {
+  const dispatch = useDispatch();
   const rewards: any = useSelector<RootState>((state) => state.rewards);
-  const users: any = useSelector<RootState>((state) => state.authentication);
-  const userRewards = users?.user_details?.data?.rewards;
+
+  useEffect(() => {
+    dispatch(getLeaderboards());
+  }, []);
 
   return (
     <div style={ContainerStyles}>
       <Container>
         <Leaderboard>Leaderboard</Leaderboard>
-        <Table
+        <StyledTable
           bordered={false}
           pagination={false}
           columns={columns}

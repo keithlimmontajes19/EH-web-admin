@@ -1,14 +1,15 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const CardStyled = styled.div`
   width: 547px;
-  max-height: 452px;
   padding: 24px;
+  max-height: 452px;
+  min-height: 452px;
   background: #ffffff;
   border-radius: 25px;
-  box-shadow: 0px 5px 20px -5px rgba(43, 46, 74, 0.2);
   overflow-y: auto;
   scrollbar-width: none;
+  box-shadow: 0px 5px 20px -5px rgba(43, 46, 74, 0.2);
 `;
 
 export const TextStyled = styled.span`
