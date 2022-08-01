@@ -9,13 +9,20 @@ const { Dragger } = Upload;
 const UploadComponent = (props: PropsType): ReactElement => {
   const { setFileList } = props;
   const accessToken = localStorage.getItem("accessToken");
-  // const API_URL = 'http://localhost:8080/api/file/post';
-  const API_URL = "https://noblemen.herokuapp.com/api/file/post";
+
+  /**
+   * =============================================================
+   * MAIN URL https://engage-hub-platform-dev.herokuapp.com/api/v1
+   * LOCAL URL http://localhost:8080/api/v1/
+   * =============================================================
+   */
+
+  const baseURL = "https://noblemen.herokuapp.com/api/file/post";
 
   const uploadInnerProps = {
     name: "file",
     multiple: true,
-    action: API_URL,
+    action: baseURL,
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

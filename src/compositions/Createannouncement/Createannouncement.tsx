@@ -87,11 +87,18 @@ const Createannouncement = (props: PropsType): ReactElement => {
     (state) => state.announcement
   );
 
+  /**
+   * =============================================================
+   * MAIN URL https://engage-hub-platform-dev.herokuapp.com/api/v1
+   * LOCAL URL http://localhost:8080/api/v1/upload
+   * =============================================================
+   */
+  const baseURL = "https://engage-hub-platform-dev.herokuapp.com/api/v1/upload";
   const uploadProps: UploadProps = {
     maxCount: 1,
     name: "file",
     showUploadList: false,
-    action: "http://localhost:8080/api/v1/upload",
+    action: baseURL,
   };
 
   const showModal = () => {
