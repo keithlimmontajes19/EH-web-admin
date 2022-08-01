@@ -1,5 +1,6 @@
-import { ReactElement, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { ReactElement, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import {
   StyledSave,
@@ -11,22 +12,43 @@ import {
   FlexContainer,
   ButtonContainer,
   UploadContainer,
-} from "./styled";
-import { Avatar } from "antd";
-import UploadButton from "components/UploadButton";
+} from './styled';
+import { Avatar } from 'antd';
+import UploadButton from 'components/UploadButton';
+
+import {
+  getUserDetails,
+  patchUserDetails,
+} from 'ducks/authentication/actionCreator';
+import auth_services from 'api/services/auth_services';
 
 const ProfileUser = (): ReactElement => {
-  const [fileId, setFileId] = useState("");
-  const [fileUrl, setFileUrl] = useState("");
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const [fileUrl, setFileUrl] = useState('');
   const [userDetails, setUserDetails] = useState({
-    first_name: "",
-    last_name: "",
-    phone_number: "",
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    country: '',
   });
 
   const { user_details: data }: any = useSelector<any>(
     (states) => states.authentication
   );
+
+  useEffect(() => {
+    if (data) {
+      setFileUrl(data?.profile?.avatar);
+      setUserDetails({
+        firstName: data?.profile?.firstName,
+        lastName: data?.profile?.lastName,
+        phoneNumber: data?.profile?.phoneNumber,
+        country: data?.profile?.country,
+      });
+    }
+  }, [data]);
 
   const onChange = (e: any, field: string) => {
     setUserDetails({
@@ -36,56 +58,60 @@ const ProfileUser = (): ReactElement => {
   };
 
   const handleSubmit = () => {
-    const data = {};
+    dispatch(patchUserDetails(data?._id, userDetails));
   };
 
-  useEffect(() => {
-    if (data) {
-      setFileId(data?.profile?.avatarId);
-      setFileUrl(data?.profile?.avatar);
-      setUserDetails({
-        first_name: data?.profile?.firstName,
-        last_name: data?.profile?.lastName,
-        phone_number: data?.profile?.phoneNumber,
-      });
-    }
-  }, [data]);
+  const uploadAvatar = async (file) => {
+    await auth_services.updateAvatar(data?._id).then((res) => {
+      fetch(res?.data?.data?.updateUrl, {
+        body: file,
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then(() => dispatch(getUserDetails()))
+        .catch((err) => console.log('error', err));
+    });
+  };
 
   return (
     <RowContainer>
       <FlexContainer>
         <StyledText>My Profile</StyledText>
-        <Avatar size={140} src={fileUrl || ""} style={{ marginLeft: -5 }} />
+        <Avatar size={140} src={fileUrl || ''} style={{ marginLeft: -5 }} />
         <UploadContainer>
           <UploadButton
-            setFileId={setFileId}
+            border="none"
             setImageUrl={setFileUrl}
             placeholder="Change Photo"
+            uploadAvatar={uploadAvatar}
           />
         </UploadContainer>
 
         <StyledLabel>First Name</StyledLabel>
         <StyledInput
-          value={userDetails.first_name}
-          onChange={(e) => onChange(e, "first_name")}
+          value={userDetails.firstName}
+          onChange={(e) => onChange(e, 'firstName')}
         />
 
         <StyledLabel>Last Name</StyledLabel>
         <StyledInput
-          value={userDetails.last_name}
-          onChange={(e) => onChange(e, "last_name")}
+          value={userDetails.lastName}
+          onChange={(e) => onChange(e, 'lastName')}
         />
 
         <StyledLabel style={{ paddingLeft: 25 }}>Phone Number</StyledLabel>
         <StyledInput
-          value={userDetails.phone_number}
-          onChange={(e) => onChange(e, "phone_number")}
+          value={userDetails.phoneNumber}
+          onChange={(e) => onChange(e, 'phoneNumber')}
         />
       </FlexContainer>
 
       <ButtonContainer>
-        <StyledCancel>CANCEL</StyledCancel>
-        <StyledSave>SAVE</StyledSave>
+        <StyledCancel onClick={() => history.goBack()}>CANCEL</StyledCancel>
+        <StyledSave onClick={() => handleSubmit()}>SAVE</StyledSave>
       </ButtonContainer>
     </RowContainer>
   );

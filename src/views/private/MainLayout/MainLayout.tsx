@@ -120,13 +120,10 @@ const MainLayout = (): ReactElement => {
         </Searchdiv>
 
         <PopoverProfile name="Keith Lim Montajes" organization="Organization">
-          <Avatar
-            size={64}
-            src={data?.profile?.avatar || ''}
-            // icon={<UserOutlined style={{ padding: "0px" }} />}
-          />
+          <Avatar size={64} src={data?.profile?.avatar || ''} />
         </PopoverProfile>
       </HeaderStyled>
+
       <Layout>
         <Sider
           onClick={() => {
@@ -170,7 +167,6 @@ const MainLayout = (): ReactElement => {
               active={selected === '2' ? 1 : 0}
               collapsed={collapsed}
               key="2"
-              // style={selected === '2' && MenuItemOnSelect}
               title={
                 <span>
                   <PlaySquareOutlined
@@ -230,7 +226,6 @@ const MainLayout = (): ReactElement => {
               active={selected === '3' ? 1 : 0}
               collapsed={collapsed}
               key="3"
-              // style={selected === '3' && MenuItemOnSelect}
               title={
                 <span>
                   <TeamOutlined

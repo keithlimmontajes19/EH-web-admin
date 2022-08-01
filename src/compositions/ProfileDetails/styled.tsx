@@ -1,12 +1,14 @@
-import styled from "styled-components";
-import { theme } from "utils/colors";
-import { Table, Input } from "antd";
+import styled from 'styled-components';
+import { theme } from 'utils/colors';
+import { Table, Input } from 'antd';
 
 export const Container = styled.div`
   padding: 85px;
 `;
 
 export const StyledBack = styled.a`
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -26,7 +28,7 @@ export const HeaderContainer = styled.div`
 
 export const StyledTable: any = styled(Table).attrs((props: any) => ({
   ...props,
-  size: "small",
+  size: 'small',
 }))`
   .ant-table-thead > tr > th {
     background: ${theme.HEADER};
@@ -35,6 +37,8 @@ export const StyledTable: any = styled(Table).attrs((props: any) => ({
 `;
 
 export const StyledHeader: any = styled.span`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   font-weight: 500;
   font-size: 20px;
   color: #635ffa;
@@ -54,31 +58,33 @@ export const ConfirmContainer = styled.div`
 `;
 
 export const EditStyles = {
-  color: "#635ffa",
-  fontSize: "18px",
-  padding: "10px 10px",
+  color: '#635ffa',
+  fontSize: '18px',
+  padding: '10px 10px',
 };
 
 export const DeleteStyles = {
-  color: "#635ffa",
-  fontSize: "18px",
-  padding: "10px 10px",
+  color: '#635ffa',
+  fontSize: '18px',
+  padding: '10px 10px',
 };
 
 export const MoreStyles = {
   fontSize: 25,
-  color: "#635FFA",
-  paddingLeft: "5px",
-  fontWeight: "bolder",
+  color: '#635FFA',
+  paddingLeft: '5px',
+  fontWeight: 'bolder',
 };
 
-export const overlayStyles = { borderRadius: "15px" };
+export const overlayStyles = { borderRadius: '15px' };
 
 export const PopoverContainer = styled.div`
   font-size: 18px;
 `;
 
 export const StyledTitle = styled.p`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   color: #4c4b7b;
   margin-top: 5px;
   font-size: 25px;
@@ -99,6 +105,8 @@ export const StyledInput: any = styled(Input)`
 `;
 
 export const StyledInvite = styled.button`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   width: 160px;
   height: 44px;
   border: none;
@@ -111,6 +119,8 @@ export const StyledInvite = styled.button`
 `;
 
 export const StyledCancel = styled.button`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   border: none;
   color: #635ffa;
   font-size: 20px;
@@ -119,4 +129,22 @@ export const StyledCancel = styled.button`
   text-align: right;
   margin-right: 20px;
   background: transparent;
+`;
+
+export const StyledHeaderName = styled.span`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 28px;
+  color: #4c4b7b;
+`;
+
+export const StyledColumnText = styled.span`
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 32px;
+  color: #4c4b7b;
 `;

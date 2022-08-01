@@ -1,10 +1,12 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const UserContainer = styled.div`
   margin: 50px;
 `;
 
 export const StyledMembers = styled.p`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   color: #4c4b7b;
   font-size: 25px;
   font-weight: 700;
@@ -13,6 +15,8 @@ export const StyledMembers = styled.p`
 `;
 
 export const StyledName = styled.p`
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
   color: #4c4b7b;
   font-size: 18px;
   line-height: 32px;
@@ -31,6 +35,8 @@ export const StyledPosition = styled.p`
 `;
 
 export const StyledCreate = styled.button`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   width: 160px;
   height: 44px;
   border: none;
@@ -42,4 +48,4 @@ export const StyledCreate = styled.button`
   background: #635ffa;
 `;
 
-export const HeaderStyles = { background: "none", marginLeft: -20 };
+export const HeaderStyles = { background: 'none', marginLeft: -20 };

@@ -16,15 +16,17 @@ export const RowContainer = styled.div`
 
 export const ButtonContainer = styled.div`
   position: absolute;
-  left: 78.94%;
-  right: 6.53%;
-  top: 91.31%;
+  left: 70%;
+  right: 10%;
+  top: 90%;
   bottom: 4%;
   display: flex;
   flex-direction: row;
 `;
 
 export const StyledText = styled.p`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   color: #4c4b7b;
   font-size: 25px;
   font-weight: 700;
@@ -34,6 +36,8 @@ export const StyledText = styled.p`
 `;
 
 export const StyledInput = styled.input`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   height: 48px;
   opacity: 0.5;
   width: 410px;
@@ -45,6 +49,8 @@ export const StyledInput = styled.input`
 `;
 
 export const StyledLabel = styled.p`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   color: #4c4b7b;
   font-size: 14px;
   font-weight: 400;
@@ -55,7 +61,9 @@ export const StyledLabel = styled.p`
 `;
 
 export const StyledSave = styled.button`
-  width: 166px;
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
+  min-width: 166px;
   height: 48px;
   color: #ffffff;
   font-size: 20px;
@@ -66,6 +74,8 @@ export const StyledSave = styled.button`
 `;
 
 export const StyledCancel = styled.button`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   border: none;
   color: #635ffa;
   font-size: 20px;
