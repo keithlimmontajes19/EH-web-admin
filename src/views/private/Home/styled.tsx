@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Popconfirm } from "antd";
+import styled from 'styled-components';
+import { Popconfirm } from 'antd';
 
 export const NoAnnouncementContainer = styled.div`
   width: 100%;
@@ -40,6 +40,7 @@ export const HeaderContainer = styled.div`
 `;
 
 export const StyledTitle = styled.span`
+  font-family: 'Red Hat Display', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 25px;
@@ -49,7 +50,9 @@ export const StyledTitle = styled.span`
 `;
 
 export const StyledViewList = styled.span`
+  font-family: 'DM Sans', sans-serif;
   font-style: normal;
+  font-weight: 700;
   font-size: 16px;
   line-height: 18px;
   text-align: center;
@@ -60,19 +63,19 @@ export const StyledViewList = styled.span`
 
 export const StyledPopover = styled(Popconfirm).attrs((props) => ({
   ...props,
-  icon: "",
+  icon: '',
   showOk: false,
   showCancel: false,
-  placement: "bottomLeft",
+  placement: 'bottomLeft',
   overlayInnerStyle: {
     minWidth: 232,
     minHeight: 90,
     borderRadius: 15,
-    background: "#fff",
-    boxShadow: "0px 5px 20px -5px rgba(43, 46, 74, 0.2)",
+    background: '#fff',
+    boxShadow: '0px 5px 20px -5px rgba(43, 46, 74, 0.2)',
   },
-  okType: "none",
-  okButtonProps: { style: { display: "none" } },
+  okType: 'none',
+  okButtonProps: { style: { display: 'none' } },
 }))``;
 
 export const StyledButton = styled.button`
@@ -85,4 +88,12 @@ export const StyledButton = styled.button`
   border: none;
   text-align: center;
   padding: 10px;
+`;
+
+export const StyledAdd = styled.span`
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  display: flex;
+  flex-direction: row;
 `;

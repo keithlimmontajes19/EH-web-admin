@@ -1,6 +1,7 @@
-import React from "react";
+import React from 'react';
 
 import {
+  StyledAdd,
   StyledTitle,
   StyledButton,
   StyledHeader,
@@ -8,23 +9,23 @@ import {
   StyledViewList,
   HeaderContainer,
   NoAnnouncementContainer,
-} from "./styled";
-import { Col, Row } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+} from './styled';
+import { Col, Row } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
-import Rewards from "compositions/Rewards";
-import IconImage from "components/IconImage";
-import DashboardCards from "compositions/DashboardCards";
-import OrganizationList from "compositions/OrganizationList";
-import DashboardMostEnrolled from "compositions/DashboardMostEnrolled";
+import Rewards from 'compositions/Rewards';
+import IconImage from 'components/IconImage';
+import DashboardCards from 'compositions/DashboardCards';
+import OrganizationList from 'compositions/OrganizationList';
+import DashboardMostEnrolled from 'compositions/DashboardMostEnrolled';
 
-import USER_ICONS from "assets/icons/card-employee.png";
-import ORG_ICONS from "assets/icons/card-org.png";
-import NO_ANNOUNCEMENT from "assets/images/noannouncement.png";
+import USER_ICONS from 'assets/icons/card-employee.png';
+import ORG_ICONS from 'assets/icons/card-org.png';
+import NO_ANNOUNCEMENT from 'assets/images/noannouncement.png';
 
 /* reducer */
-import { RootState } from "ducks/store";
-import { useSelector } from "react-redux";
+import { RootState } from 'ducks/store';
+import { useSelector } from 'react-redux';
 
 const Home = () => {
   const { user_details }: any = useSelector<RootState>(
@@ -48,14 +49,17 @@ const Home = () => {
   return (
     <div>
       <HeaderContainer>
-        <StyledTitle>Hi {user_details?.profile?.firstName || ""}!</StyledTitle>
+        <StyledTitle>Hi {user_details?.profile?.firstName || ''}!</StyledTitle>
         <StyledViewList>View List</StyledViewList>
 
         <StyledPopover title={content()}>
           <StyledButton>
-            <span style={{ display: "flex", flexDirection: "row" }}>
-              ADD <DownOutlined style={{ marginTop: 5, marginLeft: 5 }} />
-            </span>
+            <StyledAdd>
+              ADD
+              <DownOutlined
+                style={{ marginTop: 5, marginLeft: 5, fontSize: 12 }}
+              />
+            </StyledAdd>
           </StyledButton>
         </StyledPopover>
       </HeaderContainer>

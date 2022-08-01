@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import {Avatar, Popconfirm} from 'antd';
-import {UserOutlined} from '@ant-design/icons';
+import { Avatar, Popconfirm } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 export const StyledPopover = styled(Popconfirm).attrs((props) => ({
   ...props,
@@ -16,10 +16,12 @@ export const StyledPopover = styled(Popconfirm).attrs((props) => ({
     boxShadow: '0px 5px 20px -5px rgba(43, 46, 74, 0.2)',
   },
   okType: 'none',
-  okButtonProps: {style: {display: 'none'}},
+  okButtonProps: { style: { display: 'none' } },
 }))``;
 
 export const StyledText = styled.span`
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
   color: #4c4b7b;
   font-size: 15px;
   font-weight: 400;

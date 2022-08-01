@@ -1,5 +1,6 @@
-import { ReactElement, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { ReactElement, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import {
   StyledSave,
@@ -10,13 +11,23 @@ import {
   RowContainer,
   FlexContainer,
   ButtonContainer,
-} from "./styled";
+} from './styled';
+
+import { notificationAlert } from 'utils/alerts';
+import { patchUserDetails } from 'ducks/authentication/actionCreator';
 
 const ProfileAccount = (): ReactElement => {
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const [password, setPassword] = useState('');
+  const [repassword, setRepassword] = useState('');
   const [userDetails, setUserDetails] = useState({
-    email: "",
-    password: "",
-    confirm_password: "",
+    email: '',
+    country: '',
+    lastName: '',
+    firstName: '',
+    phoneNumber: '',
   });
 
   const { user_details: data }: any = useSelector<any>(
@@ -27,8 +38,10 @@ const ProfileAccount = (): ReactElement => {
     if (data) {
       setUserDetails({
         email: data?.profile?.email,
-        password: data?.profile?.password,
-        confirm_password: data?.profile?.confirm_password,
+        firstName: data?.profile?.firstName,
+        lastName: data?.profile?.lastName,
+        phoneNumber: data?.profile?.phoneNumber,
+        country: data?.profile?.country,
       });
     }
   }, [data]);
@@ -40,6 +53,14 @@ const ProfileAccount = (): ReactElement => {
     });
   };
 
+  const handleSubmit = () => {
+    if (password !== repassword) {
+      notificationAlert('warning', 'Password does not match!', () => {});
+    } else {
+      dispatch(patchUserDetails(data?._id, userDetails));
+    }
+  };
+
   return (
     <RowContainer>
       <FlexContainer>
@@ -48,29 +69,29 @@ const ProfileAccount = (): ReactElement => {
         <StyledLabel style={{ paddingLeft: 30 }}>Email Address</StyledLabel>
         <StyledInput
           value={userDetails.email}
-          onChange={(e) => onChange(e, "email")}
+          onChange={(e) => onChange(e, 'email')}
         />
 
         <StyledLabel>Password</StyledLabel>
         <StyledInput
           type="password"
-          value={userDetails.password}
+          value={password}
           placeholder="Input new password"
-          onChange={(e) => onChange(e, "first_name")}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         <StyledLabel style={{ paddingLeft: 55 }}>Re-Type Password</StyledLabel>
         <StyledInput
           type="password"
-          value={userDetails.confirm_password}
+          value={repassword}
           placeholder="Input re-type password"
-          onChange={(e) => onChange(e, "first_name")}
+          onChange={(e) => setRepassword(e.target.value)}
         />
       </FlexContainer>
 
       <ButtonContainer>
-        <StyledCancel>CANCEL</StyledCancel>
-        <StyledSave>SAVE</StyledSave>
+        <StyledCancel onClick={() => history.goBack()}>CANCEL</StyledCancel>
+        <StyledSave onClick={() => handleSubmit()}>SAVE</StyledSave>
       </ButtonContainer>
     </RowContainer>
   );

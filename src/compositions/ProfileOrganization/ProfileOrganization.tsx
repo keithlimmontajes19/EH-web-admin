@@ -1,5 +1,6 @@
-import { Fragment, ReactElement, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { Fragment, ReactElement, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import {
   StyledName,
@@ -7,26 +8,22 @@ import {
   StyledCreate,
   StyledMembers,
   UserContainer,
-  StyledPosition,
-} from "./styled";
-import { Row, Col, PageHeader } from "antd";
+} from './styled';
+import { Row, Col, PageHeader } from 'antd';
 
-import Avatar from "components/Avatar/Avatar";
-import ORG_IMAGE from "assets/icons/organization.png";
+import Avatar from 'components/Avatar/Avatar';
+import ORG_IMAGE from 'assets/icons/organization.png';
 
-import { DUMMY_DATA } from "./data";
-
-/* reducer action */
-import { useSelector, useDispatch } from "react-redux";
-import { getListOrganization } from "ducks/organization/actionCreator";
+/* reducer */
+import { getListOrganization } from 'ducks/organization/actionCreator';
 
 const ProfileOrganization = (): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const states: any = useSelector<any>((state) => state.organization);
-
-  console.log(states);
+  const { organizations }: any = useSelector<any>(
+    (state) => state.organization
+  );
 
   useEffect(() => {
     dispatch(getListOrganization());
@@ -43,19 +40,22 @@ const ProfileOrganization = (): ReactElement => {
         />
 
         <Row gutter={100}>
-          {DUMMY_DATA.map((item) => (
+          {(organizations?.data || []).map((item) => (
             <Col key={item?._id}>
               <a
                 onClick={() =>
                   history.push(
-                    `/profile/organization/${item?._id}/${item?.title}`
+                    `/profile/organization/${item?._id}/${item?.name}`,
+                    {
+                      org_id: item?._id,
+                      org_title: item?.name,
+                    }
                   )
                 }
               >
                 <Avatar size={150} height={54} width={40} icon={ORG_IMAGE} />
               </a>
-              <StyledName>Organization Name</StyledName>
-              <StyledPosition>Name</StyledPosition>
+              <StyledName>{item?.name}</StyledName>
             </Col>
           ))}
         </Row>

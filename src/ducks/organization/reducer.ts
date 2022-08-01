@@ -1,9 +1,13 @@
-import { TYPES } from "./actionTypes";
+import { TYPES } from './actionTypes';
 
 const INITIAL_STATE = {
   organizations: {
     data: [],
     error: false,
+    loading: false,
+  },
+  organization_members: {
+    data: [],
     loading: false,
   },
 };
@@ -45,6 +49,37 @@ const reducer = (state = INITIAL_STATE, action) => {
         },
       };
 
+    /**
+     * ================
+     * Members
+     * ================
+     * **/
+    case TYPES.GET_MEMBERS_REQUEST:
+      return {
+        ...state,
+        organization_members: {
+          ...state.organization_members,
+          loading: true,
+        },
+      };
+
+    case TYPES.GET_MEMBERS_SUCCESS:
+      return {
+        ...state,
+        organization_members: {
+          data: action.payload,
+          loading: false,
+        },
+      };
+
+    case TYPES.GET_MEMBERS_FAILED:
+      return {
+        ...state,
+        organization_members: {
+          data: [],
+          loading: false,
+        },
+      };
     default:
       return { ...state };
   }

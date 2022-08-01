@@ -1,7 +1,7 @@
-import { takeLatest, put, call } from "redux-saga/effects";
-import { TYPES } from "../actionTypes";
+import { takeLatest, put, call } from 'redux-saga/effects';
+import { TYPES } from '../actionTypes';
 
-import organization_service from "api/services/organization_service";
+import organization_service from 'api/services/organization_service';
 
 export function* listOrganizations(): any {
   try {
@@ -22,6 +22,29 @@ export function* listOrganizations(): any {
   }
 }
 
+export function* getMembers({ payload }: any): any {
+  try {
+    const response = yield call(
+      organization_service.getMembersOrganization,
+      payload
+    );
+
+    yield put({
+      type: TYPES.GET_MEMBERS_SUCCESS,
+      payload: response?.data?.data,
+    });
+
+    return Promise.resolve(response);
+  } catch (error) {
+    yield put({
+      type: TYPES.GET_MEMBERS_FAILED,
+    });
+
+    return Promise.reject(error);
+  }
+}
+
 export default function* watcher() {
   yield takeLatest(TYPES.LIST_DEPARTMENT_REQUEST, listOrganizations);
+  yield takeLatest(TYPES.GET_MEMBERS_REQUEST, getMembers);
 }
