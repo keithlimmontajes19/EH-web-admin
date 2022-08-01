@@ -66,7 +66,7 @@ export const StyledPopover = styled(Popconfirm).attrs((props) => ({
   placement: "bottomLeft",
   overlayInnerStyle: {
     minWidth: 232,
-    minHeight: 107,
+    minHeight: 90,
     borderRadius: 15,
     background: "#fff",
     boxShadow: "0px 5px 20px -5px rgba(43, 46, 74, 0.2)",
