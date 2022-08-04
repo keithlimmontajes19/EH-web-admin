@@ -5,7 +5,7 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import plusicon from "assets/icons/plus-Icon.svg";
 
 /* styles antd */
-import { Breadcrumb, Col, Input, message, Modal, PageHeader } from "antd";
+import { Breadcrumb, Col, Input, message, Modal, PageHeader, Spin } from "antd";
 import { RootContainer, FlexWrap, AddContainer, PlusImg } from "./styled";
 import {
   RedoOutlined,
@@ -60,16 +60,16 @@ const BuilderDashboard = () => {
 
   useEffect(() => {
     dispatch(
-        getOneDashboard({
-          dashboardId: params?.page,
-          callback: (res) => {
-            if (!res) return message.success('Something went wrong');;
-            setLoading(false);
-            setEditedData(false);
-            setOnDispatch(false);
-          },
-        })
-      );
+      getOneDashboard({
+        dashboardId: params?.page,
+        callback: (res) => {
+          if (!res) return message.success("Something went wrong");
+          setLoading(false);
+          setEditedData(false);
+          setOnDispatch(false);
+        },
+      })
+    );
   }, []);
 
   const handlePublish = () => {
@@ -81,14 +81,14 @@ const BuilderDashboard = () => {
       updateDashboard({
         data: editedData,
         callback: (res) => {
-          if (!res) return
+          if (!res) return;
           dispatch(
             getOneDashboard({
               dashboardId: params?.page,
               callback: (res) => {
-                if (!res) return message.success('Something went wrong');
+                if (!res) return message.success("Something went wrong");
                 setLoading(false);
-                setIsEditing(false)
+                setIsEditing(false);
                 setEditedData(false);
                 setOnDispatch(false);
               },
@@ -191,7 +191,7 @@ const BuilderDashboard = () => {
       title={
         <StyledText
           onClick={() => {
-            if(editedData || isEditing) {
+            if (editedData || isEditing) {
               const title = editedData
                 ? editedData?.name
                 : single_dashboard?.data?.length
@@ -203,7 +203,7 @@ const BuilderDashboard = () => {
                 inputVal: title,
                 callback: handleRenameDashboard,
               });
-            } 
+            }
           }}
         >
           <span style={{ cursor: isEditing ? "pointer" : "auto" }}>
@@ -213,7 +213,12 @@ const BuilderDashboard = () => {
               ? single_dashboard?.data[0].name
               : ""}
           </span>
-          {isEditing && <>{' '}<EditOutlined style={{color: theme.HEADINGS}}/></>}
+          {isEditing && (
+            <>
+              {" "}
+              <EditOutlined style={{ color: theme.HEADINGS }} />
+            </>
+          )}
         </StyledText>
       }
       extra={[
@@ -234,8 +239,12 @@ const BuilderDashboard = () => {
               onClick={handlePublish}
               disabled={isEditing && !editedData}
             >
-              {onDispatch ? <LoadingOutlined spin /> : <CheckOutlined />}{" "}
-              PUBLISH
+              {onDispatch ? (
+                <Spin style={{ color: "#fff" }} />
+              ) : (
+                <CheckOutlined />
+              )}{" "}
+              &nbsp; PUBLISH
             </StyledButton>
             <StyledButton
               bg={"none"}
@@ -309,7 +318,11 @@ const BuilderDashboard = () => {
                 editedData
                   ? editedData?.boards?.length % 2 === 0
                   : single_dashboard?.data?.length % 2 === 0
-              ) ? <BlankBoardFiller scalable={false} /> : <BlankBoardFiller scalable={true} />
+              ) ? (
+                <BlankBoardFiller scalable={false} />
+              ) : (
+                <BlankBoardFiller scalable={true} />
+              )
             ) : (
               <></>
             )}

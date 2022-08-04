@@ -3,10 +3,11 @@ import { ReactElement } from "react";
 import type { PropsType } from "./types";
 import { TotalIcon, TotalCard, StatContainer } from "./styled";
 
-import totalLearnersIcon from "assets/icons/total-learners-icon.svg";
+// import totalLearnersIcon from "assets/icons/total-learners-icon.svg";
 import totalCoursesIcon from "assets/icons/total-courses-icon.svg";
 import totalVideosIcon from "assets/icons/total-videos-icon.svg";
 import totalOrganizationsIcon from "assets/icons/total-organizations-icon.svg";
+import totalLearnersIcon from "assets/icons/card-courses.png";
 
 import { Col, Row } from "antd";
 import { theme } from "utils/colors";
