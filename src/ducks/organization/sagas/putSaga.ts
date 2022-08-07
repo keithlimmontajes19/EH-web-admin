@@ -25,6 +25,30 @@ export function* putOrganization({ payload }: any): any {
   }
 }
 
+export function* putMembers({ payload }: any): any {
+  try {
+    const response = yield call(
+      organization_service.putMembers,
+      payload?.id,
+      payload?.memberId,
+      payload?.data
+    );
+
+    yield put({
+      type: TYPES.PUT_ORGANIZATION_MEMBERS_SUCCESS,
+    });
+
+    return Promise.resolve(response);
+  } catch (error) {
+    yield put({
+      type: TYPES.PUT_ORGANIZATION_MEMBERS_FAILED,
+    });
+
+    return Promise.reject(error);
+  }
+}
+
 export default function* watcher() {
   yield takeLatest(TYPES.PUT_ORGANIZATION_REQUEST, putOrganization);
+  yield takeLatest(TYPES.PUT_ORGANIZATION_MEMBERS_REQUEST, putMembers);
 }

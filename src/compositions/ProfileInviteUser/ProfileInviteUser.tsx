@@ -1,6 +1,6 @@
 import { ReactElement, useState } from "react";
-
 import type { PropsType } from "./types";
+
 import {
   Container,
   StyledSave,
@@ -12,19 +12,29 @@ import {
   ButtonContainer,
   HeaderContainer,
 } from "./styled";
-
 import { SearchOutlined } from "@ant-design/icons";
 import { columns } from "./columns";
-import { DUMMY_DATA } from "./data";
+
+/* reducer action */
+import { useDispatch } from "react-redux";
+import { postMembers } from "ducks/organization/actionCreator";
 
 const ProfileInviteUser = (props: PropsType): ReactElement => {
-  const { visible, setVisible } = props;
+  const {
+    data,
+    loading,
+    visible,
+    setVisible,
+    organization_id,
+    getMembersOrganization,
+  } = props;
 
+  const dispatch = useDispatch();
   const [search, setSearch] = useState("");
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const onSelectChange = (newRowKeys) => {
-    setSelectedRowKeys(newRowKeys);
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
   };
 
   const rowSelection = {
@@ -32,21 +42,14 @@ const ProfileInviteUser = (props: PropsType): ReactElement => {
     onChange: onSelectChange,
   };
 
-  const rowListener = (record) => ({
-    onClick: (event) => {
-      if (event.target.localName != "td") {
-        event.stopPropagation();
-        return;
-      }
-      if (selectedRowKeys.includes(record.key))
-        return setSelectedRowKeys(
-          selectedRowKeys.filter((a) => a !== record.key)
-        );
-      setSelectedRowKeys([...selectedRowKeys, record.key]);
-    },
-  });
-
   const setModalShowHide = () => setVisible(!visible);
+
+  const handleSubmit = () => {
+    dispatch(postMembers(organization_id, selectedRowKeys));
+
+    setTimeout(() => setModalShowHide(), 100);
+    setTimeout(() => dispatch(getMembersOrganization(organization_id)), 1000);
+  };
 
   return (
     <StyledModal
@@ -67,17 +70,19 @@ const ProfileInviteUser = (props: PropsType): ReactElement => {
         </HeaderContainer>
 
         <StyledTable
-          rowkey="_id"
+          dataSource={data}
+          loading={loading}
           pagination={false}
           columns={columns()}
-          onRow={rowListener}
-          dataSource={DUMMY_DATA}
           rowSelection={rowSelection}
+          rowKey={(record) => {
+            return record?.profile?.email;
+          }}
         />
 
         <ButtonContainer>
           <StyledCancel onClick={setModalShowHide}>CANCEL</StyledCancel>
-          <StyledSave onClick={setModalShowHide}>INVITE</StyledSave>
+          <StyledSave onClick={() => handleSubmit()}>INVITE</StyledSave>
         </ButtonContainer>
       </Container>
     </StyledModal>

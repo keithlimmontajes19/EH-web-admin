@@ -2,8 +2,14 @@ import { ReactElement, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
+/* reducer action */
+import {
+  putMembers,
+  deleteMembers,
+  getMembersOrganization,
+} from "ducks/organization/actionCreator";
 import { RootState } from "ducks/store";
-import { getMembersOrganization } from "ducks/organization/actionCreator";
+import { getAllUsers } from "ducks/authentication/actionCreator";
 
 import {
   Container,
@@ -20,7 +26,6 @@ import { Row, PageHeader } from "antd";
 import { LeftOutlined, SearchOutlined } from "@ant-design/icons";
 
 import { columns } from "./columns";
-import { DUMMY_DATA } from "./data";
 
 import Avatar from "components/Avatar";
 import IconImage from "components/IconImage";
@@ -38,6 +43,7 @@ const ProfileDetails = (): ReactElement => {
   const organization_id = history?.location?.state?.org_id || "";
 
   const [search, setSearch] = useState("");
+  const [selectedUser, setSelectedUser] = useState({});
   const [inviteModal, setInviteModal] = useState(false);
   const [editUserModal, setEditUserModal] = useState(false);
   const [editTeamModal, setEditTeamModal] = useState(false);
@@ -47,7 +53,12 @@ const ProfileDetails = (): ReactElement => {
     organization_members: { data },
   }: any = useSelector<RootState>((state) => state.organization);
 
+  const { users }: any = useSelector<RootState>(
+    (state) => state.authentication
+  );
+
   useEffect(() => {
+    dispatch(getAllUsers());
     dispatch(getMembersOrganization(organization_id));
   }, []);
 
@@ -60,22 +71,13 @@ const ProfileDetails = (): ReactElement => {
     onChange: onSelectChange,
   };
 
-  const rowListener = (record) => ({
-    onClick: (event) => {
-      if (event.target.localName != "td") {
-        event.stopPropagation();
-        return;
-      }
+  const multipleDelete = () => {
+    selectedRowKeys.map((item) => {
+      setTimeout(() => dispatch(deleteMembers(organization_id, item)), 50);
+    });
 
-      if (selectedRowKeys.includes(record.key)) {
-        return setSelectedRowKeys(
-          selectedRowKeys.filter((a) => a !== record.key)
-        );
-      }
-
-      setSelectedRowKeys([...selectedRowKeys, record.key]);
-    },
-  });
+    dispatch(getMembersOrganization(organization_id));
+  };
 
   return (
     <Container>
@@ -107,7 +109,9 @@ const ProfileDetails = (): ReactElement => {
           ghost={false}
           style={{ background: theme.HEADER }}
           extra={[
-            <StyledCancel>REMOVE</StyledCancel>,
+            <StyledCancel onClick={() => multipleDelete()}>
+              REMOVE
+            </StyledCancel>,
             <StyledInvite onClick={() => setInviteModal(true)}>
               INVITE
             </StyledInvite>,
@@ -125,13 +129,27 @@ const ProfileDetails = (): ReactElement => {
       <StyledTable
         dataSource={data}
         pagination={false}
-        onRow={rowListener}
-        rowkey={(item) => item?._id}
         rowSelection={rowSelection}
-        columns={columns(setEditUserModal, organization_id)}
+        rowKey={(record) => record?._id}
+        columns={columns(
+          setEditUserModal,
+          organization_id,
+          deleteMembers,
+          dispatch,
+          getMembersOrganization,
+          setSelectedUser
+        )}
       />
 
-      <ProfileEditUser visible={editUserModal} setVisible={setEditUserModal} />
+      <ProfileEditUser
+        putMembers={putMembers}
+        visible={editUserModal}
+        selectedUser={selectedUser}
+        setVisible={setEditUserModal}
+        organization_id={organization_id}
+        getMembersOrganization={getMembersOrganization}
+      />
+
       <ProfileEditTeam
         visible={editTeamModal}
         setVisible={setEditTeamModal}
@@ -140,7 +158,15 @@ const ProfileDetails = (): ReactElement => {
         org_avatar={history?.location?.state?.org_avatar || ""}
         org_description={history?.location?.state?.org_description || ""}
       />
-      <ProfileInviteUser visible={inviteModal} setVisible={setInviteModal} />
+
+      <ProfileInviteUser
+        data={users?.data}
+        visible={inviteModal}
+        loading={users?.loading}
+        setVisible={setInviteModal}
+        organization_id={organization_id}
+        getMembersOrganization={getMembersOrganization}
+      />
     </Container>
   );
 };

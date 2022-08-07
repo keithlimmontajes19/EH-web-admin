@@ -6,9 +6,12 @@ export const Container = styled.div`
 `;
 
 export const StyledTitle = styled.span`
-  color: #635ffa;
-  font-size: 25px;
+  font-family: "Red Hat Display", sans-serif;
+  font-style: normal;
   font-weight: 700;
+  font-size: 18px;
+  line-height: 30px;
+  color: #635ffa;
 `;
 
 export const StyledModal = styled(Modal)`
@@ -35,25 +38,30 @@ export const ButtonContainer = styled.div`
 `;
 
 export const StyledSave = styled.button`
+  font-family: "Red Hat Display", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
   width: 100px;
   height: 35px;
   border: none;
   color: #ffffff;
-  font-size: 20px;
   box-shadow: none;
-  font-weight: 700;
   border-radius: 8px;
   background: #635ffa;
 `;
 
 export const StyledCancel = styled.button`
+  font-family: "Red Hat Display", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
   border: none;
   width: 100px;
   height: 35px;
   color: #635ffa;
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 28px;
   text-align: right;
   margin-right: 20px;
   background: transparent;
@@ -86,4 +94,15 @@ export const Divider = styled.div`
   margin-top: 11px;
   margin-bottom: 11px;
   border: 0.5px solid #a2a1bd;
+`;
+
+export const StyledInput = styled.input`
+  width: 215px;
+  height: 48px;
+  background: #ffffff;
+  opacity: 0.5;
+  border: 1px solid #635ffa;
+  border-radius: 16px;
+  padding-left: 10px;
+  padding-rifht: 10px;
 `;

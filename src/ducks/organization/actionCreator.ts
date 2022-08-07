@@ -31,3 +31,32 @@ export const postOrganization = (payload: payloadTypes) => ({
 export const clearOrganizationID = () => ({
   type: TYPES.POST_ORGANIZATION_FAILED,
 });
+
+export const putMembers = (
+  id: string,
+  memberId: string,
+  payload: payloadTypes
+) => ({
+  type: TYPES.PUT_ORGANIZATION_MEMBERS_REQUEST,
+  payload: {
+    id,
+    memberId,
+    data: payload,
+  },
+});
+
+export const deleteMembers = (id: string, memberId: string) => ({
+  type: TYPES.DELETE_ORGANIZATION_MEMBERS_REQUEST,
+  payload: {
+    id,
+    memberId,
+  },
+});
+
+export const postMembers = (id, payload: any) => ({
+  type: TYPES.POST_ORGANIZATION_MEMBERS_REQUEST,
+  payload: {
+    id,
+    data: payload,
+  },
+});

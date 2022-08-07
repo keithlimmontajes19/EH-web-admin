@@ -1,4 +1,5 @@
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import type { PropsType } from "./types";
 import {
@@ -6,6 +7,7 @@ import {
   Container,
   StyledSave,
   StyledName,
+  StyledInput,
   StyledTitle,
   StyledModal,
   StyledCancel,
@@ -19,9 +21,31 @@ import Avatar from "components/Avatar/Avatar";
 import USER_ICON from "assets/icons/user-white.png";
 
 const ProfileEditUser = (props: PropsType): ReactElement => {
-  const { visible, setVisible } = props;
+  const {
+    visible,
+    setVisible,
+    putMembers,
+    selectedUser,
+    organization_id,
+    getMembersOrganization,
+  } = props;
 
+  const dispatch = useDispatch();
   const setModalShowHide = () => setVisible(!visible);
+
+  const [isEdit, setIsEdit] = useState(false);
+  const [position, setPosition] = useState("");
+
+  const handleSubmit = () => {
+    dispatch(putMembers(organization_id, selectedUser?._id, { position }));
+
+    setTimeout(() => setModalShowHide(), 100);
+    setTimeout(() => dispatch(getMembersOrganization(organization_id)), 1000);
+  };
+
+  useEffect(() => {
+    setPosition(selectedUser?.position);
+  }, [selectedUser]);
 
   return (
     <StyledModal
@@ -31,21 +55,33 @@ const ProfileEditUser = (props: PropsType): ReactElement => {
       visible={visible}
       maskClosable={false}
       title={<StyledTitle>Edit User</StyledTitle>}
+      afterClose={() => setIsEdit(false)}
     >
       <Container>
         <RowContainer>
           <FlexContainer>
-            <Avatar icon={USER_ICON} size={100} width={41} height={53} />
-            <StyledName>Sample Name</StyledName>
+            <Avatar
+              icon={USER_ICON}
+              size={100}
+              width={41}
+              height={53}
+              source={selectedUser?.avatar}
+            />
+            <StyledName>{selectedUser?.name}</StyledName>
             <Divider />
-            <span>
-              New Hire <EditOutlined />
-            </span>
+
+            {isEdit ? (
+              <StyledInput />
+            ) : (
+              <span>
+                {position} <EditOutlined onClick={() => setIsEdit(true)} />
+              </span>
+            )}
           </FlexContainer>
         </RowContainer>
         <ButtonContainer>
           <StyledCancel onClick={setModalShowHide}>CANCEL</StyledCancel>
-          <StyledSave onClick={setModalShowHide}>SAVE</StyledSave>
+          <StyledSave onClick={() => handleSubmit()}>SAVE</StyledSave>
         </ButtonContainer>
       </Container>
     </StyledModal>

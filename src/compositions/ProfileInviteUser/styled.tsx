@@ -11,6 +11,10 @@ export const StyledTitle = styled.span`
   color: #635ffa;
   font-size: 25px;
   font-weight: 700;
+  font-family: "Red Hat Display", sans-serif;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 30px;
 `;
 
 export const StyledModal = styled(Modal)`
@@ -69,8 +73,11 @@ export const StyledTable: any = styled(Table).attrs((props: any) => ({
 `;
 
 export const StyledHeader: any = styled.span`
-  font-weight: 500;
-  font-size: 20px;
+  font-family: "Red Hat Display";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 28px;
   color: #635ffa;
   line-height: 28px;
 `;
@@ -83,24 +90,48 @@ export const ButtonContainer = styled.div`
 `;
 
 export const StyledSave = styled.button`
+  font-family: "Red Hat Display";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 28px;
   width: 97px;
   height: 44px;
   border: none;
   color: #ffffff;
-  font-size: 18px;
   box-shadow: none;
-  font-weight: 700;
   border-radius: 8px;
   background: #635ffa;
 `;
 
 export const StyledCancel = styled.button`
+  font-family: "Red Hat Display";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 28px;
   border: none;
   color: #635ffa;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 28px;
   text-align: right;
   margin-right: 20px;
   background: transparent;
+`;
+
+export const StyledName = styled.span`
+  font-family: "Red Hat Display", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 28px;
+  color: #4c4b7b;
+`;
+
+export const StyledTextcolumns = styled.span`
+  font-family: "DM Sans", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 32px;
+  text-align: center;
+  color: #4c4b7b;
 `;

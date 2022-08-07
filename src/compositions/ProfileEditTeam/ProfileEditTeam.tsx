@@ -20,15 +20,14 @@ import { PageHeader } from "antd";
 import Avatar from "components/Avatar/Avatar";
 import UploadButton from "components/UploadButton";
 import ORG_IMAGE from "assets/icons/organization.png";
-import organization_service from "api/services/organization_service";
 
 /* reducer action */
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
 import {
   putOrganization,
-  clearOrganizationID,
+  deleteOrganization,
 } from "ducks/organization/actionCreator";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const ProfileEditTeam = (props: PropsType): ReactElement => {
   const {
@@ -41,10 +40,7 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
   } = props;
 
   const dispatch = useDispatch();
-
-  const { put_delete_post_status }: any = useSelector<RootState>(
-    (state) => state.organization
-  );
+  const hisotry = useHistory();
 
   const [fileUrl, setFileUrl] = useState("");
   const [values, setValues] = useState({
@@ -89,13 +85,20 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
       closable={false}
       visible={visible}
       maskClosable={false}
-      afterClose={clearFields}
+      // afterClose={clearFields}
     >
       <PageHeader
         ghost={false}
         title={<StyledTitle>Edit Team</StyledTitle>}
         extra={[
-          <StyledSave onClick={modalEditHandler}>DELETE TEAM</StyledSave>,
+          <StyledSave
+            onClick={() => {
+              dispatch(deleteOrganization(org_id));
+              hisotry.push("/profile/organization");
+            }}
+          >
+            DELETE TEAM
+          </StyledSave>,
         ]}
       />
 
