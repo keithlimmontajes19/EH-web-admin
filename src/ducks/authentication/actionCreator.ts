@@ -1,8 +1,8 @@
-import { TYPES } from './actionTypes';
+import { TYPES } from "./actionTypes";
 
 type loginTypes = {
-  email: 'string';
-  password: 'string';
+  email: "string";
+  password: "string";
 };
 
 export const postLogin = (payload: loginTypes) => ({
@@ -39,4 +39,8 @@ export const patchUserDetails = (userId, data) => ({
     userId,
     data,
   },
+});
+
+export const getAllUsers = () => ({
+  type: TYPES.GET_USER_ALL_DETAILS_REQUEST,
 });

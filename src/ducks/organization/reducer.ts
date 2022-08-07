@@ -1,4 +1,4 @@
-import { TYPES } from './actionTypes';
+import { TYPES } from "./actionTypes";
 
 const INITIAL_STATE = {
   organizations: {
@@ -10,6 +10,8 @@ const INITIAL_STATE = {
     data: [],
     loading: false,
   },
+  put_delete_post_status: false,
+  organization_id: null,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -80,6 +82,41 @@ const reducer = (state = INITIAL_STATE, action) => {
           loading: false,
         },
       };
+
+    /**
+     * ================
+     * POST PUT DELETE STATUS
+     * ================
+     * **/
+    case TYPES.PUT_ORGANIZATION_REQUEST:
+    case TYPES.POST_ORGANIZATION_REQUEST:
+    case TYPES.DELETE_ORGANIZATION_REQUEST:
+      return {
+        ...state,
+        put_delete_post_status: true,
+      };
+
+    case TYPES.PUT_ORGANIZATION_SUCCESS:
+    case TYPES.POST_ORGANIZATION_SUCCESS:
+    case TYPES.DELETE_ORGANIZATION_SUCCESS:
+    case TYPES.PUT_ORGANIZATION_FAILED:
+    case TYPES.POST_ORGANIZATION_FAILED:
+    case TYPES.DELETE_ORGANIZATION_FAILED:
+      return {
+        ...state,
+        put_delete_post_status: false,
+        organization_id: action.payload,
+      };
+
+    case TYPES.PUT_ORGANIZATION_FAILED:
+    case TYPES.POST_ORGANIZATION_FAILED:
+    case TYPES.DELETE_ORGANIZATION_FAILED:
+      return {
+        ...state,
+        put_delete_post_status: false,
+        organization_id: null,
+      };
+
     default:
       return { ...state };
   }

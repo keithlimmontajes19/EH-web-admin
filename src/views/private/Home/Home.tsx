@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from "react";
 
 import {
   StyledAdd,
@@ -9,28 +9,32 @@ import {
   StyledViewList,
   HeaderContainer,
   NoAnnouncementContainer,
-} from './styled';
-import { Col, Row } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+} from "./styled";
+import { Col, Row } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 
-import Rewards from 'compositions/Rewards';
-import IconImage from 'components/IconImage';
-import DashboardCards from 'compositions/DashboardCards';
-import OrganizationList from 'compositions/OrganizationList';
-import DashboardMostEnrolled from 'compositions/DashboardMostEnrolled';
+import Rewards from "compositions/Rewards";
+import IconImage from "components/IconImage";
+import DashboardCards from "compositions/DashboardCards";
+import OrganizationList from "compositions/OrganizationList";
+import DashboardMostEnrolled from "compositions/DashboardMostEnrolled";
 
-import USER_ICONS from 'assets/icons/card-employee.png';
-import ORG_ICONS from 'assets/icons/card-org.png';
-import NO_ANNOUNCEMENT from 'assets/images/noannouncement.png';
+import USER_ICONS from "assets/icons/card-employee.png";
+import ORG_ICONS from "assets/icons/card-org.png";
+import NO_ANNOUNCEMENT from "assets/images/noannouncement.png";
+import ProfileAddTeam from "compositions/ProfileAddTeam";
 
 /* reducer */
-import { RootState } from 'ducks/store';
-import { useSelector } from 'react-redux';
+import { RootState } from "ducks/store";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const { user_details }: any = useSelector<RootState>(
     (state) => state.authentication
   );
+
+  const [visisble, setVisible] = useState(false);
+  const modalCreateHandler = () => setVisible(!visisble);
 
   const content = () => {
     return (
@@ -38,7 +42,7 @@ const Home = () => {
         <p>
           <IconImage source={USER_ICONS} height={16} width={12} /> &nbsp; User
         </p>
-        <p>
+        <p onClick={modalCreateHandler}>
           <IconImage source={ORG_ICONS} height={16} width={12} /> &nbsp;
           Organization
         </p>
@@ -49,7 +53,7 @@ const Home = () => {
   return (
     <div>
       <HeaderContainer>
-        <StyledTitle>Hi {user_details?.profile?.firstName || ''}!</StyledTitle>
+        <StyledTitle>Hi {user_details?.profile?.firstName || ""}!</StyledTitle>
         <StyledViewList>View List</StyledViewList>
 
         <StyledPopover title={content()}>
@@ -80,6 +84,10 @@ const Home = () => {
 
       <OrganizationList />
       <DashboardMostEnrolled />
+      <ProfileAddTeam
+        visible={visisble}
+        modalCreateHandler={modalCreateHandler}
+      />
     </div>
   );
 };

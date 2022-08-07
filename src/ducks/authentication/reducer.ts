@@ -7,10 +7,17 @@ const INITIAL_STATE = {
   data: {},
   password_change: 0,
   user_details: {},
+  users: {
+    data: [],
+    loading: false,
+  },
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    /**
+     * AUTHENTICATION LOGIN
+     */
     case TYPES.GET_AUTHENTICATION_REQUEST:
       return {
         ...state,
@@ -37,6 +44,9 @@ const reducer = (state = INITIAL_STATE, action) => {
         authenticated: false,
       };
 
+    /**
+     * CHANGE PASSWORD
+     */
     case TYPES.CHANGE_PASSWORD_SUCCESS:
     case TYPES.CHANGE_PASSWORD_FAILED:
       return {
@@ -51,12 +61,35 @@ const reducer = (state = INITIAL_STATE, action) => {
         user_details: action.payload,
       };
 
-    case TYPES.GET_USER_DETAILS_FAILED:
+    /**
+     * GET ALL USERS
+     */
+    case TYPES.GET_USER_ALL_DETAILS_REQUEST:
       return {
         ...state,
-        user_details: {},
+        users: {
+          ...state.users,
+          loading: true,
+        },
       };
 
+    case TYPES.GET_USER_ALL_DETAILS_SUCCESS:
+      return {
+        ...state,
+        users: {
+          data: action.payload,
+          loading: false,
+        },
+      };
+
+    case TYPES.GET_USER_ALL_DETAILS_FAILED:
+      return {
+        ...state,
+        users: {
+          data: [],
+          loading: false,
+        },
+      };
     default:
       return { ...state };
   }
