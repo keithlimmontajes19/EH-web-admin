@@ -14,10 +14,12 @@ import {
   UploadContainer,
   ButtonContainer,
 } from "./styled";
-import { Avatar, PageHeader } from "antd";
+import { PageHeader } from "antd";
 
 /* components */
+import Avatar from "components/Avatar/Avatar";
 import UploadButton from "components/UploadButton";
+import ORG_IMAGE from "assets/icons/organization.png";
 import organization_service from "api/services/organization_service";
 
 /* reducer action */
@@ -99,7 +101,13 @@ const ProfileAddTeam = (props: PropsType): ReactElement => {
 
       <RowContainer>
         <FlexContainer>
-          <Avatar size={140} src={fileUrl} style={{ marginLeft: -5 }} />
+          <Avatar
+            size={150}
+            height={54}
+            width={40}
+            icon={ORG_IMAGE}
+            source={fileUrl}
+          />
           <UploadContainer>
             <UploadButton
               border="none"

@@ -60,6 +60,8 @@ const ProfileOrganization = (): ReactElement => {
                       {
                         org_id: item?._id,
                         org_title: item?.name,
+                        org_avatar: item?.avatar,
+                        org_description: item?.description,
                       }
                     )
                   }

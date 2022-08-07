@@ -16,7 +16,7 @@ const organization_services = {
     api.post(`${ORGANIZATION}`, payload),
 
   putOrganization: (orgId: string, payload: payloadTypes) =>
-    api.put(`${ORGANIZATION}/${orgId}`, payload),
+    api.patch(`${ORGANIZATION}/${orgId}`, payload),
 
   deleteOrganization: (orgId: string) => api.delete(`${ORGANIZATION}/${orgId}`),
 

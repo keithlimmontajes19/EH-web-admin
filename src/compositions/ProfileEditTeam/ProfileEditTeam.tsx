@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import type { PropsType } from "./types";
 
 import {
@@ -10,58 +10,129 @@ import {
   StyledCancel,
   RowContainer,
   FlexContainer,
+  StyledTextarea,
   UploadContainer,
   ButtonContainer,
 } from "./styled";
+import { PageHeader } from "antd";
 
-import { Avatar, PageHeader } from "antd";
+/* components */
+import Avatar from "components/Avatar/Avatar";
 import UploadButton from "components/UploadButton";
+import ORG_IMAGE from "assets/icons/organization.png";
+import organization_service from "api/services/organization_service";
+
+/* reducer action */
+import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  putOrganization,
+  clearOrganizationID,
+} from "ducks/organization/actionCreator";
 
 const ProfileEditTeam = (props: PropsType): ReactElement => {
-  const { visible, setVisible } = props;
+  const {
+    visible,
+    setVisible,
+    org_id,
+    org_title,
+    org_avatar,
+    org_description,
+  } = props;
 
-  const [fileId, setFileId] = useState("");
+  const dispatch = useDispatch();
+
+  const { put_delete_post_status }: any = useSelector<RootState>(
+    (state) => state.organization
+  );
+
   const [fileUrl, setFileUrl] = useState("");
+  const [values, setValues] = useState({
+    name: "",
+    description: "",
+  });
 
-  const setModalShowHide = () => setVisible(!visible);
+  const clearFields = () => {
+    setFileUrl("");
+    setValues({
+      name: "",
+      description: "",
+    });
+  };
+
+  const handlerOnchage = (value: string, field: string) => {
+    setValues({
+      ...values,
+      [field]: value,
+    });
+  };
+
+  const modalEditHandler = () => setVisible(!visible);
+
+  const handleSubmit = () => {
+    dispatch(putOrganization(org_id, values));
+    setTimeout(() => modalEditHandler(), 100);
+  };
+
+  useEffect(() => {
+    setFileUrl(org_avatar);
+    setValues({
+      name: org_title,
+      description: org_description,
+    });
+  }, []);
 
   return (
     <StyledModal
-      width={650}
+      width={550}
       footer={false}
       closable={false}
       visible={visible}
       maskClosable={false}
+      afterClose={clearFields}
     >
       <PageHeader
         ghost={false}
         title={<StyledTitle>Edit Team</StyledTitle>}
         extra={[
-          <StyledSave onClick={setModalShowHide}>DELETE TEAM</StyledSave>,
+          <StyledSave onClick={modalEditHandler}>DELETE TEAM</StyledSave>,
         ]}
       />
 
       <RowContainer>
         <FlexContainer>
-          <Avatar size={140} src={fileUrl} style={{ marginLeft: -5 }} />
+          <Avatar
+            size={150}
+            height={54}
+            width={40}
+            icon={ORG_IMAGE}
+            source={fileUrl}
+          />
           <UploadContainer>
             <UploadButton
               border="none"
-              setFileId={setFileId}
               setImageUrl={setFileUrl}
               placeholder="Change Photo"
             />
           </UploadContainer>
           <StyledLabel>Team Name</StyledLabel>
-          <StyledInput />
+          <StyledInput
+            placeholder="Enter Team Description"
+            value={values.name}
+            onChange={(e) => handlerOnchage(e.target.value, "name")}
+          />
           <StyledLabel>Description</StyledLabel>
-          <StyledInput height={87} />
+          <StyledTextarea
+            placeholder="Enter Team Description"
+            value={values.description}
+            onChange={(e) => handlerOnchage(e.target.value, "description")}
+          />
         </FlexContainer>
       </RowContainer>
 
       <ButtonContainer>
-        <StyledCancel onClick={setModalShowHide}>CANCEL</StyledCancel>
-        <StyledSave onClick={setModalShowHide}>SAVE</StyledSave>
+        <StyledCancel onClick={modalEditHandler}>CANCEL</StyledCancel>
+        <StyledSave onClick={handleSubmit}>SAVE</StyledSave>
       </ButtonContainer>
     </StyledModal>
   );

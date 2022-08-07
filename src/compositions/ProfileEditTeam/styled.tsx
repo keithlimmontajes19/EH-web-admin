@@ -8,9 +8,12 @@ export const Container = styled.div`
 `;
 
 export const StyledTitle = styled.span`
-  color: #635ffa;
-  font-size: 25px;
+  font-family: "Red Hat Display";
+  font-style: normal;
   font-weight: 700;
+  font-size: 18px;
+  line-height: 30px;
+  color: #635ffa;
 `;
 
 export const StyledModal = styled(Modal)`
@@ -37,15 +40,20 @@ export const ButtonContainer = styled.div`
 `;
 
 export const StyledSave = styled.button`
+  font-family: "Red Hat Display";
+  font-style: normal;
+  font-size: 16px;
+  line-height: 28px;
   min-width: 100px;
   height: 35px;
   border: none;
   color: #ffffff;
-  font-size: 19px;
   box-shadow: none;
   font-weight: 700;
   border-radius: 8px;
   background: #635ffa;
+  padding-left: 10px;
+  padding-right: 10px;
 `;
 
 export const StyledCancel = styled.button`
@@ -97,6 +105,17 @@ export const StyledInput = styled.input`
   box-sizing: border-box;
   border: 1px solid #635ffa;
   height: ${(props) => (props.height ? props.height : "48")}px;
+`;
+
+export const StyledTextarea = styled.textarea`
+  opacity: 0.5;
+  width: 410px;
+  padding: 10px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-sizing: border-box;
+  border: 1px solid #635ffa;
+  height: 87px;
 `;
 
 export const StyledLabel = styled.p`
