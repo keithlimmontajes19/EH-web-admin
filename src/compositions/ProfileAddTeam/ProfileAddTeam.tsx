@@ -20,29 +20,26 @@ import { PageHeader } from "antd";
 import Avatar from "components/Avatar/Avatar";
 import UploadButton from "components/UploadButton";
 import ORG_IMAGE from "assets/icons/organization.png";
+import organization_service from "api/services/organization_service";
 
 /* reducer action */
+import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  putOrganization,
-  deleteOrganization,
+  postOrganization,
+  clearOrganizationID,
 } from "ducks/organization/actionCreator";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 
-const ProfileEditTeam = (props: PropsType): ReactElement => {
-  const {
-    visible,
-    setVisible,
-    org_id,
-    org_title,
-    org_avatar,
-    org_description,
-  } = props;
-
+const ProfileAddTeam = (props: PropsType): ReactElement => {
+  const { visible, modalCreateHandler } = props;
   const dispatch = useDispatch();
-  const hisotry = useHistory();
+
+  const { organization_id, put_delete_post_status }: any =
+    useSelector<RootState>((state) => state.organization);
 
   const [fileUrl, setFileUrl] = useState("");
+  const [fileForm, setFileForm] = useState<any>({});
+
   const [values, setValues] = useState({
     name: "",
     description: "",
@@ -50,6 +47,7 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
 
   const clearFields = () => {
     setFileUrl("");
+    setFileForm({});
     setValues({
       name: "",
       description: "",
@@ -63,20 +61,32 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
     });
   };
 
-  const modalEditHandler = () => setVisible(!visible);
-
   const handleSubmit = () => {
-    dispatch(putOrganization(org_id, values));
-    setTimeout(() => modalEditHandler(), 100);
+    dispatch(postOrganization(values));
+    setTimeout(() => modalCreateHandler(), 100);
+  };
+
+  const uploadAvatar = async () => {
+    await organization_service
+      .patchAvatarOrganization(organization_id)
+      .then((res) => {
+        fetch(res?.data?.data?.updateUrl, {
+          body: fileForm,
+          method: "PUT",
+          headers: {
+            "Content-Type": "",
+          },
+        })
+          .then(() => dispatch(clearOrganizationID()))
+          .catch(() => dispatch(clearOrganizationID()));
+      });
   };
 
   useEffect(() => {
-    setFileUrl(org_avatar);
-    setValues({
-      name: org_title,
-      description: org_description,
-    });
-  }, []);
+    if (organization_id && !put_delete_post_status) {
+      uploadAvatar();
+    }
+  }, [organization_id]);
 
   return (
     <StyledModal
@@ -85,22 +95,9 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
       closable={false}
       visible={visible}
       maskClosable={false}
-      // afterClose={clearFields}
+      afterClose={clearFields}
     >
-      <PageHeader
-        ghost={false}
-        title={<StyledTitle>Edit Team</StyledTitle>}
-        extra={[
-          <StyledSave
-            onClick={() => {
-              dispatch(deleteOrganization(org_id));
-              hisotry.push("/profile/organization");
-            }}
-          >
-            DELETE TEAM
-          </StyledSave>,
-        ]}
-      />
+      <PageHeader ghost={false} title={<StyledTitle>Add Team</StyledTitle>} />
 
       <RowContainer>
         <FlexContainer>
@@ -115,15 +112,18 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
             <UploadButton
               border="none"
               setImageUrl={setFileUrl}
+              setFileForm={setFileForm}
               placeholder="Change Photo"
             />
           </UploadContainer>
+
           <StyledLabel>Team Name</StyledLabel>
           <StyledInput
-            placeholder="Enter Team Description"
             value={values.name}
+            placeholder="Enter Team Name"
             onChange={(e) => handlerOnchage(e.target.value, "name")}
           />
+
           <StyledLabel>Description</StyledLabel>
           <StyledTextarea
             placeholder="Enter Team Description"
@@ -134,11 +134,11 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
       </RowContainer>
 
       <ButtonContainer>
-        <StyledCancel onClick={modalEditHandler}>CANCEL</StyledCancel>
+        <StyledCancel onClick={modalCreateHandler}>CANCEL</StyledCancel>
         <StyledSave onClick={handleSubmit}>SAVE</StyledSave>
       </ButtonContainer>
     </StyledModal>
   );
 };
 
-export default ProfileEditTeam;
+export default ProfileAddTeam;

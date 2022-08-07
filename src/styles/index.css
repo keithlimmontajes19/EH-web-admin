@@ -2,6 +2,7 @@
   overflow: hidden;
 }
 
+@import 'antd/dist/antd.min.css';
 @import '~gleap/build/index.min.css';
 
 .react-horizontal-scrolling-menu--scroll-container {

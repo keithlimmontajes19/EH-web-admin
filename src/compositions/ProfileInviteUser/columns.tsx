@@ -1,4 +1,4 @@
-import { StyledHeader } from "./styled";
+import { StyledHeader, StyledName, StyledTextcolumns } from "./styled";
 
 import Avatar from "components/Avatar";
 import USER_ICON from "assets/icons/user-white.png";
@@ -7,27 +7,30 @@ export const columns = (): any => [
   {
     key: 1,
     title: <StyledHeader>Name</StyledHeader>,
-    dataIndex: "name",
-    render: (record: string) => {
+    dataIndex: "profile",
+    render: (record: any) => {
       return (
         <>
           <Avatar icon={USER_ICON} width={12} height={16} size={30} /> &nbsp;
-          <span>{record}</span>
+          <StyledName>
+            {record?.firstName} {record?.lastName}
+          </StyledName>
         </>
       );
     },
   },
   {
-    key: 3,
+    key: 2,
     title: <StyledHeader>Position</StyledHeader>,
-    dataIndex: "position",
+    dataIndex: "updatedAt",
     align: "center",
+    render: () => <StyledTextcolumns>-</StyledTextcolumns>,
   },
   {
-    key: 4,
+    key: 3,
     title: <StyledHeader>Organization</StyledHeader>,
-    dataIndex: "position",
+    dataIndex: "isDeleted",
     align: "center",
-    render: () => <p>-</p>,
+    render: () => <StyledTextcolumns>-</StyledTextcolumns>,
   },
 ];

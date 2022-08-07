@@ -1,10 +1,10 @@
-import { takeLatest, put, call } from 'redux-saga/effects';
-import { TYPES } from '../actionTypes';
-import { TYPES as ALERT_TYPES } from 'ducks/alert/actionTypes';
+import { takeLatest, put, call } from "redux-saga/effects";
+import { TYPES } from "../actionTypes";
+import { TYPES as ALERT_TYPES } from "ducks/alert/actionTypes";
 
-import auth_services from 'api/services/auth_services';
+import auth_services from "api/services/auth_services";
 
-export function* postLogin({ payload }: any) {
+export function* putUserDetails({ payload }: any) {
   try {
     yield call(auth_services.putUser, payload.userId, payload.data);
     yield put({ type: TYPES.GET_USER_DETAILS_REQUEST });
@@ -13,8 +13,8 @@ export function* postLogin({ payload }: any) {
       type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
       payload: {
         onShow: true,
-        type: 'success',
-        message: 'Success edit profile!',
+        type: "success",
+        message: "Success edit profile!",
       },
     });
 
@@ -24,8 +24,8 @@ export function* postLogin({ payload }: any) {
       type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
       payload: {
         onShow: true,
-        type: 'error',
-        message: 'Failed to edit profile!',
+        type: "error",
+        message: "Failed to edit profile!",
       },
     });
 
@@ -34,5 +34,5 @@ export function* postLogin({ payload }: any) {
 }
 
 export default function* watcher() {
-  yield takeLatest(TYPES.PATCH_USER_PROFILE_REQUEST, postLogin);
+  yield takeLatest(TYPES.PATCH_USER_PROFILE_REQUEST, putUserDetails);
 }
