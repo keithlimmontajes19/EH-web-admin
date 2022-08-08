@@ -157,6 +157,7 @@ const ProfileDetails = (): ReactElement => {
         org_title={history?.location?.state?.org_title || ""}
         org_avatar={history?.location?.state?.org_avatar || ""}
         org_description={history?.location?.state?.org_description || ""}
+        getMembersOrganization={getMembersOrganization}
       />
 
       <ProfileInviteUser
