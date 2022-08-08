@@ -32,11 +32,12 @@ import { useHistory } from "react-router-dom";
 const ProfileEditTeam = (props: PropsType): ReactElement => {
   const {
     visible,
-    setVisible,
     org_id,
     org_title,
     org_avatar,
+    setVisible,
     org_description,
+    getMembersOrganization,
   } = props;
 
   const dispatch = useDispatch();
@@ -68,6 +69,7 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
   const handleSubmit = () => {
     dispatch(putOrganization(org_id, values));
     setTimeout(() => modalEditHandler(), 100);
+    setTimeout(() => dispatch(getMembersOrganization(org_id)), 1000);
   };
 
   useEffect(() => {

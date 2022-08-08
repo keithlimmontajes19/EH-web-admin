@@ -7,4 +7,5 @@ export type PropsType = {
   org_description?: string;
   modalCreateHandler?: () => void;
   setVisible: (value: boolean) => void;
+  getMembersOrganization?: (payload: any) => void;
 };
