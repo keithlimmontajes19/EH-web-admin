@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   },
   put_delete_post_status: false,
   organization_id: null,
+  organization_details: {},
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -115,6 +116,23 @@ const reducer = (state = INITIAL_STATE, action) => {
         ...state,
         put_delete_post_status: false,
         organization_id: null,
+      };
+
+    /**
+     * ================
+     * ORGANIZATION DETAILS
+     * ================
+     * **/
+    case TYPES.GET_ORGANIZATION_DETAILS_REQUEST:
+      return {
+        ...state,
+        organization_details: {},
+      };
+
+    case TYPES.GET_ORGANIZATION_DETAILS_SUCCESS:
+      return {
+        ...state,
+        organization_details: action.payload,
       };
 
     default:

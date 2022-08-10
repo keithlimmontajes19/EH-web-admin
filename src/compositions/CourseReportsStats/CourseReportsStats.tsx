@@ -55,21 +55,24 @@ const CourseReportsStats = ({
         primary={theme.RED}
         secondary={theme.RED_MID}
         title={"Courses"}
-        count={totalCourses || 0}
+        // count={totalCourses || 0}
+        count={0}
         icon={totalCoursesIcon}
       />
       <StatTotalCard
         primary={theme.BLUE}
         secondary={theme.BLUE_MID}
         title={"Videos"}
-        count={totalOrganizations || 0}
+        // count={totalOrganizations || 0}
+        count={0}
         icon={totalVideosIcon}
       />
       <StatTotalCard
         primary={theme.LIGHT_GREEN}
         secondary={theme.LIGHT_GREEN_MID}
         title={"Organizations"}
-        count={totalVideos || 0}
+        // count={totalVideos || 0}
+        count={0}
         icon={totalOrganizationsIcon}
       />
     </StatContainer>

@@ -69,7 +69,14 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
   const handleSubmit = () => {
     dispatch(putOrganization(org_id, values));
     setTimeout(() => modalEditHandler(), 100);
-    setTimeout(() => dispatch(getMembersOrganization(org_id)), 1000);
+    // setTimeout(() => dispatch(getMembersOrganization(org_id)), 1000);
+
+    hisotry.push(`/profile/organization/${org_id}/${org_title}`, {
+      org_id: org_id,
+      org_title: values.name,
+      org_avatar: org_avatar,
+      org_description: org_description,
+    });
   };
 
   useEffect(() => {
