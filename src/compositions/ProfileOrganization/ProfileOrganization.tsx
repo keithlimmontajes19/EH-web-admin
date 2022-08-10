@@ -17,7 +17,10 @@ import ORG_IMAGE from "assets/icons/organization.png";
 import ProfileAddTeam from "compositions/ProfileAddTeam";
 
 /* reducer */
-import { getListOrganization } from "ducks/organization/actionCreator";
+import {
+  getListOrganization,
+  getOrgDetails,
+} from "ducks/organization/actionCreator";
 
 const ProfileOrganization = (): ReactElement => {
   const history = useHistory();
@@ -54,7 +57,8 @@ const ProfileOrganization = (): ReactElement => {
             {(organizations?.data || []).map((item) => (
               <Col key={item?._id}>
                 <a
-                  onClick={() =>
+                  onClick={() => {
+                    dispatch(getOrgDetails(item));
                     history.push(
                       `/profile/organization/${item?._id}/${item?.name}`,
                       {
@@ -63,8 +67,8 @@ const ProfileOrganization = (): ReactElement => {
                         org_avatar: item?.avatar,
                         org_description: item?.description,
                       }
-                    )
-                  }
+                    );
+                  }}
                 >
                   <Avatar
                     size={150}

@@ -60,3 +60,8 @@ export const postMembers = (id, payload: any) => ({
     data: payload,
   },
 });
+
+export const getOrgDetails = (payload: any) => ({
+  type: TYPES.GET_ORGANIZATION_DETAILS_REQUEST,
+  payload,
+});

@@ -1,5 +1,6 @@
 export type PropsType = {
-  testID?: string,
-  children?: any,
-  [key: string]: any
+  testID?: string;
+  children?: any;
+  fontStyle?: string;
+  [key: string]: any;
 };

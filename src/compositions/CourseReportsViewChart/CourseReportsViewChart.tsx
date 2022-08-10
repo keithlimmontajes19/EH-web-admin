@@ -43,6 +43,7 @@ const CourseReportsViewChart = ({ courseViewData = [] }) => {
       ),
       (testN) => testN > 21,
     ];
+
     return Array.from(Array(4)).map((x, i) => {
       const momented = moment(month + "-" + 1 + "-" + year, "MM-DD-YYYY");
       const momentedDate = momented.toDate();
@@ -271,7 +272,7 @@ const CourseReportsViewChart = ({ courseViewData = [] }) => {
                     justifyContent: "center",
                   }}
                 >
-                  <Text fS={18} fW={400}>
+                  <Text fS={16} fW={400} fontStyle="DM">
                     {viewOption[viewMode.mode]}
                   </Text>
                 </div>

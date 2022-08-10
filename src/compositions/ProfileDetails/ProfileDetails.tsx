@@ -40,8 +40,6 @@ const ProfileDetails = (): ReactElement => {
   const history: any = useHistory();
   const dispatch = useDispatch();
 
-  const organization_id = history?.location?.state?.org_id || "";
-
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState({});
   const [inviteModal, setInviteModal] = useState(false);
@@ -50,12 +48,15 @@ const ProfileDetails = (): ReactElement => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const {
+    organization_details,
     organization_members: { data },
   }: any = useSelector<RootState>((state) => state.organization);
 
   const { users }: any = useSelector<RootState>(
     (state) => state.authentication
   );
+
+  const organization_id = organization_details?._id;
 
   useEffect(() => {
     dispatch(getAllUsers());
@@ -81,7 +82,7 @@ const ProfileDetails = (): ReactElement => {
 
   return (
     <Container>
-      <StyledBack onClick={() => history.goBack()}>
+      <StyledBack onClick={() => history.push("/profile/organization")}>
         <LeftOutlined style={{ fontSize: 11, width: 15 }} />
         Back to My Organization
       </StyledBack>
@@ -97,7 +98,13 @@ const ProfileDetails = (): ReactElement => {
           ]}
           title={
             <Row>
-              <Avatar icon={ORG_ICON} size={45} width={17} height={20} />
+              <Avatar
+                size={45}
+                width={17}
+                height={20}
+                icon={ORG_ICON}
+                source={organization_details?.avatar}
+              />
               <StyledTitle>
                 {history?.location?.state?.org_title || ""}
               </StyledTitle>

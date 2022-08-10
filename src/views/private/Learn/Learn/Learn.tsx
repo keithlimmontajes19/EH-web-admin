@@ -1,28 +1,103 @@
-import { Fragment, ReactElement, useEffect } from 'react';
+import { Fragment, ReactElement, useEffect } from "react";
 
 /* components */
-import LearnMaincourse from 'compositions/LearnMaincourse';
-import LearnCurriculum from 'compositions/LearnCurriculum';
+import LearnMaincourse from "compositions/LearnMaincourse";
+import LearnCurriculum from "compositions/LearnCurriculum";
 
 /* recuer action */
-import { RootState } from 'ducks/store';
-import { useDispatch, useSelector } from 'react-redux';
-import Loading from 'components/Loading';
-import { getMyCourses } from 'ducks/lms/actionCreator';
+import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from "react-redux";
+import { getMyCourses } from "ducks/lms/actionCreator";
+
+import {
+  Container,
+  StyledTitle,
+  StyledCard,
+  StyledName,
+  StyledAuthor,
+} from "./styled";
+import { Row, Col, Avatar, Image } from "antd";
+
+import Loading from "components/Loading";
+import IconImage from "components/IconImage";
+import RatingStar from "components/RatingStar";
+import USER_ICON from "assets/icons/profile-user.png";
+import NO_IMAGE from "assets/icons/no-purple-image.png";
 
 const Learn = (): ReactElement => {
   const dispatch = useDispatch();
-  const { loading }: any = useSelector<RootState>((state) => state.lms);
+  const { data, loading }: any = useSelector<RootState>((state) => state.lms);
 
   useEffect(() => {
     dispatch(getMyCourses());
   }, []);
 
   const content = (
-    <Fragment>
-      <LearnCurriculum />
-      <LearnMaincourse />
-    </Fragment>
+    <Container>
+      {/* <LearnCurriculum /> */}
+      {/* <LearnMaincourse /> */}
+      <StyledTitle> Main Course</StyledTitle>
+
+      <Row gutter={40}>
+        {(data || []).map((item) => {
+          return (
+            <Col span={8} style={{ marginTop: 40 }} key={item?._id}>
+              <StyledCard>
+                <Avatar
+                  src={
+                    item?.preview?.type === "image" ? item?.preview?.ref : ""
+                  }
+                  size={"large"}
+                  shape="square"
+                  style={{
+                    width: "100%",
+                    minHeight: 205,
+                    maxHeight: 205,
+                    borderTopLeftRadius: 15,
+                    borderTopRightRadius: 15,
+                  }}
+                  icon={<IconImage source={NO_IMAGE} width={70} height={61} />}
+                />
+
+                <Col span={24} style={{ padding: 8 }}>
+                  <StyledName>{item?.title || ""}</StyledName>
+
+                  <Row>
+                    <Col span={20}>
+                      <Row>
+                        <div style={{ marginTop: -2, marginRight: 6 }}>
+                          <Image
+                            width={9}
+                            height={12}
+                            src={USER_ICON}
+                            preview={false}
+                          />
+                        </div>
+                        <StyledAuthor>
+                          {" "}
+                          {item?.instructor?.name || ""}
+                        </StyledAuthor>
+                      </Row>
+                    </Col>
+
+                    <Col>
+                      <Row>
+                        <div style={{ marginTop: -3, marginRight: 6 }}>
+                          <RatingStar count={1} />
+                        </div>
+                        <StyledAuthor>5.0</StyledAuthor>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Col>
+
+                <Col span={4}></Col>
+              </StyledCard>
+            </Col>
+          );
+        })}
+      </Row>
+    </Container>
   );
 
   return loading ? <Loading /> : content;

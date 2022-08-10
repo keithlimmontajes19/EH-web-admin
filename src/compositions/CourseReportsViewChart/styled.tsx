@@ -21,10 +21,12 @@ export const DateSelectionSpace = styled(Space)`
   .ant-picker-suffix,
   .ant-picker-clear {
     background: none;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     text-align: center;
     color: ${theme.PRIMARY};
+    font-family: "DM Sans", sans-serif;
+    font-style: normal;
   }
 
   .ant-picker-date-fixed .ant-picker-header {
