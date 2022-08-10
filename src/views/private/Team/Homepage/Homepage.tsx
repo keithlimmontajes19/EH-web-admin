@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 import {
   Container,
@@ -15,17 +15,39 @@ import {
 import { columns } from "./columns";
 import { Row, Col, Tabs } from "antd";
 
+/* reducer action */
+import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from "react-redux";
+import { getAnnouncements } from "ducks/announcement/actionCreator";
+
 import NO_ANNOUNCEMENT from "assets/images/noannouncement.png";
 
 const { TabPane } = Tabs;
 
 const Homepage = (): ReactElement => {
+  const dispatch = useDispatch();
+
+  const { data, loading }: any = useSelector<RootState>(
+    (state) => state.announcement
+  );
+
+  useEffect(() => {
+    dispatch(getAnnouncements());
+  }, []);
+
+  console.log("data", data);
   return (
     <Container>
       <Row gutter={40}>
         <Col span={12}>
           <AnnouncementContainer>
-            <StyledTable size="small" dataSource={[]} columns={columns()} />
+            <StyledTable
+              size="small"
+              dataSource={data}
+              loading={loading}
+              pagination={false}
+              columns={columns()}
+            />
           </AnnouncementContainer>
         </Col>
 

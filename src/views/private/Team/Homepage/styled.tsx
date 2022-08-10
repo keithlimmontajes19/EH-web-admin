@@ -14,17 +14,21 @@ export const StyledTable = styled(Table)`
 `;
 
 export const StyledTitle = styled.p`
-  color: #635ffa;
-  font-size: 20px;
+  font-family: "Red Hat Display", sans-serif;
+  font-style: normal;
   font-weight: 700;
+  font-size: 16px;
   line-height: 25px;
+  color: #635ffa;
 `;
 
 export const StyledSubtitle = styled.p`
-  color: #a2a1bd;
-  font-size: 12px;
+  font-family: "DM Sans", sans-serif;
+  font-style: normal;
   font-weight: 400;
+  font-size: 12px;
   line-height: 22px;
+  color: #a2a1bd;
 `;
 
 export const StyledHeader = styled.h2`
@@ -124,3 +128,30 @@ export const ImgEmptyStyles = {
   width: "87px",
   height: "109px",
 };
+
+export const StyledCol1 = styled.span`
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  color: #4c4b7b;
+`;
+
+export const StyledCol2 = styled.span`
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+  color: #4c4b7b;
+`;
+
+export const StyledCol3 = styled.span`
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 22px;
+  color: #a2a1bd;
+`;
