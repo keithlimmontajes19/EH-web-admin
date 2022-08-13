@@ -1,21 +1,21 @@
-import { Input, InputNumber } from 'antd';
-import styled from 'styled-components';
-import { theme } from 'utils/colors';
+import { Input, InputNumber } from "antd";
+import styled from "styled-components";
+import { theme } from "utils/colors";
 
 export const StyledInput: any = styled(Input)`
   height: 60px;
   border: none;
-  width: ${({w=`100%`} :any) => w};
+  width: ${({ w = `100%` }: any) => w};
   padding-left: 20px;
   background: ${theme.PRIMARY_MID} !important;
-  color: ${theme.PRIMARY} !important;
-  border-radius: ${({br=`15`} :any)=> br}px;
+  color: #4c4b7b !important;
+  border-radius: ${({ br = `15` }: any) => br}px;
   border: none;
   font-size: 16px;
   font-weight: 400;
 
   &::placeholder {
-    color: ${theme.PRIMARY} !important;
+    color: #a2a1bd !important;
   }
 `;
 
@@ -38,21 +38,21 @@ export const LineInput: any = styled(Input)`
 export const StyledInputN: any = styled(InputNumber)`
   height: 60px;
   border: none;
-  width: ${({w=`100%`} :any) => w};
+  width: ${({ w = `100%` }: any) => w};
   padding-left: 20px;
   background: ${theme.PRIMARY_MID} !important;
-  border-radius: ${({br=`15`} :any)=> br}px;
+  border-radius: ${({ br = `15` }: any) => br}px;
   border: none;
   display: flex;
   align-items: center;
 
   input {
-    color: ${theme.PRIMARY} !important;
+    color: #4c4b7b !important;
     font-size: 16px;
     font-weight: 400;
 
     ::placeholder {
-      color: ${theme.PRIMARY} !important;
+      color: #a2a1bd !important;
     }
   }
 `;
