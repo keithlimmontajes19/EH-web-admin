@@ -10,9 +10,10 @@ const INITIAL_STATE = {
     data: [],
     loading: false,
   },
-  put_delete_post_status: false,
   organization_id: null,
   organization_details: {},
+  put_delete_post_status: false,
+  error_put_delete_post_status: false,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -95,27 +96,29 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         put_delete_post_status: true,
+        error_put_delete_post_status: false,
       };
 
     case TYPES.PUT_ORGANIZATION_SUCCESS:
     case TYPES.POST_ORGANIZATION_SUCCESS:
     case TYPES.DELETE_ORGANIZATION_SUCCESS:
-    case TYPES.PUT_ORGANIZATION_FAILED:
-    case TYPES.POST_ORGANIZATION_FAILED:
-    case TYPES.DELETE_ORGANIZATION_FAILED:
       return {
         ...state,
         put_delete_post_status: false,
         organization_id: action.payload,
+        error_put_delete_post_status: false,
       };
 
+    break;
+    
     case TYPES.PUT_ORGANIZATION_FAILED:
     case TYPES.POST_ORGANIZATION_FAILED:
     case TYPES.DELETE_ORGANIZATION_FAILED:
       return {
         ...state,
-        put_delete_post_status: false,
         organization_id: null,
+        put_delete_post_status: false,
+        error_put_delete_post_status: true,
       };
 
     /**

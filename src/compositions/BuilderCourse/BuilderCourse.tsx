@@ -26,26 +26,28 @@ const blankData = {
     name: "NaN$",
     title: "NaN$",
   },
-  points: 10
+  points: 10,
 };
 
 const BuilderCourse = ({ id = "" }: any): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
   const params: Params = useParams();
+
+  const addNew = params.page === "add";
+
+  const [queue, setQueue] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [onAdd, setOnAdd]: any = useState(false);
+  const [refreshed, setRefreshed] = useState(false);
+  const [file, setFile]: any = useState({ type: false, ref: {} });
   const [course, setCourse]: any = useState(
     JSON.parse(JSON.stringify(blankData))
   );
-  const [onAdd, setOnAdd]: any = useState(false);
-  const [file, setFile]: any = useState({ type: false, ref: {} });
-  const [queue, setQueue] = useState(false);
-  const [refreshed, setRefreshed] = useState(false);
-  const addNew = params.page === "add";
 
   useEffect(() => {
-    localStorage.setItem("organizationId", "6239ffd1cb8440277f2a2b39");
-    localStorage.setItem("courseId", id);
+    // localStorage.setItem("courseId", id);
+    // localStorage.setItem("organizationId", "6239ffd1cb8440277f2a2b39");
 
     if (!addNew)
       dispatch(
@@ -112,8 +114,10 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
       setQueue(false);
       return;
     }
+
     localStorage.setItem("organizationId", "6239ffd1cb8440277f2a2b39");
     localStorage.setItem("courseId", course._id);
+
     const { type, ref }: any = file;
     const callback = async (res) => {
       if (!res) return;
@@ -202,10 +206,10 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
         ghost={false}
         title={
           <Text
-            u={true}
             fS={16}
-            fC={"#635FFA"}
             fW={500}
+            u={true}
+            fC={"#A2A1BD"}
             onClick={() => history.push("/learn/courses")}
           >
             {"< "}Back to Courses
@@ -228,8 +232,9 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
             initialValues={{
               t: course.title === "NaN$" ? "" : course.title,
               d: course.description === "NaN$" ? "" : course.description,
-              a: course.instructor.name === "NaN$" ? "" : course.instructor.name,
-              p: course.points || ''
+              a:
+                course.instructor.name === "NaN$" ? "" : course.instructor.name,
+              p: course.points || "",
             }}
           >
             <Row>

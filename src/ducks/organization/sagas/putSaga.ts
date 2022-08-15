@@ -1,9 +1,11 @@
 import { takeLatest, put, call } from "redux-saga/effects";
 import { TYPES } from "../actionTypes";
+import { TYPES as ALERT_TYPES } from "ducks/alert/actionTypes";
 
 import organization_service from "api/services/organization_service";
 
 export function* putOrganization({ payload }: any): any {
+  
   try {
     const response = yield call(
       organization_service.putOrganization,
@@ -15,10 +17,28 @@ export function* putOrganization({ payload }: any): any {
       type: TYPES.PUT_ORGANIZATION_SUCCESS,
     });
 
+    yield put({
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "success",
+        message: `Edit organization name success!`,
+      },
+    });
+    
     return Promise.resolve(response);
   } catch (error) {
     yield put({
       type: TYPES.PUT_ORGANIZATION_FAILED,
+    });
+
+    yield put({
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: "error",
+        message: "You are now allowed access to this organization.",
+      },
     });
 
     return Promise.reject(error);

@@ -122,12 +122,14 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
       >
         <Input placeholder="Lesson title" />
       </Form.Item>
+
       <Form.Item
         name="d"
         rules={[{ required: true, message: "Enter a content" }]}
       >
         <TextArea style={{ minHeight: "179px" }} placeholder="Add Content" />
       </Form.Item>
+
       <Form.Item>
         <Row justify="space-between">
           {file.type ? <MediaPreview /> : <MediaField />}
