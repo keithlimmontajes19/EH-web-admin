@@ -1,15 +1,16 @@
-import TableCourses from "compositions/TableCourses";
-import { PlusOutlined, DownOutlined } from "@ant-design/icons";
 import { ReactElement } from "react";
+import { PlusOutlined, DownOutlined } from "@ant-design/icons";
+import { useHistory, useParams } from "react-router-dom";
 import { Layout, PageHeader, Tabs } from "antd";
 import { StyledTabs } from "./styled";
-import Dropdown from "components/Dropdown";
-import { useHistory, useParams } from "react-router-dom";
-import { Params } from "./types";
-import BuilderCourse from "compositions/BuilderCourse";
-import Text from "components/Text";
 import { theme } from "utils/colors";
+import { Params } from "./types";
+
+import Text from "components/Text";
+import Dropdown from "components/Dropdown";
 import StyledButton from "components/StyledButton";
+import TableCourses from "compositions/TableCourses";
+import BuilderCourse from "compositions/BuilderCourse";
 
 const headerActions = [
   {
@@ -25,6 +26,7 @@ const headerActions = [
 const Courses = (): ReactElement => {
   const history = useHistory();
   const params: Params = useParams();
+
   return (
     <>
       {params.page ? (

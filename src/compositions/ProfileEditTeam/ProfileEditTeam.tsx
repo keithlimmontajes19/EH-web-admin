@@ -26,8 +26,9 @@ import {
   putOrganization,
   deleteOrganization,
 } from "ducks/organization/actionCreator";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { RootState } from "ducks/store";
 
 const ProfileEditTeam = (props: PropsType): ReactElement => {
   const {
@@ -43,11 +44,19 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
   const dispatch = useDispatch();
   const hisotry = useHistory();
 
+  const { error_put_delete_post_status }: any =
+    useSelector<RootState>((state) => state.organization);
+
+  const [status, setStatus ] = useState(error_put_delete_post_status);
   const [fileUrl, setFileUrl] = useState("");
   const [values, setValues] = useState({
     name: "",
     description: "",
   });
+
+  useEffect(() => {
+    setStatus(error_put_delete_post_status)
+  }, [error_put_delete_post_status]);
 
   const clearFields = () => {
     setFileUrl("");
@@ -68,15 +77,17 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
 
   const handleSubmit = () => {
     dispatch(putOrganization(org_id, values));
-    setTimeout(() => modalEditHandler(), 100);
-    // setTimeout(() => dispatch(getMembersOrganization(org_id)), 1000);
 
-    hisotry.push(`/profile/organization/${org_id}/${org_title}`, {
-      org_id: org_id,
-      org_title: values.name,
-      org_avatar: org_avatar,
-      org_description: org_description,
-    });
+    setTimeout(() => {
+      hisotry.push(`/profile/organization/${org_id}/${org_title}`, {
+        org_id: org_id,
+        org_title: status ? org_title : values.name,
+        org_avatar: org_avatar,
+        org_description: org_description,
+      });
+
+      modalEditHandler();
+    }, 1500);
   };
 
   useEffect(() => {

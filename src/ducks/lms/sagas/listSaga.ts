@@ -1,14 +1,14 @@
-import { takeLatest, put, call } from 'redux-saga/effects';
-import { TYPES } from '../actionTypes';
+import { takeLatest, put, call } from "redux-saga/effects";
+import { TYPES } from "../actionTypes";
 
-import lms_service from 'api/services/lms_service';
+import lms_service from "api/services/lms_service";
 
-export const topicId = async () => await localStorage.getItem('topicId');
-export const getUserId = async () => await localStorage.getItem('userId');
-export const courseId = async () => await localStorage.getItem('courseId');
-export const lessonId = async () => await localStorage.getItem('lessonId');
+export const topicId = async () => await localStorage.getItem("topicId");
+export const getUserId = async () => await localStorage.getItem("userId");
+export const courseId = async () => await localStorage.getItem("courseId");
+export const lessonId = async () => await localStorage.getItem("lessonId");
 export const organizationId = async () =>
-  await localStorage.getItem('organizationId');
+  await localStorage.getItem("organizationId");
 
 const filterCourses = (course: Array<any>, status: string) => {
   const courses = [];
@@ -28,8 +28,8 @@ export function* getMyCourses(): any {
 
     const data = response?.data?.data;
     const myCourses = data.length ? data : [];
-    const ongoingCourses = filterCourses(data, 'ongoing');
-    const completedCourses = filterCourses(data, 'completed');
+    const ongoingCourses = filterCourses(data, "ongoing");
+    const completedCourses = filterCourses(data, "completed");
 
     yield put({
       type: TYPES.GET_COURSES_LIST_SUCCESS,
@@ -99,8 +99,10 @@ export function* getCurrilumDetails({ payload }: any): any {
 
 export function* getLesson({ payload }: any): any {
   const { idList, callback = () => {} } = payload;
+
   let idCourse;
   let idOrg;
+
   if (idList) {
     idCourse = idList.idCourse;
     idOrg = idList.idOrg;
@@ -108,14 +110,16 @@ export function* getLesson({ payload }: any): any {
     idCourse = yield call(courseId);
     idOrg = yield call(organizationId);
   }
+
   try {
     const response = yield call(lms_service.getLesson, idOrg, idCourse);
+
+    console.log("response", response?.data);
     yield put({
       type: TYPES.GET_LESSONS_LIST_SUCCESS,
       payload: response?.data?.data,
     });
 
-    callback(response?.data?.data);
     return Promise.resolve(response);
   } catch (error) {
     yield put({
@@ -261,6 +265,7 @@ export function* getLessonId({ payload }: any): any {
 
 export function* getCourse({ payload }: any): any {
   const { callback = () => {} } = payload;
+
   const idOrg = yield call(organizationId);
   const idCourse = yield call(courseId);
 
@@ -271,8 +276,11 @@ export function* getCourse({ payload }: any): any {
       type: TYPES.GET_COURSE_SUCCESS,
       payload: res.data,
     });
+
+    console.log("res", res);
     callback(res.data);
   } catch (error) {
+    console.log(error);
     yield put({
       type: TYPES.GET_COURSE_FAILED,
     });
@@ -301,7 +309,7 @@ export function* getCourseView({ payload }: any): any {
 
 export function* getCourseReportsStats({ payload }: any): any {
   const { callback = () => {} } = payload;
-  
+
   try {
     const res = yield call(lms_service.getCourseReportsStats);
 
@@ -360,7 +368,12 @@ export function* getUserCourseReportsDetails({ payload }: any): any {
   const { idOrg, idUser, idCourse, callback = () => {} } = payload;
 
   try {
-    const res = yield call(lms_service.getUserCourseReportsDetails, idOrg, idUser, idCourse);
+    const res = yield call(
+      lms_service.getUserCourseReportsDetails,
+      idOrg,
+      idUser,
+      idCourse
+    );
 
     yield put({
       type: TYPES.GET_USER_COURSE_REPORTS_DETAILS_SUCCESS,
@@ -383,9 +396,9 @@ export function* getUserDetails({ payload }: any): any {
 
     yield put({
       type: TYPES.GET_COURSE_USER_DETAILS_SUCCESS,
-      payload: res.data?.data
+      payload: res.data?.data,
     });
-    callback(res.data?.data)
+    callback(res.data?.data);
   } catch (error) {
     yield put({
       type: TYPES.GET_COURSE_USER_DETAILS_FAILED,
@@ -395,9 +408,9 @@ export function* getUserDetails({ payload }: any): any {
 }
 
 export default function* watcher() {
+  yield takeLatest(TYPES.GET_COURSE_REQUEST, getCourse);
   yield takeLatest(TYPES.ID_GET_TOPIC_REQUEST, getTopicId);
   yield takeLatest(TYPES.ID_GET_LESSON_REQUEST, getLessonId);
-  yield takeLatest(TYPES.GET_COURSE_REQUEST, getCourse);
   yield takeLatest(TYPES.GET_LESSONS_LIST_REQUEST, getLesson);
   yield takeLatest(TYPES.GET_REVIEW_LIST_REQUEST, getReviews);
   yield takeLatest(TYPES.GET_COURSES_LIST_REQUEST, getMyCourses);
@@ -407,11 +420,16 @@ export default function* watcher() {
   yield takeLatest(TYPES.GET_COURSES_CURICULUM_REQUEST, getCurriculum);
   yield takeLatest(TYPES.GET_CURICULUM_DETAILS_REQUEST, getCurrilumDetails);
   yield takeLatest(TYPES.GET_DETAILS_LESSONS_LIST_REQUEST, getTopicDetails);
-  yield takeLatest(TYPES.GET_COURSE_REQUEST, getCourse);
   yield takeLatest(TYPES.GET_COURSE_VIEW_REQUEST, getCourseView);
-  yield takeLatest(TYPES.GET_COURSE_REPORTS_STATS_REQUEST, getCourseReportsStats);
+  yield takeLatest(
+    TYPES.GET_COURSE_REPORTS_STATS_REQUEST,
+    getCourseReportsStats
+  );
   yield takeLatest(TYPES.GET_ALL_USER_REPORTS_REQUEST, getAllUserReports);
   yield takeLatest(TYPES.GET_USER_COURSE_REPORTS_REQUEST, getUserCourseReports);
-  yield takeLatest(TYPES.GET_USER_COURSE_REPORTS_DETAILS_REQUEST, getUserCourseReportsDetails);
+  yield takeLatest(
+    TYPES.GET_USER_COURSE_REPORTS_DETAILS_REQUEST,
+    getUserCourseReportsDetails
+  );
   yield takeLatest(TYPES.GET_COURSE_USER_DETAILS_REQUEST, getUserDetails);
 }

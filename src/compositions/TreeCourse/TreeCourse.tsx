@@ -1,45 +1,58 @@
-import { Col, Modal, Row, Space } from "antd";
-import Dropdown from "components/Dropdown";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Modal, Row, Space } from "antd";
+
 import {
-  EditOutlined,
-  DeleteOutlined,
   EyeFilled,
   PlusOutlined,
   FormOutlined,
+  EditOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
-import { getTreeStyle, StyledTree } from "./styled";
-import { theme } from "utils/colors";
-import { useDispatch, useSelector } from "react-redux";
+
 import {
   getLessons,
   postLesson,
   deleteLesson,
-  postLessonContent,
   updateLesson,
+  getCurriculum,
+  postLessonContent,
   updateLessonContent,
   deleteLessonContent,
-  getCurriculum,
 } from "ducks/lms/actionCreator";
-import Loading from "components/Loading";
+
+import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from "react-redux";
+
+import { theme } from "utils/colors";
 import { useHistory } from "react-router-dom";
+import { getTreeStyle, StyledTree } from "./styled";
 import { AddLesson, EditField, newData } from "./components";
-import StyledButton from "components/StyledButton";
+
 import Text from "components/Text";
+import Loading from "components/Loading";
+import Dropdown from "components/Dropdown";
+import StyledButton from "components/StyledButton";
 import ModalCurriculum from "compositions/ModalCurriculum";
 
 function TreeCourse({ course, onAdd, setOnAdd }) {
   const history = useHistory();
+  const dispatch = useDispatch();
+
   const [data, setData] = useState({});
   const [treeData, setTreeData] = useState([]);
-  const [expandedKeys, setExpandedKeys] = useState(["0-0", "0-0-0", "0-0-0-0"]);
   const [onDragNode, setOnDragNode]: any = useState({});
-  // upto 4 elements, [ onEdit, keyToEdit, onAdd, editFieldMode ]
   const [onEdit, setOnEdit]: any = useState([false]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [viewVisible, setViewVisible] = useState(false);
+  const [expandedKeys, setExpandedKeys] = useState(["0-0", "0-0-0", "0-0-0-0"]);
 
-  const dispatch = useDispatch();
+  const {
+    lesson: { loading },
+  }: any = useSelector<RootState>((state) => state.lms);
+
+  useEffect(() => {
+    setIsLoading(loading);
+  }, [loading]);
 
   useEffect(() => {
     localStorage.setItem("courseId", course._id);
@@ -157,9 +170,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                   <EditOutlined
                     onClick={() => setOnEdit([true, _objMakeKey])}
                   />
-                  <EyeFilled 
-                    onClick={() => openView(course)}
-                  />
+                  <EyeFilled onClick={() => openView(course)} />
                   <DeleteOutlined
                     onClick={() => {
                       Modal.confirm({
@@ -425,10 +436,6 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
       if (dragArr[1] !== dropArr[1]) return false;
     }
     return true;
-    // const a = onDragNode.contentType;
-    // const b = a === 'section-head' || a === 'lesson';
-    // if (b) return true;
-    // else return dropArr.length !== 2;
   };
 
   const handleLessonDispatch = (obj, { type, ref }) => {
@@ -456,11 +463,11 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
 
     localStorage.setItem("courseId", obj?._id);
     setViewVisible(true);
-  }
+  };
+
   const closeView = () => {
     setViewVisible(false);
-  }
-
+  };
 
   return (
     <>
@@ -477,6 +484,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
           </Text>
         </StyledButton>
       </Row>
+
       {onAdd && (
         <AddLesson
           data={data}
@@ -484,23 +492,21 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
           handleDispatch={handleLessonDispatch}
         />
       )}
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <StyledTree
-          className="draggable-tree"
-          onExpand={onExpand}
-          expandedKeys={expandedKeys}
-          draggable={!onEdit[0]}
-          blockNode
-          onDrop={onDropv2}
-          onDragStart={({ node }) => setOnDragNode(node)}
-          allowDrop={allowDrop}
-          treeData={treeData}
-          style={{ background: "none " }}
-        />
-      )}
-      <ModalCurriculum isVisible={viewVisible} isCancel={closeView}/>
+
+      <StyledTree
+        className="draggable-tree"
+        onExpand={onExpand}
+        expandedKeys={expandedKeys}
+        draggable={!onEdit[0]}
+        blockNode
+        onDrop={onDropv2}
+        onDragStart={({ node }) => setOnDragNode(node)}
+        allowDrop={allowDrop}
+        treeData={treeData}
+        style={{ background: "none " }}
+      />
+
+      <ModalCurriculum isVisible={viewVisible} isCancel={closeView} />
     </>
   );
 }
