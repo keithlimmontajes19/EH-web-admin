@@ -53,23 +53,14 @@ const auth_services = {
   postCourse: (payload: any) => api.post(`courses`, payload),
   deleteCourse: (organizationId: string, courseId: string) =>
     api.delete(`${ORGANIZATION}/${organizationId}/courses/${courseId}`),
-  updateLesson: (
-    payload: any,
-    organizationId: string,
-    courseId: string,
-    lessonId: string
-  ) =>
-    api.put(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`,
-      payload
-    ),
+
+  updateLesson: (payload: any, lessonId: string) =>
+    api.patch(`/lessons/${lessonId}`, payload),
 
   postLesson: (payload: any) => api.post(`/lessons`, payload),
 
-  deleteLesson: (organizationId: string, courseId: string, lessonId: string) =>
-    api.delete(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`
-    ),
+  deleteLesson: (lessonId: string) => api.delete(`/lessons/${lessonId}`),
+
   updateLessonContent: (
     payload: any,
     organizationId: string,

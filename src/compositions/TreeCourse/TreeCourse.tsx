@@ -38,7 +38,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState<any>({});
   const [treeData, setTreeData] = useState([]);
   const [onDragNode, setOnDragNode]: any = useState({});
   const [onEdit, setOnEdit]: any = useState([false]);
@@ -177,31 +177,32 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                   <EyeFilled onClick={() => openView(course)} />
                   <DeleteOutlined
                     onClick={() => {
-                      Modal.confirm({
-                        title: `Are you sure, you want to delete this ${_obj.contentType.replace(
-                          /[-]+/g,
-                          " "
-                        )}?`,
-                        okText: "Yes",
-                        okType: "danger",
-                        onOk: () => {
-                          const copy = { ...data };
-                          const callback = (res) => {
-                            if (!res) return;
-                            const reset = (obj, objKey, objI) => {
-                              const arr = [...obj[objKey]];
-                              obj[objKey] = arr.filter((x, z) => z !== objI);
-                              setData(copy);
-                            };
-                            findAKey(copy, "curriculum", _objMakeKey, reset);
-                          };
-                          const payload = { ...ids, callback };
+                      // Modal.confirm({
+                      //   title: `Are you sure, you want to delete this ${_obj.contentType.replace(
+                      //     /[-]+/g,
+                      //     " "
+                      //   )}?`,
+                      //   okText: "Yes",
+                      //   okType: "danger",
+                      //   onOk: () => {
+                      const copy = { ...data };
+                      const callback = (res) => {
+                        if (!res) return;
+                        const reset = (obj, objKey, objI) => {
+                          const arr = [...obj[objKey]];
+                          obj[objKey] = arr.filter((x, z) => z !== objI);
+                          setData(copy);
+                        };
+                        findAKey(copy, "curriculum", _objMakeKey, reset);
+                      };
 
-                          if (branchLvl === 1) dispatch(deleteLesson(payload));
-                          if (branchLvl === 2)
-                            dispatch(deleteLessonContent(payload));
-                        },
-                      });
+                      const payload = { ...ids, callback };
+
+                      if (branchLvl === 1) dispatch(deleteLesson(payload));
+                      if (branchLvl === 2)
+                        dispatch(deleteLessonContent(payload));
+                      // }
+                      // });
                     }}
                   />
                   {isSpecial && (
@@ -229,7 +230,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
               cb={(t, d, { type, ref }) => {
                 const callback = (res) => {
                   if (!res) return;
-                  if (type) uploadFile(res.uploadSignedUrl, ref);
+                  // if (type) uploadFile(res.uploadSignedUrl, ref);
 
                   _obj.title = t;
                   _obj.description = d;
@@ -445,11 +446,9 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   const handleLessonDispatch = (obj, { type, ref }) => {
     const callback = (res: any) => {
       if (!res) return;
-      if (type) uploadFile(res.uploadSignedUrl, ref);
-      const copy = JSON.parse(JSON.stringify(data));
-      const newArr = [].concat(copy.curriculum, [res]);
-      copy.curriculum = newArr;
-      setData(copy);
+      // if (type) uploadFile(res.uploadSignedUrl, ref);
+      const newArr = data?.curriculum.concat(res);
+      setData({ curriculum: newArr });
     };
     dispatch(
       postLesson({

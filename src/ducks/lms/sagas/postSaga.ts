@@ -84,26 +84,22 @@ export function* updateLesson({ payload }: any): any {
   const data = {
     title,
     description,
-    body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
-    preview: { type: preview.type },
+    // body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
+    // preview: { type: preview.type },
     position,
   };
 
   try {
-    const response = yield call(
-      lms_service.updateLesson,
-      data,
-      idOrg,
-      idCourse,
-      idLesson
-    );
+    const response = yield call(lms_service.updateLesson, data, idLesson);
+
     yield put({
       type: TYPES.PUT_UPDATE_LESSON_SUCCESS,
       payload: response,
     });
 
-    const { lesson, uploadSignedUrl } = response?.data?.data;
-    callback({ ...lesson, uploadSignedUrl });
+    const { lesson } = response?.data?.data;
+    callback({ ...lesson });
+
     return Promise.resolve(response);
   } catch (error) {
     yield put({
@@ -121,9 +117,9 @@ export function* postLesson({ payload }: any): any {
   const data = {
     title,
     description,
-    body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
     preview: { type: preview.type },
     position,
+    courseId: idCourse,
   };
 
   try {
@@ -137,8 +133,7 @@ export function* postLesson({ payload }: any): any {
       payload: response.data,
     });
 
-    const { lesson, uploadSignedUrl } = response?.data?.data;
-    callback({ ...lesson, uploadSignedUrl });
+    callback(response?.data?.data);
 
     return Promise.resolve(response);
   } catch (error) {
