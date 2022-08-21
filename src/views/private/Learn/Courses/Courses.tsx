@@ -47,14 +47,14 @@ const Courses = (): ReactElement => {
               </StyledButton>,
               <Dropdown
                 menu={headerActions}
-                title={
-                  <span style={{ paddingLeft: 50 }}>
-                    <Text fS={20}>
-                      Actions&nbsp;
-                      <DownOutlined style={{ fontSize: 15 }} />
-                    </Text>
-                  </span>
-                }
+                // title={
+                //   <span style={{ paddingLeft: 50 }}>
+                //     <Text fS={20}>
+                //       Actions&nbsp;
+                //       <DownOutlined style={{ fontSize: 15 }} />
+                //     </Text>
+                //   </span>
+                // }
               />,
             ]}
             footer={
@@ -67,14 +67,14 @@ const Courses = (): ReactElement => {
                   }
                   key="1"
                 />
-                <Tabs.TabPane
+                {/* <Tabs.TabPane
                   tab={
                     <Text fC={theme.BLACK} fW={500} fS={22} m={"0 20px"}>
                       Settings
                     </Text>
                   }
                   key="2"
-                />
+                /> */}
               </StyledTabs>
             }
           />

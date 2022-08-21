@@ -1,6 +1,6 @@
-import { Layout} from 'antd';
-import styled from 'styled-components';
-import {theme} from 'utils/colors';
+import { Layout } from "antd";
+import styled from "styled-components";
+import { theme } from "utils/colors";
 
 export const TableContainer: any = styled(Layout)`
   .ant-table {
@@ -111,7 +111,7 @@ export const TableContainer: any = styled(Layout)`
     border-spacing: 0 8px;
   }
   .parent-table > div > div > div > div > div > table > tbody:before {
-    content: '@';
+    content: "@";
     display: block;
     line-height: 8px;
     text-indent: -99999px;
