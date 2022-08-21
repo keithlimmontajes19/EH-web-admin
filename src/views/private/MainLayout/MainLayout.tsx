@@ -37,6 +37,8 @@ import { Layout, Menu, Avatar, Input } from "antd";
 /* components */
 import NavigationContent from "navigations/privateRoute";
 import PopoverProfile from "compositions/PopoverProfile";
+import MainLogo from 'assets/icons/main-logo.png';
+import IconImage from "components/IconImage";
 
 const { Sider, Content } = Layout;
 
@@ -110,7 +112,8 @@ const MainLayout = (): ReactElement => {
   return (
     <StyledLayout>
       <HeaderStyled>
-        <Searchdiv collapsed={collapsed}>
+        <IconImage source={MainLogo} height={80} width={180} />
+        <Searchdiv collapsed={false}>
           <Input
             size="large"
             placeholder="Search for anything"

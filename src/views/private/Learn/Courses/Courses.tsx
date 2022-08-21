@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { PlusOutlined, DownOutlined } from "@ant-design/icons";
 import { useHistory, useParams } from "react-router-dom";
 import { Layout, PageHeader, Tabs } from "antd";
@@ -11,6 +11,7 @@ import Dropdown from "components/Dropdown";
 import StyledButton from "components/StyledButton";
 import TableCourses from "compositions/TableCourses";
 import BuilderCourse from "compositions/BuilderCourse";
+import CreateCourses from "compositions/CreateCourses";
 
 const headerActions = [
   {
@@ -27,6 +28,8 @@ const Courses = (): ReactElement => {
   const history = useHistory();
   const params: Params = useParams();
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   return (
     <>
       {params.page ? (
@@ -38,10 +41,7 @@ const Courses = (): ReactElement => {
             title={<Text fS={30}>Courses</Text>}
             style={{ background: "none", paddingTop: 8 }}
             extra={[
-              <StyledButton
-                w={130}
-                onClick={() => history.push("/learn/courses/add")}
-              >
+              <StyledButton w={130} onClick={() => setIsModalVisible(true)}>
                 <PlusOutlined />
                 ADD
               </StyledButton>,
@@ -79,6 +79,10 @@ const Courses = (): ReactElement => {
             }
           />
           <TableCourses />
+          <CreateCourses
+            isModalVisible={isModalVisible}
+            setIsModalVisible={setIsModalVisible}
+          />
         </Layout>
       )}
     </>

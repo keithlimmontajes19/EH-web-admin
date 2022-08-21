@@ -12,30 +12,28 @@ export const organizationId = async () =>
   await localStorage.getItem("organizationId");
 
 export function* updateCourse({ payload }: any): any {
-  const idOrg = yield call(organizationId);
   const idCourse = yield call(courseId);
+
   const {
     title,
     description,
     preview,
     instructor,
     callback = () => {},
-    points = false
+    points = false,
   } = payload;
   const data = {
     title,
     description,
     body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
     preview: { type: preview.type },
-    instructor
+    instructor,
   };
-  console.log(points)
 
   try {
     const response = yield call(
       lms_service.updateCourse,
-      points ? {...data, points} : data,
-      idOrg,
+      points ? { ...data, points } : data,
       idCourse
     );
     yield put({
@@ -58,17 +56,17 @@ export function* updateCourse({ payload }: any): any {
 
 export function* postCourse({ payload }: any): any {
   const { data, callback = () => {} } = payload;
-  const idOrg = yield call(organizationId);
 
   try {
-    const response = yield call(lms_service.postCourse, data, idOrg);
+    const response = yield call(lms_service.postCourse, data);
     yield put({
       type: TYPES.POST_COURSE_SUCCESS,
       payload: response.data,
     });
 
-    const { course, uploadSignedUrl } = response?.data?.data;
-    callback({ ...course, uploadSignedUrl });
+    const { course } = response?.data?.data;
+
+    callback({ ...course });
     return Promise.resolve(response);
   } catch (error) {
     yield put({
@@ -129,11 +127,16 @@ export function* postLesson({ payload }: any): any {
   };
 
   try {
-    const response = yield call(lms_service.postLesson, data, idOrg, idCourse);
+    const response = yield call(lms_service.postLesson, {
+      ...data,
+      courseId: idCourse,
+    });
+
     yield put({
       type: TYPES.POST_LESSON_SUCCESS,
       payload: response.data,
     });
+
     const { lesson, uploadSignedUrl } = response?.data?.data;
     callback({ ...lesson, uploadSignedUrl });
 
@@ -430,15 +433,11 @@ export function* postCourseView({ payload }: any): any {
   const { course, user, idOrg, callback = () => {} } = payload;
   const data = {
     course,
-    user
+    user,
   };
 
   try {
-    const response = yield call(
-      lms_service.postCourseView,
-      data,
-      idOrg
-    );
+    const response = yield call(lms_service.postCourseView, data, idOrg);
     yield put({
       type: TYPES.POST_COURSE_VIEW_SUCCESS,
       payload: response.data,

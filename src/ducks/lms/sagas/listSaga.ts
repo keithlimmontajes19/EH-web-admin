@@ -24,7 +24,7 @@ export function* getMyCourses(): any {
   const userId = yield call(getUserId);
 
   try {
-    const response = yield call(lms_service.getMyCourses, userId);
+    const response = yield call(lms_service.getListCourses);
 
     const data = response?.data?.data;
     const myCourses = data.length ? data : [];
@@ -98,28 +98,17 @@ export function* getCurrilumDetails({ payload }: any): any {
 }
 
 export function* getLesson({ payload }: any): any {
-  const { idList, callback = () => {} } = payload;
-
-  let idCourse;
-  let idOrg;
-
-  if (idList) {
-    idCourse = idList.idCourse;
-    idOrg = idList.idOrg;
-  } else {
-    idCourse = yield call(courseId);
-    idOrg = yield call(organizationId);
-  }
+  const { id, callback = () => {} } = payload;
 
   try {
-    const response = yield call(lms_service.getLesson, idOrg, idCourse);
+    const response = yield call(lms_service.getLesson, id);
 
-    console.log("response", response?.data);
     yield put({
       type: TYPES.GET_LESSONS_LIST_SUCCESS,
       payload: response?.data?.data,
     });
 
+    callback(response?.data?.data);
     return Promise.resolve(response);
   } catch (error) {
     yield put({
@@ -266,21 +255,18 @@ export function* getLessonId({ payload }: any): any {
 export function* getCourse({ payload }: any): any {
   const { callback = () => {} } = payload;
 
-  const idOrg = yield call(organizationId);
   const idCourse = yield call(courseId);
 
   try {
-    const res = yield call(lms_service.getCourse, idOrg, idCourse);
+    const res = yield call(lms_service.getCourse, idCourse);
 
     yield put({
       type: TYPES.GET_COURSE_SUCCESS,
       payload: res.data,
     });
 
-    console.log("res", res);
     callback(res.data);
   } catch (error) {
-    console.log(error);
     yield put({
       type: TYPES.GET_COURSE_FAILED,
     });
