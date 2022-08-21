@@ -45,11 +45,13 @@ export const ItemTextDiv = styled.div`
 export const HeaderStyled = styled(Header)`
   background: ${theme.HEADER};
   border-radius: 0px;
-  box-shadow: 0px 4px 5px 1px ${theme.HEADER}44;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 50px;
+  padding-left: 20px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  padding-right: 50px
   height: 70px;
   z-index: 4;
 `;
@@ -58,7 +60,7 @@ export const Searchdiv = styled.div<any>`
   flex: 1;
   display: flex;
   padding: 20px;
-  margin-left: ${(props: any) => (props?.collapsed ? "80px" : "210px")};
+  margin-left: 70px;
   transition: margin-left 0.1s;
 
   @media only screen and (max-width: 1224px) {

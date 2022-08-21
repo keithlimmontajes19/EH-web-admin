@@ -1,37 +1,39 @@
-import { Table, Modal, Input, PageHeader, Layout, Tabs } from "antd";
+import { Table, Modal, Input } from "antd";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+
 import {
-  EditOutlined,
-  DeleteOutlined,
   EyeFilled,
   BuildFilled,
+  EditOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { SpaceDiv, TableContainer } from "./styled";
 
-// ducks action
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "ducks/store";
+/* reducer action */
 import {
   updateCourse,
   getMyCourses,
   deleteCourse,
   getCurriculum,
 } from "ducks/lms/actionCreator";
-import Loading from "components/Loading";
+import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from "react-redux";
+
 import Text from "components/Text";
-import { useHistory } from "react-router-dom";
+import Loading from "components/Loading";
 import ModalCurriculum from "compositions/ModalCurriculum";
 
-function TableCourses() {
+const TableCourses = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
+  const [dataSource, setDataSource] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [dataSource, setDataSource] = useState([]);
   const [viewVisible, setViewVisible] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const columns = [
     {
@@ -84,13 +86,8 @@ function TableCourses() {
               <span
                 onClick={() => {
                   localStorage.setItem("courseId", record?._id);
-                  localStorage.setItem(
-                    "organizationId",
-                    record?.organizationId
-                  );
 
-                  console.log("object", object);
-                  // history.push("/learn/courses/builder/" + record._id);
+                  history.push("/learn/courses/builder/" + record._id);
                 }}
               >
                 <BuildFilled style={{ color: "#635ffa" }} />
@@ -108,7 +105,6 @@ function TableCourses() {
   );
 
   useEffect(() => {
-    localStorage.setItem("organizationId", "6239ffd1cb8440277f2a2b39");
     dispatch(getMyCourses());
   }, []);
 
@@ -117,12 +113,15 @@ function TableCourses() {
       setDataSource([]);
       return;
     }
+
     const sortIt = (a, b) => {
       if (a > b) return 1;
       if (b > a) return -1;
       return 0;
     };
+
     const sorted = data.sort((a, b) => sortIt(a.title, b.title));
+
     setDataSource(
       sorted.map((obj, i) => ({
         ...obj,
@@ -160,33 +159,45 @@ function TableCourses() {
       },
     });
   };
+
   const onEditData = (record) => {
     setIsEditing(true);
     setEditingData({ ...record });
   };
+
   const resetEditing = () => {
     setIsEditing(false);
     setEditingData(null);
   };
+
   const renameOk = () => {
     if (JSON.stringify(editingData) === "{}") return;
-    localStorage.setItem("organizationId", editingData.organizationId);
+
+    console.log("editingData", editingData);
+
     localStorage.setItem("courseId", editingData._id);
+    localStorage.setItem("organizationId", editingData.organizationId);
+
     dispatch(updateCourse(editingData));
+
     const mapped = dataSource.map((obj) => {
       if (obj._id === editingData._id) return editingData;
       return obj;
     });
-    setDataSource(mapped);
+
     resetEditing();
+    setDataSource(mapped);
   };
+
   const onSelectChange = (newRowKeys) => {
     setSelectedRowKeys(newRowKeys);
   };
+
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
   const rowListener = (record) => ({
     onClick: (event) => {
       if (event.target.localName != "td") {
@@ -208,6 +219,7 @@ function TableCourses() {
     dispatch(getCurriculum(obj));
     setViewVisible(true);
   };
+
   const closeView = () => {
     setViewVisible(false);
   };
@@ -222,11 +234,11 @@ function TableCourses() {
       }}
     >
       <Table
-        onRow={rowListener}
-        rowSelection={rowSelection}
         columns={columns}
         dataSource={dataSource}
-        loading={{ indicator: <Loading />, spinning: loading }}
+        loading={rawLoading}
+        onRow={rowListener}
+        rowSelection={rowSelection}
       />
       <Modal
         title="Rename"
@@ -250,6 +262,6 @@ function TableCourses() {
       <ModalCurriculum isVisible={viewVisible} isCancel={closeView} />
     </TableContainer>
   );
-}
+};
 
 export default TableCourses;

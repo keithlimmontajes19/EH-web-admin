@@ -1,28 +1,31 @@
-import api from '../index';
-import {USERS, REVIEW, ORGANIZATION} from '../constants';
-import { lessonId, organizationId } from 'ducks/lms/sagas/listSaga';
+import api from "../index";
+import { USERS, REVIEW, ORGANIZATION } from "../constants";
+import { lessonId, organizationId } from "ducks/lms/sagas/listSaga";
 
 const auth_services = {
   getMyCourses: (userId: string) => api.get(`${USERS}/${userId}/courses`),
-  getAllCourses: (organizationId: string) => api.get(`${ORGANIZATION}/${organizationId}/courses`),
+  getListCourses: () => api.get(`courses`),
+  getAllCourses: (organizationId: string) =>
+    api.get(`${ORGANIZATION}/${organizationId}/courses`),
   getReview: (courseId: string) => api.get(`${REVIEW}/${courseId}/reviews`),
-  getLesson: (organizationId: string, courseId: string) =>
-  api.get(`${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum`),
+
+  getLesson: (courseId: string) => api.get(`/courses/${courseId}/lessons`),
+
   getSingleLesson: (
     organizationId: string,
     courseId: string,
     lessonId: string
   ) =>
     api.get(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`,
+      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`
     ),
   getLessonDetails: (
     organizationId: string,
     courseId: string,
-    lessonId: string,
+    lessonId: string
   ) =>
     api.get(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`,
+      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`
     ),
   getQuizQuestions: (
     organizationId: string,
@@ -31,74 +34,41 @@ const auth_services = {
     quizId: string
   ) =>
     api.get(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${quizId}/questions`,
+      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${quizId}/questions`
     ),
   getTopicDetails: (
     courseId: string,
     lessonId: string,
     contentId: string,
-    organizationId: string,
+    organizationId: string
   ) =>
     api.get(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${contentId}`,
+      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${contentId}`
     ),
-  getCourse: (
-    organizationId: string,
-    courseId: string,
-  ) =>
-    api.get(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}`,
-      ),
-  updateCourse: (
-    payload: any,
-    organizationId: string,
-    courseId: string,
-  ) =>
-    api.put(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}`,
-      payload
-      ),
-  postCourse: (
-    payload: any,
-    organizationId: string,
-  ) => 
-    api.post(
-      `${ORGANIZATION}/${organizationId}/courses`,
-      payload
-    ),
-  deleteCourse: (
-    organizationId: string,
-    courseId: string,
-  ) => 
-    api.delete(
-    `${ORGANIZATION}/${organizationId}/courses/${courseId}`,
-    ),
+  getCourse: (courseId: string) => api.get(`/courses/${courseId}`),
+
+  updateCourse: (payload: any, courseId: string) =>
+    api.patch(`/courses/${courseId}`, payload),
+
+  postCourse: (payload: any) => api.post(`courses`, payload),
+  deleteCourse: (organizationId: string, courseId: string) =>
+    api.delete(`${ORGANIZATION}/${organizationId}/courses/${courseId}`),
   updateLesson: (
     payload: any,
     organizationId: string,
     courseId: string,
-    lessonId: string,
+    lessonId: string
   ) =>
     api.put(
       `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`,
       payload
-      ),
-  postLesson: (
-    payload: any,
-    organizationId: string,
-    courseId: string,
-  ) => 
-    api.post(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum`,
-      payload
     ),
-  deleteLesson: (
-    organizationId: string,
-    courseId: string,
-    lessonId: string,
-  ) => 
+
+  postLesson: (payload: any) => api.post(`/lessons`, payload),
+
+  deleteLesson: (organizationId: string, courseId: string, lessonId: string) =>
     api.delete(
-    `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`,
+      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`
     ),
   updateLessonContent: (
     payload: any,
@@ -110,13 +80,13 @@ const auth_services = {
     api.put(
       `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${contentId}`,
       payload
-      ),
+    ),
   postLessonContent: (
     payload: any,
     organizationId: string,
     courseId: string,
     lessonId: string
-  ) => 
+  ) =>
     api.post(
       `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents`,
       payload
@@ -126,9 +96,9 @@ const auth_services = {
     courseId: string,
     lessonId: string,
     contentId: string
-  ) => 
+  ) =>
     api.delete(
-    `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${contentId}`,
+      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${contentId}`
     ),
   updateTopicContent: (
     payload: any,
@@ -136,19 +106,19 @@ const auth_services = {
     courseId: string,
     lessonId: string,
     contentId: string,
-    topicId: string,
+    topicId: string
   ) =>
     api.put(
       `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${contentId}/contents/${topicId}`,
       payload
-      ),
+    ),
   postTopicContent: (
     payload: any,
     organizationId: string,
     courseId: string,
     lessonId: string,
     contentId: string
-  ) => 
+  ) =>
     api.post(
       `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${contentId}/contents`,
       payload
@@ -162,7 +132,7 @@ const auth_services = {
   ) =>
     api.delete(
       `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${contentId}/contents/${topicId}`
-      ),
+    ),
   updateQuizQuestion: (
     payload: any,
     organizationId: string,
@@ -196,34 +166,22 @@ const auth_services = {
     api.delete(
       `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${quizId}/questions/${questionId}`
     ),
-  postCourseView: (
-    payload: any,
-    organizationId: string,
-  ) => 
+  postCourseView: (payload: any, organizationId: string) =>
     api.post(
       `${ORGANIZATION}/${organizationId}/course-reports/course-views`,
       payload
     ),
-  getCourseView: (
-    organizationId: string,
-  ) => 
-    api.get(
-      `${ORGANIZATION}/${organizationId}/course-reports/course-views`,
-    ),
+  getCourseView: (organizationId: string) =>
+    api.get(`${ORGANIZATION}/${organizationId}/course-reports/course-views`),
   getCourseReportsStats: () => api.get(`course-reports/stats`),
   getAllUserReports: () => api.get(`user-reports`),
-  getUserCourseReports: (
-    organizationId: string,
-    userId: string,
-  ) =>
-    api.get(
-      `${ORGANIZATION}/${organizationId}/course-reports/user/${userId}`
-    ),
+  getUserCourseReports: (organizationId: string, userId: string) =>
+    api.get(`${ORGANIZATION}/${organizationId}/course-reports/user/${userId}`),
   getUserCourseReportsDetails: (
     organizationId: string,
     userId: string,
-    courseId: string,
-  ) => 
+    courseId: string
+  ) =>
     api.get(
       `${ORGANIZATION}/${organizationId}/course-reports/user/${userId}/course/${courseId}`
     ),
