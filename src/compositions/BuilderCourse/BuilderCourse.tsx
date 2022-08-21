@@ -26,28 +26,30 @@ const blankData = {
     name: "NaN$",
     title: "NaN$",
   },
-  points: 10,
+  points: "",
 };
 
 const BuilderCourse = ({ id = "" }: any): ReactElement => {
-  const history = useHistory();
+  const history: any = useHistory();
   const dispatch = useDispatch();
   const params: Params = useParams();
 
   const addNew = params.page === "add";
+  const organizationId = history?.location?.state?.organization;
 
+  
+  const [course, setCourse]: any = useState(
+    JSON.parse(JSON.stringify(blankData))
+  );
   const [queue, setQueue] = useState(false);
   const [loading, setLoading] = useState(true);
   const [onAdd, setOnAdd]: any = useState(false);
   const [refreshed, setRefreshed] = useState(false);
   const [file, setFile]: any = useState({ type: false, ref: {} });
-  const [course, setCourse]: any = useState(
-    JSON.parse(JSON.stringify(blankData))
-  );
 
   useEffect(() => {
-    // localStorage.setItem("courseId", id);
-    // localStorage.setItem("organizationId", "6239ffd1cb8440277f2a2b39");
+    localStorage.setItem("courseId", id);
+    localStorage.setItem("organizationId", organizationId);
 
     if (!addNew)
       dispatch(
@@ -60,7 +62,7 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
 
   useEffect(() => {
     if (!refreshed && "_id" in course) {
-      history.replace("/learn/courses/builder/" + course._id);
+      history.replace("/learn/courses/builder/" + course?._id);
       setRefreshed(true);
     }
   }, [course]);
@@ -115,8 +117,8 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
       return;
     }
 
-    localStorage.setItem("organizationId", "6239ffd1cb8440277f2a2b39");
-    localStorage.setItem("courseId", course._id);
+    localStorage.setItem("courseId", course?._id);
+    // localStorage.setItem("organizationId", organizationId);
 
     const { type, ref }: any = file;
     const callback = async (res) => {
@@ -230,11 +232,10 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
         >
           <Form
             initialValues={{
-              t: course.title === "NaN$" ? "" : course.title,
-              d: course.description === "NaN$" ? "" : course.description,
-              a:
-                course.instructor.name === "NaN$" ? "" : course.instructor.name,
-              p: course.points || "",
+              t: course?.title === "NaN$" ? "" : course?.title,
+              d: course?.description === "NaN$" ? "" : course?.description,
+              a: course?.instructor?.name === "NaN$" ? "" : course?.instructor?.name,
+              p: course?.points || "",
             }}
           >
             <Row>
@@ -245,7 +246,7 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
                 >
                   <Input
                     placeholder={"Course Title"}
-                    value={course.title}
+                    value={course?.title}
                     onChange={(e) => {
                       setQueue(true);
                       setCourse((prev) => {
@@ -265,7 +266,7 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
                     max={100}
                     controls={false}
                     placeholder={"Points Earned"}
-                    value={course.points}
+                    value={course?.points}
                     onChange={(e) => {
                       setQueue(true);
                       setCourse((prev) => {
@@ -285,7 +286,7 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
                 >
                   <Input
                     placeholder={"Add Subtitle/Short Slogan/Short Description"}
-                    value={course.description}
+                    value={course?.description}
                     onChange={(e) => {
                       setQueue(true);
                       setCourse((prev) => {

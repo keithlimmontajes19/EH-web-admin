@@ -110,7 +110,7 @@ const MainLayout = (): ReactElement => {
   return (
     <StyledLayout>
       <HeaderStyled>
-        <Searchdiv collapsed={collapsed}>
+        <Searchdiv collapsed={false}>
           <Input
             size="large"
             placeholder="Search for anything"

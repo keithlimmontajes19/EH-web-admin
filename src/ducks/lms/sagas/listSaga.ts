@@ -24,7 +24,7 @@ export function* getMyCourses(): any {
   const userId = yield call(getUserId);
 
   try {
-    const response = yield call(lms_service.getMyCourses, userId);
+    const response = yield call(lms_service.getListCourses);
 
     const data = response?.data?.data;
     const myCourses = data.length ? data : [];
@@ -266,21 +266,18 @@ export function* getLessonId({ payload }: any): any {
 export function* getCourse({ payload }: any): any {
   const { callback = () => {} } = payload;
 
-  const idOrg = yield call(organizationId);
   const idCourse = yield call(courseId);
 
   try {
-    const res = yield call(lms_service.getCourse, idOrg, idCourse);
+    const res = yield call(lms_service.getCourse, idCourse);
 
     yield put({
       type: TYPES.GET_COURSE_SUCCESS,
       payload: res.data,
     });
 
-    console.log("res", res);
     callback(res.data);
   } catch (error) {
-    console.log(error);
     yield put({
       type: TYPES.GET_COURSE_FAILED,
     });

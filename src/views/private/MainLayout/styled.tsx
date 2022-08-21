@@ -45,7 +45,6 @@ export const ItemTextDiv = styled.div`
 export const HeaderStyled = styled(Header)`
   background: ${theme.HEADER};
   border-radius: 0px;
-  box-shadow: 0px 4px 5px 1px ${theme.HEADER}44;
   display: flex;
   flex-direction: row;
   align-items: center;
