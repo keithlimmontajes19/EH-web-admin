@@ -42,14 +42,14 @@ const Quizzes = (): ReactElement => {
             extra={[
               <Dropdown
                 menu={headerActions}
-                title={
-                  <span style={{ paddingLeft: 50 }}>
-                    <Text fS={20}>
-                      Actions&nbsp;
-                      <DownOutlined style={{ fontSize: 15 }} />
-                    </Text>
-                  </span>
-                }
+                // title={
+                //   <span style={{ paddingLeft: 50 }}>
+                //     <Text fS={20}>
+                //       Actions&nbsp;
+                //       <DownOutlined style={{ fontSize: 15 }} />
+                //     </Text>
+                //   </span>
+                // }
               />,
             ]}
             footer={

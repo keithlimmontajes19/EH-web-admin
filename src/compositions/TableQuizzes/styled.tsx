@@ -1,11 +1,11 @@
-import { Layout} from 'antd';
-import styled from 'styled-components';
-import {theme} from 'utils/colors';
+import { Layout } from "antd";
+import styled from "styled-components";
+import { theme } from "utils/colors";
 
 export const StyledText: any = styled.span`
-  color: ${({fC}: any) => (fC ? fC : `#635FFA`)};
-  font-size: ${({fS}: any) => (fS ? fS : 28)}px;
-  font-weight: ${({fW}: any) => (fW ? fW : 700)};
+  color: ${({ fC }: any) => (fC ? fC : `#635FFA`)};
+  font-size: ${({ fS }: any) => (fS ? fS : 28)}px;
+  font-weight: ${({ fW }: any) => (fW ? fW : 700)};
 `;
 
 export const TableContainer: any = styled(Layout)`
@@ -13,9 +13,9 @@ export const TableContainer: any = styled(Layout)`
     background: none;
   }
 
-  .ant-table-placeholder {
-    display: none;
-  }
+  // .ant-table-placeholder {
+  //   display: none;
+  // }
 
   .ant-table-tbody > tr > td {
     border: none;
@@ -117,7 +117,7 @@ export const TableContainer: any = styled(Layout)`
     border-spacing: 0 8px;
   }
   .parent-table > div > div > div > div > div > table > tbody:before {
-    content: '@';
+    content: "@";
     display: block;
     line-height: 8px;
     text-indent: -99999px;
