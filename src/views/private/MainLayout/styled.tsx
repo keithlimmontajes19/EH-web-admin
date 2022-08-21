@@ -48,7 +48,10 @@ export const HeaderStyled = styled(Header)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 50px;
+  padding-left: 20px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  padding-right: 50px
   height: 70px;
   z-index: 4;
 `;
@@ -57,7 +60,7 @@ export const Searchdiv = styled.div<any>`
   flex: 1;
   display: flex;
   padding: 20px;
-  margin-left: ${(props: any) => (props?.collapsed ? "80px" : "210px")};
+  margin-left: 70px;
   transition: margin-left 0.1s;
 
   @media only screen and (max-width: 1224px) {
