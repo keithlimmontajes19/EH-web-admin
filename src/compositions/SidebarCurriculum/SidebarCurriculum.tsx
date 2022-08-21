@@ -18,6 +18,7 @@ import { getTopicID, getLessonId } from "ducks/lms/actionCreator";
 import Text from "components/Text";
 
 const { SubMenu } = Menu;
+
 const SidebarCurriculum = (props: PropsType): ReactElement => {
   const dispatch = useDispatch();
 
@@ -96,7 +97,7 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
             .map((lessonContent, itemIndex) => {
               const stats = lessonContent?.stats;
 
-              return lessonContent?.contents.length > 0 ? (
+              return (lessonContent?.contents || []).length > 0 ? (
                 <SubMenu
                   key={itemIndex}
                   onTitleClick={(e) => {
@@ -129,7 +130,7 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
                    * Topic Menu
                    * ==============
                    */}
-                  {(lessonContent?.contents || [])
+                  {(lessonContent?.contents || lessonContent || [])
                     .sort((a, b) => a?.position - b?.position)
                     .map((topicContent, topicIndex) => {
                       const firstIndex = () => {

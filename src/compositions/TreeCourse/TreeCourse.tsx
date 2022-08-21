@@ -59,6 +59,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
     localStorage.setItem("organizationId", "6239ffd1cb8440277f2a2b39");
     dispatch(
       getLessons({
+        id: course?._id,
         callback: defaultCallback,
       })
     );
@@ -82,7 +83,10 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
       return;
     }
 
+    console.log("sorted", res);
+
     const sorted = sortByPosition(res);
+
     setData({ curriculum: sorted });
     setIsLoading(false);
   };

@@ -9,8 +9,7 @@ const auth_services = {
     api.get(`${ORGANIZATION}/${organizationId}/courses`),
   getReview: (courseId: string) => api.get(`${REVIEW}/${courseId}/reviews`),
 
-  getLesson: (organizationId: string, courseId: string) =>
-    api.get(`${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum`),
+  getLesson: (courseId: string) => api.get(`/courses/${courseId}/lessons`),
 
   getSingleLesson: (
     organizationId: string,

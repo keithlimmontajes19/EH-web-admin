@@ -37,7 +37,6 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
   const addNew = params.page === "add";
   const organizationId = history?.location?.state?.organization;
 
-  
   const [course, setCourse]: any = useState(
     JSON.parse(JSON.stringify(blankData))
   );
@@ -234,7 +233,10 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
             initialValues={{
               t: course?.title === "NaN$" ? "" : course?.title,
               d: course?.description === "NaN$" ? "" : course?.description,
-              a: course?.instructor?.name === "NaN$" ? "" : course?.instructor?.name,
+              a:
+                course?.instructor?.name === "NaN$"
+                  ? ""
+                  : course?.instructor?.name,
               p: course?.points || "",
             }}
           >

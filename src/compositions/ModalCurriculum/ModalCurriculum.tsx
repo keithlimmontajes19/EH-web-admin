@@ -16,15 +16,17 @@ const ModalCurriculum = ({ isVisible, isCancel }): ReactElement => {
   const dispatch = useDispatch();
   const targetRef: any = useRef();
 
-  useEffect(() => {
-    if (isVisible) dispatch(getLessons());
-  }, [isVisible]);
+  // useEffect(() => {
+  //   if (isVisible) dispatch(getLessons(courseId, ()));
+  // }, [isVisible]);
 
   const { lesson, curriculum }: any = useSelector<RootState>(
     (state) => state.lms
   );
   const [selected, setSelected] = useState("1");
   const [lessonIndex, setLessonIndex] = useState<string | number>(-1);
+
+  console.log("lesson", lesson?.data);
 
   const content = (
     <Row style={{ borderRadius: 15 }} ref={targetRef}>
@@ -56,7 +58,7 @@ const ModalCurriculum = ({ isVisible, isCancel }): ReactElement => {
       visible={isVisible}
       bodyStyle={{
         padding: 0,
-        minHeight: targetRef.current ? targetRef.current.offsetHeight : 0,
+        minHeight: 300,
       }}
       footer={null}
     >
