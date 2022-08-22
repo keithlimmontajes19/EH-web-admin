@@ -1,24 +1,19 @@
-import {ReactElement} from 'react';
+import { ReactElement } from "react";
 
 /* styles antd */
-import {SubLogoContainer, RowContainer, FormContainer} from './styled';
-import {Row} from 'antd';
+import { FormContainer } from "./styled";
 
 /* utils */
-import {} from 'utils/constants';
+import {} from "utils/constants";
 
 /* component */
-import LoginForm from 'compositions/LoginForm';
+import LoginForm from "compositions/LoginForm";
 
 const Login = (): ReactElement => {
   return (
-    <Row gutter={24} style={RowContainer}>
-      <SubLogoContainer>
-        <FormContainer>
-          <LoginForm />
-        </FormContainer>
-      </SubLogoContainer>
-    </Row>
+    <FormContainer>
+      <LoginForm />
+    </FormContainer>
   );
 };
 

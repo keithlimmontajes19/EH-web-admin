@@ -1,12 +1,12 @@
-import { ReactElement, useEffect, useState } from "react";
-import type { PropsType } from "./types";
+import { ReactElement, useEffect, useState } from 'react';
+import type { PropsType } from './types';
 
-import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { Row, Select } from "antd";
-import { TeamOutlined } from "@ant-design/icons";
-import { StyledText } from "compositions/Announcements/styled";
+import { Row, Select } from 'antd';
+import { TeamOutlined } from '@ant-design/icons';
+import { StyledText } from 'compositions/Announcements/styled';
 
 import {
   Container,
@@ -14,14 +14,14 @@ import {
   ModalContainer,
   ViewerContainer,
   StyledButtonCancle,
-} from "./styled";
+} from './styled';
 
-import { theme } from "utils/colors";
-import CustomeSelect from "components/CustomeSelect";
+import { theme } from 'utils/colors';
+import CustomeSelect from 'components/CustomeSelect';
 
 /* reducer action */
-import { RootState } from "ducks/store";
-import { getOrganizations } from "ducks/announcement/actionCreator";
+import { RootState } from 'ducks/store';
+import { getOrganizations } from 'ducks/announcement/actionCreator';
 
 const { Option } = Select;
 
@@ -44,11 +44,12 @@ const CreateCourses = (props: PropsType): ReactElement => {
     setIsModalVisible(false);
   };
 
+  console.log('organization', organization);
   const handleSubmit = () => {
     setIsModalVisible(false);
     setTimeout(
       () =>
-        history.push("/learn/courses/add", {
+        history.push('/learn/courses/add', {
           organization: organization,
         }),
       100
@@ -70,9 +71,9 @@ const CreateCourses = (props: PropsType): ReactElement => {
         footer={[
           <StyledButtonCancle
             style={{
-              width: "100 px",
-              color: "#635ffa",
-              background: "#fff",
+              width: '100 px',
+              color: '#635ffa',
+              background: '#fff',
             }}
             onClick={handleCancel}
           >
@@ -84,7 +85,7 @@ const CreateCourses = (props: PropsType): ReactElement => {
         <StyledText
           fS={20}
           fC={theme.HEADINGS}
-          style={{ marginBottom: "12px !important" }}
+          style={{ marginBottom: '12px !important' }}
         >
           Viewer
         </StyledText>
@@ -100,8 +101,8 @@ const CreateCourses = (props: PropsType): ReactElement => {
                 <span style={{ marginLeft: 20 }}>Organization Name</span>
               }
               style={{
-                width: "468px",
-                margin: "20px 0",
+                width: '468px',
+                margin: '20px 0',
               }}
             >
               {(organizations?.data || []).map((item, i) => {
