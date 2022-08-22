@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import {theme} from 'utils/colors';
-import {Input, Button} from 'antd';
+import { theme } from 'utils/colors';
+import { Input, Button } from 'antd';
 
 export const Container = styled.div`
   padding: 30px;
@@ -18,7 +18,15 @@ export const StyledInput: any = styled<any>(Input)`
   border-radius: 550px;
   margin-top: 20px;
   height: 50px;
-  width: 404.29px;
+  width: 100%;
+
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+  padding-left: 20px;
+  padding-right: 20px;
 `;
 
 export const StyledPassword = styled(Input.Password)`
@@ -26,7 +34,15 @@ export const StyledPassword = styled(Input.Password)`
   backdrop-filter: blur(25px);
   border-radius: 550px;
   height: 50px;
-  width: 404.29px;
+  width: 100%;
+
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+  padding-left: 20px;
+  padding-right: 20px;
 `;
 
 export const StyledButton = styled(Button)`
@@ -40,7 +56,12 @@ export const StyledButton = styled(Button)`
   border-radius: 50px;
   color: white;
   height: 50px;
-  width: 404.29px;
+  width: 100%;
+
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
 `;
 
 export const SignupContainer = styled.div`
@@ -82,10 +103,12 @@ export const FlexRow = styled.div`
 `;
 
 export const TitleStyled = styled.div`
+  font-family: 'Red Hat Display', sans-serif;
+  color: #4c4b7b;
   font-style: normal;
   font-weight: 700;
-  font-size: 40px;
-  line-height: 50px;
+  font-size: 25px;
+  line-height: 30px;
   text-align: center;
   background: linear-gradient(0deg, #2b2e4a, #2b2e4a),
     linear-gradient(
@@ -118,4 +141,32 @@ export const LabelStyled = styled.span`
   line-height: 18px;
   text-align: right;
   color: #635ffa;
+`;
+
+export const StyledCancel = styled.button`
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #635ffa;
+  background: transparent;
+  border: none;
+  width: 100%;
+`;
+
+export const DividerButton = styled.div`
+  margin-top: 33px;
+`;
+
+export const Subtitle = styled.p`
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #a2a1bd;
+  width: 100%;
 `;

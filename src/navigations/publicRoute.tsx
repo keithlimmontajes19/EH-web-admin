@@ -1,10 +1,10 @@
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 
-import Login from "views/public/Login";
-import EnterOTP from "compositions/EnterOtp";
-import ResetPassword from "compositions/ResetPassword";
-import ForgotPassword from "compositions/ForgotPassword";
+import Login from 'views/public/Login';
+import EnterOTP from 'views/public/EnterOtpScreen';
+import ForgotPassword from 'views/public/ForgotScreen';
+import ResetPassword from 'views/public/ResetPasswordScreen';
 
 const Navigation = () => {
   return (

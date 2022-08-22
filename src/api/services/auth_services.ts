@@ -1,5 +1,5 @@
-import api from "api/index";
-import { AUTHENTICATION, USER } from "api/constants";
+import api from 'api/index';
+import { AUTHENTICATION, USER } from 'api/constants';
 
 const auth_services = {
   tokenChecker: () => api.get(`${USER}/token`),
@@ -11,9 +11,13 @@ const auth_services = {
   postLogin: (params) => api.post(`${AUTHENTICATION}/login`, params),
   postSignup: (params) => api.post(`${AUTHENTICATION}/signup`, params),
 
+  updateAvatar: (userId: string) => api.patch(`users/${userId}/avatar`),
   putUser: (userId: string, payload: any) =>
     api.patch(`/users/${userId}`, payload),
-  updateAvatar: (userId: string) => api.patch(`users/${userId}/avatar`),
+
+  postOtp: (payload: any) => api.post('/api/v1/otp', payload),
+  verifyOtp: (payload: any) => api.post('/api/v1/otp/verify', payload),
+  register: (payload: any) => api.post('/api/v1/auth/register', payload),
 };
 
 export default auth_services;
