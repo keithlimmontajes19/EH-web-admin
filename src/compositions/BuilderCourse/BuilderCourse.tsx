@@ -1,41 +1,42 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from 'react';
 
-import Text from "components/Text";
-import Input from "components/Input";
+import Text from 'components/Text';
+import Input from 'components/Input';
 
-import { Col, Form, Layout, PageHeader, Row, Space, Upload } from "antd";
-import { VideoCameraOutlined, PictureOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import { getCourse, postCourse } from "ducks/lms/actionCreator";
-import Loading from "components/Loading";
-import TreeCourse from "compositions/TreeCourse";
-import { useHistory, useParams } from "react-router-dom";
-import { Params } from "views/private/Learn/Courses/types";
-import StyledButton from "components/StyledButton";
-import { theme } from "utils/colors";
-import { updateCourse } from "ducks/lms/actionCreator";
+import { Col, Form, Layout, PageHeader, Row, Space, Upload } from 'antd';
+import { VideoCameraOutlined, PictureOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { getCourse, postCourse } from 'ducks/lms/actionCreator';
+import Loading from 'components/Loading';
+import TreeCourse from 'compositions/TreeCourse';
+import { useHistory, useParams } from 'react-router-dom';
+import { Params } from 'views/private/Learn/Courses/types';
+import StyledButton from 'components/StyledButton';
+import { theme } from 'utils/colors';
+import { updateCourse } from 'ducks/lms/actionCreator';
 
 const blankData = {
-  title: "NaN$",
-  description: "NaN$",
-  body: "&lt;html&gt; &lt;body&gt;NaN$&lt;/body&gt; &lt;/html&gt;",
+  title: '',
+  description: '',
+  body: '&lt;html&gt; &lt;body&gt;&lt;/body&gt; &lt;/html&gt;',
   preview: {
-    type: "image",
+    type: 'image',
   },
   instructor: {
-    name: "NaN$",
-    title: "NaN$",
+    name: '',
   },
-  points: "",
+  points: '',
 };
 
-const BuilderCourse = ({ id = "" }: any): ReactElement => {
+const BuilderCourse = ({ id = '' }: any): ReactElement => {
   const history: any = useHistory();
   const dispatch = useDispatch();
   const params: Params = useParams();
 
-  const addNew = params.page === "add";
+  const addNew = params.page === 'add';
   const organizationId = history?.location?.state?.organization;
+  const organizations = history?.location?.state?.organization;
+  console.log('organization', organizations);
 
   const [course, setCourse]: any = useState(
     JSON.parse(JSON.stringify(blankData))
@@ -47,8 +48,8 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
   const [file, setFile]: any = useState({ type: false, ref: {} });
 
   useEffect(() => {
-    localStorage.setItem("courseId", id);
-    localStorage.setItem("organizationId", organizationId);
+    localStorage.setItem('courseId', id);
+    localStorage.setItem('organizationId', organizationId);
 
     if (!addNew)
       dispatch(
@@ -60,8 +61,8 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
   }, []);
 
   useEffect(() => {
-    if (!refreshed && "_id" in course) {
-      history.replace("/learn/courses/builder/" + course?._id);
+    if (!refreshed && '_id' in course) {
+      history.replace('/learn/courses/builder/' + course?._id);
       setRefreshed(true);
     }
   }, [course]);
@@ -75,14 +76,14 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
     const reader = new FileReader();
     reader.onloadend = async () => {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
       const fileBlob = await getBlob(reader.result);
 
       const response = await fetch(
         new Request(signedUrl, {
-          method: "PUT",
+          method: 'PUT',
           body: fileBlob,
-          headers: new Headers({ "Content-Type": file.type }),
+          headers: new Headers({ 'Content-Type': file.type }),
         })
       );
     };
@@ -93,7 +94,7 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
     if (!res) return;
     const { type, ref }: any = file;
     if (type) uploadFile(res.uploadSignedUrl, ref);
-    localStorage.setItem("courseId", res._id);
+    localStorage.setItem('courseId', res._id);
     setCourse(res);
     setLoading(false);
   };
@@ -108,7 +109,7 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
     if (addNew) {
       dispatch(
         postCourse({
-          data: course,
+          data: { ...course, organizations },
           callback: addNewCallback,
         })
       );
@@ -116,7 +117,7 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
       return;
     }
 
-    localStorage.setItem("courseId", course?._id);
+    localStorage.setItem('courseId', course?._id);
     // localStorage.setItem("organizationId", organizationId);
 
     const { type, ref }: any = file;
@@ -127,7 +128,7 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
     dispatch(
       updateCourse({
         ...course,
-        preview: { type: type ? type : "image" },
+        preview: { type: type ? type : 'image' },
         callback,
       })
     );
@@ -141,16 +142,16 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
 
   const MediaPreview = () => (
     <StyledButton
-      bg={"none"}
-      c={"red"}
-      b={`2px solid ${"red"}`}
+      bg={'none'}
+      c={'red'}
+      b={`2px solid ${'red'}`}
       icon={
-        file.type === "image" ? <PictureOutlined /> : <VideoCameraOutlined />
+        file.type === 'image' ? <PictureOutlined /> : <VideoCameraOutlined />
       }
       htmlType="button"
       onClick={() => setFile({ type: false, ref: {} })}
     >
-      <Text fC={"red"} fS={18} fW={500}>
+      <Text fC={'red'} fS={18} fW={500}>
         {file.ref.name}
       </Text>
     </StyledButton>
@@ -162,12 +163,12 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
         maxCount={1}
         showUploadList={false}
         beforeUpload={(f) => {
-          if (/video/g.test(f.type)) handleUpload("video", f);
+          if (/video/g.test(f.type)) handleUpload('video', f);
           return false;
         }}
       >
         <StyledButton
-          bg={"none"}
+          bg={'none'}
           c={theme.PRIMARY}
           b={`2px solid ${theme.PRIMARY}`}
           icon={<VideoCameraOutlined />}
@@ -182,12 +183,12 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
         maxCount={1}
         showUploadList={false}
         beforeUpload={(f) => {
-          if (/image/g.test(f.type)) handleUpload("image", f);
+          if (/image/g.test(f.type)) handleUpload('image', f);
           return false;
         }}
       >
         <StyledButton
-          bg={"none"}
+          bg={'none'}
           c={theme.PRIMARY}
           b={`2px solid ${theme.PRIMARY}`}
           icon={<PictureOutlined />}
@@ -202,7 +203,7 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
   );
 
   return (
-    <Layout style={{ paddingRight: 50, background: "transparent" }}>
+    <Layout style={{ paddingRight: 50, background: 'transparent' }}>
       <PageHeader
         ghost={false}
         title={
@@ -210,44 +211,45 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
             fS={16}
             fW={500}
             u={true}
-            fC={"#A2A1BD"}
-            onClick={() => history.push("/learn/courses")}
+            fC={'#A2A1BD'}
+            onClick={() => history.push('/learn/courses')}
           >
-            {"< "}Back to Courses
+            {'< '}Back to Courses
           </Text>
         }
         footer={
-          <Text fS={25} fC={"#2B2E4A"}>
+          <Text fS={25} fC={'#2B2E4A'}>
             Add Course
           </Text>
         }
-        style={{ background: "none", paddingTop: 8, paddingBottom: 30 }}
+        style={{ background: 'none', paddingTop: 8, paddingBottom: 30 }}
       />
+
       {loading ? (
         <Loading />
       ) : (
         <Layout
-          style={{ background: "none", paddingLeft: 30, paddingRight: 25 }}
+          style={{ background: 'none', paddingLeft: 30, paddingRight: 25 }}
         >
           <Form
             initialValues={{
-              t: course?.title === "NaN$" ? "" : course?.title,
-              d: course?.description === "NaN$" ? "" : course?.description,
+              t: course?.title === 'NaN$' ? '' : course?.title,
+              d: course?.description === 'NaN$' ? '' : course?.description,
               a:
-                course?.instructor?.name === "NaN$"
-                  ? ""
+                course?.instructor?.name === 'NaN$'
+                  ? ''
                   : course?.instructor?.name,
-              p: course?.points || "",
+              p: course?.points || '',
             }}
           >
             <Row>
               <Col flex={19}>
                 <Form.Item
                   name="t"
-                  rules={[{ required: true, message: "Enter a title" }]}
+                  rules={[{ required: true, message: 'Enter a title' }]}
                 >
                   <Input
-                    placeholder={"Course Title"}
+                    placeholder={'Course Title'}
                     value={course?.title}
                     onChange={(e) => {
                       setQueue(true);
@@ -267,7 +269,7 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
                     min={0}
                     max={100}
                     controls={false}
-                    placeholder={"Points Earned"}
+                    placeholder={'Points Earned'}
                     value={course?.points}
                     onChange={(e) => {
                       setQueue(true);
@@ -284,10 +286,10 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
               <Col flex={11}>
                 <Form.Item
                   name="d"
-                  rules={[{ required: true, message: "Enter a content" }]}
+                  rules={[{ required: true, message: 'Enter a content' }]}
                 >
                   <Input
-                    placeholder={"Add Subtitle/Short Slogan/Short Description"}
+                    placeholder={'Add Subtitle/Short Slogan/Short Description'}
                     value={course?.description}
                     onChange={(e) => {
                       setQueue(true);
@@ -303,10 +305,10 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
               <Col flex={11}>
                 <Form.Item
                   name="a"
-                  rules={[{ required: true, message: "Enter an author" }]}
+                  rules={[{ required: true, message: 'Enter an author' }]}
                 >
                   <Input
-                    placeholder={"Author"}
+                    placeholder={'Author'}
                     onChange={(e) => {
                       setQueue(true);
                       setCourse((prev) => {
@@ -325,11 +327,11 @@ const BuilderCourse = ({ id = "" }: any): ReactElement => {
           <Row justify="space-between" style={{ marginBottom: 25 }}>
             {file.type ? <MediaPreview /> : <MediaField />}
             <StyledButton
-              p={"-10px 0 0 0"}
+              p={'-10px 0 0 0'}
               onClick={setCourseInfo}
-              style={{ visibility: queue ? "visible" : "hidden" }}
+              style={{ visibility: queue ? 'visible' : 'hidden' }}
             >
-              {addNew ? "PUBLISH" : "SAVE"}
+              {addNew ? 'PUBLISH' : 'SAVE'}
             </StyledButton>
           </Row>
           {addNew ? (
