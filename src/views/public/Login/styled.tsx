@@ -31,7 +31,9 @@ export const FormContainer = styled.div`
   overflow: hidden;
   margin-top: 111px;
   margin-right: 146px;
-  background: #ffffff;
-  border-radius: 20px;
   align-self: flex-end;
+
+  background: #fafafb;
+  box-shadow: 0px 5px 20px -5px rgba(43, 46, 74, 0.2);
+  border-radius: 15px;
 `;
