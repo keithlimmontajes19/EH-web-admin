@@ -26,8 +26,6 @@ const ModalCurriculum = ({ isVisible, isCancel }): ReactElement => {
   const [selected, setSelected] = useState("1");
   const [lessonIndex, setLessonIndex] = useState<string | number>(-1);
 
-  console.log("lesson", lesson?.data);
-
   const content = (
     <Row style={{ borderRadius: 15 }} ref={targetRef}>
       <Col span={6}>

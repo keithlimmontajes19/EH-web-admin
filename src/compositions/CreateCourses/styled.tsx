@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Button, Layout, Modal } from "antd";
+import styled from 'styled-components';
+import { Button, Layout, Modal } from 'antd';
 
 export const StyledButton: any = styled(Button)`
   background: #635ffa;
@@ -147,3 +147,12 @@ export const EndDate = styled.div``;
 export const TimeStart = styled.div``;
 
 export const TimeEnd = styled.div``;
+
+export const ColumnText = styled.span`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 28px;
+  color: #4c4b7b;
+`;

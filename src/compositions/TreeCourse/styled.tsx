@@ -1,10 +1,11 @@
-import {Button, Input, Tree} from 'antd';
+import { Button, Input, Tree } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import styled from 'styled-components';
-import {theme} from 'utils/colors';
+import { theme } from 'utils/colors';
 
 export const getTreeStyle = (type, lastIofSect, i) => {
-  const mode = type === 'section-head' ? 0 : type === 'lesson' ? 1 : i%2 === 0 ? 2 : 3
+  const mode =
+    type === 'section-head' ? 0 : type === 'lesson' ? 1 : i % 2 === 0 ? 2 : 3;
   const color = [
     theme.PRIMARY_MID,
     '#fff',
@@ -106,4 +107,14 @@ export const StyledTree = styled(Tree)`
     border-left: 10px solid #635ffa;
     padding-left: 10px;
   }
+`;
+
+export const StyledLesson = styled.span`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #ffffff;
 `;

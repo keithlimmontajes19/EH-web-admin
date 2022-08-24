@@ -1,14 +1,22 @@
-import { Table, Modal, Input } from "antd";
-import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Table, Modal, Input } from 'antd';
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
   EyeFilled,
   BuildFilled,
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
-import { SpaceDiv, TableContainer } from "./styled";
+  EditFilled,
+  DeleteFilled,
+} from '@ant-design/icons';
+
+import {
+  SpaceDiv,
+  FirstText,
+  TextStyled,
+  ColumnText,
+  TableContainer,
+} from './styled';
+import { StyledInput } from 'compositions/LoginForm/styled';
 
 /* reducer action */
 import {
@@ -16,13 +24,11 @@ import {
   getMyCourses,
   deleteCourse,
   getCurriculum,
-} from "ducks/lms/actionCreator";
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
+} from 'ducks/lms/actionCreator';
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Text from "components/Text";
-import Loading from "components/Loading";
-import ModalCurriculum from "compositions/ModalCurriculum";
+import ModalCurriculum from 'compositions/ModalCurriculum';
 
 const TableCourses = () => {
   const history = useHistory();
@@ -37,18 +43,17 @@ const TableCourses = () => {
 
   const columns = [
     {
-      key: "a1",
-      title: <Text fS={20}>TITLE</Text>,
-      dataIndex: "title",
-      width: "35%",
-      maxWidth: "35%",
+      key: 'a1',
+      title: <TextStyled>TITLE</TextStyled>,
+      dataIndex: 'title',
+      width: '35%',
+      maxWidth: '35%',
     },
     {
-      key: "a2",
+      key: 'a2',
       title: (
-        <div style={{ textAlign: "right" }}>
-          <span
-            style={{ cursor: "pointer" }}
+        <div style={{ textAlign: 'right' }}>
+          <FirstText
             onClick={() => {
               onDeleteData(
                 dataSource.filter((obj) => selectedRowKeys.includes(obj.key))
@@ -56,43 +61,45 @@ const TableCourses = () => {
               setSelectedRowKeys([]);
             }}
           >
-            <DeleteOutlined style={{ color: "#635ffa" }} />
-            <Text fC="inherit" fS={20}>
-              DELETE
-            </Text>
-          </span>
+            <DeleteFilled style={{ color: '#4C4B7B,', fontSize: 19 }} />
+          </FirstText>
         </div>
       ),
       minWidth: 350,
-      render: (record, object) => {
+      render: (record) => {
         return (
           <>
             <div className="row-actions">
-              <span onClick={() => onEditData(record)}>
-                <EditOutlined style={{ color: "#635ffa" }} />
+              <ColumnText onClick={() => onEditData(record)}>
+                <EditFilled style={{ color: '#4C4B7B' }} />
                 &nbsp;RENAME
-              </span>
-              <SpaceDiv w={"5%"}>@</SpaceDiv>
-              <span onClick={() => openView(record)}>
-                <EyeFilled style={{ color: "#635ffa" }} />
-                &nbsp;VIEW
-              </span>
-              <SpaceDiv w={"5%"}>@</SpaceDiv>
-              <span onClick={() => onDeleteData([record])}>
-                <DeleteOutlined style={{ color: "#635ffa" }} />
-                &nbsp;DELETE
-              </span>
-              <SpaceDiv w={"5%"}>@</SpaceDiv>
-              <span
-                onClick={() => {
-                  localStorage.setItem("courseId", record?._id);
+              </ColumnText>
 
-                  history.push("/learn/courses/builder/" + record._id);
+              <SpaceDiv w={'5%'}>@</SpaceDiv>
+
+              <ColumnText onClick={() => openView(record)}>
+                <EyeFilled style={{ color: '#4C4B7B' }} />
+                &nbsp;VIEW
+              </ColumnText>
+
+              <SpaceDiv w={'5%'}>@</SpaceDiv>
+
+              <ColumnText onClick={() => onDeleteData([record])}>
+                <DeleteFilled style={{ color: '#4C4B7B' }} />
+                &nbsp;DELETE
+              </ColumnText>
+
+              <SpaceDiv w={'5%'}>@</SpaceDiv>
+
+              <ColumnText
+                onClick={() => {
+                  localStorage.setItem('courseId', record?._id);
+                  history.push('/learn/courses/builder/' + record._id);
                 }}
               >
-                <BuildFilled style={{ color: "#635ffa" }} />
+                <BuildFilled style={{ color: '#4C4B7B' }} />
                 &nbsp;BUILDER
-              </span>
+              </ColumnText>
             </div>
           </>
         );
@@ -134,9 +141,9 @@ const TableCourses = () => {
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
     Modal.confirm({
-      title: "Are you sure, you want to delete this record?",
-      okText: "Yes",
-      okType: "danger",
+      title: 'Are you sure, you want to delete this record?',
+      okText: 'Yes',
+      okType: 'danger',
       onOk: () => {
         const callback = (res) => {
           if (!res) return;
@@ -171,13 +178,9 @@ const TableCourses = () => {
   };
 
   const renameOk = () => {
-    if (JSON.stringify(editingData) === "{}") return;
+    if (JSON.stringify(editingData) === '{}') return;
 
-    console.log("editingData", editingData);
-
-    localStorage.setItem("courseId", editingData._id);
-    localStorage.setItem("organizationId", editingData.organizationId);
-
+    localStorage.setItem('courseId', editingData._id);
     dispatch(updateCourse(editingData));
 
     const mapped = dataSource.map((obj) => {
@@ -200,7 +203,7 @@ const TableCourses = () => {
 
   const rowListener = (record) => ({
     onClick: (event) => {
-      if (event.target.localName != "td") {
+      if (event.target.localName != 'td') {
         event.stopPropagation();
         return;
       }
@@ -213,8 +216,8 @@ const TableCourses = () => {
   });
 
   const openView = (obj) => {
-    localStorage.setItem("courseId", obj?._id);
-    localStorage.setItem("organizationId", obj?.organizationId);
+    localStorage.setItem('courseId', obj?._id);
+    localStorage.setItem('organizationId', obj?.organizationId);
 
     dispatch(getCurriculum(obj));
     setViewVisible(true);
@@ -229,8 +232,8 @@ const TableCourses = () => {
       style={{
         paddingLeft: 30,
         paddingRight: 24,
-        paddingTop: 45,
-        background: "transparent",
+        paddingTop: 30,
+        background: 'transparent',
       }}
     >
       <Table
@@ -240,24 +243,52 @@ const TableCourses = () => {
         onRow={rowListener}
         rowSelection={rowSelection}
       />
+
       <Modal
-        title="Rename"
+        okText="SAVE"
+        cancelText="CANCEL"
         visible={isEditing}
-        okText="Save"
+        onOk={renameOk}
         onCancel={() => {
           resetEditing();
         }}
-        onOk={renameOk}
+        okButtonProps={{
+          size: 'large',
+          style: {
+            borderRadius: 8,
+            background: '#635FFA',
+            fontFamily: 'Red Hat Display',
+            fontStyle: 'normal',
+            fontWeight: 700,
+            fontSize: 16,
+          },
+        }}
+        cancelButtonProps={{
+          size: 'large',
+          style: {
+            borderRadius: 8,
+            background: '#FFF',
+            fontFamily: 'Red Hat Display',
+            fontStyle: 'normal',
+            fontWeight: 700,
+            fontSize: 16,
+            color: '#635FFA',
+            border: 'none',
+          },
+        }}
       >
-        <Input
-          value={editingData?.name}
-          prefix="Title: "
-          onChange={(e) => {
-            setEditingData((pre) => {
-              return { ...pre, title: e.target.value };
-            });
-          }}
-        />
+        <div style={{ padding: 20 }}>
+          <ColumnText>Rename Course</ColumnText>
+          <StyledInput
+            prefix="Title: "
+            value={editingData?.title}
+            onChange={(e) => {
+              setEditingData((pre) => {
+                return { ...pre, title: e.target.value };
+              });
+            }}
+          />
+        </div>
       </Modal>
       <ModalCurriculum isVisible={viewVisible} isCancel={closeView} />
     </TableContainer>

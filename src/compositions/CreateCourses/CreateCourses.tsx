@@ -4,20 +4,13 @@ import type { PropsType } from './types';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Row, Select } from 'antd';
-import { TeamOutlined } from '@ant-design/icons';
-import { StyledText } from 'compositions/Announcements/styled';
+import { Row, Select, Modal } from 'antd';
+import { notificationAlert } from 'utils/alerts';
+import { Container, ColumnText, ViewerContainer } from './styled';
 
-import {
-  Container,
-  StyledButton,
-  ModalContainer,
-  ViewerContainer,
-  StyledButtonCancle,
-} from './styled';
-
-import { theme } from 'utils/colors';
+import IconImage from 'components/IconImage';
 import CustomeSelect from 'components/CustomeSelect';
+import GROUP_PEOPLE from 'assets/icons/group-people.png';
 
 /* reducer action */
 import { RootState } from 'ducks/store';
@@ -36,24 +29,25 @@ const CreateCourses = (props: PropsType): ReactElement => {
     (state) => state.announcement
   );
 
-  const handleOk = () => {
-    setIsModalVisible(false);
+  const handleSubmit = () => {
+    if (organization && organization.length) {
+      setIsModalVisible(false);
+      setTimeout(() => {
+        history.push('/learn/courses/add', {
+          organization: organization,
+        });
+      }, 50);
+    } else {
+      return notificationAlert(
+        'error',
+        'Please select organization.',
+        () => {}
+      );
+    }
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-  };
-
-  console.log('organization', organization);
-  const handleSubmit = () => {
-    setIsModalVisible(false);
-    setTimeout(
-      () =>
-        history.push('/learn/courses/add', {
-          organization: organization,
-        }),
-      100
-    );
   };
 
   useEffect(() => {
@@ -62,43 +56,53 @@ const CreateCourses = (props: PropsType): ReactElement => {
 
   return (
     <Container>
-      <ModalContainer
-        onOk={handleOk}
+      <Modal
+        okText="CREATE"
+        cancelText="CANCEL"
+        onOk={handleSubmit}
         maskClosable={false}
-        title="Create Course"
         onCancel={handleCancel}
         visible={isModalVisible}
-        footer={[
-          <StyledButtonCancle
-            style={{
-              width: '100 px',
-              color: '#635ffa',
-              background: '#fff',
-            }}
-            onClick={handleCancel}
-          >
-            Cancel
-          </StyledButtonCancle>,
-          <StyledButton onClick={handleSubmit}>Create</StyledButton>,
-        ]}
+        afterClose={() => setOrganization(undefined)}
+        okButtonProps={{
+          size: 'large',
+          style: {
+            borderRadius: 8,
+            background: '#635FFA',
+            fontFamily: 'Red Hat Display',
+            fontStyle: 'normal',
+            fontWeight: 700,
+            fontSize: 16,
+          },
+        }}
+        cancelButtonProps={{
+          size: 'large',
+          style: {
+            borderRadius: 8,
+            background: '#FFF',
+            fontFamily: 'Red Hat Display',
+            fontStyle: 'normal',
+            fontWeight: 700,
+            fontSize: 16,
+            color: '#635FFA',
+            border: 'none',
+          },
+        }}
       >
-        <StyledText
-          fS={20}
-          fC={theme.HEADINGS}
-          style={{ marginBottom: '12px !important' }}
-        >
-          Viewer
-        </StyledText>
+        <ColumnText>Create Course</ColumnText>
 
         <Row justify="space-between">
           <ViewerContainer>
             <CustomeSelect
               size="large"
+              value={organization}
               mode="multiple"
-              prefixIcon={<TeamOutlined />}
               onChange={(e) => setOrganization(e)}
+              prefixIcon={
+                <IconImage source={GROUP_PEOPLE} width={15} height={13} />
+              }
               placeholder={
-                <span style={{ marginLeft: 20 }}>Organization Name</span>
+                <span style={{ marginLeft: 25 }}> Select Organizations </span>
               }
               style={{
                 width: '468px',
@@ -115,7 +119,7 @@ const CreateCourses = (props: PropsType): ReactElement => {
             </CustomeSelect>
           </ViewerContainer>
         </Row>
-      </ModalContainer>
+      </Modal>
     </Container>
   );
 };

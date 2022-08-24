@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Modal, Row, Space } from "antd";
+import { useEffect, useState } from 'react';
+import { Modal, Row, Space } from 'antd';
 
 import {
   EyeFilled,
@@ -7,7 +7,7 @@ import {
   FormOutlined,
   EditOutlined,
   DeleteOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
 import {
   getLessons,
@@ -18,21 +18,21 @@ import {
   postLessonContent,
   updateLessonContent,
   deleteLessonContent,
-} from "ducks/lms/actionCreator";
+} from 'ducks/lms/actionCreator';
 
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { theme } from "utils/colors";
-import { useHistory } from "react-router-dom";
-import { getTreeStyle, StyledTree } from "./styled";
-import { AddLesson, EditField, newData } from "./components";
+import { theme } from 'utils/colors';
+import { useHistory } from 'react-router-dom';
+import { getTreeStyle, StyledTree, StyledLesson } from './styled';
+import { AddLesson, EditField, newData } from './components';
 
-import Text from "components/Text";
-import Loading from "components/Loading";
-import Dropdown from "components/Dropdown";
-import StyledButton from "components/StyledButton";
-import ModalCurriculum from "compositions/ModalCurriculum";
+import Text from 'components/Text';
+import Loading from 'components/Loading';
+import Dropdown from 'components/Dropdown';
+import StyledButton from 'components/StyledButton';
+import ModalCurriculum from 'compositions/ModalCurriculum';
 
 function TreeCourse({ course, onAdd, setOnAdd }) {
   const history = useHistory();
@@ -44,7 +44,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   const [onEdit, setOnEdit]: any = useState([false]);
   const [isLoading, setIsLoading] = useState(false);
   const [viewVisible, setViewVisible] = useState(false);
-  const [expandedKeys, setExpandedKeys] = useState(["0-0", "0-0-0", "0-0-0-0"]);
+  const [expandedKeys, setExpandedKeys] = useState(['0-0', '0-0-0', '0-0-0-0']);
 
   const {
     lesson: { loading },
@@ -55,8 +55,8 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   }, [loading]);
 
   useEffect(() => {
-    localStorage.setItem("courseId", course._id);
-    localStorage.setItem("organizationId", "6239ffd1cb8440277f2a2b39");
+    localStorage.setItem('courseId', course._id);
+    localStorage.setItem('organizationId', '6239ffd1cb8440277f2a2b39');
     dispatch(
       getLessons({
         id: course?._id,
@@ -66,8 +66,8 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   }, []);
 
   const getOrgId = () => {
-    const getItem = localStorage.getItem("organizationId");
-    return getItem ? getItem : "6239ffd1cb8440277f2a2b39";
+    const getItem = localStorage.getItem('organizationId');
+    return getItem ? getItem : '6239ffd1cb8440277f2a2b39';
   };
 
   const sortByPosition = (arr) =>
@@ -83,7 +83,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
       return;
     }
 
-    console.log("sorted", res);
+    console.log('sorted', res);
 
     const sorted = sortByPosition(res);
 
@@ -100,14 +100,14 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
     const reader = new FileReader();
     reader.onloadend = async () => {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
       const fileBlob = await getBlob(reader.result);
 
       const response = await fetch(
         new Request(signedUrl, {
-          method: "PUT",
+          method: 'PUT',
           body: fileBlob,
-          headers: new Headers({ "Content-Type": file.type }),
+          headers: new Headers({ 'Content-Type': file.type }),
         })
       );
     };
@@ -125,17 +125,17 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
       const _tmp = [];
       for (let i = 0; i < sortedArr.length; i++) {
         const _obj = sortedArr[i];
-        if (!_obj || typeof _obj !== "object") continue;
+        if (!_obj || typeof _obj !== 'object') continue;
         const _objMakeKey = lvl + i * 2;
         const editMode = onEdit[1] === _objMakeKey;
         const addMode = onEdit[1] === _objMakeKey && onEdit[2];
 
         const isSpecial =
-          _obj.contentType === "section-head" || _obj.contentType === "lesson";
-        const isSect = _obj.contentType === "section-head";
-        const nextObjKey = "curriculum" in _obj ? "curriculum" : "contents";
+          _obj.contentType === 'section-head' || _obj.contentType === 'lesson';
+        const isSect = _obj.contentType === 'section-head';
+        const nextObjKey = 'curriculum' in _obj ? 'curriculum' : 'contents';
         const lastIofSect =
-          obj.contentType === "section-head" && i === sortedArr.length - 1;
+          obj.contentType === 'section-head' && i === sortedArr.length - 1;
 
         const branchLvl = Math.floor((_objMakeKey.length - 1) / 2);
         const limitAction = branchLvl === 1 ? false : true;
@@ -160,15 +160,15 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
             <>
               <Row align="middle" justify="space-between">
                 <span>
-                  {_obj.contentType === "quiz" ? <FormOutlined /> : ""}
+                  {_obj.contentType === 'quiz' ? <FormOutlined /> : ''}
                   {_obj.title || _obj}
                 </span>
                 <Space
-                  className={"action-to-hide"}
+                  className={'action-to-hide'}
                   style={{
-                    minHeight: "60px",
+                    minHeight: '60px',
                     color: theme.PRIMARY,
-                    fontSize: "24px",
+                    fontSize: '24px',
                   }}
                 >
                   <EditOutlined
@@ -193,7 +193,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                           obj[objKey] = arr.filter((x, z) => z !== objI);
                           setData(copy);
                         };
-                        findAKey(copy, "curriculum", _objMakeKey, reset);
+                        findAKey(copy, 'curriculum', _objMakeKey, reset);
                       };
 
                       const payload = { ...ids, callback };
@@ -217,8 +217,8 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
           ),
           key: _objMakeKey,
           selectable: !onEdit[0],
-          contentType: _obj.contentType || "none",
-          children: dataToTrees(obj, objKey, lvl + i * 2 + "-"),
+          contentType: _obj.contentType || 'none',
+          children: dataToTrees(obj, objKey, lvl + i * 2 + '-'),
           style: getTreeStyle(_obj.contentType, lastIofSect, i),
           branchLvl,
           ids,
@@ -241,7 +241,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                     ..._obj,
                     title: t,
                     description: d,
-                    preview: { type: type ? type : "image" },
+                    preview: { type: type ? type : 'image' },
                   },
                   ...ids,
                   callback,
@@ -253,13 +253,13 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
               }}
               data={_obj}
               mode={
-                isSect ? 0 : isSpecial ? 1 : _obj.contentType === "quiz" ? 3 : 2
+                isSect ? 0 : isSpecial ? 1 : _obj.contentType === 'quiz' ? 3 : 2
               }
             />
           ),
           key: lvl + (i * 2 + 1),
-          contentType: "input",
-          style: { display: "flex" },
+          contentType: 'input',
+          style: { display: 'flex' },
           selectable: false,
         };
         const addAction = (mode) => ({
@@ -294,8 +294,8 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
             />
           ),
           key: lvl + (i * 2 + 1),
-          contentType: "input",
-          style: { display: "flex" },
+          contentType: 'input',
+          style: { display: 'flex' },
           selectable: false,
         });
 
@@ -308,7 +308,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
       return _tmp;
     };
 
-    const tmp = dataToTrees(copy, "curriculum", "0-");
+    const tmp = dataToTrees(copy, 'curriculum', '0-');
     setExpandedKeys(keysToExpand);
     setTreeData(tmp);
   }, [data, onEdit]);
@@ -319,10 +319,10 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
     // const defaultMode = [{n: 'Topic', m: 2}, {n: 'Quiz', m: 3}]
     // const modes = limitAction ? defaultMode : [...specialMode, ...defaultMode]
     const modes = [
-      { n: "Topic", m: 2 },
-      { n: "Quiz", m: 3 },
-      { n: "Activity", m: 4 },
-      { n: "Assignments", m: 5 },
+      { n: 'Topic', m: 2 },
+      { n: 'Quiz', m: 3 },
+      { n: 'Activity', m: 4 },
+      { n: 'Assignments', m: 5 },
     ];
     const action = (n: any) => setOnEdit([true, objKey, true, n]);
     return modes.map(({ n, m }, i) => ({ name: n, action: () => action(m) }));
@@ -339,19 +339,19 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
         callback(obj, objKey, i);
         break;
       } else if (
-        arr[i].contentType === "section-heading" ||
-        arr[i].contentType === "section-head"
+        arr[i].contentType === 'section-heading' ||
+        arr[i].contentType === 'section-head'
       ) {
-        findAKey(_obj, "curriculum", key, callback);
+        findAKey(_obj, 'curriculum', key, callback);
         continue;
-      } else findAKey(_obj, "contents", key, callback);
+      } else findAKey(_obj, 'contents', key, callback);
     }
   };
 
   const onDropv2 = (info) => {
     const { key: dropKey } = info.node;
     const { key: dragKey } = info.dragNode;
-    const dropPos = dropKey.split("-");
+    const dropPos = dropKey.split('-');
     const dropPosition = Math.ceil(Number(dropPos[dropPos.length - 1]) / 2);
 
     const copy = { ...data };
@@ -361,7 +361,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
     let branchLvl;
     let ids;
 
-    findAKey(copy, "curriculum", dragKey, (obj, objKey, objI) => {
+    findAKey(copy, 'curriculum', dragKey, (obj, objKey, objI) => {
       const arr = [...obj[objKey]];
       const foundObj = { ...arr[objI] };
       toPaste = foundObj;
@@ -384,7 +384,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
 
       obj[objKey] = arr.filter((x, z) => z !== objI);
 
-      findAKey(copy, "curriculum", dropKey, (obj, objKey) => {
+      findAKey(copy, 'curriculum', dropKey, (obj, objKey) => {
         const arr = [...obj[objKey]];
         const a = arr.slice(0, dropPosition);
         const b = arr.slice(dropPosition);
@@ -428,8 +428,8 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   const allowDrop = ({ dropNode }) => {
     // conditions to avoid dropping into invincible node (for edit field)
     if (onEdit[0]) return false;
-    const dragArr = onDragNode.key.split("-");
-    const dropArr = dropNode.key.split("-");
+    const dragArr = onDragNode.key.split('-');
+    const dropArr = dropNode.key.split('-');
     const dropPosition = Number(dropArr[dropArr.length - 1]) % 2;
     if (dropPosition) return false;
 
@@ -464,7 +464,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   const openView = (obj) => {
     dispatch(getCurriculum(obj));
 
-    localStorage.setItem("courseId", obj?._id);
+    localStorage.setItem('courseId', obj?._id);
     setViewVisible(true);
   };
 
@@ -476,15 +476,12 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
     <>
       <Row justify="space-between">
         <StyledButton
-          w={213}
-          m={"0 0 20px 0"}
-          p={"-10px 0 0 0"}
+          w={180}
+          m={'0 0 20px 0'}
+          p={'-10px 0 0 0'}
           onClick={() => setOnAdd(true)}
-          icon={<PlusOutlined />}
         >
-          <Text fC="#fff" fS="18" fW="500">
-            LESSON
-          </Text>
+          <StyledLesson>ADD LESSON</StyledLesson>
         </StyledButton>
       </Row>
 
@@ -506,7 +503,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
         onDragStart={({ node }) => setOnDragNode(node)}
         allowDrop={allowDrop}
         treeData={treeData}
-        style={{ background: "none " }}
+        style={{ background: 'none ' }}
       />
 
       <ModalCurriculum isVisible={viewVisible} isCancel={closeView} />

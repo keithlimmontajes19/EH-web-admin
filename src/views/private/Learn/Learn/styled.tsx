@@ -1,11 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const Container = styled.div`
   padding-right: 40px;
 `;
 
 export const StyledTitle = styled.span`
-  font-family: "Red Hat Display", sans-serif;
+  font-family: 'Red Hat Display', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -22,7 +22,7 @@ export const StyledCard = styled.div`
 `;
 
 export const StyledName = styled.span`
-  font-family: "DM Sans", sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
@@ -31,7 +31,7 @@ export const StyledName = styled.span`
 `;
 
 export const StyledAuthor = styled.span`
-  font-family: "DM Sans", sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;

@@ -1,11 +1,11 @@
-import {Button, Input, Layout} from 'antd';
+import { Button, Input, Layout } from 'antd';
 import styled from 'styled-components';
 
 export const SpaceDiv: any = styled.div`
   display: inline-block;
   visibility: hidden;
   text-indent: -99999;
-  width: ${({w}: any) => (w ? w : `20px`)};
+  width: ${({ w }: any) => (w ? w : `20px`)};
 `;
 
 export const TableContainer: any = styled(Layout)`
@@ -138,4 +138,32 @@ export const TableContainer: any = styled(Layout)`
     font-weight: 500;
     cursor: pointer;
   }
+`;
+
+export const TextStyled = styled.span`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  color: #4c4b7b;
+`;
+
+export const ColumnText = styled.span`
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 28px;
+  color: #4c4b7b;
+`;
+
+export const FirstText = styled.span`
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 32px;
+  color: #4c4b7b;
+  cursor: pointer;
 `;
