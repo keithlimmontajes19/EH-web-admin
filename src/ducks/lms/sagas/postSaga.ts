@@ -1,33 +1,36 @@
-import { takeLatest, put, call } from "redux-saga/effects";
-import { TYPES } from "../actionTypes";
+import { takeLatest, put, call } from 'redux-saga/effects';
+import { TYPES } from '../actionTypes';
+import { TYPES as ALERT_TYPES } from 'ducks/alert/actionTypes';
 
-import lms_service from "api/services/lms_service";
+import lms_service from 'api/services/lms_service';
 
-export const quizId = async () => await localStorage.getItem("quizId");
-export const topicId = async () => await localStorage.getItem("topicId");
-export const courseId = async () => await localStorage.getItem("courseId");
-export const lessonId = async () => await localStorage.getItem("lessonId");
+export const quizId = async () => await localStorage.getItem('quizId');
+export const topicId = async () => await localStorage.getItem('topicId');
+export const courseId = async () => await localStorage.getItem('courseId');
+export const lessonId = async () => await localStorage.getItem('lessonId');
 
 export const organizationId = async () =>
-  await localStorage.getItem("organizationId");
+  await localStorage.getItem('organizationId');
 
 export function* updateCourse({ payload }: any): any {
   const idCourse = yield call(courseId);
 
   const {
     title,
-    description,
-    preview,
     instructor,
-    callback = () => {},
+    description,
     points = false,
+    callback = () => {},
   } = payload;
+
   const data = {
     title,
+    points,
     description,
+    instructor: {
+      name: instructor?.name,
+    },
     body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
-    preview: { type: preview.type },
-    instructor,
   };
 
   try {
@@ -36,6 +39,7 @@ export function* updateCourse({ payload }: any): any {
       points ? { ...data, points } : data,
       idCourse
     );
+
     yield put({
       type: TYPES.PUT_UPDATE_COURSE_SUCCESS,
       payload: response,
@@ -64,9 +68,17 @@ export function* postCourse({ payload }: any): any {
       payload: response.data,
     });
 
-    const { course } = response?.data?.data;
+    callback(response?.data?.data);
 
-    callback({ ...course });
+    yield put({
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: 'success',
+        message: 'New added course.',
+      },
+    });
+
     return Promise.resolve(response);
   } catch (error) {
     yield put({
@@ -74,6 +86,15 @@ export function* postCourse({ payload }: any): any {
     });
 
     callback(false);
+
+    yield put({
+      type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
+      payload: {
+        onShow: true,
+        type: 'error',
+        message: 'Failed to add course.',
+      },
+    });
     return Promise.reject(error);
   }
 }
@@ -152,7 +173,7 @@ export function* updateLessonContent({ payload }: any): any {
     contentType,
     title,
     description,
-    preview = { type: "image" },
+    preview = { type: 'image' },
     position,
   } = payload.data;
 
@@ -200,7 +221,7 @@ export function* postLessonContent({ payload }: any): any {
     title,
     description,
     body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
-    preview: { type: "video" },
+    preview: { type: 'video' },
     position,
   };
 
@@ -219,7 +240,7 @@ export function* postLessonContent({ payload }: any): any {
 
     const res = response?.data?.data;
     callback(
-      "content" in res
+      'content' in res
         ? { ...res.content, uploadSignedUrl: res.uploadSignedUrl }
         : res
     );
@@ -340,7 +361,7 @@ export function* updateQuizQuestion({ payload }: any): any {
     title,
     description,
     body:
-      questionType === "fill-in-the-blanks"
+      questionType === 'fill-in-the-blanks'
         ? body
         : `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
     resource,
@@ -391,7 +412,7 @@ export function* postQuizQuestion({ payload }: any): any {
     title,
     description,
     body:
-      questionType === "fill-in-the-blanks"
+      questionType === 'fill-in-the-blanks'
         ? body
         : `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
     resource,
@@ -451,14 +472,15 @@ export function* postCourseView({ payload }: any): any {
 }
 
 export default function* watcher() {
-  yield takeLatest(TYPES.PUT_UPDATE_COURSE_REQUEST, updateCourse);
   yield takeLatest(TYPES.POST_COURSE_REQUEST, postCourse);
-  yield takeLatest(TYPES.PUT_UPDATE_LESSON_REQUEST, updateLesson);
   yield takeLatest(TYPES.POST_LESSON_REQUEST, postLesson);
+  yield takeLatest(TYPES.PUT_UPDATE_COURSE_REQUEST, updateCourse);
+  yield takeLatest(TYPES.PUT_UPDATE_LESSON_REQUEST, updateLesson);
   yield takeLatest(
     TYPES.PUT_UPDATE_LESSON_CONTENT_REQUEST,
     updateLessonContent
   );
+
   yield takeLatest(TYPES.POST_LESSON_CONTENT_REQUEST, postLessonContent);
   yield takeLatest(TYPES.PUT_UPDATE_TOPIC_CONTENT_REQUEST, updateTopicContent);
   yield takeLatest(TYPES.POST_TOPIC_CONTENT_REQUEST, postTopicContent);

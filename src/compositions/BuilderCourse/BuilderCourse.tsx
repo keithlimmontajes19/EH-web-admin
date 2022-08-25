@@ -1,19 +1,32 @@
 import { ReactElement, useEffect, useState } from 'react';
+import { StyledLinkBack, StyledAddCourse } from './styled';
+
+import {
+  Col,
+  Form,
+  Layout,
+  PageHeader,
+  Row,
+  Space,
+  Upload,
+  message,
+} from 'antd';
+import { VideoCameraOutlined, PictureOutlined } from '@ant-design/icons';
+
+import { useDispatch } from 'react-redux';
+import { updateCourse } from 'ducks/lms/actionCreator';
+import { getCourse, postCourse } from 'ducks/lms/actionCreator';
+import lmsService from 'api/services/lms_service';
 
 import Text from 'components/Text';
 import Input from 'components/Input';
-
-import { Col, Form, Layout, PageHeader, Row, Space, Upload } from 'antd';
-import { VideoCameraOutlined, PictureOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
-import { getCourse, postCourse } from 'ducks/lms/actionCreator';
 import Loading from 'components/Loading';
 import TreeCourse from 'compositions/TreeCourse';
+import StyledButton from 'components/StyledButton';
+
+import { theme } from 'utils/colors';
 import { useHistory, useParams } from 'react-router-dom';
 import { Params } from 'views/private/Learn/Courses/types';
-import StyledButton from 'components/StyledButton';
-import { theme } from 'utils/colors';
-import { updateCourse } from 'ducks/lms/actionCreator';
 
 const blankData = {
   title: '',
@@ -36,16 +49,15 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
   const addNew = params.page === 'add';
   const organizationId = history?.location?.state?.organization;
   const organizations = history?.location?.state?.organization;
-  console.log('organization', organizations);
 
-  const [course, setCourse]: any = useState(
-    JSON.parse(JSON.stringify(blankData))
-  );
   const [queue, setQueue] = useState(false);
   const [loading, setLoading] = useState(true);
   const [onAdd, setOnAdd]: any = useState(false);
   const [refreshed, setRefreshed] = useState(false);
   const [file, setFile]: any = useState({ type: false, ref: {} });
+  const [course, setCourse]: any = useState(
+    JSON.parse(JSON.stringify(blankData))
+  );
 
   useEffect(() => {
     localStorage.setItem('courseId', id);
@@ -90,13 +102,26 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     reader.readAsDataURL(file);
   };
 
-  const addNewCallback = (res) => {
-    if (!res) return;
-    const { type, ref }: any = file;
-    if (type) uploadFile(res.uploadSignedUrl, ref);
-    localStorage.setItem('courseId', res._id);
-    setCourse(res);
-    setLoading(false);
+  const addNewCallback = async (response) => {
+    if (response) {
+      setCourse(response);
+      localStorage.setItem('courseId', response?._id);
+
+      await lmsService.uploadCoursePreview(response?._id).then((res) => {
+        fetch(res?.data?.data, {
+          body: file,
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+          .then(() => {
+            setLoading(false);
+          })
+          .catch((err) => console.log('error', err));
+      });
+    }
   };
 
   const defaultCallback = (res) => {
@@ -118,13 +143,13 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     }
 
     localStorage.setItem('courseId', course?._id);
-    // localStorage.setItem("organizationId", organizationId);
 
     const { type, ref }: any = file;
     const callback = async (res) => {
       if (!res) return;
       if (type) uploadFile(res.uploadSignedUrl, ref);
     };
+
     dispatch(
       updateCourse({
         ...course,
@@ -138,13 +163,16 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
   const handleUpload = (type, ref) => {
     setQueue(true);
     setFile({ type, ref });
+
+    return;
   };
 
   const MediaPreview = () => (
     <StyledButton
-      bg={'none'}
       c={'red'}
+      bg={'none'}
       b={`2px solid ${'red'}`}
+      p={`10px`}
       icon={
         file.type === 'image' ? <PictureOutlined /> : <VideoCameraOutlined />
       }
@@ -157,71 +185,80 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     </StyledButton>
   );
 
-  const MediaField = () => (
-    <Space>
-      <Upload
-        maxCount={1}
-        showUploadList={false}
-        beforeUpload={(f) => {
-          if (/video/g.test(f.type)) handleUpload('video', f);
-          return false;
-        }}
-      >
-        <StyledButton
-          bg={'none'}
-          c={theme.PRIMARY}
-          b={`2px solid ${theme.PRIMARY}`}
-          icon={<VideoCameraOutlined />}
-          htmlType="button"
+  console.log('files', file);
+
+  const MediaField = () => {
+    const baseURL =
+      'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload';
+    const uploadProps = {
+      maxCount: 1,
+      name: 'file',
+      showUploadList: false,
+      action: baseURL,
+    };
+
+    const onChangeImageVideo = (info, type) => {
+      if (info.file.status === 'done') {
+        const file = info?.file?.originFileObj;
+
+        handleUpload(type, file);
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    };
+
+    return (
+      <Space>
+        <Upload
+          {...uploadProps}
+          accept="video/*"
+          onChange={(args) => onChangeImageVideo(args, 'video')}
         >
-          <Text fS={18} fW={500}>
-            Add Video
-          </Text>
-        </StyledButton>
-      </Upload>
-      <Upload
-        maxCount={1}
-        showUploadList={false}
-        beforeUpload={(f) => {
-          if (/image/g.test(f.type)) handleUpload('image', f);
-          return false;
-        }}
-      >
-        <StyledButton
-          bg={'none'}
-          c={theme.PRIMARY}
-          b={`2px solid ${theme.PRIMARY}`}
-          icon={<PictureOutlined />}
-          htmlType="button"
+          <StyledButton
+            bg={'none'}
+            c={theme.PRIMARY}
+            b={`2px solid ${theme.PRIMARY}`}
+            icon={<VideoCameraOutlined />}
+            htmlType="button"
+          >
+            <Text fS={18} fW={500}>
+              Add Video
+            </Text>
+          </StyledButton>
+        </Upload>
+
+        <Upload
+          {...uploadProps}
+          accept="image/*"
+          onChange={(args) => onChangeImageVideo(args, 'image')}
         >
-          <Text fS={18} fW={500}>
-            Add Picture
-          </Text>
-        </StyledButton>
-      </Upload>
-    </Space>
-  );
+          <StyledButton
+            bg={'none'}
+            c={theme.PRIMARY}
+            b={`2px solid ${theme.PRIMARY}`}
+            icon={<PictureOutlined />}
+            htmlType="button"
+          >
+            <Text fS={18} fW={500}>
+              Add Picture
+            </Text>
+          </StyledButton>
+        </Upload>
+      </Space>
+    );
+  };
 
   return (
     <Layout style={{ paddingRight: 50, background: 'transparent' }}>
       <PageHeader
         ghost={false}
         title={
-          <Text
-            fS={16}
-            fW={500}
-            u={true}
-            fC={'#A2A1BD'}
-            onClick={() => history.push('/learn/courses')}
-          >
+          <StyledLinkBack onClick={() => history.push('/learn/courses')}>
             {'< '}Back to Courses
-          </Text>
+          </StyledLinkBack>
         }
-        footer={
-          <Text fS={25} fC={'#2B2E4A'}>
-            Add Course
-          </Text>
-        }
+        footer={<StyledAddCourse>Add Course</StyledAddCourse>}
         style={{ background: 'none', paddingTop: 8, paddingBottom: 30 }}
       />
 
@@ -324,6 +361,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
               </Col>
             </Row>
           </Form>
+
           <Row justify="space-between" style={{ marginBottom: 25 }}>
             {file.type ? <MediaPreview /> : <MediaField />}
             <StyledButton
@@ -334,12 +372,14 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
               {addNew ? 'PUBLISH' : 'SAVE'}
             </StyledButton>
           </Row>
+
           {addNew ? (
             <></>
           ) : (
             <TreeCourse course={course} onAdd={onAdd} setOnAdd={setOnAdd} />
           )}
-          <Row justify="end" style={{ marginTop: 150, paddingRight: 20 }}>
+
+          {/* <Row justify="end" style={{ marginTop: 150, paddingRight: 20 }}>
             <Col>
               {!onAdd && (
                 <>
@@ -353,7 +393,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
                 </>
               )}
             </Col>
-          </Row>
+          </Row> */}
         </Layout>
       )}
     </Layout>

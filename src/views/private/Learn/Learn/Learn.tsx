@@ -1,13 +1,13 @@
-import { Fragment, ReactElement, useEffect } from "react";
+import { Fragment, ReactElement, useEffect } from 'react';
 
 /* components */
-import LearnMaincourse from "compositions/LearnMaincourse";
-import LearnCurriculum from "compositions/LearnCurriculum";
+import LearnMaincourse from 'compositions/LearnMaincourse';
+import LearnCurriculum from 'compositions/LearnCurriculum';
 
 /* recuer action */
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
-import { getMyCourses } from "ducks/lms/actionCreator";
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMyCourses } from 'ducks/lms/actionCreator';
 
 import {
   Container,
@@ -15,20 +15,20 @@ import {
   StyledCard,
   StyledName,
   StyledAuthor,
-} from "./styled";
-import { Row, Col, Avatar, Image } from "antd";
+} from './styled';
+import { Row, Col, Avatar, Image } from 'antd';
 import {
   CardStyled,
   TextStyled,
   MarginTop,
-} from "compositions/LearnCurriculum/styled";
+} from 'compositions/LearnCurriculum/styled';
 
-import Loading from "components/Loading";
-import IconImage from "components/IconImage";
-import RatingStar from "components/RatingStar";
-import USER_ICON from "assets/icons/profile-user.png";
-import NO_IMAGE from "assets/icons/no-purple-image.png";
-import NO_COURSES from "assets/icons/no-courses-icon.png";
+import Loading from 'components/Loading';
+import IconImage from 'components/IconImage';
+import RatingStar from 'components/RatingStar';
+import USER_ICON from 'assets/icons/profile-user.png';
+import NO_IMAGE from 'assets/icons/no-purple-image.png';
+import NO_COURSES from 'assets/icons/no-courses-icon.png';
 
 const Learn = (): ReactElement => {
   const dispatch = useDispatch();
@@ -44,11 +44,11 @@ const Learn = (): ReactElement => {
         <StyledTitle>Courses</StyledTitle>
         <div
           style={{
-            marginTop: "15%",
-            marginLeft: "40%",
-            marginRight: "40%",
-            marginBottom: "50%",
-            alignContent: "center",
+            marginTop: '15%',
+            marginLeft: '40%',
+            marginRight: '40%',
+            marginBottom: '50%',
+            alignContent: 'center',
           }}
         >
           <img
@@ -60,10 +60,10 @@ const Learn = (): ReactElement => {
           />
           <h3
             style={{
-              padding: "10px",
-              fontSize: "22px",
-              fontWeight: "500",
-              color: "#2B2E4A !important",
+              padding: '10px',
+              fontSize: '22px',
+              fontWeight: '500',
+              color: '#2B2E4A !important',
             }}
           >
             No course.
@@ -79,19 +79,19 @@ const Learn = (): ReactElement => {
       {/* <LearnMaincourse /> */}
       <StyledTitle>Courses</StyledTitle>
 
-      <Row gutter={40}>
+      <Row gutter={40} style={{ marginBottom: 40 }}>
         {(data || []).map((item) => {
           return (
             <Col span={8} style={{ marginTop: 40 }} key={item?._id}>
               <StyledCard>
                 <Avatar
                   src={
-                    item?.preview?.type === "image" ? item?.preview?.ref : ""
+                    item?.preview?.type === 'image' ? item?.preview?.ref : ''
                   }
-                  size={"large"}
+                  size={'large'}
                   shape="square"
                   style={{
-                    width: "100%",
+                    width: '100%',
                     minHeight: 205,
                     maxHeight: 205,
                     borderTopLeftRadius: 15,
@@ -101,7 +101,7 @@ const Learn = (): ReactElement => {
                 />
 
                 <Col span={24} style={{ padding: 8 }}>
-                  <StyledName>{item?.title || ""}</StyledName>
+                  <StyledName>{item?.title || ''}</StyledName>
 
                   <Row>
                     <Col span={20}>
@@ -115,8 +115,8 @@ const Learn = (): ReactElement => {
                           />
                         </div>
                         <StyledAuthor>
-                          {" "}
-                          {item?.instructor?.name || ""}
+                          {' '}
+                          {item?.instructor?.name || ''}
                         </StyledAuthor>
                       </Row>
                     </Col>

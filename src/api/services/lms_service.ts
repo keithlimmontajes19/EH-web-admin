@@ -1,6 +1,6 @@
-import api from "../index";
-import { USERS, REVIEW, ORGANIZATION } from "../constants";
-import { lessonId, organizationId } from "ducks/lms/sagas/listSaga";
+import api from '../index';
+import { USERS, REVIEW, ORGANIZATION } from '../constants';
+import { lessonId, organizationId } from 'ducks/lms/sagas/listSaga';
 
 const auth_services = {
   getMyCourses: (userId: string) => api.get(`${USERS}/${userId}/courses`),
@@ -51,8 +51,7 @@ const auth_services = {
     api.patch(`/courses/${courseId}`, payload),
 
   postCourse: (payload: any) => api.post(`courses`, payload),
-  deleteCourse: (organizationId: string, courseId: string) =>
-    api.delete(`${ORGANIZATION}/${organizationId}/courses/${courseId}`),
+  deleteCourse: (courseId: string) => api.delete(`/courses/${courseId}`),
 
   updateLesson: (payload: any, lessonId: string) =>
     api.patch(`/lessons/${lessonId}`, payload),
@@ -177,6 +176,7 @@ const auth_services = {
       `${ORGANIZATION}/${organizationId}/course-reports/user/${userId}/course/${courseId}`
     ),
   getUserDetails: (userId: string) => api.get(`${USERS}/${userId}`),
+  uploadCoursePreview: (courseId: string) => api.patch(`courses/${courseId}/preview`)
 };
 
 export default auth_services;

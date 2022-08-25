@@ -1,21 +1,21 @@
-import { takeLatest, put, call } from "redux-saga/effects";
-import { TYPES } from "../actionTypes";
+import { takeLatest, put, call } from 'redux-saga/effects';
+import { TYPES } from '../actionTypes';
 
-import lms_service from "api/services/lms_service";
+import lms_service from 'api/services/lms_service';
 
-export const quizId = async () => await localStorage.getItem("quizId");
-export const topicId = async () => await localStorage.getItem("topicId");
-export const courseId = async () => await localStorage.getItem("courseId");
-export const lessonId = async () => await localStorage.getItem("lessonId");
+export const quizId = async () => await localStorage.getItem('quizId');
+export const topicId = async () => await localStorage.getItem('topicId');
+export const courseId = async () => await localStorage.getItem('courseId');
+export const lessonId = async () => await localStorage.getItem('lessonId');
 
 export const organizationId = async () =>
-  await localStorage.getItem("organizationId");
+  await localStorage.getItem('organizationId');
 
 export function* deleteCourse({ payload }: any): any {
-  const { idOrg, idCourse, callback = () => {} } = payload;
+  const { idCourse, callback = () => {} } = payload;
 
   try {
-    const response = yield call(lms_service.deleteCourse, idOrg, idCourse);
+    const response = yield call(lms_service.deleteCourse, idCourse);
     yield put({
       type: TYPES.DELETE_COURSE_SUCCESS,
       payload: response,

@@ -1,33 +1,17 @@
-import { ReactElement, useState } from "react";
-import { PlusOutlined, DownOutlined } from "@ant-design/icons";
-import { useHistory, useParams } from "react-router-dom";
-import { Layout, PageHeader, Tabs } from "antd";
-import { StyledTabs } from "./styled";
-import { theme } from "utils/colors";
-import { Params } from "./types";
+import { ReactElement, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { Params } from './types';
 
-import Text from "components/Text";
-import Dropdown from "components/Dropdown";
-import StyledButton from "components/StyledButton";
-import TableCourses from "compositions/TableCourses";
-import BuilderCourse from "compositions/BuilderCourse";
-import CreateCourses from "compositions/CreateCourses";
+import { Layout, PageHeader } from 'antd';
+import { StyledTitle } from 'views/private/Learn/Learn/styled';
 
-const headerActions = [
-  {
-    name: "action 1",
-    action: () => console.log("action 1"),
-  },
-  {
-    name: "action 2",
-    action: () => console.log("action 2"),
-  },
-];
+import StyledButton from 'components/StyledButton';
+import TableCourses from 'compositions/TableCourses';
+import BuilderCourse from 'compositions/BuilderCourse';
+import CreateCourses from 'compositions/CreateCourses';
 
 const Courses = (): ReactElement => {
-  const history = useHistory();
   const params: Params = useParams();
-
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   return (
@@ -35,48 +19,16 @@ const Courses = (): ReactElement => {
       {params.page ? (
         <BuilderCourse id={params.subpage} />
       ) : (
-        <Layout style={{ paddingRight: 50, background: "transparent" }}>
+        <Layout style={{ paddingRight: 50, background: 'transparent' }}>
           <PageHeader
             ghost={false}
-            title={<Text fS={30}>Courses</Text>}
-            style={{ background: "none", paddingTop: 8 }}
+            title={<StyledTitle>Courses</StyledTitle>}
+            style={{ background: 'none', paddingTop: 8 }}
             extra={[
               <StyledButton w={130} onClick={() => setIsModalVisible(true)}>
-                <PlusOutlined />
-                ADD
+                CREATE
               </StyledButton>,
-              <Dropdown
-                menu={headerActions}
-                // title={
-                //   <span style={{ paddingLeft: 50 }}>
-                //     <Text fS={20}>
-                //       Actions&nbsp;
-                //       <DownOutlined style={{ fontSize: 15 }} />
-                //     </Text>
-                //   </span>
-                // }
-              />,
             ]}
-            footer={
-              <StyledTabs defaultActiveKey="1">
-                <Tabs.TabPane
-                  tab={
-                    <Text fC={theme.BLACK} fW={500} fS={22} m={"0 20px"}>
-                      All Courses
-                    </Text>
-                  }
-                  key="1"
-                />
-                {/* <Tabs.TabPane
-                  tab={
-                    <Text fC={theme.BLACK} fW={500} fS={22} m={"0 20px"}>
-                      Settings
-                    </Text>
-                  }
-                  key="2"
-                /> */}
-              </StyledTabs>
-            }
           />
           <TableCourses />
           <CreateCourses
