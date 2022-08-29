@@ -1,4 +1,4 @@
-import {Dropdown as AntDropdown, Menu} from 'antd';
+import { Dropdown as AntDropdown, Menu } from 'antd';
 
 /* Menu and Title Sample
 
@@ -42,16 +42,42 @@ Hover me <DownOutlined />
 </a>
 
 */
-const Dropdown = ({menu = [], title = <></>, disabled = false}) => {
+const Dropdown = ({ menu = [], title = <></>, disabled = false }) => {
   const menued = (
-    <Menu>
+    <Menu style={{ borderRadius: 20, padding: 10 }}>
       {menu.map((obj, i) => (
-        <Menu.Item key={i} onClick={obj.action}>{obj.name}</Menu.Item>
+        <Menu.Item
+          key={i}
+          color="#e0dffe"
+          onClick={obj.action}
+          style={{
+            fontFamily: 'DM Sans',
+            fontStyle: 'normal',
+            fontWeight: 400,
+            fontSize: 16,
+            color: '#4C4B7B',
+          }}
+        >
+          {obj.name}
+        </Menu.Item>
       ))}
     </Menu>
   );
 
-  return <AntDropdown overlay={menued} disabled={disabled}>{title}</AntDropdown>;
+  return (
+    <AntDropdown
+      placement="bottomRight"
+      overlay={menued}
+      disabled={disabled}
+      overlayStyle={{
+        boxShadow: '0px 0px 8px 1px rgba(99, 95, 250, 0.3)',
+        minWidth: 185,
+        borderRadius: 20,
+      }}
+    >
+      {title}
+    </AntDropdown>
+  );
 };
 
 export default Dropdown;

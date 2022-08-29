@@ -14,8 +14,6 @@ export const newData = (m: number, t: string, d: string, pos: number) => {
     "lesson",
     "topic",
     "quiz",
-    "activity",
-    "assignment",
   ];
 
   return {
@@ -160,8 +158,6 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
     "Lesson",
     "Topic",
     "Quiz",
-    "Activity",
-    "Assignment",
   ];
   const { title: t, description: d } = data;
   const [file, setFile]: any = useState({ type: false, ref: {} });
@@ -233,22 +229,28 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
     </Space>
   );
 
+  /**
+   * THIS IS FOR CREATE OF CONTENT
+   * QUIZ, TOPIC, ASSIGNMENT
+   * FORMS
+   */
   return (
     <Form
-      onFinish={({ t, d }) => cb(t, d, file)}
+      onFinish={({ content_title, content_description }) => cb(content_title, content_description, file)}
       initialValues={{ t: t, d: d }}
       style={{ marginTop: "15px" }}
     >
       {mode !== 0 ? (
         <>
           <Form.Item
-            name="t"
+            name="content_title"
             rules={[{ required: true, message: `Add a ${modes[mode]} Title` }]}
           >
             <Input placeholder={`${modes[mode]} Title`} />
           </Form.Item>
+          
           <Form.Item
-            name="d"
+            name="content_description"
             rules={[{ required: true, message: "Add a Content" }]}
           >
             <TextArea
@@ -256,6 +258,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
               placeholder="Add Content"
             />
           </Form.Item>
+
           <Form.Item>
             <Row justify={mode <= 2 ? "space-between" : "end"}>
               {mode <= 2 ? (
@@ -294,6 +297,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
             justifyContent: "center",
           }}
         >
+          
           <div style={{ width: "calc(100% - 332px)" }}>
             <Form.Item
               name="t"
@@ -304,6 +308,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
               <Input placeholder={`${modes[mode]} Title`} />
             </Form.Item>
           </div>
+
           <Row align="middle" justify="end">
             <StyledButton
               bg={"none"}
