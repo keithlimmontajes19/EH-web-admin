@@ -9,9 +9,12 @@ export const getOneForm = (payload) => ({
   payload,
 });
 
-export const postForm = (payload) => ({
+export const postForm = (payload, callback) => ({
   type: TYPES.POST_FORMS_REQUEST,
-  payload,
+  payload: {
+    data: payload,
+    callback
+  },
 });
 
 export const putForm = (id, data) => ({

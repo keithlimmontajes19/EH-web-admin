@@ -296,7 +296,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
         >
           <div style={{ width: "calc(100% - 332px)" }}>
             <Form.Item
-              name="t"
+              name="content_title"
               rules={[
                 { required: true, message: `Add a ${modes[mode]} Title` },
               ]}

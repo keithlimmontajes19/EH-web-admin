@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import { theme } from 'utils/colors';
 
 export const getTreeStyle = (type, lastIofSect, i) => {
-  const mode =
-    type === 'section-head' ? 0 : type === 'lesson' ? 1 : i % 2 === 0 ? 2 : 3;
+  const mode =  type === 'section-head' ? 0 : type === 'lesson' ? 1 : i % 2 === 0 ? 2 : 3;
   const color = [
     theme.PRIMARY_MID,
     '#fff',
     theme.PRIMARY_LIGHT,
     theme.PRIMARY_SLIGHT,
   ];
+
   return {
     background: color[mode],
     fontSize: mode === 0 ? '20px' : '18px',

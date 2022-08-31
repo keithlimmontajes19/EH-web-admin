@@ -30,6 +30,7 @@ import {
   TimeStart,
   Container,
   StartDate,
+  TitleCreate,
   StyledButton,
   ImgContainer,
   ItemContainer,
@@ -176,14 +177,15 @@ const Createannouncement = (props: PropsType): ReactElement => {
 
   return (
     <Container>
-      <StyledButton onClick={showModal}>Create</StyledButton>
+      <StyledButton onClick={showModal}>CREATE</StyledButton>
       <ModalContainer
         onOk={handleOk}
+        closable={false}
         maskClosable={false}
         afterClose={clearIdUrl}
         onCancel={handleCancel}
         visible={isModalVisible}
-        title="Create Announcement"
+        title={<TitleCreate>Create Announcement</TitleCreate>}
         footer={[
           <StyledButtonCancle
             onClick={handleCancel}
@@ -191,17 +193,18 @@ const Createannouncement = (props: PropsType): ReactElement => {
               width: "100 px",
               color: "#635ffa",
               background: "#fff",
-              border: "1px solid #635ffa ",
+              border: "none",
             }}
           >
-            Cancel
+            CANCEL
           </StyledButtonCancle>,
+
           <StyledButton onClick={() => handleSubmit("inactive")}>
-            Save As Draft
+            SAVE AS DRAFT
           </StyledButton>,
+
           <StyledButton onClick={() => handleSubmit("active")}>
-            <img src={publishicon} style={{ paddingRight: "5px" }} />
-            Publish
+            PUBLISH
           </StyledButton>,
         ]}
       >
@@ -262,7 +265,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
         <div style={{ marginTop: "20px" }}>
           <Input
             style={{
-              borderRadius: "15px",
+              borderRadius: "8px",
               background: "#F8F8F8",
               width: "485px",
               height: "38px",
@@ -275,7 +278,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
 
           <Input.TextArea
             style={{
-              borderRadius: "15px",
+              borderRadius: "8px",
               background: "#F8F8F8",
               width: "485px",
               height: "auto",
@@ -433,7 +436,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
           </Col>
         </Row>
 
-        <StyledText fS={25} style={{ marginBottom: "12px !important" }}>
+        <StyledText fS={20} style={{ marginBottom: "12px !important" }}>
           Viewer
         </StyledText>
 

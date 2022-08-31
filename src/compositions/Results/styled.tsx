@@ -97,6 +97,28 @@ export const StyledButtonResult: any = styled.button`
   font-size: 20px;
   font-weight: 700;
   border-radius: 8px;
-  background-color: #fff !important;
-  color: #635ffa !important;
+  border: none;
+  background-color: #f5f5fa !important;
+
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #635FFA;
 `;
+
+export const StyledResults = styled.span`
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 30px;
+  color: #635FFA;
+`
+export const CollapseContainer = styled.div`
+  background: #FAFAFB;
+  border-radius: 10px;
+  box-shadow: 0px 5px 20px -5px rgba(43, 46, 74, 0.1);
+`

@@ -1,35 +1,40 @@
-import { ReactElement, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import type { PropsType } from "./types";
+import { ReactElement, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import type { PropsType } from './types';
 
 /* styled antd */
 import {
   HeaderStyles,
   DivEmptyStyles,
   ImgEmptyStyles,
-} from "compositions/Announcements/styled";
-import { Layout, PageHeader, Input, Row, Col } from "antd";
-import { StyledButtonCreate, ModalContainer, InputStyles } from "./styled";
+} from 'compositions/Announcements/styled';
+import { Layout, PageHeader, Input, Row, Col } from 'antd';
+import {
+  StyledButtonCreate,
+  ModalContainer,
+  InputStyles,
+  CreateText,
+} from './styled';
 
 /* components */
-import Screen from "components/Screen";
-import PublishOnBoarding from "compositions/PublishOnBoarding";
-import NoScreenImage from "assets/images/no-screens-table.png";
+import Screen from 'components/Screen';
+import PublishOnBoarding from 'compositions/PublishOnBoarding';
+import NoScreenImage from 'assets/images/no-screens-table.png';
 
 /* reducer action */
 import {
   deleteOnboading,
   getOneOnboarding,
   getOnboardingList,
-} from "ducks/onboarding/actionCreator";
-import { RootState } from "ducks/store";
-import { useSelector, useDispatch } from "react-redux";
+} from 'ducks/onboarding/actionCreator';
+import { RootState } from 'ducks/store';
+import { useSelector, useDispatch } from 'react-redux';
 
 const OnboardingScreens = (props: PropsType): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [screenname, setScreenname] = useState("");
+  const [screenname, setScreenname] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const { onboarding_list }: any = useSelector<RootState>(
@@ -55,15 +60,16 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
   const titleChecker = screenname.length > 0;
 
   return (
-    <Layout style={{ background: "none" }}>
+    <Layout style={{ background: 'none' }}>
       <PageHeader
         ghost={false}
+        style={{ background: 'transparent' }}
         extra={[
           <>
             <StyledButtonCreate onClick={showModal}>CREATE</StyledButtonCreate>
             <ModalContainer
               centered
-              okText="Create"
+              okText="CREATE"
               onOk={handleOk}
               onCancel={handleCancel}
               maskClosable={false}
@@ -72,8 +78,11 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
               okButtonProps={{
                 disabled: titleChecker ? false : true,
                 ghost: titleChecker ? false : true,
+                style: {
+                  fontSize: 16
+                }
               }}
-              title="Create Onboarding Screens"
+              title={<CreateText>Create Onboarding Screens</CreateText>}
             >
               <Input
                 size="large"
@@ -86,6 +95,8 @@ const OnboardingScreens = (props: PropsType): ReactElement => {
           <PublishOnBoarding data={onboarding_list} />,
         ]}
       />
+
+      <div style={{ marginTop: 30 }} />
 
       {!onboarding_list?.data.length ? (
         <div style={DivEmptyStyles}>

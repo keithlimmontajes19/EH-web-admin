@@ -1,30 +1,39 @@
-import styled from "styled-components";
-import { Button, Layout } from "antd";
-import { theme } from "utils/colors";
+import styled from 'styled-components';
+import { Button, Layout } from 'antd';
+import { theme } from 'utils/colors';
 export const Container = styled.div``;
 
 export const StyledButton: any = styled(Button)`
+  gap: 10px;
+  width: 180px;
+  height: 48px;
   background: #635ffa;
-  color: #fff;
-  width: auto;
-  height: 48px;
   border-radius: 8px;
-  font-size: 20px;
+  font-family: 'Red Hat Display';
+  font-style: normal;
   font-weight: 700;
-`;
-export const StyledButtonCancle = styled(Button)`
-  background: #fff;
-  color: #635ffa;
-  width: auto;
-  height: 48px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
   text-align: center;
-  justify-contet: center;
-  cursor: pointer;
-  border: none;
+  color: #ffffff;
 `;
+
+export const StyledButtonCancle = styled.button`
+  background: transparent;
+  gap: 10px;
+  width: 180px;
+  height: 48px;
+  border: none;
+
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #635ffa;
+`;
+
 export const MainScreenContainer = styled(Layout)`
   display: flex;
   flex-direction: column;
@@ -36,7 +45,7 @@ export const StyledText = styled.span`
   height: 25px;
 
   /* Headline 4 */
-  font-family: "Red Hat Display";
+  font-family: 'Red Hat Display';
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -45,6 +54,7 @@ export const StyledText = styled.span`
   opacity: 0.5;
   margin: 20px 0px;
 `;
+
 export const ScreenContainer = styled.div`
   display: flex;
   margin-top: 0px;
@@ -55,6 +65,7 @@ export const ScreenContainer = styled.div`
   box-shadow: 0px 5px 20px -5px rgba(43, 46, 74, 0.2);
   border-radius: 20px;
 `;
+
 export const ContainerImg = styled.div`
   display: flex;
   flex-direction: column;
@@ -63,14 +74,17 @@ export const ContainerImg = styled.div`
   width: 280px;
   height: 280px;
 `;
+
 export const ImgaeContainer = styled.img`
   height: 100%;
   width: 100%;
 `;
+
 export const TitleContainer = styled.div`
   padding: 5px;
   margin: 5px;
 `;
+
 export const DescreptionContainer = styled.div`
   margin-bottom: 65px;
 `;
@@ -81,4 +95,14 @@ export const UploadButton = styled(Button)`
   font-weight: 700;
   border-color: ${theme.PRIMARY};
   color: ${theme.PRIMARY};
+`;
+
+export const BackbuttonText = styled.a`
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  text-decoration-line: underline;
+  color: #a2a1bd !important;
 `;

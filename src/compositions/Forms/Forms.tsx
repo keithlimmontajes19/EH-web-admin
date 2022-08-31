@@ -12,6 +12,7 @@ import {
   TableContainer,
   ModalContainer,
   ImgEmptyStyles,
+  StyledFormTitle,
   InputCreateStyles,
   StyledButtonResult,
 } from "./styled";
@@ -46,12 +47,7 @@ const Forms = (): ReactElement => {
     forms: { data, loading },
   }: any = useSelector<RootState>((states) => states.forms);
 
-  const modalShowClose = () => setIsModalVisible(!isModalVisible);
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-    history.push(`/team/forms/createforms/${formtitle}`);
-  };
+  const modalShowClose = () => history.push(`/team/forms/createforms/form`);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -73,8 +69,8 @@ const Forms = (): ReactElement => {
         <TableContainer style={{ background: "none" }} hasData={data.length}>
           <PageHeader
             ghost={false}
-            title={<StyledText fS={30}>Forms</StyledText>}
-            style={{ paddingTop: 8 }}
+            title={<StyledFormTitle>Forms</StyledFormTitle>}
+            style={{ paddingTop: 8, background: '#f5f5fa' }}
             extra={[
               data.length === 0 ? (
                 <StyledButtonResult type="default">
@@ -85,33 +81,13 @@ const Forms = (): ReactElement => {
               ),
               <>
                 <StyledButton onClick={modalShowClose}>CREATE</StyledButton>
-                <ModalContainer
-                  centered
-                  onOk={handleOk}
-                  title="Create Forms"
-                  maskClosable={false}
-                  visible={isModalVisible}
-                  onCancel={modalShowClose}
-                  footer={[
-                    <ButtonStyled onClick={handleOk}>
-                      <ButtonLabel>CREATE</ButtonLabel>
-                    </ButtonStyled>,
-                  ]}
-                >
-                  <Input
-                    size="large"
-                    style={InputCreateStyles}
-                    placeholder="Input form name"
-                    onChange={(e) => setFormName(e.target.value)}
-                  />
-                </ModalContainer>
               </>,
             ]}
           />
 
           <StyledInput
-            placeholder="Search Forms"
-            prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
+            placeholder="Type"
+            prefix={<SearchOutlined style={{ color: "#A2A1BD" }} />}
           />
 
           <Table

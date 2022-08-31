@@ -46,6 +46,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   const [isLoading, setIsLoading] = useState(false);
   const [viewVisible, setViewVisible] = useState(false);
   const [expandedKeys, setExpandedKeys] = useState(["0-0", "0-0-0", "0-0-0-0"]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const {
     lesson: { loading },
@@ -137,10 +138,8 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
         const isSect = _obj.contentType === "section-head";
         const nextObjKey = "curriculum" in _obj ? "curriculum" : "contents";
 
-        const isSpecial =
-          _obj.contentType === "section-head" || _obj.contentType === "lesson";
-        const lastIofSect =
-          obj.contentType === "section-head" && i === sortedArr.length - 1;
+        const isSpecial = _obj.contentType === "section-head" || _obj.contentType === "lesson";
+        const lastIofSect = obj.contentType === "section-head" && i === sortedArr.length - 1;
 
         const branchLvl = Math.floor((_objMakeKey.length - 1) / 2);
         const limitAction = branchLvl === 1 ? false : true;
@@ -164,7 +163,6 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
           };
         }
 
-        console.log("_obj", _obj);
         /**
          * THIS IS FOR THE ACTION BUTTONS
          * FOR THE RIGHT SIDE OF THE LESSONS
@@ -187,16 +185,11 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                     fontSize: "24px",
                   }}
                 >
-                  <EditOutlined
-                    onClick={() => setOnEdit([true, _objMakeKey])}
-                  />
-
+                  <EditOutlined  onClick={() => setOnEdit([true, _objMakeKey])} />
                   <EyeFilled onClick={() => openView(course)} />
-
                   <DeleteOutlined
                     onClick={() => {
                       const copy = { ...data };
-
                       const callback = (res) => {
                         if (!res) return;
 
@@ -248,8 +241,6 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
               setTitle={setTitle}
               setOnEdit={setOnEdit}
               cb={(t, d, { type, ref }) => {
-                console.log("t, d", t, d);
-
                 const callback = (res) => {
                   if (!res) return;
 
@@ -284,6 +275,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
           contentType: "input",
           key: lvl + (i * 2 + 1),
           style: { display: "flex" },
+          // style: getTreeStyle(_obj.contentType, lastIofSect, i),
         };
 
         /**
@@ -304,6 +296,10 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                   ...ids,
                 };
 
+                keysToExpand.push(_objMakeKey);
+                _obj.key = _objMakeKey;
+                _tmp.push(title(_obj, nextObjKey));
+        
                 const callback = (res) => {
                   // if (!res) return;
                   // if (type) uploadFile(res.uploadSignedUrl, ref);
@@ -329,9 +325,10 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
           contentType: "input",
           key: lvl + (i * 2 + 1),
           style: { display: "flex" },
+          // style: getTreeStyle(mode, lastIofSect, i),
         });
 
-        keysToExpand.push(_objMakeKey);
+        keysToExpand.push(_objMakeKey); 
         _obj.key = _objMakeKey;
         _tmp.push(title(_obj, nextObjKey));
 
@@ -340,6 +337,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
          * PUSHING ITEMS ON THE TREE
          * ALSO FOR SAVING THE ITEM EDIT FIELD COMPONENT
          */
+
         if (addMode) {
           _tmp.push({ ...addAction(onEdit[3]) });
         } else if (editMode) {
@@ -350,9 +348,9 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
       return _tmp;
     };
 
-    console.log("copy", copy);
 
     const tmp = dataToTrees(copy, "curriculum", "0-");
+    // console.log("tmp", tmp);
 
     setTreeData(tmp);
     setExpandedKeys(keysToExpand);
