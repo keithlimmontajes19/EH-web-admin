@@ -27,13 +27,22 @@ export const TableContainer: any = styled<any>(Layout)`
   }
 
   .ant-table thead tr .ant-table-cell {
-    background: #635ffa15;
+    background: #FAFAFB;
+    box-shadow: 0px 4px 8px rgba(10, 130, 0, 0.05);
   }
 
   .ant-table-tbody > tr > td {
-    background: ${(props): any => (props.hasData ? "#635ffa15" : "#fff")};
+    // background: ${(props): any => (props.hasData ? "#635ffa15" : "#fff")};
   }
 
+  .ant-table-tbody > .ant-table-row:nth-child(odd) {
+    background: #f5f5fa;
+  }
+
+  .ant-table-tbody > .ant-table-row:nth-child(even) {
+    background: #fff;
+  }
+ 
   .ant-table-cell {
     font-size: 20px;
     font-weight: 400;
@@ -147,7 +156,7 @@ export const StyledInput: any = styled(Input)`
   height: 48px;
   border: none;
   padding-left: 20px;
-  border-radius: 20px;
+  border-radius: 8px;
   margin-bottom: 40px;
   font-size: 14px;
   font-weight: 400;
@@ -159,14 +168,38 @@ export const StyledText: any = styled.span`
   font-weight: ${({ fW }: any) => (fW ? fW : 700)};
 `;
 
+export const ColumnFirstText = styled.span`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 28px;
+  color: #4C4B7B;
+`;
+
+export const StyledFormTitle = styled.span`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+  color: #4C4B7B;
+`;
+
 export const StyledButton: any = styled(Button)`
   background: #635ffa;
   color: #fff;
-  width: 166px;
+  width: 180px;
   height: 48px;
   border-radius: 8px;
-  font-size: 20px;
+
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+
 `;
 
 export const StyledButtonResult: any = styled.button`
@@ -175,8 +208,16 @@ export const StyledButtonResult: any = styled.button`
   font-size: 20px;
   font-weight: 700;
   border-radius: 8px;
-  background-color: #fff !important;
-  color: #635ffa !important;
+  border: none;
+  background-color: #f5f5fa !important;
+
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #635FFA;
 `;
 
 export const ModalContainer = styled(Modal)`
@@ -247,7 +288,7 @@ export const DivEmptyStyles: any = {
   display: "flex",
   alignItems: "center",
   flexDirection: "column",
-  backgroundColor: "#fff",
+  backgroundColor: "transparent",
   padding: 120,
 };
 
@@ -265,26 +306,38 @@ export const InputCreateStyles = {
 };
 
 export const TextStyled = styled.span`
+  font-family: 'DM Sans', sans-serif;
   font-style: normal;
   font-weight: 700;
-  font-size: 20px;
-  line-height: 25px;
-  color: #4c4b7b;
+  font-size: 16px;
+  line-height: 32px;
+  color: #4C4B7B;
 `;
 
 export const ButtonStyled = styled.button`
-  width: 110px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 56px;
+  gap: 10px;
+  position: absolute;
+  width: 180px;
   height: 48px;
+  left: 1166px;
+  top: 115px;
+  background: #635FFA;
   border-radius: 8px;
-  background: #635ffa;
 `;
 
 export const ButtonLabel = styled.span`
-  color: #ffffff;
-  font-size: 20px;
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
   font-weight: 700;
-  line-height: 28px;
-  text-align: right;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #FFFFFF;
 `;
 
 export const PopupContainer = styled.div`\

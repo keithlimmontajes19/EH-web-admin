@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Button, Input, Layout } from "antd";
+import styled from 'styled-components';
+import { Button, Input, Layout } from 'antd';
 export const Container = styled.div``;
 
 export const StyledButton: any = styled(Button)`
@@ -18,15 +18,36 @@ export const StyledText: any = styled.span`
   font-weight: ${({ fW }: any) => (fW ? fW : 700)};
 `;
 
+export const ColumnText = styled.span`
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 28px;
+  color: #4c4b7b;
+`;
+
+export const StyledTitle = styled.span`
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+  color: #4c4b7b;
+`;
+
 export const StyledInput: any = styled(Input)`
   width: 497px;
   height: 48px;
   border: none;
-  padding-left: 20px;
-  border-radius: 20px;
-  margin-bottom: 40px;
+  padder-radius: 20px;
+  margin-ding-left: 20px;
+  borbottom: 40px;
   font-size: 14px;
   font-weight: 400;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 41px;
 `;
 
 export const TableContainer: any = styled<any>(Layout)`
@@ -53,11 +74,12 @@ export const TableContainer: any = styled<any>(Layout)`
   }
 
   .ant-table thead tr .ant-table-cell {
-    background: #635ffa15;
+    background: #fafafb;
+    box-shadow: 0px 4px 8px rgba(10, 130, 0, 0.05);
   }
 
   .ant-table-tbody > tr > td {
-    background: ${(props): any => (props.hasData ? "#635ffa15" : "#fff")};
+    // background: ${(props): any => (props.hasData ? '#635ffa15' : '#fff')};
   }
 
   .ant-table-cell {
@@ -65,6 +87,14 @@ export const TableContainer: any = styled<any>(Layout)`
     font-weight: 400;
     color: #2b2e4a;
     overflow: hidden;
+  }
+
+  .ant-table-tbody > .ant-table-row:nth-child(odd) {
+    background: #f5f5fa;
+  }
+
+  .ant-table-tbody > .ant-table-row:nth-child(even) {
+    background: #fff;
   }
 
   .ant-table-row > .ant-table-cell:nth-child(3) {
@@ -85,7 +115,7 @@ export const TableContainer: any = styled<any>(Layout)`
   }
 
   tbody:before {
-    content: "@";
+    content: '@';
     display: block;
     line-height: 20px;
     text-indent: -99999px;
@@ -168,7 +198,7 @@ export const TableContainer: any = styled<any>(Layout)`
   }
 `;
 
-export const PopupContainer = styled.div`\
+export const PopupContainer = styled.div`
   display:flex;
   flex-direction:row;
   align-items:center;
@@ -190,29 +220,39 @@ export const Contentdiv = styled.div`
 export const BuildIcon = styled.img``;
 
 export const TextStyled = styled.span`
+  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 700;
-  font-size: 20px;
-  line-height: 25px;
+  font-size: 16px;
+  line-height: 32px;
   color: #4c4b7b;
 `;
 
 export const HeaderStyles = {
-  padding: "10px",
-  fontSize: "22px",
-  fontWeight: "500",
-  color: "#2B2E4A !important",
+  padding: '10px',
+  fontSize: '22px',
+  fontWeight: '500',
+  color: '#2B2E4A !important',
 };
 
 export const DivEmptyStyles: any = {
-  display: "flex",
-  alignItems: "center",
-  flexDirection: "column",
-  backgroundColor: "#fff",
+  display: 'flex',
+  alignItems: 'center',
+  flexDirection: 'column',
+  backgroundColor: 'transparent',
   padding: 120,
 };
 
 export const ImgEmptyStyles = {
-  width: "87px",
-  height: "109px",
+  width: '87px',
+  height: '109px',
 };
+
+export const ColumnFirstText = styled.span`
+  font-family: 'Red Hat Display', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 28px;
+  color: #4c4b7b;
+`;

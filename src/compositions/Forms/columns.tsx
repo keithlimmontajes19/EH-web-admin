@@ -3,11 +3,13 @@ import moment from "moment";
 import {
   MoreOutlined,
   EditOutlined,
-  DeleteFilled,
   DeleteOutlined,
 } from "@ant-design/icons";
 import { Popover } from "antd";
-import { Contentdiv, StyledText, TextStyled, PopupContainer } from "./styled";
+import { Contentdiv, TextStyled, PopupContainer, ColumnFirstText } from "./styled";
+
+import IconImage from "components/IconImage";
+import DELETE_ICON from 'assets/icons/delete-icon.png';
 
 export const columns: any = (
   selectedRowKeys: Array<string>,
@@ -18,7 +20,7 @@ export const columns: any = (
 ) => [
   {
     key: 1,
-    title: <StyledText fS={20}>TITLE</StyledText>,
+    title: <ColumnFirstText>TITLE</ColumnFirstText>,
     dataIndex: "title",
     width: "35%",
     maxWidth: "35%",
@@ -26,7 +28,7 @@ export const columns: any = (
   },
   {
     key: 2,
-    title: <StyledText fS={20}>FORM TYPE</StyledText>,
+    title: <ColumnFirstText>FORM TYPE</ColumnFirstText>,
     dataIndex: "type",
     align: "center",
     width: "35%",
@@ -35,7 +37,7 @@ export const columns: any = (
   },
   {
     key: 3,
-    title: <StyledText fS={20}>DATE ADDED</StyledText>,
+    title: <ColumnFirstText>DATE ADDED</ColumnFirstText>,
     dataIndex: "createdAt",
     align: "center",
     width: "35%",
@@ -50,7 +52,7 @@ export const columns: any = (
     key: 4,
     title: (
       <a onClick={() => dispatch(deleteForm({ ids: selectedRowKeys }))}>
-        <DeleteFilled style={{ color: "#635ffa" }} />
+        <IconImage source={DELETE_ICON} width={17} height={21}/>
       </a>
     ),
     align: "center",

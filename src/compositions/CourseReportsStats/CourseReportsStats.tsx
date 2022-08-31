@@ -7,7 +7,7 @@ import { TotalIcon, TotalCard, StatContainer } from "./styled";
 import totalCoursesIcon from "assets/icons/total-courses-icon.svg";
 import totalVideosIcon from "assets/icons/total-videos-icon.svg";
 import totalOrganizationsIcon from "assets/icons/total-organizations-icon.svg";
-import totalLearnersIcon from "assets/icons/card-courses.png";
+import totalLearnersIcon from "assets/icons/color-graduate.png";
 
 import { Col, Row } from "antd";
 import { theme } from "utils/colors";
@@ -45,8 +45,8 @@ const CourseReportsStats = ({
   return (
     <StatContainer>
       <StatTotalCard
-        primary={theme.PRIMARY}
-        secondary={theme.PRIMARY_MID}
+        primary={theme.LIGHT_GREEN}
+        secondary={theme.LIGHT_GREEN_MID}
         title={"Learners"}
         count={totalLearners || 0}
         icon={totalLearnersIcon}
@@ -59,7 +59,7 @@ const CourseReportsStats = ({
         count={0}
         icon={totalCoursesIcon}
       />
-      <StatTotalCard
+      {/* <StatTotalCard
         primary={theme.BLUE}
         secondary={theme.BLUE_MID}
         title={"Videos"}
@@ -74,7 +74,7 @@ const CourseReportsStats = ({
         // count={totalVideos || 0}
         count={0}
         icon={totalOrganizationsIcon}
-      />
+      /> */}
     </StatContainer>
   );
 };

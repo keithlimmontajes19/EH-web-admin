@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Button, Modal } from "antd";
+import styled from 'styled-components';
+import { Button, Modal } from 'antd';
 
 export const StyledButton: any = styled(Button)`
   background: #635ffa;
@@ -7,8 +7,14 @@ export const StyledButton: any = styled(Button)`
   width: 166px;
   height: 48px;
   border-radius: 8px;
-  font-size: 20px;
+
+  font-family: 'Red Hat Display';
+  font-style: normal;
   font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #ffffff;
 `;
 
 export const ModalContainer = styled(Modal)`
@@ -135,7 +141,7 @@ export const ScreenContainer: any = styled.div`
   margin-top: 20px;
   box-shadow: 0px 5px 20px -5px rgba(43, 46, 74, 0.2);
   opacity: ${(props: any) => (props.isPublish ? 0.3 : 1)}px;
-  background-color: ${(props: any) => (props.isPublish ? "#BDBDBD" : "#fff")}px;
+  background-color: ${(props: any) => (props.isPublish ? '#BDBDBD' : '#fff')}px;
 `;
 
 export const NameStyled = styled.p`
@@ -146,4 +152,13 @@ export const NameStyled = styled.p`
   margin-top: 5px;
   margin-bottom: 27px;
   margin-left: -20px;
+`;
+
+export const PublishText = styled.span`
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 30px;
+  color: #635ffa;
 `;

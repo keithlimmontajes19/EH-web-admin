@@ -1,35 +1,36 @@
-import { ReactElement, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import type { PropsType } from "./types";
+import { ReactElement, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import type { PropsType } from './types';
 
 /* styled */
 import {
   StyledText,
   StyledInput,
+  StyledTitle,
   HeaderStyles,
   TableContainer,
   DivEmptyStyles,
   ImgEmptyStyles,
-} from "./styled";
+} from './styled';
 
 /* reducer action */
 import {
   getAnnouncements,
   deleteAnnouncements,
-} from "ducks/announcement/actionCreator";
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
+} from 'ducks/announcement/actionCreator';
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
 
 /* antd icons */
-import { columns } from "./columns";
-import { Table, Layout, PageHeader } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import { columns } from './columns';
+import { Table, Layout, PageHeader } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 /* components */
-import Loading from "components/Loading";
-import EditAnnouncement from "compositions/EditAnnouncement";
-import Createannouncement from "compositions/Createannouncement";
-import NoAnnouncement from "assets/images/no-announcement-table.png";
+import Loading from 'components/Loading';
+import EditAnnouncement from 'compositions/EditAnnouncement';
+import Createannouncement from 'compositions/Createannouncement';
+import NoAnnouncement from 'assets/images/no-announcement-table.png';
 
 const Announcements = (props: PropsType): ReactElement => {
   const history = useHistory();
@@ -41,7 +42,7 @@ const Announcements = (props: PropsType): ReactElement => {
 
   const [selected, setSelected] = useState({});
   const [editShow, setEditShow] = useState(false);
-  const [searchInpt, setSearchInpt] = useState("");
+  const [searchInpt, setSearchInpt] = useState('');
   const [dataSource, setDataSource] = useState([]);
   const [searchdData, setSearchdData] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -51,7 +52,7 @@ const Announcements = (props: PropsType): ReactElement => {
   }, []);
 
   useEffect(() => {
-    if (searchInpt === "") return;
+    if (searchInpt === '') return;
     setSearchdData(
       dataSource.filter((obj) => {
         return searchdData.some((objX) => {
@@ -72,7 +73,7 @@ const Announcements = (props: PropsType): ReactElement => {
 
   const rowListener = (record) => ({
     onClick: (event) => {
-      if (event.target.localName != "td") {
+      if (event.target.localName != 'td') {
         event.stopPropagation();
         return;
       }
@@ -88,26 +89,26 @@ const Announcements = (props: PropsType): ReactElement => {
 
   return (
     <>
-      <Layout style={{ paddingRight: 50, background: "transparent" }}>
+      <Layout style={{ paddingRight: 50, background: 'transparent' }}>
         <PageHeader
           ghost={false}
           extra={[<Createannouncement />]}
-          style={{ background: "none", paddingTop: 8 }}
-          title={<StyledText fS={30}>Announcements</StyledText>}
+          style={{ background: 'none', paddingTop: 8 }}
+          title={<StyledTitle>Announcements</StyledTitle>}
         />
         <TableContainer
           hasData={data.length}
           style={{
             paddingLeft: 30,
             paddingRight: 24,
-            background: "transparent",
+            background: 'transparent',
           }}
         >
           <StyledInput
             onChange={handleSearch}
             defaultValue={searchInpt}
-            placeholder="Search Pages"
-            prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
+            placeholder="Type"
+            prefix={<SearchOutlined style={{ color: '#A2A1BD' }} />}
           />
 
           <Table

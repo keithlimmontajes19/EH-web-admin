@@ -1,14 +1,17 @@
-import styled from "styled-components";
-import { Button, Layout, Modal } from "antd";
+import styled from 'styled-components';
+import { Button, Layout, Modal } from 'antd';
 
 export const StyledButton: any = styled(Button)`
-  background: #635ffa;
-  color: #fff;
-  width: 157px;
-  height: 48px;
+  width: 180px;
+  height: 40px;
+  background: #635FFA;
   border-radius: 8px;
-  font-size: 20px;
+  font-family: 'Red Hat Display';
+  font-style: normal;
   font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+  color: #FFFFFF;
 `;
 
 export const Container = styled(Layout)`
@@ -143,3 +146,13 @@ export const EndDate = styled.div``;
 export const TimeStart = styled.div``;
 
 export const TimeEnd = styled.div``;
+
+export const TitleCreate = styled.span`
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 30px;
+  text-align: center;
+  color: #4c4b7b;
+`;

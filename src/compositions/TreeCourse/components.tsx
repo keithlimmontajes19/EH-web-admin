@@ -6,17 +6,10 @@ import Text from "components/Text";
 import TextArea from "components/TextArea";
 import Input from "components/Input";
 import StyledButton from "components/StyledButton";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 export const newData = (m: number, t: string, d: string, pos: number) => {
-  const mode = [
-    "section-head",
-    "lesson",
-    "topic",
-    "quiz",
-    "activity",
-    "assignment",
-  ];
+  const mode = ["section-head", "lesson", "topic", "quiz"];
 
   return {
     title: t,
@@ -154,16 +147,10 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
   );
 };
 
-export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
-  const modes = [
-    "Section Heading",
-    "Lesson",
-    "Topic",
-    "Quiz",
-    "Activity",
-    "Assignment",
-  ];
+export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
   const { title: t, description: d } = data;
+
+  const modes = ["Section Heading", "Lesson", "Topic", "Quiz"];
   const [file, setFile]: any = useState({ type: false, ref: {} });
 
   const handleUpload = (type, ref) => setFile({ type, ref });
@@ -210,6 +197,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
           </Text>
         </StyledButton>
       </Upload>
+
       <Upload
         maxCount={1}
         showUploadList={false}
@@ -233,22 +221,33 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
     </Space>
   );
 
+  /**
+   * THIS IS FOR CREATE OF CONTENT
+   * QUIZ, TOPIC, ASSIGNMENT
+   * FORMS
+   */
   return (
     <Form
-      onFinish={({ t, d }) => cb(t, d, file)}
+      onFinish={({ content_title, content_description }) =>
+        cb(content_title, content_description, file)
+      }
       initialValues={{ t: t, d: d }}
       style={{ marginTop: "15px" }}
     >
       {mode !== 0 ? (
         <>
           <Form.Item
-            name="t"
+            name="content_title"
             rules={[{ required: true, message: `Add a ${modes[mode]} Title` }]}
           >
-            <Input placeholder={`${modes[mode]} Title`} />
+            <Input
+              placeholder={`${modes[mode]} Title`}
+              onChage={(event) => setTitle(event.target.value)}
+            />
           </Form.Item>
+
           <Form.Item
-            name="d"
+            name="content_description"
             rules={[{ required: true, message: "Add a Content" }]}
           >
             <TextArea
@@ -256,6 +255,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
               placeholder="Add Content"
             />
           </Form.Item>
+
           <Form.Item>
             <Row justify={mode <= 2 ? "space-between" : "end"}>
               {mode <= 2 ? (
@@ -296,7 +296,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
         >
           <div style={{ width: "calc(100% - 332px)" }}>
             <Form.Item
-              name="t"
+              name="content_title"
               rules={[
                 { required: true, message: `Add a ${modes[mode]} Title` },
               ]}
@@ -304,6 +304,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit }) => {
               <Input placeholder={`${modes[mode]} Title`} />
             </Form.Item>
           </div>
+
           <Row align="middle" justify="end">
             <StyledButton
               bg={"none"}

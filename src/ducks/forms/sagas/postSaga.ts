@@ -5,8 +5,9 @@ import { TYPES as ALERT_TYPES } from "ducks/alert/actionTypes";
 import form_service from "api/services/form_service";
 
 export function* postForms({ payload }: any) {
+  payload.callback({ loading: true, success: null })
   try {
-    const response = yield call(form_service.postForms, payload);
+    const response = yield call(form_service.postForms, payload.data);
     yield put({
       type: TYPES.POST_FORMS_SUCCESS,
       payload: response?.data,
@@ -21,6 +22,7 @@ export function* postForms({ payload }: any) {
       },
     });
 
+    payload.callback({ loading: false, success: true })
     return Promise.resolve(response);
   } catch (error) {
     yield put({
@@ -36,6 +38,7 @@ export function* postForms({ payload }: any) {
       },
     });
 
+    payload.callback({ loading: false, success: false })
     return Promise.reject(error);
   }
 }
