@@ -143,14 +143,19 @@ export const TableContainer: any = styled(Layout)`
     border-radius: 15px !important;
   }
 `;
-export const StyledButtonCreate: any = styled(Button)`
-  background: #fff;
+export const StyledButtonCreate: any = styled.button`
+  background: #f5f5fa;
+  border: none;
   color: #635ffa;
   width: 166px;
   height: 48px;
-  border-radius: 8px;
-  font-size: 20px;
+  font-family: 'Red Hat Display';
+  font-style: normal;
   font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #635ffa;
 `;
 
 export const ScreensContainer = styled(Layout)`
@@ -219,8 +224,18 @@ export const ModalContainer = styled(Modal)`
 
 export const InputStyles = {
   width: '485px',
-  height: '38px',
+  height: '48px',
   margin: '10px 0px',
-  borderRadius: '15px',
+  borderRadius: '8px',
   background: '#F8F8F8',
 };
+
+export const CreateText = styled.span`
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 30px;
+  text-align: center;
+  color: #635ffa;
+`;

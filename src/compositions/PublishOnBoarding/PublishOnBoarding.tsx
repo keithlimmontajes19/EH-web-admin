@@ -5,6 +5,7 @@ import {
   Img,
   Heading,
   Container,
+  PublishText,
   Description,
   StyledButton,
   ModalContainer,
@@ -133,7 +134,7 @@ const PublishOnBoarding = (props: PropsType): ReactElement => {
         width={1000}
         visible={visible}
         maskClosable={false}
-        title="Publish Onboarding Screens"
+        title={<PublishText>Publish Onboarding Screens</PublishText>}
         onCancel={() => setVisible(false)}
         footer={[
           <StyledButton

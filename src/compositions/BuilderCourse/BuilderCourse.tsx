@@ -23,6 +23,7 @@ import Input from 'components/Input';
 import Loading from 'components/Loading';
 import TreeCourse from 'compositions/TreeCourse';
 import StyledButton from 'components/StyledButton';
+import LessonTreeTable from 'compositions/LessonTreeTable';
 
 import { theme } from 'utils/colors';
 import { useHistory, useParams } from 'react-router-dom';
@@ -184,8 +185,6 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
       </Text>
     </StyledButton>
   );
-
-  console.log('files', file);
 
   const MediaField = () => {
     const baseURL =
@@ -376,6 +375,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
           {addNew ? (
             <></>
           ) : (
+            // <LessonTreeTable />
             <TreeCourse course={course} onAdd={onAdd} setOnAdd={setOnAdd} />
           )}
 

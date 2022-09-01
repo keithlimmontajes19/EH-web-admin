@@ -14,17 +14,6 @@ import SettingsLessons from "compositions/SettingsLessons";
 import StyledButton from "components/StyledButton";
 import Text from "components/Text";
 
-const headerActions = [
-  {
-    name: "action 1",
-    action: () => console.log("action 1"),
-  },
-  {
-    name: "action 2",
-    action: () => console.log("action 2"),
-  },
-];
-
 const Lessons = (): ReactElement => {
   const history = useHistory();
   const [page, setPage] = useState("0");
@@ -45,17 +34,6 @@ const Lessons = (): ReactElement => {
               <PlusOutlined />
               ADD
             </StyledButton>,
-            <Dropdown
-              menu={headerActions}
-              // title={
-              //   <span style={{ paddingLeft: 50 }}>
-              //     <Text fS={20}>
-              //       Actions&nbsp;
-              //       <DownOutlined style={{ fontSize: 15 }} />
-              //     </Text>
-              //   </span>
-              // }
-            />,
           ]}
           footer={
             <StyledTabs activeKey={page} onChange={(n) => setPage(n)}>

@@ -4,27 +4,37 @@ import { theme } from "utils/colors";
 export const Container = styled.div``;
 
 export const StyledButton: any = styled(Button)`
+  gap: 10px;
+  width: 180px;
+  height: 48px;
   background: #635ffa;
-  color: #fff;
-  width: auto;
-  height: 48px;
   border-radius: 8px;
-  font-size: 20px;
+  font-family: 'Red Hat Display';
+  font-style: normal;
   font-weight: 700;
-`;
-export const StyledButtonCancle = styled(Button)`
-  background: #fff;
-  color: #635ffa;
-  width: auto;
-  height: 48px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
   text-align: center;
-  justify-contet: center;
-  cursor: pointer;
-  border: none;
+  color: #ffffff;
 `;
+
+export const StyledButtonCancle = styled.button`
+  background: transparent;
+  gap: 10px;
+  width: 180px;
+  height: 48px;
+  border: none;
+
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #635ffa;
+`;
+
+
 export const MainScreenContainer = styled(Layout)`
   display: flex;
   flex-direction: column;
@@ -45,6 +55,7 @@ export const StyledText = styled.span`
   opacity: 0.5;
   margin: 20px 0px;
 `;
+
 export const ScreenContainer = styled.div`
   display: flex;
   margin-top: 0px;
@@ -81,4 +92,14 @@ export const UploadButton = styled(Button)`
   font-weight: 700;
   border-color: ${theme.PRIMARY};
   color: ${theme.PRIMARY};
+`;
+
+export const BackbuttonText = styled.a`
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  text-decoration-line: underline;
+  color: #a2a1bd !important;
 `;

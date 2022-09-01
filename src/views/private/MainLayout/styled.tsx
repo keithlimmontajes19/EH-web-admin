@@ -23,7 +23,7 @@ export const Siderstyles = { background: theme.WHITE };
 export const StyledMenu = styled<any>(Menu)`
   height: 100%;
   border-right: 0;
-  min-width: 100px;
+  min-width: 95%;
   padding-top: 48px;
   background: ${theme.WHITE_MID};
   box-shadow: 0px 0px 5px 3px ${theme.WHITE_MID} !important;
@@ -43,17 +43,19 @@ export const ItemTextDiv = styled.div`
 `;
 
 export const HeaderStyled = styled(Header)`
-  background: ${theme.HEADER};
-  border-radius: 0px;
+  z-index: 4;
+  height: 70px;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding-left: 20px;
   padding-top: 50px;
   padding-bottom: 50px;
-  padding-right: 50px
-  height: 70px;
-  z-index: 4;
+  padding-right: 50px;
+  border-radius: 0px;
+  background: ${theme.HEADER};
+  filter: drop-shadow(0px 4px 8px rgba(10, 130, 0, 0.05));
+  box-shadow: 0px 0px 5px 3px rgba(43, 46, 74, 0.2);
 `;
 
 export const Searchdiv = styled.div<any>`
@@ -118,24 +120,24 @@ export const StyledLayout: any = styled(Layout).attrs(() => ({
 
 export const StyledSubMenu = styled(SubMenu)`
   .ant-menu-submenu-arrow {
-    color: ${({ active }: any) => (active ? `white` : `inherit`)}!important;
-    margin-right: 10px;
+    // color: ${({ active }: any) => (active ? `white` : `inherit`)}!important;
+    // margin-right: 10px;
   }
 
   .ant-menu-submenu-title {
-    ${({ active }: any) =>
-      active
-        ? `min-height: 50px;
-    background: #635ffa;
-    max-width: 202px;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;`
-        : `min-height: 50px; max-width: 202px;`}
+    ${({ active }: any) => 
+     active  ? `min-height: 50px;
+                background: #A3A2EF;
+                max-width: 95%;
+                border-top-right-radius: 20px;
+                border-bottom-right-radius: 20px;`
+            : `min-height: 50px; max-width: 95%;`
+    }
   }
 
   .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-    background-color: transparent;
-    color: inherit;
+    background-color: #A3A2EF;
+    color: #4C4B7B;
   }
 
   .ant-menu-item:hover {
@@ -158,8 +160,9 @@ export const StyledSubMenu = styled(SubMenu)`
 
 export const MenuItemOnSelect = {
   minHeight: "50px",
-  background: "#635ffa",
-  maxWidth: "202px",
+  background: "#A3A2EF",
+  maxWidth: "95%",
+  minWidth: "95%",
   borderTopRightRadius: "20px",
   borderBottomRightRadius: "20px",
 };
@@ -167,6 +170,6 @@ export const MenuItemOnSelect = {
 export const LayoutStyles = {
   paddingTop: 21,
   paddingLeft: 21,
-  background: theme.WHITE,
+  background: '#f5f5fa',
   minHeight: "98vh",
 };

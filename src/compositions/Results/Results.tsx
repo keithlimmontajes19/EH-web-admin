@@ -9,7 +9,9 @@ import { AgChartsReact } from "ag-charts-react";
 import {
   Container,
   StyledText,
+  StyledResults,
   ModalContainer,
+  CollapseContainer,
   StyledTextHeading,
   StyledButtonResult,
 } from "./styled";
@@ -75,7 +77,7 @@ const Results = (props: PropsType): ReactElement => {
                   <Row justify="end" key={form?._id}>
                     <Col span={24}>
                       <StyledTextHeading>
-                        Sample Qusestion #1 ?
+                        Qusestion #1 ?
                       </StyledTextHeading>
                     </Col>
                   </Row>
@@ -113,7 +115,7 @@ const Results = (props: PropsType): ReactElement => {
         centered
         width={1000}
         footer={false}
-        title="RESULTS"
+        title={<StyledResults>RESULTS</StyledResults>}
         visible={visible}
         maskClosable={false}
         onOk={() => setVisible(false)}
@@ -121,7 +123,7 @@ const Results = (props: PropsType): ReactElement => {
       >
         <Container>
           {(data || []).map((item: any) => (
-            <div key={item?._id}>{toCollapse(item)}</div>
+            <CollapseContainer key={item?._id}>{toCollapse(item)}</CollapseContainer>
           ))}
         </Container>
       </ModalContainer>

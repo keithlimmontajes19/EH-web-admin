@@ -214,36 +214,49 @@ export function* updateLessonContent({ payload }: any): any {
 }
 
 export function* postLessonContent({ payload }: any): any {
-  const { idOrg, idCourse, idLesson, callback = () => {} } = payload;
-  const { contentType, title, description, preview, position } = payload.data;
+  const { idLesson, callback = () => {} } = payload;
+  const { contentType, title, description, position } = payload.data;
+
+  console.log("contentType", contentType)
+  console.log(idLesson)
+
+
+  // const data = {
+    // title,
+    // position,
+    // description,
+    // contentType,
+    // preview: { type: 'video' },
+    // body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
+  // };
+
   const data = {
-    contentType,
-    title,
-    description,
-    body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
-    preview: { type: 'video' },
-    position,
-  };
+    ...payload.data,
+    lessonId: idLesson,
+  }
 
   try {
-    const response = yield call(
-      lms_service.postLessonContent,
-      data,
-      idOrg,
-      idCourse,
-      idLesson
-    );
+    let response;
+
+    if (contentType === "quiz") {
+      yield call( lms_service.postQuiz, data)
+    } else {
+      yield call( lms_service.postTopic, data)
+    }
+   
     yield put({
       type: TYPES.POST_LESSON_CONTENT_SUCCESS,
       payload: response.data,
     });
 
     const res = response?.data?.data;
+
     callback(
       'content' in res
         ? { ...res.content, uploadSignedUrl: res.uploadSignedUrl }
         : res
     );
+
     return Promise.resolve(response);
   } catch (error) {
     yield put({

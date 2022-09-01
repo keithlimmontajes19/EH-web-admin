@@ -315,11 +315,12 @@ const CourseReportsTable = ({ reportTableData }): ReactElement => {
   };
 
   return (
-    <>
+    <div style={{ paddingRight: 10}}>
       <StyledTabs defaultActiveKey="1" type="card">
-        <TabPane tab={<Text fS={20}>Course Report</Text>} key="1" />
-        <TabPane tab={<Text fS={20}>User Report</Text>} key="2" />
+        {/* <TabPane tab={<Text fS={20}>Course Report</Text>} key="1" /> */}
+        {/* <TabPane tab={<Text fS={20}>User Report</Text>} key="2" /> */}
       </StyledTabs>
+
       {dataSource.length > 1 ? (
         <CourseReportsHeader {...reportsHeader} />
       ) : (
@@ -412,7 +413,7 @@ const CourseReportsTable = ({ reportTableData }): ReactElement => {
           </StyledSubTabs>
         )}
       </TableContainer>
-    </>
+    </div>
   );
 };
 
