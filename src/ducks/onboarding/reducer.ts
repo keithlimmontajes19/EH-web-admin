@@ -56,7 +56,7 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         onboarding_list: {
-          data: [],
+          ...state.onboarding_list,
           loading: true,
           error: false,
         },

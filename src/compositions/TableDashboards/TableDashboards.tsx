@@ -9,11 +9,12 @@ import {
 } from '@ant-design/icons';
 
 import {
-  StyledButton,
+  ColumnText,
+  StyledTitle,
   StyledInput,
-  StyledText,
   TableContainer,
-} from './styled';
+  ColumnFirstText,
+} from 'compositions/Announcements/styled';
 import { useHistory } from 'react-router-dom';
 
 // ducks action
@@ -24,8 +25,9 @@ import {
   getDashboard,
   updateDashboard,
 } from 'ducks/dashboard/actionCreator';
-import Loading from 'components/Loading';
 import CreateDashboard from '../CreateDashboard';
+import IconImage from 'components/IconImage';
+import DELETE_ICON from 'assets/icons/delete-icon.png';
 
 function TableDashboards() {
   const dispatch = useDispatch();
@@ -48,14 +50,15 @@ function TableDashboards() {
   const columns = [
     {
       key: '1',
-      title: <StyledText fS={20}>TITLE</StyledText>,
+      title: <ColumnText>TITLE</ColumnText>,
       dataIndex: 'name',
       width: '35%',
       maxWidth: '35%',
+      render: (record) => <ColumnFirstText>{record}</ColumnFirstText>,
     },
     {
       key: '2',
-      title: <StyledText fS={20}>DEPARTMENT</StyledText>,
+      title: <ColumnText>DEPARTMENT</ColumnText>,
       dataIndex: 'organization',
       maxWidth: '25%',
       render: (record: any) => {
@@ -81,10 +84,7 @@ function TableDashboards() {
               setSelectedRowKeys([]);
             }}
           >
-            <DeleteFilled style={{ color: '#635ffa' }} />
-            <StyledText fC="inherit" fS={18} fw={700}>
-              DELETE
-            </StyledText>
+            <IconImage source={DELETE_ICON} width={17} height={21} />
           </span>
         </div>
       ),
@@ -94,19 +94,19 @@ function TableDashboards() {
           <>
             <div className="row-actions">
               <span onClick={() => onEditData(record)}>
-                <EditOutlined style={{ color: '#635ffa' }} />
+                <EditOutlined style={{ color: '#4C4B7B' }} />
                 &nbsp;RENAME
               </span>
               &nbsp; &nbsp; &nbsp;
               <span
                 onClick={() => pushHistory(`/team/dashboards/${record?._id}`)}
               >
-                <EyeFilled style={{ color: '#635ffa' }} />
+                <EyeFilled style={{ color: '#4C4B7B' }} />
                 &nbsp;VIEW
               </span>
               &nbsp; &nbsp; &nbsp;
               <span onClick={() => onDeleteData([record])}>
-                <DeleteOutlined style={{ color: '#635ffa' }} />
+                <DeleteOutlined style={{ color: '#4C4B7B' }} />
                 &nbsp;DELETE
               </span>
             </div>
@@ -167,21 +167,26 @@ function TableDashboards() {
       },
     });
   };
+
   const onEditData = (record) => {
     setIsEditing(true);
     setEditingData({ ...record });
   };
+
   const resetEditing = () => {
     setIsEditing(false);
     setEditingData(null);
   };
+
   const onSelectChange = (newRowKeys) => {
     setSelectedRowKeys(newRowKeys);
   };
+
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
   const rowListener = (record) => ({
     onClick: (event) => {
       if (event.target.localName != 'td') {
@@ -195,6 +200,7 @@ function TableDashboards() {
       setSelectedRowKeys([...selectedRowKeys, record.key]);
     },
   });
+
   const handleSearch = (e) => {
     setSearchInpt(e.target.value);
     setSelectedRowKeys([]);
@@ -219,11 +225,12 @@ function TableDashboards() {
       )
     );
   };
+
   return (
     <Layout style={{ paddingRight: 50, background: 'transparent' }}>
       <PageHeader
         ghost={false}
-        title={<StyledText fS={30}>Dashboards</StyledText>}
+        title={<StyledTitle>Dashboards</StyledTitle>}
         style={{ background: 'none', paddingTop: 8 }}
         extra={[<CreateDashboard />]}
       />
@@ -237,10 +244,10 @@ function TableDashboards() {
         }}
       >
         <StyledInput
-          placeholder="Search Dashboards"
+          placeholder="Type"
           defaultValue={searchInpt}
           onChange={handleSearch}
-          prefix={<SearchOutlined style={{ color: '#635ffa' }} />}
+          prefix={<SearchOutlined style={{ color: '#A2A1BD' }} />}
         />
 
         <Table
@@ -248,7 +255,6 @@ function TableDashboards() {
           rowSelection={rowSelection}
           columns={columns}
           dataSource={searchInpt !== '' ? searchdData : dataSource}
-          // loading={{ indicator: <Loading />, spinning: loading }}
           loading={loading}
         />
 
