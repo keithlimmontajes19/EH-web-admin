@@ -3,7 +3,7 @@ import { Button, Layout, Modal } from 'antd';
 
 export const StyledButton: any = styled(Button)`
   width: 180px;
-  height: 40px;
+  height: 48px;
   background: #635FFA;
   border-radius: 8px;
   font-family: 'Red Hat Display';

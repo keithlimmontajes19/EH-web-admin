@@ -1,5 +1,5 @@
-import { ReactElement, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { ReactElement, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
   StyledText,
@@ -15,14 +15,14 @@ import {
   StyledFormTitle,
   InputCreateStyles,
   StyledButtonResult,
-} from "./styled";
+} from './styled';
 
-import { columns } from "./columns";
-import { SearchOutlined } from "@ant-design/icons";
-import { Layout, PageHeader, Table, Input } from "antd";
+import { columns } from './columns';
+import { SearchOutlined } from '@ant-design/icons';
+import { Layout, PageHeader, Table, Input } from 'antd';
 
-import Results from "compositions/Results";
-import NoForms from "assets/icons/NoFormsIcon.svg";
+import Results from 'compositions/Results';
+import NoForms from 'assets/icons/NoFormsIcon.svg';
 
 /* reducer action */
 import {
@@ -30,15 +30,15 @@ import {
   deleteForm,
   getOneForm,
   getAllResults,
-} from "ducks/forms/actionCreator";
-import { RootState } from "ducks/store";
-import { useSelector, useDispatch } from "react-redux";
+} from 'ducks/forms/actionCreator';
+import { RootState } from 'ducks/store';
+import { useSelector, useDispatch } from 'react-redux';
 
 const Forms = (): ReactElement => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [formtitle, setFormName] = useState("");
+  const [formtitle, setFormName] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
@@ -65,29 +65,36 @@ const Forms = (): ReactElement => {
 
   return (
     <>
-      <Layout style={{ paddingRight: 50, background: "transparent" }}>
-        <TableContainer style={{ background: "none" }} hasData={data.length}>
-          <PageHeader
-            ghost={false}
-            title={<StyledFormTitle>Forms</StyledFormTitle>}
-            style={{ paddingTop: 8, background: '#f5f5fa' }}
-            extra={[
-              data.length === 0 ? (
-                <StyledButtonResult type="default">
-                  SEE RESULTS
-                </StyledButtonResult>
-              ) : (
-                <Results data={results?.data} loading={results?.loading} />
-              ),
-              <>
-                <StyledButton onClick={modalShowClose}>CREATE</StyledButton>
-              </>,
-            ]}
-          />
+      <Layout style={{ paddingRight: 50, background: 'transparent' }}>
+        <PageHeader
+          ghost={false}
+          title={<StyledFormTitle>Forms</StyledFormTitle>}
+          style={{ paddingTop: 8, background: '#f5f5fa' }}
+          extra={[
+            data.length === 0 ? (
+              <StyledButtonResult type="default">
+                SEE RESULTS
+              </StyledButtonResult>
+            ) : (
+              <Results data={results?.data} loading={results?.loading} />
+            ),
+            <>
+              <StyledButton onClick={modalShowClose}>CREATE</StyledButton>
+            </>,
+          ]}
+        />
 
+        <TableContainer
+          hasData={data.length}
+          style={{
+            paddingLeft: 30,
+            paddingRight: 24,
+            background: 'transparent',
+          }}
+        >
           <StyledInput
             placeholder="Type"
-            prefix={<SearchOutlined style={{ color: "#A2A1BD" }} />}
+            prefix={<SearchOutlined style={{ color: '#A2A1BD' }} />}
           />
 
           <Table
