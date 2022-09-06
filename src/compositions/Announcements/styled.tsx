@@ -41,13 +41,13 @@ export const StyledInput: any = styled(Input)`
   height: 48px;
   border: none;
   padder-radius: 20px;
-  margin-ding-left: 20px;
   borbottom: 40px;
   font-size: 14px;
   font-weight: 400;
   background: #fff;
   border-radius: 8px;
   margin-bottom: 41px;
+  padding-left: 20px;
 `;
 
 export const TableContainer: any = styled<any>(Layout)`

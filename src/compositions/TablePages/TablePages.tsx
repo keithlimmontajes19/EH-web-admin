@@ -1,40 +1,48 @@
 import { ReactElement } from 'react';
+import type { PropsType } from './types';
+import { useHistory } from 'react-router-dom';
+
 import {
   Table,
   Modal,
   Input,
-  PageHeader,
   Layout,
   Space,
   Row,
-  Collapse,
   Spin,
+  Collapse,
+  PageHeader,
 } from 'antd';
-import { useEffect, useState } from 'react';
-import Collapsetab from 'components/Collapsetab';
+
 import {
-  SearchOutlined,
-  EditOutlined,
-  DeleteOutlined,
   EyeFilled,
+  EditOutlined,
   EnterOutlined,
+  SearchOutlined,
+  DeleteOutlined,
   LoadingOutlined,
 } from '@ant-design/icons';
-import { StyledButton, StyledInput, TableContainer, BuildIcon } from './styled';
+import { useEffect, useState } from 'react';
+
+import { theme } from 'utils/colors';
+import { StyledButton, BuildIcon } from './styled';
+import {
+  ColumnText,
+  StyledTitle,
+  StyledInput,
+  TableContainer,
+  ColumnFirstText,
+} from 'compositions/Announcements/styled';
+
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { deletePage, getPages, updatePage } from 'ducks/pages/actionCreator';
 
 // icons imorted here
 import nopages from '../../assets/icons/nopages.svg';
-import hammericon from '../../assets/icons/hammer-icon.svg';
-
-import type { PropsType } from './types';
-import { useHistory } from 'react-router-dom';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'ducks/store';
-import Text from 'components/Text';
-import Loading from 'components/Loading';
-import { deletePage, getPages, updatePage } from 'ducks/pages/actionCreator';
-import { theme } from 'utils/colors';
+import hammericon from '../../assets/icons/hammer-color.png';
+import IconImage from 'components/IconImage';
+import DELETE_ICON from 'assets/icons/delete-icon.png';
 
 const TablePages = (props: PropsType): ReactElement => {
   const dispatch = useDispatch();
@@ -55,6 +63,7 @@ const TablePages = (props: PropsType): ReactElement => {
   const makeTitle = (record) => {
     const { forms } = record;
     const testA = forms ? forms.length > 0 : false;
+
     const toCollapse = (arr) => (
       <Collapse ghost>
         <Collapse.Panel header={record?.title} key="2">
@@ -84,22 +93,20 @@ const TablePages = (props: PropsType): ReactElement => {
         </Collapse.Panel>
       </Collapse>
     );
+
     return testA ? (
       toCollapse(forms)
     ) : (
-      <span className="ant-no-collapse" style={{ marginLeft: 24 }}>
-        {record.title}
-      </span>
+      <ColumnFirstText>{record.title}</ColumnFirstText>
     );
   };
+
   const columns = [
     {
       key: '1',
       title: (
         <Row align="middle" justify="space-between">
-          <Text fS={20} m="0 0 0 20px">
-            TITLE
-          </Text>
+          <ColumnText>TITLE</ColumnText>
           <div style={{ textAlign: 'right' }}>
             <span
               style={{ cursor: 'pointer' }}
@@ -110,14 +117,12 @@ const TablePages = (props: PropsType): ReactElement => {
                 setSelectedRowKeys([]);
               }}
             >
-              <DeleteOutlined style={{ color: '#635ffa' }} />
-              <Text fC="inherit" fS={20}>
-                DELETE
-              </Text>
+              <IconImage source={DELETE_ICON} width={17} height={21} />
             </span>
           </div>
         </Row>
       ),
+
       minWidth: 350,
       render: (rec, record, iB) => ({
         children: (
@@ -125,12 +130,12 @@ const TablePages = (props: PropsType): ReactElement => {
             {makeTitle(record)}
             <Space className="row-actions" size={'middle'}>
               <span onClick={() => onEditData(record)}>
-                <EditOutlined style={{ color: '#635ffa' }} />
+                <EditOutlined style={{ color: '#4C4B7B' }} />
                 &nbsp;RENAME
               </span>
               &nbsp; &nbsp; &nbsp;
               <span onClick={() => onEditData(record)}>
-                <EyeFilled style={{ color: '#635ffa' }} />
+                <EyeFilled style={{ color: '#4C4B7B' }} />
                 &nbsp;VIEW
               </span>
               &nbsp; &nbsp; &nbsp;
@@ -139,12 +144,16 @@ const TablePages = (props: PropsType): ReactElement => {
                   pushHistory(`/team/pages/builder/${record?._id}`)
                 }
               >
-                <BuildIcon src={hammericon} style={{ color: '#635ffa' }} />
-                &nbsp;BUILDER
+                <BuildIcon
+                  src={hammericon}
+                  color="#4C4B7B"
+                  style={{ color: '#4C4B7B', width: 20, height: 15 }}
+                />
+                &nbsp;&nbsp;BUILDER
               </span>
               &nbsp; &nbsp; &nbsp;
               <span onClick={() => onDeleteData([record])}>
-                <DeleteOutlined style={{ color: '#635ffa' }} />
+                <DeleteOutlined style={{ color: '#4C4B7B' }} />
                 &nbsp;DELETE
               </span>
             </Space>
@@ -153,6 +162,7 @@ const TablePages = (props: PropsType): ReactElement => {
       }),
     },
   ];
+
   useEffect(() => {
     dispatch(getPages());
   }, []);
@@ -183,6 +193,7 @@ const TablePages = (props: PropsType): ReactElement => {
 
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
+
     Modal.confirm({
       title: 'Are you sure, you want to delete this record?',
       okText: 'Yes',
@@ -207,21 +218,26 @@ const TablePages = (props: PropsType): ReactElement => {
       },
     });
   };
+
   const onEditData = (record) => {
     setIsEditing(true);
     setEditingData({ ...record });
   };
+
   const resetEditing = () => {
     setIsEditing(false);
     setEditingData(null);
   };
+
   const onSelectChange = (newRowKeys) => {
     setSelectedRowKeys(newRowKeys);
   };
+
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
   const rowListener = (record) => ({
     onClick: (event) => {
       if (event.target.localName != 'td') {
@@ -235,23 +251,30 @@ const TablePages = (props: PropsType): ReactElement => {
       setSelectedRowKeys([...selectedRowKeys, record.key]);
     },
   });
+
   const handleSearch = (e) => {
     setSearchInpt(e.target.value);
     setSelectedRowKeys([]);
+
     const pattern = e.target.value
       .split('')
       .map((x) => {
         return `(?=.*${x})`;
       })
       .join('');
+
     const regX = new RegExp(`${pattern}`, 'gi');
     const tmp = [];
+
     dataSource.forEach((record, i) => {
       if (regX.test(record?.title)) tmp.push(i);
     });
+
     if (!tmp.length) return setSearchdData([]);
+
     setSearchdData(dataSource.filter((obj) => tmp.includes(obj.key)));
   };
+
   const refreshSearchdData = () => {
     setSearchdData(
       dataSource.filter((record) =>
@@ -259,12 +282,13 @@ const TablePages = (props: PropsType): ReactElement => {
       )
     );
   };
+  
   return (
     <>
       <Layout style={{ paddingRight: 50, background: 'transparent' }}>
         <PageHeader
           ghost={false}
-          title={<Text fS={30}>Pages</Text>}
+          title={<StyledTitle>Pages</StyledTitle>}
           style={{ background: 'none', paddingTop: 8 }}
           extra={[
             <StyledButton onClick={() => pushHistory('/team/pages/create')}>
@@ -280,10 +304,10 @@ const TablePages = (props: PropsType): ReactElement => {
           }}
         >
           <StyledInput
-            placeholder="Search Pages"
+            placeholder="Type"
             defaultValue={searchInpt}
             onChange={handleSearch}
-            prefix={<SearchOutlined style={{ color: '#635ffa' }} />}
+            prefix={<SearchOutlined style={{ color: '#A2A1BD' }} />}
           />
 
           <Table
@@ -291,7 +315,6 @@ const TablePages = (props: PropsType): ReactElement => {
             rowSelection={rowSelection}
             columns={columns}
             dataSource={searchInpt !== '' ? searchdData : dataSource}
-            // loading={{ indicator: <Loading />, spinning: loading }}
             loading={loading}
             locale={{
               emptyText: (

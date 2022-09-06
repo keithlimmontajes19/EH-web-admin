@@ -41,13 +41,16 @@ export const NakedInput: any = styled(Input)`
 `;
 
 export const StyledButton: any = styled(Button)`
-  background: #635ffa;
-  color: #fff;
-  width: 166px;
+  width: 180px;
   height: 48px;
+  background: #635FFA;
   border-radius: 8px;
-  font-size: 20px;
+  font-family: 'Red Hat Display';
+  font-style: normal;
   font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+  color: #FFFFFF;
 `;
 
 export const TableContainer: any = styled(Layout)`
@@ -88,6 +91,14 @@ export const TableContainer: any = styled(Layout)`
     background: #635ffa06 !important;
   }
 
+  .ant-table-tbody > .ant-table-row:nth-child(odd) {
+    background: #f5f5fa;
+  }
+
+  .ant-table-tbody > .ant-table-row:nth-child(even) {
+    background: #fff;
+  }
+  
   .ant-table-row:hover {
     box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.04);
     cursor: pointer;

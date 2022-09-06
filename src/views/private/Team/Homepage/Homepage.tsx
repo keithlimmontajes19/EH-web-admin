@@ -35,7 +35,6 @@ const Homepage = (): ReactElement => {
     dispatch(getAnnouncements());
   }, []);
 
-  console.log("data", data);
   return (
     <Container>
       <Row gutter={40}>
@@ -59,7 +58,7 @@ const Homepage = (): ReactElement => {
         </Col>
       </Row>
 
-      <StyledRecent>Recents</StyledRecent>
+      {/* <StyledRecent>Recents</StyledRecent>
       <TabContainer>
         <Tabs defaultActiveKey="1">
           <TabPane key={1} tab={<StyledTabtitle>Visited</StyledTabtitle>}>
@@ -75,7 +74,7 @@ const Homepage = (): ReactElement => {
             <TabitemContainer>No results found.</TabitemContainer>
           </TabPane>
         </Tabs>
-      </TabContainer>
+      </TabContainer> */}
     </Container>
   );
 };

@@ -2,13 +2,16 @@ import styled from "styled-components";
 import { Button, Layout, Modal } from "antd";
 
 export const StyledButton: any = styled(Button)`
-  background: #635ffa;
-  color: #fff;
-  width: 157px;
+  width: 180px;
   height: 48px;
+  background: #635FFA;
   border-radius: 8px;
-  font-size: 20px;
+  font-family: 'Red Hat Display';
+  font-style: normal;
   font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+  color: #FFFFFF;
 `;
 
 export const Container = styled(Layout)`
