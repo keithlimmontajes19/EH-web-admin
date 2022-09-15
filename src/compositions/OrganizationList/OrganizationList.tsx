@@ -125,8 +125,8 @@ const OrganizationList = () => {
   };
 
   return (
-    <Fragment>
-      {!loading && <StyledTitle>Organizations</StyledTitle>}
+    <div style={{ marginTop: 30 }}>
+      {data?.length && <StyledTitle>Groups</StyledTitle>}
       <ScrollMenu
         LeftArrow={() => (data?.length ? LeftArrow() : <></>)}
         RightArrow={() => (data?.length ? RightArrow() : <></>)}
@@ -145,7 +145,7 @@ const OrganizationList = () => {
           />
         ))}
       </ScrollMenu>
-    </Fragment>
+    </div>
   );
 };
 

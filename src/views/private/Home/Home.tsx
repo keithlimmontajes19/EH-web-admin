@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 
 import {
   StyledAdd,
+  StyledLink,
   StyledTitle,
   StyledButton,
   StyledHeader,
   StyledPopover,
-  StyledViewList,
   HeaderContainer,
   NoAnnouncementContainer,
 } from './styled';
@@ -54,25 +54,34 @@ const Home = () => {
     <div>
       <HeaderContainer>
         <StyledTitle>Hi {user_details?.profile?.firstName || ''}!</StyledTitle>
-        <StyledViewList>View List</StyledViewList>
-
-        <StyledPopover title={content()}>
-          <StyledButton>
-            <StyledAdd>
+        {/* <StyledViewList>View List</StyledViewList> */}
+        <StyledButton>
+          <StyledAdd>USERS</StyledAdd>
+        </StyledButton>
+        &nbsp;
+        <StyledButton background="transparent" color="#fff">
+          <StyledPopover title={content()}>
+            <StyledLink>
               ADD
               <DownOutlined
-                style={{ marginTop: 5, marginLeft: 5, fontSize: 12 }}
+                style={{
+                  marginTop: 0,
+                  marginLeft: 5,
+                  fontSize: 12,
+                  fontWeight: '900',
+                }}
               />
-            </StyledAdd>
-          </StyledButton>
-        </StyledPopover>
+            </StyledLink>
+          </StyledPopover>
+        </StyledButton>
       </HeaderContainer>
 
       {/**
        * TO DO:
        * Remove until working or has API
        */}
-      {false && <DashboardCards />}
+       
+      <DashboardCards />
 
       <Row gutter={40}>
         <Col span={12}>
