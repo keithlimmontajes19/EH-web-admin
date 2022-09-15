@@ -27,8 +27,8 @@ export const StyledHeader = styled.h2`
 
 export const HeaderContainer = styled.div`
   display: flex;
-  height: 121px;
-  padding-top: 41px;
+  height: 90px;
+  padding-top: 26px;
   padding-left: 34px;
   padding-right: 51px;
   margin-bottom: 41px;
@@ -66,10 +66,10 @@ export const StyledPopover = styled(Popconfirm).attrs((props) => ({
   icon: '',
   showOk: false,
   showCancel: false,
-  placement: 'bottomLeft',
+  placement: 'top',
   overlayInnerStyle: {
-    minWidth: 232,
-    minHeight: 90,
+    minWidth: 200,
+    minHeight: 50,
     borderRadius: 15,
     background: '#fff',
     boxShadow: '0px 5px 20px -5px rgba(43, 46, 74, 0.2)',
@@ -78,22 +78,35 @@ export const StyledPopover = styled(Popconfirm).attrs((props) => ({
   okButtonProps: { style: { display: 'none' } },
 }))``;
 
-export const StyledButton = styled.button`
-  background: #ffffff;
+export const StyledButton = styled.button<any>`
+  background: ${(props) => props.background ? props.background : '#fff'};
   border-radius: 8px;
   max-height: 40px;
   min-height: 40px;
-  width: 70px;
-  color: #635ffa;
+  width: 180px;
+  color: ${(props) => props.color ? props.color : '#635ffa'};
   border: none;
   text-align: center;
   padding: 10px;
 `;
 
-export const StyledAdd = styled.span`
-  font-family: 'DM Sans';
+export const StyledAdd = styled.a`
+  font-family: 'DM Sans', sans-serif;
   font-style: normal;
   font-weight: 700;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: row;
+`;
+
+export const StyledLink = styled.a`
+  font-family: 'DM Sans', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  color: #fff;
 `;

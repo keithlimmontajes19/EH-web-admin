@@ -2,13 +2,7 @@ import { ReactElement, useEffect, useState } from "react";
 import "draft-js/dist/Draft.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-import {
-  PageHeader,
-  Breadcrumb,
-  Layout,
-  Modal,
-  Input,
-} from "antd";
+import { PageHeader, Breadcrumb, Layout, Modal, Input } from "antd";
 
 import {
   MoreOutlined,
@@ -25,11 +19,7 @@ import { EditorContainer, StyledButton, StyledButtonCancle } from "./styled";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
-import {
-  EditorState,
-  convertToRaw,
-  convertFromRaw,
-} from "draft-js";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
@@ -185,6 +175,7 @@ const BuilderPage = (props: PropsType): ReactElement => {
           </Breadcrumb>
 
           <PageHeader
+            style={{ background: "none", paddingTop: 8 }}
             title={
               <Text
                 onClick={() => {

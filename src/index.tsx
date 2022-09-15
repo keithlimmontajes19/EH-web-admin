@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 
 /* styles */
 import "./styles/index.css";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 ReactDOM.render(
   <React.StrictMode>

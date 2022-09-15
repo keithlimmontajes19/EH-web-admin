@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect } from 'react';
-import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
+import React, { Fragment, useEffect } from "react";
+import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
 
 import {
   FlexRow,
@@ -14,24 +14,24 @@ import {
   ImageContainer,
   RatingContainer,
   AvatarContainer,
-} from './styled';
-import { Image } from 'antd';
-import { NO_IMAGE } from 'utils/constants';
-import { useHistory } from 'react-router-dom';
-import { getCurriculum } from 'ducks/lms/actionCreator';
+} from "./styled";
+import { Image } from "antd";
+import { NO_IMAGE } from "utils/constants";
+import { useHistory } from "react-router-dom";
+import { getCurriculum } from "ducks/lms/actionCreator";
 
 /* components */
-import IconImage from 'components/IconImage';
-import RatingStar from 'components/RatingStar';
-import USER_LOGO from 'assets/images/user-icon.png';
-import LEFT_ARROW from 'assets/icons/left-icon.png';
-import RIGHT_ARROW from 'assets/icons/right-icon.png';
-import ORGANIZATION from 'assets/icons/organization.png';
+import IconImage from "components/IconImage";
+import RatingStar from "components/RatingStar";
+import USER_LOGO from "assets/images/user-icon.png";
+import LEFT_ARROW from "assets/icons/left-icon.png";
+import RIGHT_ARROW from "assets/icons/right-icon.png";
+import ORGANIZATION from "assets/icons/organization.png";
 
 /* recuer action */
-import { RootState } from 'ducks/store';
-import { useSelector, useDispatch } from 'react-redux';
-import { getListOrganization } from 'ducks/organization/actionCreator';
+import { RootState } from "ducks/store";
+import { useSelector, useDispatch } from "react-redux";
+import { getListOrganization } from "ducks/organization/actionCreator";
 
 const LeftArrow = () => {
   const { scrollPrev } = React.useContext(VisibilityContext);
@@ -41,10 +41,10 @@ const LeftArrow = () => {
       style={{
         flex: 1,
         zIndex: 2,
-        display: 'flex',
+        display: "flex",
         marginRight: 10,
-        justifyContent: 'center',
-        flexDirection: 'column',
+        justifyContent: "center",
+        flexDirection: "column",
         padding: 5,
       }}
     >
@@ -61,10 +61,10 @@ const RightArrow = () => {
       style={{
         flex: 1,
         zIndex: 2,
-        display: 'flex',
+        display: "flex",
         marginLeft: 10,
-        justifyContent: 'center',
-        flexDirection: 'column',
+        justifyContent: "center",
+        flexDirection: "column",
         padding: 5,
       }}
     >
@@ -80,21 +80,21 @@ const Card = ({ item, itemId, onClick }) => {
   return (
     <div
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
         marginRight: 122,
       }}
     >
       <AvatarContainer>
-        <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+        <div style={{ marginLeft: "auto", marginRight: "auto" }}>
           <IconImage source={ORGANIZATION} width={40} height={53} />
         </div>
       </AvatarContainer>
 
-      <StyledName>{item?.name || ''}</StyledName>
+      <StyledName>{item?.name || ""}</StyledName>
     </div>
   );
 };
@@ -125,14 +125,14 @@ const OrganizationList = () => {
   };
 
   return (
-    <Fragment>
-      {!loading && <StyledTitle>Organizations</StyledTitle>}
+    <div style={{ marginTop: 30 }}>
+      {data?.length ? <StyledTitle>Groups</StyledTitle> : <></>}
       <ScrollMenu
         LeftArrow={() => (data?.length ? LeftArrow() : <></>)}
         RightArrow={() => (data?.length ? RightArrow() : <></>)}
         options={{
           ratio: 0.9,
-          rootMargin: '5px',
+          rootMargin: "5px",
           threshold: [0.01, 0.05, 0.5, 0.75, 0.95, 1],
         }}
       >
@@ -145,7 +145,7 @@ const OrganizationList = () => {
           />
         ))}
       </ScrollMenu>
-    </Fragment>
+    </div>
   );
 };
 

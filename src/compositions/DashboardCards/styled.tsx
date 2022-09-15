@@ -5,6 +5,7 @@ export const Container = styled.div`
     flex-direction Row;
     overflow-x: scroll;
     scrollbar-width: none;
+    margin-top: 30px;
 `;
 
 export const StyledCard = styled.div`

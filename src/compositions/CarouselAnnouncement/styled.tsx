@@ -49,7 +49,7 @@ export const AnnouncementContainer = styled.div`
 
 export const NoAnnouncementContainer = styled.div`
   width: 100%;
-  height: 400px;
+  height: 452px;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
@@ -63,8 +63,8 @@ export const NoAnnouncementContainer = styled.div`
 
 export const CarouselContainer = styled.div`
   width: 100%;
-  max-height: 400px;
-  min-height: 400px;
+  max-height: 452px;
+  min-height: 452px;
   background: #e0dffe;
   border-radius: 15px;
   box-shadow: 0px 5px 20px -5px rgba(43, 46, 74, 0.2);
