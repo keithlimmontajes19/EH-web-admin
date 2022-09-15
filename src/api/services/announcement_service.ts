@@ -3,6 +3,7 @@ import { ANNOUNCEMENT, ORGANIZATION } from "../constants";
 
 const annoucement_services = {
   getAnnouncement: () => api.get(`${ANNOUNCEMENT}`),
+  getAnnouncementByUser: () => api.get(`${ANNOUNCEMENT}/mobile/user`),
   getOrganizations: () => api.get(`${ORGANIZATION}`),
   postAnnouncement: (payload: any) =>
     api.post(`${ANNOUNCEMENT}/create`, payload),

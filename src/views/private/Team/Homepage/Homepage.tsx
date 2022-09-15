@@ -1,28 +1,15 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect } from "react";
 
-import {
-  Container,
-  StyledTable,
-  StyledHeader,
-  StyledRecent,
-  TabContainer,
-  StyledTabtitle,
-  TabitemContainer,
-  AnnouncementContainer,
-  NoAnnouncementContainer,
-} from "./styled";
-
+import { Row, Col } from "antd";
 import { columns } from "./columns";
-import { Row, Col, Tabs } from "antd";
+import { Container, StyledTable, AnnouncementContainer } from "./styled";
 
 /* reducer action */
 import { RootState } from "ducks/store";
 import { useDispatch, useSelector } from "react-redux";
 import { getAnnouncements } from "ducks/announcement/actionCreator";
 
-import NO_ANNOUNCEMENT from "assets/images/noannouncement.png";
-
-const { TabPane } = Tabs;
+import CarouselAnnouncement from "compositions/CarouselAnnouncement";
 
 const Homepage = (): ReactElement => {
   const dispatch = useDispatch();
@@ -51,30 +38,9 @@ const Homepage = (): ReactElement => {
         </Col>
 
         <Col span={12}>
-          <NoAnnouncementContainer>
-            <img src={NO_ANNOUNCEMENT} alt="image" />
-            <StyledHeader>No Announcement</StyledHeader>
-          </NoAnnouncementContainer>
+          <CarouselAnnouncement />
         </Col>
       </Row>
-
-      {/* <StyledRecent>Recents</StyledRecent>
-      <TabContainer>
-        <Tabs defaultActiveKey="1">
-          <TabPane key={1} tab={<StyledTabtitle>Visited</StyledTabtitle>}>
-            <TabitemContainer>No results found.</TabitemContainer>
-          </TabPane>
-          <TabPane tab={<StyledTabtitle>Worked on</StyledTabtitle>} key={2}>
-            <TabitemContainer>No results found.</TabitemContainer>
-          </TabPane>
-          <TabPane tab={<StyledTabtitle>Draft</StyledTabtitle>} key={3}>
-            <TabitemContainer>No results found.</TabitemContainer>
-          </TabPane>
-          <TabPane tab={<StyledTabtitle>Started</StyledTabtitle>} key={4}>
-            <TabitemContainer>No results found.</TabitemContainer>
-          </TabPane>
-        </Tabs>
-      </TabContainer> */}
     </Container>
   );
 };

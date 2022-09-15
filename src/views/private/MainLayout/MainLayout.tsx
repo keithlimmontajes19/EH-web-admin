@@ -52,10 +52,11 @@ const teamItems = [
 
 const learnItems = [
   { name: 'Courses', link: 'courses', icon: FolderOutlined },
-  { name: 'Lessons', link: 'lessons', icon: BookOutlined },
-  { name: 'Topics', link: 'topics', icon: FolderOpenOutlined },
-  { name: 'Quizzes', link: 'quizzes', icon: ClockCircleOutlined },
   { name: 'Reports', link: 'reports', icon: BarChartOutlined },
+
+  // { name: 'Lessons', link: 'lessons', icon: BookOutlined },
+  // { name: 'Topics', link: 'topics', icon: FolderOpenOutlined },
+  // { name: 'Quizzes', link: 'quizzes', icon: ClockCircleOutlined },
 ];
 
 const MainLayout = (): ReactElement => {

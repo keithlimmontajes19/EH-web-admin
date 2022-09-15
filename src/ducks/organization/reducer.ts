@@ -27,7 +27,7 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         organizations: {
-          data: [],
+          ...state.organizations,
           error: false,
           loading: true,
         },
