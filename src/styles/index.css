@@ -20,3 +20,15 @@
   width: 0;
   height: 0;
 }
+
+/* .react-player > div {
+  position: absolute;
+} */
+
+.video-wrapper {
+  /* height: 100%; */
+  width: 100%;
+  min-height: 225px !important;
+  max-height: 225px !important;
+  border-radius: 15px !important;
+ }

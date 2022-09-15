@@ -1,4 +1,4 @@
-import { TYPES } from './actionTypes';
+import { TYPES } from "./actionTypes";
 
 const INITIAL_STATE = {
   data: [],
@@ -6,6 +6,11 @@ const INITIAL_STATE = {
   error: false,
   organizations: [],
   org_loading: false,
+  announcement_by_user: {
+    data: [],
+    loading: false,
+    error: false,
+  },
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -62,6 +67,41 @@ const reducer = (state = INITIAL_STATE, action) => {
         ...state,
         organizations: [],
         org_loading: false,
+      };
+
+    /**
+     * ================
+     * Announcement reducer
+     * ================
+     * **/
+    case TYPES.LIST_ANNOUNCEMENT_BY_USER_REQUEST:
+      return {
+        ...state,
+        announcement_by_user: {
+          ...state.announcement_by_user,
+          loading: true,
+          error: false,
+        },
+      };
+
+    case TYPES.LIST_ANNOUNCEMENT_BY_USER_SUCCESS:
+      return {
+        ...state,
+        announcement_by_user: {
+          data: action.payload,
+          loading: false,
+          error: false,
+        },
+      };
+
+    case TYPES.LIST_ANNOUNCEMENT_BY_USER_FAILED:
+      return {
+        ...state,
+        announcement_by_user: {
+          data: [],
+          loading: false,
+          error: true,
+        },
       };
 
     default:

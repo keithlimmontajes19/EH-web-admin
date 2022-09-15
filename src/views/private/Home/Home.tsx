@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 import {
   StyledAdd,
@@ -9,24 +9,25 @@ import {
   StyledPopover,
   HeaderContainer,
   NoAnnouncementContainer,
-} from './styled';
-import { Col, Row } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+} from "./styled";
+import { Col, Row } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 
-import Rewards from 'compositions/Rewards';
-import IconImage from 'components/IconImage';
-import DashboardCards from 'compositions/DashboardCards';
-import OrganizationList from 'compositions/OrganizationList';
-import DashboardMostEnrolled from 'compositions/DashboardMostEnrolled';
+import Rewards from "compositions/Rewards";
+import IconImage from "components/IconImage";
+import DashboardCards from "compositions/DashboardCards";
+import OrganizationList from "compositions/OrganizationList";
+import DashboardMostEnrolled from "compositions/DashboardMostEnrolled";
 
-import USER_ICONS from 'assets/icons/card-employee.png';
-import ORG_ICONS from 'assets/icons/card-org.png';
-import NO_ANNOUNCEMENT from 'assets/images/noannouncement.png';
-import ProfileAddTeam from 'compositions/ProfileAddTeam';
+import USER_ICONS from "assets/icons/card-employee.png";
+import ORG_ICONS from "assets/icons/card-org.png";
+import NO_ANNOUNCEMENT from "assets/images/noannouncement.png";
+import ProfileAddTeam from "compositions/ProfileAddTeam";
+import CarouselAnnouncement from "compositions/CarouselAnnouncement";
 
 /* reducer */
-import { RootState } from 'ducks/store';
-import { useSelector } from 'react-redux';
+import { RootState } from "ducks/store";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   const { user_details }: any = useSelector<RootState>(
@@ -53,7 +54,7 @@ const Home = () => {
   return (
     <div>
       <HeaderContainer>
-        <StyledTitle>Hi {user_details?.profile?.firstName || ''}!</StyledTitle>
+        <StyledTitle>Hi {user_details?.profile?.firstName || ""}!</StyledTitle>
         {/* <StyledViewList>View List</StyledViewList> */}
         <StyledButton>
           <StyledAdd>USERS</StyledAdd>
@@ -68,7 +69,7 @@ const Home = () => {
                   marginTop: 0,
                   marginLeft: 5,
                   fontSize: 12,
-                  fontWeight: '900',
+                  fontWeight: "900",
                 }}
               />
             </StyledLink>
@@ -80,16 +81,14 @@ const Home = () => {
        * TO DO:
        * Remove until working or has API
        */}
-       
+
       <DashboardCards />
 
       <Row gutter={40}>
         <Col span={12}>
-          <NoAnnouncementContainer>
-            <img src={NO_ANNOUNCEMENT} alt="image" />
-            <StyledHeader>No Announcement</StyledHeader>
-          </NoAnnouncementContainer>
+          <CarouselAnnouncement />
         </Col>
+
         <Col span={12}>
           <Rewards />
         </Col>

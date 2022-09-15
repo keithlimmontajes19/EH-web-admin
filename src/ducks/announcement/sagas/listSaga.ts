@@ -41,7 +41,30 @@ export function* getOrganizations(): any {
   }
 }
 
+export function* listOfAnnouncementByUser(): any {
+  try {
+    const response = yield call(announcement_service.getAnnouncement);
+
+    yield put({
+      type: TYPES.LIST_ANNOUNCEMENT_BY_USER_SUCCESS,
+      payload: response?.data,
+    });
+
+    return Promise.resolve(response);
+  } catch (error) {
+    yield put({
+      type: TYPES.LIST_ANNOUNCEMENT_BY_USER_FAILED,
+    });
+
+    return Promise.reject(error);
+  }
+}
+
 export default function* watcher() {
   yield takeLatest(TYPES.LIST_ANNOUNCEMENT_REQUEST, listAnnouncement);
   yield takeLatest(TYPES.GET_ORGANIZATIONS_REQUEST, getOrganizations);
+  yield takeLatest(
+    TYPES.LIST_ANNOUNCEMENT_BY_USER_REQUEST,
+    listOfAnnouncementByUser
+  );
 }
