@@ -22,14 +22,14 @@ const headerActions = [
 const CreateForm = (props: PropsType): ReactElement => {
   const history = useHistory();
   const params: Params = useParams();
-  
+
   const handleButtonClick = (e) => {
     message.info("Click on left button.");
-  }
+  };
 
   const handleMenuClick = (e) => {
     message.info("Click on menu item.");
-  }
+  };
 
   const pushHistory = (route: string) => {
     history.push(route);

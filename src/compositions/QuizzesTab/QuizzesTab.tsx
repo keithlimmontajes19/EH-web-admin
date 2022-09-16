@@ -1,6 +1,6 @@
-import { ReactElement, useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
-import type { PropsType } from './types';
+import { ReactElement, useEffect, useState } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import type { PropsType } from "./types";
 
 import {
   FormText,
@@ -18,17 +18,17 @@ import {
   StyledButtonCancle,
   SelectStyledComponent,
   StyledQuestionContainer,
-} from './styled';
+} from "./styled";
 
-import { theme } from 'utils/colors';
-import { Col, Input, Layout, PageHeader, Row } from 'antd';
-import { PlusOutlined, PlusCircleFilled } from '@ant-design/icons';
+import { theme } from "utils/colors";
+import { Col, Input, Layout, PageHeader, Row } from "antd";
+import { PlusOutlined, PlusCircleFilled } from "@ant-design/icons";
 
-import { RootState } from 'ducks/store';
-import { postForm } from 'ducks/forms/actionCreator';
-import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from "ducks/store";
+import { postForm } from "ducks/forms/actionCreator";
+import { useDispatch, useSelector } from "react-redux";
 
-import Dropdown from 'components/Dropdown';
+import Dropdown from "components/Dropdown";
 
 const QuizzesTab = (props: PropsType): ReactElement => {
   const history = useHistory();
@@ -37,25 +37,25 @@ const QuizzesTab = (props: PropsType): ReactElement => {
 
   const [answer, setAnswer] = useState([]);
   const [data, setData]: any = useState({});
-  const [formType, setFormType] = useState('');
-  const [question, setQuestion] = useState('');
+  const [formType, setFormType] = useState("");
+  const [question, setQuestion] = useState("");
   const [addans, setAddanswere] = useState(false);
   const [questionAnswer, setQuestionAnswer] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const headerActions = [
     {
-      name: 'Quiz',
-      action: () => setFormType('Quiz'),
+      name: "Quiz",
+      action: () => setFormType("Quiz"),
     },
     {
-      name: 'Survey',
-      action: () => setFormType('Survey'),
+      name: "Survey",
+      action: () => setFormType("Survey"),
     },
   ];
 
   const showQuestion = () => setAddanswere(true);
-  const addAnwers = () => setAnswer([...answer, '']);
+  const addAnwers = () => setAnswer([...answer, ""]);
 
   const addQuestionAnswer = (item, checked) => {
     const values = Array.from(questionAnswer);
@@ -82,7 +82,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
         {
           name: data?.title,
           description: data?.description,
-          quiz_survey_type: 'multiple_choice',
+          quiz_survey_type: "multiple_choice",
           quiz_survey_questions: [
             {
               point: 0,
@@ -100,18 +100,17 @@ const QuizzesTab = (props: PropsType): ReactElement => {
   };
 
   const callback = (res) => {
-    console.log(res);
     setLoading(res?.loading);
 
     if (res?.success) {
-      history.push('/team/forms');
+      history.push("/team/forms");
     }
   };
 
   return (
-    <Layout style={{ paddingRight: 50, background: 'none' }}>
-      <StyledLinked onClick={() => history.push('/team/forms')}>
-        {'<'} Back to Forms
+    <Layout style={{ paddingRight: 50, background: "none" }}>
+      <StyledLinked onClick={() => history.push("/team/forms")}>
+        {"<"} Back to Forms
       </StyledLinked>
 
       <PageHeader />
@@ -121,13 +120,13 @@ const QuizzesTab = (props: PropsType): ReactElement => {
           gutter={16}
           align="middle"
           justify="center"
-          style={{ marginBottom: '30px' }}
+          style={{ marginBottom: "30px" }}
         >
           <Col span={17}>
             <StyledInput
               value={data.title}
               style={{ marginBottom: 0 }}
-              placeholder={'Add Title'}
+              placeholder={"Add Title"}
               onChange={(e) =>
                 setData((prev) => {
                   const tmp = { ...prev };
@@ -144,9 +143,9 @@ const QuizzesTab = (props: PropsType): ReactElement => {
               title={
                 <SelectStyledComponent>
                   <FormText
-                    background={formType.length ? '#2B2E4A' : 'darkgray'}
+                    background={formType.length ? "#2B2E4A" : "darkgray"}
                   >
-                    {formType.length ? formType : 'Select Type'}
+                    {formType.length ? formType : "Select Type"}
                   </FormText>
                 </SelectStyledComponent>
               }
@@ -156,7 +155,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
 
         <StyledTextArea
           value={data.description}
-          style={{ minHeight: '179px', marginBottom: 30 }}
+          style={{ minHeight: "179px", marginBottom: 30 }}
           placeholder="Add Description"
           onChange={(e) => {
             setData((prev) => {
@@ -170,19 +169,19 @@ const QuizzesTab = (props: PropsType): ReactElement => {
         <QuestionLayout>
           {addans === true ? (
             <StyledQuestionContainer>
-              <div style={{ margin: '10px 0px' }}>
+              <div style={{ margin: "10px 0px" }}>
                 <Row>
                   <Input
                     placeholder="Type Question Here.."
                     style={{
-                      width: '500px',
-                      borderTop: 'none',
-                      borderLeft: 'none',
-                      borderRight: 'none',
-                      color: '#4C4B7B',
-                      borderBottom: '1px solid #A2A1BD',
+                      width: "500px",
+                      borderTop: "none",
+                      borderLeft: "none",
+                      borderRight: "none",
+                      color: "#4C4B7B",
+                      borderBottom: "1px solid #A2A1BD",
                       fontSize: 18,
-                      fontFamily: 'DM Sans',
+                      fontFamily: "DM Sans",
                       fontWeight: 400,
                     }}
                     value={question}
@@ -198,7 +197,7 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                * */}
               {answer.map((item, index) => (
                 <Row key={index}>
-                  <div style={{ margin: '10px 0px' }}>
+                  <div style={{ margin: "10px 0px" }}>
                     <CheckboxStyled
                       onChange={(e) =>
                         addQuestionAnswer(item, e.target.checked)
@@ -206,14 +205,14 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                     >
                       <Input
                         style={{
-                          width: '500px',
-                          borderTop: 'none',
-                          borderLeft: 'none',
-                          borderRight: 'none',
-                          color: '#4C4B7B',
-                          borderBottom: '1px solid #A2A1BD',
+                          width: "500px",
+                          borderTop: "none",
+                          borderLeft: "none",
+                          borderRight: "none",
+                          color: "#4C4B7B",
+                          borderBottom: "1px solid #A2A1BD",
                           fontSize: 18,
-                          fontFamily: 'DM Sans',
+                          fontFamily: "DM Sans",
                           fontWeight: 400,
                         }}
                         placeholder="Type Answer Here..."
@@ -233,14 +232,12 @@ const QuizzesTab = (props: PropsType): ReactElement => {
                 <div onClick={addAnwers}>
                   <PlusCircleFilled
                     style={{
-                      fontSize: '25px',
+                      fontSize: "25px",
                       color: `${theme.PRIMARY}`,
-                      margin: '10px 0px 0px 30px',
+                      margin: "10px 0px 0px 30px",
                     }}
                   />
-                  <AnswerText style={{ cursor: 'pointer' }}>
-                    ANSWER
-                  </AnswerText>
+                  <AnswerText style={{ cursor: "pointer" }}>ANSWER</AnswerText>
                 </div>
               </Row>
 

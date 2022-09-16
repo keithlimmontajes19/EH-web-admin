@@ -1,8 +1,8 @@
-import { Button, Input, Layout, Select, Checkbox } from 'antd';
-import { theme } from 'utils/colors';
+import { Button, Input, Layout, Select, Checkbox } from "antd";
+import { theme } from "utils/colors";
 
-import styled from 'styled-components';
-import TextArea from 'antd/lib/input/TextArea';
+import styled from "styled-components";
+import TextArea from "antd/lib/input/TextArea";
 
 export const Container = styled.div``;
 
@@ -34,7 +34,7 @@ export const StyledButtonCancle = styled(Button)`
   cursor: pointer;
   border: none;
 
-  font-family: 'Red Hat Display', sans-serif;
+  font-family: "Red Hat Display", sans-serif;
   font-style: normal;
   font-size: 16px;
   line-height: 18px;
@@ -57,17 +57,17 @@ export const StyledText: any = styled.span`
 `;
 
 export const AnswerText = styled.span`
-  font-family: 'Red Hat Display';
+  font-family: "Red Hat Display";
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
   line-height: 28px;
   text-align: right;
-  color: #635FFA;
-`
+  color: #635ffa;
+`;
 
 export const StyledLinked = styled.a`
-  font-family: 'DM Sans';
+  font-family: "DM Sans";
   font-style: normal;
   font-weight: 500;
   font-size: 16px;
@@ -75,10 +75,11 @@ export const StyledLinked = styled.a`
   text-decoration-line: underline;
   color: #a2a1bd;
 `;
+
 export const StyledInput: any = styled(Input)`
   height: 48px;
   padding-left: 20px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
@@ -160,9 +161,9 @@ export const StyledButton: any = styled(Button)`
   height: 48px;
   box-sizing: border-box;
   border-radius: 8px;
-  border: ${({ b }: any) => (b ? b : 'none')};
+  border: ${({ b }: any) => (b ? b : "none")};
 
-  font-family: 'Red Hat Display', sans-serif;
+  font-family: "Red Hat Display", sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
@@ -176,10 +177,9 @@ export const StyledButton: any = styled(Button)`
   &:focus {
     background: ${({ bg }: any) => (bg ? bg : `#635ffa`)};
     color: ${({ c }: any) => (c ? c : `#fff`)};
-    border: ${({ b }: any) => (b ? b : 'none')};
+    border: ${({ b }: any) => (b ? b : "none")};
   }
 `;
-
 
 export const AddQuestionButton = styled.button`
   gap: 10px;
@@ -190,7 +190,7 @@ export const AddQuestionButton = styled.button`
 `;
 
 export const TextAddQuestion = styled.span`
-  font-family: 'Red Hat Display';
+  font-family: "Red Hat Display";
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
@@ -205,7 +205,7 @@ export const StyledTextArea: any = styled(TextArea)`
   box-shadow: inset 0px 0px 5px 2px rgba(99, 95, 250, 0.1);
   border-radius: 8px;
 
-  font-family: 'DM Sans';
+  font-family: "DM Sans";
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -228,7 +228,7 @@ export const SelectStyledComponent: any = styled.div`
 
 export const FormContainer = styled.div``;
 export const FormText: any = styled.span`
-  font-family: 'DM Sans', sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
