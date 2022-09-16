@@ -16,6 +16,7 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 import { StyledText } from "compositions/TableDashboards/styled";
+import { StyledLinked } from "compositions/QuizzesTab/styled";
 
 /* components */
 import Board from "compositions/Board";
@@ -285,11 +286,10 @@ const BuilderDashboard = () => {
 
   return (
     <RootContainer style={{ background: "none !important" }}>
-      <Breadcrumb>
-        <Breadcrumb.Item>
-          <Link to="/team/dashboards"> {`< Back to Dashboards`}</Link>
-        </Breadcrumb.Item>
-      </Breadcrumb>
+      <StyledLinked onClick={() => history.push("/team/dashboards")}>
+        {"<"} Back to Dashboards
+      </StyledLinked>
+
       {loading ? (
         <Loading />
       ) : (

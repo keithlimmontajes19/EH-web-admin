@@ -1,4 +1,7 @@
 import { ReactElement, useEffect, useState } from "react";
+import { Link, useHistory, useParams } from "react-router-dom";
+import type { PropsType } from "./types";
+
 import "draft-js/dist/Draft.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
@@ -14,13 +17,12 @@ import {
 import Text from "components/Text";
 
 import { useDispatch } from "react-redux";
-import type { PropsType } from "./types";
-import { EditorContainer, StyledButton, StyledButtonCancle } from "./styled";
-import { Link, useHistory, useParams } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
-
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
+import { ToastContainer } from "react-toastify";
+import { StyledLinked } from "compositions/QuizzesTab/styled";
+import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
+import { EditorContainer, StyledButton, StyledButtonCancle } from "./styled";
+
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 
@@ -165,14 +167,9 @@ const BuilderPage = (props: PropsType): ReactElement => {
         <Loading />
       ) : (
         <>
-          <Breadcrumb separator="<">
-            <Breadcrumb.Item> </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <Link to="/team/pages" style={{ textDecoration: "underline" }}>
-                Back to Pages
-              </Link>
-            </Breadcrumb.Item>
-          </Breadcrumb>
+          <StyledLinked onClick={() => history.push("/team/pages")}>
+            {"<"} Back to Pages
+          </StyledLinked>
 
           <PageHeader
             style={{ background: "none", paddingTop: 8 }}
