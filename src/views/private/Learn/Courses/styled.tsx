@@ -1,6 +1,6 @@
-import { Button, Tabs, Collapse } from "antd";
-import styled from "styled-components";
-import { CaretRightOutlined } from "@ant-design/icons";
+import { Button, Tabs, Collapse, Popconfirm } from 'antd';
+import { CaretRightOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
 
 export const StyledTabs: any = styled(Tabs)`
   .ant-tabs-ink-bar {
@@ -20,7 +20,7 @@ export const StyledCollapse = styled(Collapse).attrs(() => ({
 `;
 
 export const StyledText = styled.span`
-  font-family: "Red Hat Display";
+  font-family: 'Red Hat Display';
   font-style: normal;
   font-weight: 700;
   font-size: 18px;
@@ -29,7 +29,7 @@ export const StyledText = styled.span`
 `;
 
 export const StyledSubtitle = styled.p`
-  font-family: "DM Sans";
+  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -38,7 +38,7 @@ export const StyledSubtitle = styled.p`
 `;
 
 export const StyledLabel = styled.p`
-  font-family: "DM Sans";
+  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
@@ -47,7 +47,7 @@ export const StyledLabel = styled.p`
 `;
 
 export const StyledStar = styled.span`
-  font-family: "DM Sans", sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -55,6 +55,30 @@ export const StyledStar = styled.span`
   color: #a2a1bd;
 `;
 
-export const StyledLink = styled.a`
-  // margin-left: 20%;
+export const StyledPopover = styled(Popconfirm).attrs((props) => ({
+  ...props,
+  icon: '',
+  showOk: false,
+  showCancel: false,
+  placement: 'bottomLeft',
+  overlayInnerStyle: {
+    minWidth: 150,
+    minHeight: 100,
+    maxHeight: 126,
+    borderRadius: 15,
+    background: '#fff',
+    boxShadow: '0px 5px 20px -5px rgba(43, 46, 74, 0.2)',
+  },
+  okType: 'none',
+  okButtonProps: { style: { display: 'none' } },
+}))``;
+
+export const ColumnText = styled.a`
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 32px;
+  color: #4c4b7b;
+  margin-left: -10px;
 `;

@@ -1,32 +1,35 @@
-import { ReactElement, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Params } from "./types";
+import { ReactElement, useEffect, useState } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+import { Params } from './types';
 
 import {
+  ColumnText,
   StyledText,
   StyledStar,
-  StyledLink,
   StyledLabel,
+  StyledPopover,
   StyledSubtitle,
   StyledCollapse,
-} from "./styled";
-import { StyledTitle } from "views/private/Learn/Learn/styled";
-import { Layout, PageHeader, Avatar, Collapse, Row, Col } from "antd";
+} from './styled';
+import { StyledTitle } from 'views/private/Learn/Learn/styled';
+import { Layout, PageHeader, Avatar, Collapse, Row, Col, Tooltip } from 'antd';
 
-import StyledButton from "components/StyledButton";
-import BuilderCourse from "compositions/BuilderCourse";
-import CreateCourses from "compositions/CreateCourses";
+import StyledButton from 'components/StyledButton';
+import BuilderCourse from 'compositions/BuilderCourse';
+import CreateCourses from 'compositions/CreateCourses';
+import ModalCurriculum from 'compositions/ModalCurriculum';
 // import TableCourses from "compositions/TableCourses";
 
-import IconImage from "components/IconImage";
-import RatingStar from "components/RatingStar";
+import Loading from 'components/Loading';
+import IconImage from 'components/IconImage';
+import RatingStar from 'components/RatingStar';
 
-import NO_IMAGE from "assets/icons/no-purple-box.png";
-import COLOR_QUIZ from "assets/icons/color-quiz.png";
-import COLOR_KEBAB from "assets/icons/color-kebab.png";
-import COLOR_LESSON from "assets/icons/color-lesson.png";
-import COLOR_TOPICS from "assets/icons/color-topics.png";
-import COLOR_ASSIGNMENT from "assets/icons/color-assignment.png";
+import NO_IMAGE from 'assets/icons/no-purple-box.png';
+import COLOR_QUIZ from 'assets/icons/color-quiz.png';
+import COLOR_KEBAB from 'assets/icons/color-kebab.png';
+import COLOR_LESSON from 'assets/icons/color-lesson.png';
+import COLOR_TOPICS from 'assets/icons/color-topics.png';
+import COLOR_ASSIGNMENT from 'assets/icons/color-assignment.png';
 
 /* reducer action */
 import {
@@ -34,36 +37,79 @@ import {
   getMyCourses,
   deleteCourse,
   getCurriculum,
-} from "ducks/lms/actionCreator";
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
-import Loading from "components/Loading";
+} from 'ducks/lms/actionCreator';
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { EyeFilled, BuildFilled, DeleteFilled } from '@ant-design/icons';
 
 const { Panel } = Collapse;
 
 const Courses = (): ReactElement => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const params: Params = useParams();
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const { data, loading }: any = useSelector<RootState>((state) => state.lms);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [viewVisible, setViewVisible] = useState(false);
 
   useEffect(() => {
     dispatch(getMyCourses());
   }, []);
 
-  console.log("data", data);
+  const openView = (obj) => {
+    localStorage.setItem('courseId', obj?._id);
+
+    dispatch(getCurriculum(obj));
+    setTimeout(() => setViewVisible(true), 100);
+  };
+
+  const popoverContent = (item: any) => {
+    return (
+      <div style={{ marginLeft: 20 }}>
+        <ColumnText
+          onClick={() => {
+            localStorage.setItem('courseId', item?._id);
+            history.push('/learn/courses/builder/' + item?._id);
+          }}
+        >
+          <BuildFilled style={{ color: '#4C4B7B' }} />
+          &nbsp; &nbsp;Builder
+        </ColumnText>
+
+        <br />
+
+        <ColumnText onClick={() => openView(item)}>
+          <EyeFilled style={{ color: '#4C4B7B' }} />
+          &nbsp; &nbsp;View
+        </ColumnText>
+
+        <br />
+
+        <ColumnText
+          onClick={() => {
+            dispatch(deleteCourse({ idCourse: item?._id }));
+            dispatch(getMyCourses());
+          }}
+        >
+          <DeleteFilled style={{ color: '#4C4B7B' }} />
+          &nbsp; &nbsp;Delete
+        </ColumnText>
+      </div>
+    );
+  };
 
   const content = (
     <>
       {params.page ? (
         <BuilderCourse id={params.subpage} />
       ) : (
-        <Layout style={{ paddingRight: 50, background: "transparent" }}>
+        <Layout style={{ paddingRight: 50, background: 'transparent' }}>
           <PageHeader
             ghost={false}
             title={<StyledTitle>Courses</StyledTitle>}
-            style={{ background: "none", paddingTop: 8 }}
+            style={{ background: 'none', paddingTop: 8 }}
             extra={[
               <StyledButton w={130} onClick={() => setIsModalVisible(true)}>
                 CREATE
@@ -76,7 +122,7 @@ const Courses = (): ReactElement => {
               <Panel
                 key="1"
                 header={
-                  <Row style={{ width: "100%" }} gutter={20}>
+                  <Row style={{ width: '100%' }} gutter={20}>
                     <Col span={4}>
                       <Avatar
                         src={null}
@@ -102,7 +148,7 @@ const Courses = (): ReactElement => {
                           {item?.instructor?.name}
                         </StyledSubtitle>
 
-                        <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
                           <div>
                             <StyledLabel>
                               <IconImage
@@ -156,9 +202,17 @@ const Courses = (): ReactElement => {
                     </Col>
 
                     <Col flex={1}>
-                      <StyledLink>
+                      <Tooltip
+                        color="#fff"
+                        placement="bottomRight"
+                        title={popoverContent(item)}
+                        overlayInnerStyle={{
+                          width: 150,
+                          borderRadius: 15,
+                        }}
+                      >
                         <IconImage source={COLOR_KEBAB} width={16} height={4} />
-                      </StyledLink>
+                      </Tooltip>
                     </Col>
                   </Row>
                 }
@@ -167,6 +221,10 @@ const Courses = (): ReactElement => {
           ))}
 
           {/* <TableCourses /> */}
+          <ModalCurriculum
+            isVisible={viewVisible}
+            isCancel={() => setViewVisible(false)}
+          />
           <CreateCourses
             isModalVisible={isModalVisible}
             setIsModalVisible={setIsModalVisible}
