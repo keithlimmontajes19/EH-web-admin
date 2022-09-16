@@ -144,7 +144,6 @@ const Courses = (): ReactElement => {
                       <div>
                         <StyledText>{item?.title}</StyledText>
                         <StyledSubtitle>
-                          {item?.instructor?.title}&nbsp;
                           {item?.instructor?.name}
                         </StyledSubtitle>
 
