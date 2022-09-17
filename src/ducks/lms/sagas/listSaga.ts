@@ -1,14 +1,14 @@
-import { takeLatest, put, call } from "redux-saga/effects";
-import { TYPES } from "../actionTypes";
+import { takeLatest, put, call } from 'redux-saga/effects';
+import { TYPES } from '../actionTypes';
 
-import lms_service from "api/services/lms_service";
+import lms_service from 'api/services/lms_service';
 
-export const topicId = async () => await localStorage.getItem("topicId");
-export const getUserId = async () => await localStorage.getItem("userId");
-export const courseId = async () => await localStorage.getItem("courseId");
-export const lessonId = async () => await localStorage.getItem("lessonId");
+export const topicId = async () => await localStorage.getItem('topicId');
+export const getUserId = async () => await localStorage.getItem('userId');
+export const courseId = async () => await localStorage.getItem('courseId');
+export const lessonId = async () => await localStorage.getItem('lessonId');
 export const organizationId = async () =>
-  await localStorage.getItem("organizationId");
+  await localStorage.getItem('organizationId');
 
 const filterCourses = (course: Array<any>, status: string) => {
   const courses = [];
@@ -28,8 +28,8 @@ export function* getMyCourses(): any {
 
     const data = response?.data?.data;
     const myCourses = data.length ? data : [];
-    const ongoingCourses = filterCourses(data, "ongoing");
-    const completedCourses = filterCourses(data, "completed");
+    const ongoingCourses = filterCourses(data, 'ongoing');
+    const completedCourses = filterCourses(data, 'completed');
 
     yield put({
       type: TYPES.GET_COURSES_LIST_SUCCESS,
@@ -108,7 +108,7 @@ export function* getLesson({ payload }: any): any {
       payload: response?.data?.data,
     });
 
-    callback(response?.data?.data);
+    callback(response?.data?.data, id);
     return Promise.resolve(response);
   } catch (error) {
     yield put({

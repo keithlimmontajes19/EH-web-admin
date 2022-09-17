@@ -82,3 +82,12 @@ export const ColumnText = styled.a`
   color: #4c4b7b;
   margin-left: -10px;
 `;
+
+export const StyledLessonText = styled.span`
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  color: #4c4b7b;
+  margin-top: -2.5px;
+`;
