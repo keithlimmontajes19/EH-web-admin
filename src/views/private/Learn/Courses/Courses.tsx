@@ -47,6 +47,7 @@ import { RootState } from 'ducks/store';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { EyeFilled, BuildFilled, DeleteFilled } from '@ant-design/icons';
+import Lessons from '../Lessons';
 
 const { Panel } = Collapse;
 
@@ -125,8 +126,27 @@ const Courses = (): ReactElement => {
     }
   };
 
-  const contentCallback = (content, id) => {
-    console.log(content, id);
+  const contentCallback = (content, lessonid, courseid) => {
+    let copyData: any = Array.from(courses);
+
+    if (content) {
+      const course = copyData.find((x) => x._id === courseid);
+      const lesson = course?.lessons.find((y) => y._id === lessonid);
+      const contents = { ...lesson, contents: content };
+
+      const findCourseIndex = copyData.findIndex((x) => x._id === courseid);
+      const findLessonIndex = course?.lessons.findIndex(
+        (y) => y._id === lessonid
+      );
+
+      if (findCourseIndex !== undefined && findLessonIndex !== undefined) {
+        copyData[findCourseIndex].lessons[findLessonIndex] = {
+          ...contents,
+        };
+
+        setCourses(copyData);
+      }
+    }
   };
 
   const content = (
@@ -274,7 +294,8 @@ const Courses = (): ReactElement => {
                           if (event?.length) {
                             dispatch(
                               getContents({
-                                id: lesson?._id,
+                                courseid: item?._id,
+                                lessonid: lesson?._id,
                                 callback: contentCallback,
                               })
                             );
@@ -296,26 +317,34 @@ const Courses = (): ReactElement => {
                             <StyledLessonText>{lesson?.title}</StyledLessonText>
                           }
                         >
-                          <div
-                            style={{
-                              padding: 8,
-                              width: '100%',
-                              alignSelf: 'center',
-                              borderTop: '1px solid #f0f0f3',
-                            }}
-                          />
+                          {(lesson?.contents || []).map((content) => {
+                            return (
+                              <div key={content?._id} style={{ padding: 10 }}>
+                                <div
+                                  style={{
+                                    padding: 8,
+                                    width: '100%',
+                                    alignSelf: 'center',
+                                    borderTop: '1px solid #f0f0f3',
+                                  }}
+                                />
 
-                          <IconImage
-                            width={20}
-                            height={20}
-                            source={QUIZ_PINK}
-                          />
+                                <IconImage
+                                  width={20}
+                                  height={20}
+                                  source={
+                                    content?.contentType === 'topic'
+                                      ? TOPIC_PINK
+                                      : QUIZ_PINK
+                                  }
+                                />
 
-                          <StyledContentText>
-                            A dog is a type of domesticated animal. Known for
-                            its loyalty and faithfulness, it can be found as a
-                            welcome guest in many households across the world.
-                          </StyledContentText>
+                                <StyledContentText>
+                                  {content?.title}
+                                </StyledContentText>
+                              </div>
+                            );
+                          })}
                         </Panel>
                       </Collapse>
                     );
@@ -345,8 +374,7 @@ const Courses = (): ReactElement => {
     </>
   );
 
-  // return loading ? <Loading /> : content;
-  return content;
+  return loading ? <Loading /> : content;
 };
 
 export default Courses;

@@ -148,17 +148,17 @@ export function* getSingleLesson({ payload }: any): any {
 }
 
 export function* getLessonDetails({ payload }: any): any {
-  const { id, callback = () => {} } = payload;
+  const { lessonid, courseid, callback = () => {} } = payload;
 
   try {
-    const response = yield call(lms_service.getLessonDetails, id);
+    const response = yield call(lms_service.getLessonDetails, lessonid);
 
     yield put({
       type: TYPES.GET_CONTENTS_LIST_SUCCESS,
       payload: response?.data?.data,
     });
 
-    callback(response?.data?.data, id);
+    callback(response?.data?.data, lessonid, courseid);
 
     return Promise.resolve(response);
   } catch (error) {
