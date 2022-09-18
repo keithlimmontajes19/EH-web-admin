@@ -11,6 +11,7 @@ import {
   StyledSubtitle,
   StyledCollapse,
   StyledLessonText,
+  StyledContentText,
 } from './styled';
 import { StyledTitle } from 'views/private/Learn/Learn/styled';
 import { Layout, PageHeader, Avatar, Collapse, Row, Col, Tooltip } from 'antd';
@@ -26,6 +27,8 @@ import IconImage from 'components/IconImage';
 import RatingStar from 'components/RatingStar';
 
 import NO_IMAGE from 'assets/icons/no-purple-box.png';
+import TOPIC_PINK from 'assets/icons/topic-pink.png';
+import QUIZ_PINK from 'assets/icons/quiz-pink.png';
 import COLOR_QUIZ from 'assets/icons/color-quiz.png';
 import COLOR_KEBAB from 'assets/icons/color-kebab.png';
 import COLOR_LESSON from 'assets/icons/color-lesson.png';
@@ -34,6 +37,7 @@ import COLOR_ASSIGNMENT from 'assets/icons/color-assignment.png';
 
 /* reducer action */
 import {
+  getContents,
   getLessons,
   getMyCourses,
   deleteCourse,
@@ -121,6 +125,10 @@ const Courses = (): ReactElement => {
     }
   };
 
+  const contentCallback = (content, id) => {
+    console.log(content, id);
+  };
+
   const content = (
     <>
       {params.page ? (
@@ -155,7 +163,7 @@ const Courses = (): ReactElement => {
                     <Row style={{ width: '100%' }} gutter={20}>
                       <Col span={4}>
                         <Avatar
-                          src={null}
+                          src={item?.preview}
                           size="large"
                           shape="square"
                           style={{
@@ -256,31 +264,58 @@ const Courses = (): ReactElement => {
                     </Row>
                   }
                 >
-                  {(item?.lessons || []).map((lesson, index) => {
-                    let propsLessons = {};
-
-                    // propsLessons = {
-                    //   expandIcon: ({ isActive }) => <></>,
-                    // };
-
+                  {(item?.lessons || []).map((lesson) => {
                     return (
                       <Collapse
                         accordion
-                        key={index}
                         bordered={false}
-                        {...propsLessons}
+                        key={lesson?._id}
+                        onChange={(event) => {
+                          if (event?.length) {
+                            dispatch(
+                              getContents({
+                                id: lesson?._id,
+                                callback: contentCallback,
+                              })
+                            );
+                          }
+                        }}
                       >
+                        <div
+                          style={{
+                            marginLeft: 18,
+                            width: '97.5%',
+                            alignSelf: 'center',
+                            borderTop: '1px solid #f0f0f3',
+                          }}
+                        />
+
                         <Panel
-                          key={item?._id}
+                          key={lesson?._id}
                           header={
                             <StyledLessonText>{lesson?.title}</StyledLessonText>
                           }
                         >
-                          <p style={{ paddingLeft: 35 }}>
+                          <div
+                            style={{
+                              padding: 8,
+                              width: '100%',
+                              alignSelf: 'center',
+                              borderTop: '1px solid #f0f0f3',
+                            }}
+                          />
+
+                          <IconImage
+                            width={20}
+                            height={20}
+                            source={QUIZ_PINK}
+                          />
+
+                          <StyledContentText>
                             A dog is a type of domesticated animal. Known for
                             its loyalty and faithfulness, it can be found as a
                             welcome guest in many households across the world.
-                          </p>
+                          </StyledContentText>
                         </Panel>
                       </Collapse>
                     );

@@ -148,39 +148,24 @@ export function* getSingleLesson({ payload }: any): any {
 }
 
 export function* getLessonDetails({ payload }: any): any {
-  const { idList, callback = () => {} } = payload;
-  let idLesson;
-  let idCourse;
-  let idOrg;
-  if (idList) {
-    idLesson = idList.idLesson;
-    idCourse = idList.idCourse;
-    idOrg = idList.idOrg;
-  } else {
-    idLesson = yield call(lessonId);
-    idCourse = yield call(courseId);
-    idOrg = yield call(organizationId);
-  }
+  const { id, callback = () => {} } = payload;
 
   try {
-    const response = yield call(
-      lms_service.getLessonDetails,
-      idOrg,
-      idCourse,
-      idLesson
-    );
+    const response = yield call(lms_service.getLessonDetails, id);
 
     yield put({
       type: TYPES.GET_CONTENTS_LIST_SUCCESS,
       payload: response?.data?.data,
     });
 
-    callback(response?.data?.data);
+    callback(response?.data?.data, id);
+
     return Promise.resolve(response);
   } catch (error) {
     yield put({
       type: TYPES.GET_CONTENTS_LIST_FAILED,
     });
+
     callback(false);
     return Promise.reject(error);
   }
