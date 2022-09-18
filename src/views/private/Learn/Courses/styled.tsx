@@ -82,3 +82,25 @@ export const ColumnText = styled.a`
   color: #4c4b7b;
   margin-left: -10px;
 `;
+
+export const StyledLessonText = styled.span`
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  color: #4c4b7b;
+  margin-top: -2.5px;
+  // border-top: 1px solid #f0f0f3;
+  width: 100%;
+`;
+
+export const StyledContentText = styled.span`
+  font-family: 'DM Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+  color: #4c4b7b;
+  margin-left: 15px;
+  // border-top: 1px solid #f0f0f3;
+`;

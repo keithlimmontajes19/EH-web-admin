@@ -19,14 +19,14 @@ const auth_services = {
     api.get(
       `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`
     ),
-  getLessonDetails: (
-    organizationId: string,
-    courseId: string,
-    lessonId: string
-  ) =>
-    api.get(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}`
-    ),
+
+  /**
+   * @param lessonId
+   * @returns List of Lessons Contents
+   */
+  getLessonDetails: (lessonId: string) =>
+    api.get(`/lessons/${lessonId}/contents`),
+
   getQuizQuestions: (
     organizationId: string,
     courseId: string,
@@ -128,7 +128,7 @@ const auth_services = {
     api.delete(
       `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${contentId}/contents/${topicId}`
     ),
-    
+
   updateQuizQuestion: (
     payload: any,
     organizationId: string,
@@ -182,21 +182,24 @@ const auth_services = {
       `${ORGANIZATION}/${organizationId}/course-reports/user/${userId}/course/${courseId}`
     ),
   getUserDetails: (userId: string) => api.get(`${USERS}/${userId}`),
-  uploadCoursePreview: (courseId: string) => api.patch(`courses/${courseId}/preview`),
+  uploadCoursePreview: (courseId: string) =>
+    api.patch(`courses/${courseId}/preview`),
 
   /**
    * NEW ENDPOINTS KEITH
    * TOPIC QUIZ
    **/
-   getTopic: (id: any) => api.get(`/topics/${id}`),
-   deleteTopic: (id: string) => api.delete(`/topics/${id}`),
-   postTopic: (payload: any) => api.post(`/topics`, payload),
-   updateTopic: (id: string, payload: any ) => api.patch(`/topics/${id}`, payload),
+  getTopic: (id: any) => api.get(`/topics/${id}`),
+  deleteTopic: (id: string) => api.delete(`/topics/${id}`),
+  postTopic: (payload: any) => api.post(`/topics`, payload),
+  updateTopic: (id: string, payload: any) =>
+    api.patch(`/topics/${id}`, payload),
 
-   getQuiz: (id: any) => api.get(`/quizzes/${id}`),
-   deleteQuiz: (id: string) => api.delete(`/quizzes/${id}`),
-   postQuiz: (payload: any) => api.post(`/quizzes`, payload),
-   updateQuiz: (id: string, payload: any ) => api.patch(`/quizzes/${id}`, payload),
+  getQuiz: (id: any) => api.get(`/quizzes/${id}`),
+  deleteQuiz: (id: string) => api.delete(`/quizzes/${id}`),
+  postQuiz: (payload: any) => api.post(`/quizzes`, payload),
+  updateQuiz: (id: string, payload: any) =>
+    api.patch(`/quizzes/${id}`, payload),
 };
 
 export default auth_services;
