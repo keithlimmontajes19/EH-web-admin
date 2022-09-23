@@ -100,6 +100,7 @@ export function* getCurrilumDetails({ payload }: any): any {
 export function* getLesson({ payload }: any): any {
   const { id, callback = () => {} } = payload;
 
+  callback([], null, true);
   try {
     const response = yield call(lms_service.getLesson, id);
 
@@ -108,14 +109,14 @@ export function* getLesson({ payload }: any): any {
       payload: response?.data?.data,
     });
 
-    callback(response?.data?.data, id);
+    callback(response?.data?.data, id, false);
     return Promise.resolve(response);
   } catch (error) {
     yield put({
       type: TYPES.GET_LESSONS_LIST_FAILED,
     });
 
-    callback(false);
+    callback(false, null, false);
     return Promise.reject(error);
   }
 }
