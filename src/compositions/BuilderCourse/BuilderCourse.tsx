@@ -13,36 +13,34 @@ import {
 } from 'antd';
 import { PictureOutlined } from '@ant-design/icons';
 
+/* reducer and actions */
+import lmsService from 'api/services/lms_service';
 import { useDispatch } from 'react-redux';
 import { updateCourse } from 'ducks/lms/actionCreator';
 import { getCourse, postCourse } from 'ducks/lms/actionCreator';
-import lmsService from 'api/services/lms_service';
-
-import Text from 'components/Text';
-import Input from 'components/Input';
-import Loading from 'components/Loading';
-import TreeCourse from 'compositions/TreeCourse';
-import StyledButton from 'components/StyledButton';
-import LessonTreeTable from 'compositions/LessonTreeTable';
 
 import { theme } from 'utils/colors';
 import { useHistory, useParams } from 'react-router-dom';
 import { Params } from 'views/private/Learn/Courses/types';
 
+import Input from 'components/Input';
+import Loading from 'components/Loading';
 import IconImage from 'components/IconImage';
+import TreeCourse from 'compositions/TreeCourse';
+import StyledButton from 'components/StyledButton';
 import NO_IMAGE from 'assets/icons/no-purple-box.png';
 
 const blankData = {
+  body: '',
   title: '',
+  points: '',
   description: '',
-  body: '&lt;html&gt; &lt;body&gt;&lt;/body&gt; &lt;/html&gt;',
   preview: {
     type: 'image',
   },
   instructor: {
     name: '',
   },
-  points: '',
 };
 
 const BuilderCourse = ({ id = '' }: any): ReactElement => {
@@ -51,7 +49,6 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
   const params: Params = useParams();
 
   const addNew = params.page === 'add';
-  const organizationId = history?.location?.state?.organization;
   const organizations = history?.location?.state?.organization;
 
   const [queue, setQueue] = useState(false);
@@ -74,7 +71,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     if (!addNew)
       dispatch(
         getCourse({
-          callback: defaultCallback,
+          callback: getCourseDetail,
         })
       );
     else setLoading(false);
@@ -87,33 +84,11 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     }
   }, [course]);
 
-  // const uploadFile = (signedUrl, file) => {
-  //   const getBlob = async (fileUri: any) => {
-  //     const resp = await fetch(fileUri);
-  //     const fileBody = await resp.blob();
-  //     return fileBody;
-  //   };
-  //   const reader = new FileReader();
-  //   reader.onloadend = async () => {
-  //     const formData = new FormData();
-  //     formData.append('file', file);
-  //     const fileBlob = await getBlob(reader.result);
-
-  //     const response = await fetch(
-  //       new Request(signedUrl, {
-  //         method: 'PUT',
-  //         body: fileBlob,
-  //         headers: new Headers({ 'Content-Type': file.type }),
-  //       })
-  //     );
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
-
-  const defaultCallback = (res) => {
-    if (!res) return;
-    setCourse(res.data);
-    setLoading(false);
+  const getCourseDetail = (res) => {
+    if (res) {
+      setCourse(res?.data);
+      setLoading(false);
+    }
   };
 
   const setCourseInfo = () => {
@@ -121,19 +96,23 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
       dispatch(
         postCourse({
           data: { ...course, organizations, description: '&nan' },
-          callback: () => {},
+          callback: (res) => {
+            if (res) {
+              course._id = res?._id || '';
+            }
+          },
         })
       );
       setQueue(false);
+
       return;
     }
 
     localStorage.setItem('courseId', course?._id);
 
-    const { type, ref }: any = file;
+    const { type }: any = file;
     const callback = async (res) => {
       if (!res) return;
-      // if (type) uploadFile(res.uploadSignedUrl, ref);
     };
 
     dispatch(
@@ -153,27 +132,11 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     return;
   };
 
-  const MediaPreview = () => (
-    <div onClick={() => setFileUrl('')}>
-      <Avatar
-        src={fileUrl}
-        size="large"
-        shape="square"
-        style={{
-          width: 150,
-          minHeight: 100,
-          maxHeight: 100,
-          borderRadius: 15,
-        }}
-        icon={<IconImage source={NO_IMAGE} width={70} height={61} />}
-      />
-    </div>
-  );
-
   /**
    *================
    * @returns
-   * FILES UPLOAD
+   * FILE UPLOAD
+   * COURSE PREVIEW PHOTO
    * ===============
    */
   const baseURL = 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload';
@@ -191,6 +154,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
       UploadCoverPhoto(info);
       handleUpload(type, file);
       setFileUrl(info?.file?.response?.data?.url);
+
       message.success(`${info.file.name} file uploaded successfully`);
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
@@ -207,26 +171,39 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
             Accept: 'application/json',
             'Content-Type': 'multipart/form-data',
           },
-        })
-          .then(() => {
-            setLoading(false);
-          })
-          .catch((err) => console.log('error', err));
+        }).then(() => setLoading(false));
       });
     }
   };
+
+  const MediaPreview = () => (
+    <div onClick={() => setFileUrl('')}>
+      <Avatar
+        src={fileUrl}
+        size="large"
+        shape="square"
+        style={{
+          width: 150,
+          minHeight: 100,
+          maxHeight: 100,
+          borderRadius: 15,
+        }}
+        icon={<IconImage source={NO_IMAGE} width={70} height={61} />}
+      />
+    </div>
+  );
 
   return (
     <Layout style={{ paddingRight: 50, background: 'transparent' }}>
       <PageHeader
         ghost={false}
+        footer={<StyledAddCourse>Add Course</StyledAddCourse>}
+        style={{ background: 'none', paddingTop: 8, paddingBottom: 30 }}
         title={
           <StyledLinkBack onClick={() => history.push('/learn/courses')}>
             {'< '}Back to Courses
           </StyledLinkBack>
         }
-        footer={<StyledAddCourse>Add Course</StyledAddCourse>}
-        style={{ background: 'none', paddingTop: 8, paddingBottom: 30 }}
       />
 
       {loading ? (
@@ -237,13 +214,10 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
         >
           <Form
             initialValues={{
-              t: course?.title === 'NaN$' ? '' : course?.title,
-              d: course?.description === 'NaN$' ? '' : course?.description,
-              a:
-                course?.instructor?.name === 'NaN$'
-                  ? ''
-                  : course?.instructor?.name,
-              p: course?.points || '',
+              t: course?.title,
+              p: course?.points,
+              d: course?.description,
+              a: course?.instructor?.name,
             }}
           >
             <Row>
@@ -269,7 +243,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
               <Col flex={0.5} />
 
               <Col>
-                <Form.Item name="p">
+                <Form.Item>
                   <Upload
                     {...uploadProps}
                     accept="image/*"
@@ -292,7 +266,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
             <Row justify="space-between">
               <Col flex={30}>
                 <Form.Item
-                  name="d"
+                  name="a"
                   rules={[{ required: true, message: 'Enter a author.' }]}
                 >
                   <Input
@@ -304,6 +278,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
                           name: e.target.value,
                           title: prev.instructor.title,
                         };
+
                         return prev;
                       });
                     }}
@@ -315,13 +290,13 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
 
               <Col>
                 <Form.Item
-                  // name="p"
+                  name="p"
                   rules={[{ required: true, message: 'Enter points.' }]}
                 >
                   <Input
-                    isNumber={true}
                     min={0}
                     max={100}
+                    isNumber={true}
                     controls={false}
                     placeholder={'Points Earned'}
                     value={course?.points}
@@ -330,6 +305,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
                       setQueue(true);
                       setCourse((prev) => {
                         prev.points = e;
+
                         return prev;
                       });
                     }}
@@ -350,9 +326,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
             </StyledButton>
           </Row>
 
-          {addNew ? (
-            <></>
-          ) : (
+          {course?._id && (
             <TreeCourse course={course} onAdd={onAdd} setOnAdd={setOnAdd} />
           )}
         </Layout>

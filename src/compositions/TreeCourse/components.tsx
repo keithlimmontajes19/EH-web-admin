@@ -98,7 +98,7 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
       onFinish={({ t, d }) => {
         const newObj = {
           title: t,
-          description: d,
+          description: '$nan',
           preview: { type: file.type ? file.type : 'video' },
           position: data.curriculum.length + 1,
           organizationId: localStorage.getItem('organizationId'),
@@ -113,19 +113,19 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
         name="t"
         rules={[{ required: true, message: 'Enter a title' }]}
       >
-        <Input placeholder="Lesson title" />
+        <Input placeholder="Lesson Title" />
       </Form.Item>
 
-      <Form.Item
+      {/* <Form.Item
         name="d"
         rules={[{ required: true, message: 'Enter a content' }]}
       >
         <TextArea style={{ minHeight: '179px' }} placeholder="Add Content" />
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item>
         <Row justify="space-between">
-          {file.type ? <MediaPreview /> : <MediaField />}
+          {/* {file.type ? <MediaPreview /> : <MediaField />} */}
           <Col>
             <Row justify="end">
               <Col>
@@ -246,7 +246,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
             />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             name="content_description"
             rules={[{ required: true, message: 'Add a Content' }]}
           >
@@ -254,11 +254,11 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
               style={{ minHeight: '179px' }}
               placeholder="Add Content"
             />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item>
             <Row justify={mode <= 2 ? 'space-between' : 'end'}>
-              {mode <= 2 ? (
+              {/* {mode <= 2 ? (
                 file.type ? (
                   <MediaPreview />
                 ) : (
@@ -266,7 +266,8 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
                 )
               ) : (
                 <></>
-              )}
+              )} */}
+              <div />
               <Col>
                 <Row justify="end">
                   <Col>

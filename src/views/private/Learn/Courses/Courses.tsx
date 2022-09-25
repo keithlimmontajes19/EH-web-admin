@@ -291,11 +291,13 @@ const Courses = (): ReactElement => {
                             borderRadius: 15,
                           }}
                         >
-                          <IconImage
-                            source={COLOR_KEBAB}
-                            width={16}
-                            height={4}
-                          />
+                          <div style={{ padding: 5 }}>
+                            <IconImage
+                              source={COLOR_KEBAB}
+                              width={16}
+                              height={4}
+                            />
+                          </div>
                         </Tooltip>
                       </Col>
                     </Row>

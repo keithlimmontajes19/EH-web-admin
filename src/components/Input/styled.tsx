@@ -39,8 +39,9 @@ export const StyledInputN: any = styled(InputNumber)`
   height: 60px;
   border: none;
   width: ${({ w = `100%` }: any) => w};
-  padding-left: 20px;
+  padding-left: 10px;
   // background: ${theme.PRIMARY_MID} !important;
+
   border-radius: ${({ br = `15` }: any) => br}px;
   border: none;
   display: flex;
@@ -48,7 +49,7 @@ export const StyledInputN: any = styled(InputNumber)`
 
   input {
     color: #4c4b7b !important;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 400;
 
     ::placeholder {
