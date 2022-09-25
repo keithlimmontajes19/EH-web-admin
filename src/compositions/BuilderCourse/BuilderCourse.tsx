@@ -2,16 +2,16 @@ import { ReactElement, useEffect, useState } from 'react';
 import { StyledLinkBack, StyledAddCourse, StyledCoverphoto } from './styled';
 
 import {
+  Row,
   Col,
   Form,
   Layout,
-  PageHeader,
-  Row,
-  Space,
+  Avatar,
   Upload,
   message,
+  PageHeader,
 } from 'antd';
-import { VideoCameraOutlined, PictureOutlined } from '@ant-design/icons';
+import { PictureOutlined } from '@ant-design/icons';
 
 import { useDispatch } from 'react-redux';
 import { updateCourse } from 'ducks/lms/actionCreator';
@@ -28,7 +28,9 @@ import LessonTreeTable from 'compositions/LessonTreeTable';
 import { theme } from 'utils/colors';
 import { useHistory, useParams } from 'react-router-dom';
 import { Params } from 'views/private/Learn/Courses/types';
+
 import IconImage from 'components/IconImage';
+import NO_IMAGE from 'assets/icons/no-purple-box.png';
 
 const blankData = {
   title: '',
@@ -63,8 +65,11 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
   );
 
   useEffect(() => {
+    setFileUrl(course?.preview);
+  }, [course]);
+
+  useEffect(() => {
     localStorage.setItem('courseId', id);
-    localStorage.setItem('organizationId', organizationId);
 
     if (!addNew)
       dispatch(
@@ -82,28 +87,28 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     }
   }, [course]);
 
-  const uploadFile = (signedUrl, file) => {
-    const getBlob = async (fileUri: any) => {
-      const resp = await fetch(fileUri);
-      const fileBody = await resp.blob();
-      return fileBody;
-    };
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const formData = new FormData();
-      formData.append('file', file);
-      const fileBlob = await getBlob(reader.result);
+  // const uploadFile = (signedUrl, file) => {
+  //   const getBlob = async (fileUri: any) => {
+  //     const resp = await fetch(fileUri);
+  //     const fileBody = await resp.blob();
+  //     return fileBody;
+  //   };
+  //   const reader = new FileReader();
+  //   reader.onloadend = async () => {
+  //     const formData = new FormData();
+  //     formData.append('file', file);
+  //     const fileBlob = await getBlob(reader.result);
 
-      const response = await fetch(
-        new Request(signedUrl, {
-          method: 'PUT',
-          body: fileBlob,
-          headers: new Headers({ 'Content-Type': file.type }),
-        })
-      );
-    };
-    reader.readAsDataURL(file);
-  };
+  //     const response = await fetch(
+  //       new Request(signedUrl, {
+  //         method: 'PUT',
+  //         body: fileBlob,
+  //         headers: new Headers({ 'Content-Type': file.type }),
+  //       })
+  //     );
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
 
   const defaultCallback = (res) => {
     if (!res) return;
@@ -128,7 +133,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     const { type, ref }: any = file;
     const callback = async (res) => {
       if (!res) return;
-      if (type) uploadFile(res.uploadSignedUrl, ref);
+      // if (type) uploadFile(res.uploadSignedUrl, ref);
     };
 
     dispatch(
@@ -149,13 +154,20 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
   };
 
   const MediaPreview = () => (
-    <StyledButton
-      htmlType="button"
-      style={{ width: 150, height: 100 }}
-      onClick={() => setFile({ type: false, ref: {} })}
-    >
-      <IconImage source={fileUrl} width={150} height={100} />
-    </StyledButton>
+    <div onClick={() => setFileUrl('')}>
+      <Avatar
+        src={fileUrl}
+        size="large"
+        shape="square"
+        style={{
+          width: 150,
+          minHeight: 100,
+          maxHeight: 100,
+          borderRadius: 15,
+        }}
+        icon={<IconImage source={NO_IMAGE} width={70} height={61} />}
+      />
+    </div>
   );
 
   /**
@@ -328,7 +340,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
           </Form>
 
           <Row justify="space-between" style={{ marginBottom: 25 }}>
-            {file.type ? <MediaPreview /> : <div />}
+            <MediaPreview />
             <StyledButton
               p={'-10px 0 0 0'}
               onClick={setCourseInfo}
