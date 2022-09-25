@@ -1,13 +1,13 @@
-import { Input, InputNumber } from "antd";
-import styled from "styled-components";
-import { theme } from "utils/colors";
+import { Input, InputNumber } from 'antd';
+import styled from 'styled-components';
+import { theme } from 'utils/colors';
 
 export const StyledInput: any = styled(Input)`
   height: 60px;
   border: none;
   width: ${({ w = `100%` }: any) => w};
   padding-left: 20px;
-  background: ${theme.PRIMARY_MID} !important;
+  // background: ${theme.PRIMARY_MID} !important;
   color: #4c4b7b !important;
   border-radius: ${({ br = `15` }: any) => br}px;
   border: none;
@@ -40,7 +40,7 @@ export const StyledInputN: any = styled(InputNumber)`
   border: none;
   width: ${({ w = `100%` }: any) => w};
   padding-left: 20px;
-  background: ${theme.PRIMARY_MID} !important;
+  // background: ${theme.PRIMARY_MID} !important;
   border-radius: ${({ br = `15` }: any) => br}px;
   border: none;
   display: flex;

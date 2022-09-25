@@ -19,3 +19,13 @@ export const StyledAddCourse = styled.span`
   line-height: 30px;
   color: #4c4b7b;
 `;
+
+export const StyledCoverphoto = styled.span`
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #635ffa;
+`;

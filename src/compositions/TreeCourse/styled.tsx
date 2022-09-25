@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { theme } from 'utils/colors';
 
 export const getTreeStyle = (type, lastIofSect, i) => {
-  const mode =  type === 'section-head' ? 0 : type === 'lesson' ? 1 : i % 2 === 0 ? 2 : 3;
+  const mode =
+    type === 'section-head' ? 0 : type === 'lesson' ? 1 : i % 2 === 0 ? 2 : 3;
   const color = [
     theme.PRIMARY_MID,
     '#fff',
@@ -13,17 +14,22 @@ export const getTreeStyle = (type, lastIofSect, i) => {
   ];
 
   return {
-    background: color[mode],
-    fontSize: mode === 0 ? '20px' : '18px',
+    // background: color[mode],
+    background: '#fff',
+    boxShadow: '0px 4px 8px rgba(10, 130, 0, 0.05)',
+    border: '1px solid  rgba(10, 130, 0, 0.05)',
+
+    height: '60px',
+    color: '#4C4B7B',
+
+    zIndex: mode <= 1 ? 3 : 2,
     fontWeight: mode === 0 ? 600 : 400,
     marginTop: mode === 0 ? '15px' : '0',
+    fontSize: mode === 0 ? '20px' : '18px',
     marginBottom: mode === 0 || lastIofSect ? '15px' : '0',
-    color: theme.BLACK,
-    height: '60px',
-    borderTop: mode === 0 ? '1px solid #635FFA' : 'none',
-    borderBottom: mode === 0 ? '1px solid #635FFA' : 'none',
-    zIndex: mode <= 1 ? 3 : 2,
-    filter: `drop-shadow(0 0 ${mode <= 1 ? 2 : 1}px #635FFAEA)`,
+    // borderTop: mode === 0 ? '1px solid #635FFA' : 'none',
+    // borderBottom: mode === 0 ? '1px solid #635FFA' : 'none',
+    // filter: `drop-shadow(0 0 ${mode <= 1 ? 2 : 1}px #635FFAEA)`,
   };
 };
 

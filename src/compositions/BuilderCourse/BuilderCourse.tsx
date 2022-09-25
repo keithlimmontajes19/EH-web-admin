@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { StyledLinkBack, StyledAddCourse } from './styled';
+import { StyledLinkBack, StyledAddCourse, StyledCoverphoto } from './styled';
 
 import {
   Col,
@@ -105,28 +105,6 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     reader.readAsDataURL(file);
   };
 
-  const addNewCallback = async (response) => {
-    if (response) {
-      setCourse(response);
-      localStorage.setItem('courseId', response?._id);
-
-      await lmsService.uploadCoursePreview(response?._id).then((res) => {
-        fetch(res?.data?.data, {
-          body: file,
-          method: 'PUT',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-          .then(() => {
-            setLoading(false);
-          })
-          .catch((err) => console.log('error', err));
-      });
-    }
-  };
-
   const defaultCallback = (res) => {
     if (!res) return;
     setCourse(res.data);
@@ -138,7 +116,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
       dispatch(
         postCourse({
           data: { ...course, organizations, description: '&nan' },
-          callback: addNewCallback,
+          callback: () => {},
         })
       );
       setQueue(false);
@@ -181,26 +159,48 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
   );
 
   /**
-   *
-   * @returns FILES UPLOAD
+   *================
+   * @returns
+   * FILES UPLOAD
+   * ===============
    */
   const baseURL = 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload';
   const uploadProps = {
     maxCount: 1,
     name: 'file',
-    showUploadList: false,
     action: baseURL,
+    showUploadList: false,
   };
 
   const onChangeImageVideo = (info, type) => {
     if (info.file.status === 'done') {
       const file = info?.file?.originFileObj;
 
+      UploadCoverPhoto(info);
       handleUpload(type, file);
       setFileUrl(info?.file?.response?.data?.url);
       message.success(`${info.file.name} file uploaded successfully`);
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
+    }
+  };
+
+  const UploadCoverPhoto = async (response) => {
+    if (response) {
+      await lmsService.uploadCoursePreview(id).then((res) => {
+        fetch(res?.data?.data, {
+          body: response?.file?.originFileObj,
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+          .then(() => {
+            setLoading(false);
+          })
+          .catch((err) => console.log('error', err));
+      });
     }
   };
 
@@ -268,12 +268,9 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
                       c={theme.PRIMARY}
                       b={`2px solid ${theme.PRIMARY}`}
                       icon={<PictureOutlined />}
-                      htmlType="button"
                       style={{ width: 185 }}
                     >
-                      <Text fS={18} fW={500}>
-                        COVER PHOTO
-                      </Text>
+                      <StyledCoverphoto>COVER PHOTO</StyledCoverphoto>
                     </StyledButton>
                   </Upload>
                 </Form.Item>
@@ -306,7 +303,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
 
               <Col>
                 <Form.Item
-                  name="a"
+                  // name="p"
                   rules={[{ required: true, message: 'Enter points.' }]}
                 >
                   <Input

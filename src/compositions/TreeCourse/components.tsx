@@ -1,22 +1,22 @@
-import { Col, Form, Row, Space, Upload } from "antd";
-import { theme } from "utils/colors";
-import { VideoCameraOutlined, PictureOutlined } from "@ant-design/icons";
+import { Col, Form, Row, Space, Upload } from 'antd';
+import { theme } from 'utils/colors';
+import { VideoCameraOutlined, PictureOutlined } from '@ant-design/icons';
 
-import Text from "components/Text";
-import TextArea from "components/TextArea";
-import Input from "components/Input";
-import StyledButton from "components/StyledButton";
-import { ReactElement, useEffect, useState } from "react";
+import Text from 'components/Text';
+import TextArea from 'components/TextArea';
+import Input from 'components/Input';
+import StyledButton from 'components/StyledButton';
+import { ReactElement, useEffect, useState } from 'react';
 
 export const newData = (m: number, t: string, d: string, pos: number) => {
-  const mode = ["section-head", "lesson", "topic", "quiz"];
+  const mode = ['section-head', 'lesson', 'topic', 'quiz'];
 
   return {
     title: t,
     description: d,
     body: `&lt;html&gt; &lt;body&gt; &lt;p&gt;${d}&lt;/p&gt; &lt;/body&gt; &lt;/html&gt;`,
     preview: {
-      type: "video",
+      type: 'video',
     },
     contentType: mode[m],
     position: pos,
@@ -30,11 +30,11 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
 
   const MediaPreview = () => (
     <StyledButton
-      bg={"none"}
-      c={"red"}
-      b={`2px solid ${"red"}`}
+      bg={'none'}
+      c={'red'}
+      b={`2px solid ${'red'}`}
       icon={
-        file.type === "image" ? <PictureOutlined /> : <VideoCameraOutlined />
+        file.type === 'image' ? <PictureOutlined /> : <VideoCameraOutlined />
       }
       htmlType="button"
       onClick={() => {
@@ -42,7 +42,7 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
         setFile({ type: false, ref: {} });
       }}
     >
-      <Text fC={"red"} fS={18} fW={500}>
+      <Text fC={'red'} fS={18} fW={500}>
         {file.ref.name}
       </Text>
     </StyledButton>
@@ -54,12 +54,12 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
         maxCount={1}
         showUploadList={false}
         beforeUpload={(f) => {
-          if (/video/g.test(f.type)) handleUpload("video", f);
+          if (/video/g.test(f.type)) handleUpload('video', f);
           return false;
         }}
       >
         <StyledButton
-          bg={"none"}
+          bg={'none'}
           c={theme.PRIMARY}
           b={`2px solid ${theme.PRIMARY}`}
           icon={<VideoCameraOutlined />}
@@ -74,12 +74,12 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
         maxCount={1}
         showUploadList={false}
         beforeUpload={(f) => {
-          if (/image/g.test(f.type)) handleUpload("image", f);
+          if (/image/g.test(f.type)) handleUpload('image', f);
           return false;
         }}
       >
         <StyledButton
-          bg={"none"}
+          bg={'none'}
           c={theme.PRIMARY}
           b={`2px solid ${theme.PRIMARY}`}
           icon={<PictureOutlined />}
@@ -99,28 +99,28 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
         const newObj = {
           title: t,
           description: d,
-          preview: { type: file.type ? file.type : "video" },
+          preview: { type: file.type ? file.type : 'video' },
           position: data.curriculum.length + 1,
-          organizationId: localStorage.getItem("organizationId"),
-          courseId: localStorage.getItem("courseId"),
-          contentType: "lesson",
+          organizationId: localStorage.getItem('organizationId'),
+          courseId: localStorage.getItem('courseId'),
+          contentType: 'lesson',
         };
         handleDispatch(newObj, file);
       }}
-      style={{ marginTop: "10px" }}
+      style={{ marginTop: '10px' }}
     >
       <Form.Item
         name="t"
-        rules={[{ required: true, message: "Enter a title" }]}
+        rules={[{ required: true, message: 'Enter a title' }]}
       >
         <Input placeholder="Lesson title" />
       </Form.Item>
 
       <Form.Item
         name="d"
-        rules={[{ required: true, message: "Enter a content" }]}
+        rules={[{ required: true, message: 'Enter a content' }]}
       >
-        <TextArea style={{ minHeight: "179px" }} placeholder="Add Content" />
+        <TextArea style={{ minHeight: '179px' }} placeholder="Add Content" />
       </Form.Item>
 
       <Form.Item>
@@ -130,7 +130,7 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
             <Row justify="end">
               <Col>
                 <StyledButton
-                  bg={"none"}
+                  bg={'none'}
                   c={theme.BLACK}
                   htmlType="button"
                   onClick={() => setOnAdd(false)}
@@ -150,18 +150,18 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
 export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
   const { title: t, description: d } = data;
 
-  const modes = ["Section Heading", "Lesson", "Topic", "Quiz"];
+  const modes = ['Section Heading', 'Topic', 'Quiz', 'Assignment'];
   const [file, setFile]: any = useState({ type: false, ref: {} });
 
   const handleUpload = (type, ref) => setFile({ type, ref });
 
   const MediaPreview = () => (
     <StyledButton
-      bg={"none"}
-      c={"red"}
-      b={`2px solid ${"red"}`}
+      bg={'none'}
+      c={'red'}
+      b={`2px solid ${'red'}`}
       icon={
-        file.type === "image" ? <PictureOutlined /> : <VideoCameraOutlined />
+        file.type === 'image' ? <PictureOutlined /> : <VideoCameraOutlined />
       }
       htmlType="button"
       onClick={() => {
@@ -169,7 +169,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
         setFile({ type: false, ref: {} });
       }}
     >
-      <Text fC={"red"} fS={18} fW={500}>
+      <Text fC={'red'} fS={18} fW={500}>
         {file.ref.name}
       </Text>
     </StyledButton>
@@ -181,12 +181,12 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
         maxCount={1}
         showUploadList={false}
         beforeUpload={(f) => {
-          if (/video/g.test(f.type)) handleUpload("video", f);
+          if (/video/g.test(f.type)) handleUpload('video', f);
           return false;
         }}
       >
         <StyledButton
-          bg={"none"}
+          bg={'none'}
           c={theme.PRIMARY}
           b={`2px solid ${theme.PRIMARY}`}
           icon={<VideoCameraOutlined />}
@@ -202,12 +202,12 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
         maxCount={1}
         showUploadList={false}
         beforeUpload={(f) => {
-          if (/image/g.test(f.type)) handleUpload("image", f);
+          if (/image/g.test(f.type)) handleUpload('image', f);
           return false;
         }}
       >
         <StyledButton
-          bg={"none"}
+          bg={'none'}
           c={theme.PRIMARY}
           b={`2px solid ${theme.PRIMARY}`}
           icon={<PictureOutlined />}
@@ -232,7 +232,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
         cb(content_title, content_description, file)
       }
       initialValues={{ t: t, d: d }}
-      style={{ marginTop: "15px" }}
+      style={{ marginTop: '15px' }}
     >
       {mode !== 0 ? (
         <>
@@ -248,16 +248,16 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
 
           <Form.Item
             name="content_description"
-            rules={[{ required: true, message: "Add a Content" }]}
+            rules={[{ required: true, message: 'Add a Content' }]}
           >
             <TextArea
-              style={{ minHeight: "179px" }}
+              style={{ minHeight: '179px' }}
               placeholder="Add Content"
             />
           </Form.Item>
 
           <Form.Item>
-            <Row justify={mode <= 2 ? "space-between" : "end"}>
+            <Row justify={mode <= 2 ? 'space-between' : 'end'}>
               {mode <= 2 ? (
                 file.type ? (
                   <MediaPreview />
@@ -271,7 +271,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
                 <Row justify="end">
                   <Col>
                     <StyledButton
-                      bg={"none"}
+                      bg={'none'}
                       c={theme.BLACK}
                       htmlType="button"
                       onClick={() => setOnEdit([false])}
@@ -288,13 +288,13 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
       ) : (
         <div
           style={{
-            display: "flex",
-            height: "60px",
-            marginBottom: "20px",
-            justifyContent: "center",
+            display: 'flex',
+            height: '60px',
+            marginBottom: '20px',
+            justifyContent: 'center',
           }}
         >
-          <div style={{ width: "calc(100% - 332px)" }}>
+          <div style={{ width: 'calc(100% - 332px)' }}>
             <Form.Item
               name="content_title"
               rules={[
@@ -307,7 +307,7 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
 
           <Row align="middle" justify="end">
             <StyledButton
-              bg={"none"}
+              bg={'none'}
               c={theme.BLACK}
               htmlType="button"
               onClick={() => setOnEdit([false])}

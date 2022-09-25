@@ -85,9 +85,7 @@ const Learn = (): ReactElement => {
             <Col span={8} style={{ marginTop: 40 }} key={item?._id}>
               <StyledCard>
                 <Avatar
-                  src={
-                    item?.preview?.type === 'image' ? item?.preview?.ref : ''
-                  }
+                  src={item?.preview}
                   size={'large'}
                   shape="square"
                   style={{
