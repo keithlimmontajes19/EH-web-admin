@@ -1,4 +1,4 @@
-import {TYPES} from './actionTypes';
+import { TYPES } from './actionTypes';
 
 const INITIAL_STATE = {
   data: [],
@@ -133,7 +133,7 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         lesson: {
-          data: [],
+          ...state.lesson,
           loading: true,
         },
       };
@@ -219,7 +219,7 @@ const reducer = (state = INITIAL_STATE, action) => {
     /**
      * QUIZ QUESTIONS REDUCER
      * */
-     case TYPES.GET_QUIZ_QUESTIONS_REQUEST:
+    case TYPES.GET_QUIZ_QUESTIONS_REQUEST:
       return {
         ...state,
         quizQuestions: {
@@ -312,7 +312,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.GET_COURSE_FAILED:
       return {
         ...state,
@@ -340,7 +340,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.GET_ALL_COURSES_LIST_FAILED:
       return {
         ...state,
@@ -368,7 +368,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.PUT_UPDATE_COURSE_FAILED:
       return {
         ...state,
@@ -396,7 +396,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.POST_COURSE_FAILED:
       return {
         ...state,
@@ -424,7 +424,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.DELETE_COURSE_FAILED:
       return {
         ...state,
@@ -452,7 +452,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.PUT_UPDATE_LESSON_FAILED:
       return {
         ...state,
@@ -480,7 +480,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.POST_LESSON_FAILED:
       return {
         ...state,
@@ -508,7 +508,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.DELETE_LESSON_FAILED:
       return {
         ...state,
@@ -536,7 +536,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.PUT_UPDATE_LESSON_CONTENT_FAILED:
       return {
         ...state,
@@ -564,7 +564,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.POST_LESSON_CONTENT_FAILED:
       return {
         ...state,
@@ -592,7 +592,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.DELETE_LESSON_CONTENT_FAILED:
       return {
         ...state,
@@ -620,7 +620,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.PUT_UPDATE_TOPIC_CONTENT_FAILED:
       return {
         ...state,
@@ -648,7 +648,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.POST_TOPIC_CONTENT_FAILED:
       return {
         ...state,
@@ -676,7 +676,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.DELETE_TOPIC_CONTENT_FAILED:
       return {
         ...state,
@@ -704,7 +704,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.PUT_UPDATE_QUIZ_QUESTION_FAILED:
       return {
         ...state,
@@ -732,7 +732,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.POST_QUIZ_QUESTION_FAILED:
       return {
         ...state,
@@ -760,7 +760,7 @@ const reducer = (state = INITIAL_STATE, action) => {
           data: action.payload,
           loading: false,
         },
-      }
+      };
     case TYPES.DELETE_QUIZ_QUESTION_FAILED:
       return {
         ...state,
@@ -771,7 +771,7 @@ const reducer = (state = INITIAL_STATE, action) => {
       };
 
     default:
-      return {...state};  
+      return { ...state };
   }
 };
 

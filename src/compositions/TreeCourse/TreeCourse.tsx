@@ -1,13 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Modal, Row, Space } from 'antd';
+import { Row, Space } from 'antd';
 
-import {
-  EyeFilled,
-  PlusOutlined,
-  FormOutlined,
-  EditOutlined,
-  DeleteFilled,
-} from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteFilled } from '@ant-design/icons';
 
 import {
   getLessons,
@@ -28,8 +22,6 @@ import { useHistory } from 'react-router-dom';
 import { AddLesson, EditField, newData } from './components';
 import { getTreeStyle, StyledTree, StyledLesson, BuildIcon } from './styled';
 
-import Text from 'components/Text';
-import Loading from 'components/Loading';
 import Dropdown from 'components/Dropdown';
 import IconImage from 'components/IconImage';
 import StyledButton from 'components/StyledButton';
@@ -48,15 +40,10 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   const [onDragNode, setOnDragNode]: any = useState({});
   const [onEdit, setOnEdit]: any = useState([false]);
   const [isLoading, setIsLoading] = useState(false);
-  const [viewVisible, setViewVisible] = useState(false);
   const [expandedKeys, setExpandedKeys] = useState(['0-0', '0-0-0', '0-0-0-0']);
 
   const { lesson }: any = useSelector<RootState>((state) => state.lms);
   const { loading } = lesson;
-
-  useEffect(() => {
-    setIsLoading(loading);
-  }, [loading]);
 
   useEffect(() => {
     localStorage.setItem('courseId', course._id);
@@ -163,8 +150,6 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                     color: theme.SEMI_BLACK,
                   }}
                 >
-                  {/* <EyeFilled onClick={() => openView(course)} /> */}
-
                   <BuildIcon
                     src={hammericon}
                     color="#4C4B7B"
@@ -276,7 +261,6 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
           contentType: 'input',
           key: lvl + (i * 2 + 1),
           style: { display: 'flex' },
-          // style: getTreeStyle(_obj.contentType, lastIofSect, i),
         };
 
         /**
@@ -330,7 +314,6 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
           contentType: 'input',
           key: lvl + (i * 2 + 1),
           style: { display: 'flex' },
-          // style: getTreeStyle(mode, lastIofSect, i),
         });
 
         keysToExpand.push(_objMakeKey);
@@ -359,7 +342,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
     setExpandedKeys(keysToExpand);
   }, [data, onEdit]);
 
-  const addActions = (objKey, limitAction) => {
+  const addActions = (objKey, _limitAction) => {
     const modes = [
       { n: 'Section Heading', m: 0 },
       { n: 'Topic', m: 1 },
@@ -400,9 +383,9 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
 
     const copy = { ...data };
 
+    let ids;
     let toPaste;
     let branchLvl;
-    let ids;
 
     findAKey(copy, 'curriculum', dragKey, (obj, objKey, objI) => {
       const arr = [...obj[objKey]];
@@ -486,7 +469,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
     return true;
   };
 
-  const handleLessonDispatch = (obj, { type, ref }) => {
+  const handleLessonDispatch = (obj) => {
     const callback = (res: any) => {
       if (!res) return;
       const newArr = data?.curriculum.concat(res);
@@ -503,19 +486,8 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
     setOnAdd(false);
   };
 
-  const openView = (obj) => {
-    dispatch(getCurriculum(obj));
-
-    localStorage.setItem('courseId', obj?._id);
-    setViewVisible(true);
-  };
-
-  const closeView = () => {
-    setViewVisible(false);
-  };
-
   return (
-    <>
+    <div style={{ paddingBottom: 50 }}>
       <Row justify="space-between">
         <StyledButton
           w={180}
@@ -547,9 +519,7 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
         style={{ background: 'none ' }}
         onDragStart={({ node }) => setOnDragNode(node)}
       />
-
-      <ModalCurriculum isVisible={viewVisible} isCancel={closeView} />
-    </>
+    </div>
   );
 }
 
