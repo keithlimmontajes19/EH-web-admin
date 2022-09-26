@@ -1,15 +1,14 @@
-import { Col, Form, Row, Space, Upload } from 'antd';
+import { useState } from 'react';
+
 import { theme } from 'utils/colors';
-import { VideoCameraOutlined, PictureOutlined } from '@ant-design/icons';
+import { Col, Form, Row } from 'antd';
 
 import Text from 'components/Text';
-import TextArea from 'components/TextArea';
 import Input from 'components/Input';
 import StyledButton from 'components/StyledButton';
-import { ReactElement, useEffect, useState } from 'react';
 
 export const newData = (m: number, t: string, d: string, pos: number) => {
-  const mode = ['section-head', 'lesson', 'topic', 'quiz'];
+  const mode = ['section-head', 'topic', 'quiz', 'assignment'];
 
   return {
     title: t,
@@ -23,129 +22,72 @@ export const newData = (m: number, t: string, d: string, pos: number) => {
   };
 };
 
+/**
+ * @param param
+ * @returns
+ * FOR ADDING OF NEW LESSONS
+ */
 export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
   const [file, setFile]: any = useState({ type: false, ref: {} });
 
-  const handleUpload = (type, ref) => setFile({ type, ref });
-
-  const MediaPreview = () => (
-    <StyledButton
-      bg={'none'}
-      c={'red'}
-      b={`2px solid ${'red'}`}
-      icon={
-        file.type === 'image' ? <PictureOutlined /> : <VideoCameraOutlined />
-      }
-      htmlType="button"
-      onClick={() => {
-        console.log(file);
-        setFile({ type: false, ref: {} });
-      }}
-    >
-      <Text fC={'red'} fS={18} fW={500}>
-        {file.ref.name}
-      </Text>
-    </StyledButton>
-  );
-
-  const MediaField = () => (
-    <Space>
-      <Upload
-        maxCount={1}
-        showUploadList={false}
-        beforeUpload={(f) => {
-          if (/video/g.test(f.type)) handleUpload('video', f);
-          return false;
-        }}
-      >
-        <StyledButton
-          bg={'none'}
-          c={theme.PRIMARY}
-          b={`2px solid ${theme.PRIMARY}`}
-          icon={<VideoCameraOutlined />}
-          htmlType="button"
-        >
-          <Text fS={18} fW={500}>
-            Add Video
-          </Text>
-        </StyledButton>
-      </Upload>
-      <Upload
-        maxCount={1}
-        showUploadList={false}
-        beforeUpload={(f) => {
-          if (/image/g.test(f.type)) handleUpload('image', f);
-          return false;
-        }}
-      >
-        <StyledButton
-          bg={'none'}
-          c={theme.PRIMARY}
-          b={`2px solid ${theme.PRIMARY}`}
-          icon={<PictureOutlined />}
-          htmlType="button"
-        >
-          <Text fS={18} fW={500}>
-            Add Picture
-          </Text>
-        </StyledButton>
-      </Upload>
-    </Space>
-  );
-
   return (
     <Form
-      onFinish={({ t, d }) => {
+      onFinish={({ t }) => {
         const newObj = {
           title: t,
           description: '$nan',
-          preview: { type: file.type ? file.type : 'video' },
-          position: data.curriculum.length + 1,
-          organizationId: localStorage.getItem('organizationId'),
-          courseId: localStorage.getItem('courseId'),
           contentType: 'lesson',
+          position: data.curriculum.length + 1,
+          courseId: localStorage.getItem('courseId'),
+          preview: { type: file.type ? file.type : 'video' },
+          organizationId: localStorage.getItem('organizationId'),
         };
+
         handleDispatch(newObj, file);
       }}
       style={{ marginTop: '10px' }}
     >
-      <Form.Item
-        name="t"
-        rules={[{ required: true, message: 'Enter a title' }]}
-      >
-        <Input placeholder="Lesson Title" />
-      </Form.Item>
+      <Row>
+        <Col span={17}>
+          <Form.Item
+            name="t"
+            rules={[{ required: true, message: 'Enter a title' }]}
+          >
+            <Input placeholder="Lesson Title" />
+          </Form.Item>
+        </Col>
 
-      {/* <Form.Item
-        name="d"
-        rules={[{ required: true, message: 'Enter a content' }]}
-      >
-        <TextArea style={{ minHeight: '179px' }} placeholder="Add Content" />
-      </Form.Item> */}
-
-      <Form.Item>
-        <Row justify="space-between">
-          {/* {file.type ? <MediaPreview /> : <MediaField />} */}
-          <Col>
-            <Row justify="end">
-              <Col>
-                <StyledButton
-                  bg={'none'}
-                  c={theme.BLACK}
-                  htmlType="button"
-                  onClick={() => setOnAdd(false)}
-                >
-                  CANCEL
-                </StyledButton>
-                <StyledButton htmlType="submit">SAVE</StyledButton>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </Form.Item>
+        <Form.Item>
+          <Row justify="space-between">
+            <Col>
+              <Row justify="end">
+                <Col>
+                  <StyledButton
+                    bg={'none'}
+                    c={theme.BLACK}
+                    htmlType="button"
+                    onClick={() => setOnAdd(false)}
+                  >
+                    CANCEL
+                  </StyledButton>
+                  <StyledButton htmlType="submit">SAVE</StyledButton>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Form.Item>
+      </Row>
     </Form>
   );
 };
+
+/**
+ * @param param
+ * @returns
+ * THIS IS FOR CREATE OF CONTENT
+ * QUIZ, TOPIC, ASSIGNMENT
+ * FORMS
+ */
 
 export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
   const { title: t, description: d } = data;
@@ -153,172 +95,45 @@ export const EditField = ({ cb, data, mode = 2, setOnEdit, setTitle }) => {
   const modes = ['Section Heading', 'Topic', 'Quiz', 'Assignment'];
   const [file, setFile]: any = useState({ type: false, ref: {} });
 
-  const handleUpload = (type, ref) => setFile({ type, ref });
-
-  const MediaPreview = () => (
-    <StyledButton
-      bg={'none'}
-      c={'red'}
-      b={`2px solid ${'red'}`}
-      icon={
-        file.type === 'image' ? <PictureOutlined /> : <VideoCameraOutlined />
-      }
-      htmlType="button"
-      onClick={() => {
-        console.log(file);
-        setFile({ type: false, ref: {} });
-      }}
-    >
-      <Text fC={'red'} fS={18} fW={500}>
-        {file.ref.name}
-      </Text>
-    </StyledButton>
-  );
-
-  const MediaField = () => (
-    <Space>
-      <Upload
-        maxCount={1}
-        showUploadList={false}
-        beforeUpload={(f) => {
-          if (/video/g.test(f.type)) handleUpload('video', f);
-          return false;
-        }}
-      >
-        <StyledButton
-          bg={'none'}
-          c={theme.PRIMARY}
-          b={`2px solid ${theme.PRIMARY}`}
-          icon={<VideoCameraOutlined />}
-          htmlType="button"
-        >
-          <Text fS={18} fW={500}>
-            Add Video
-          </Text>
-        </StyledButton>
-      </Upload>
-
-      <Upload
-        maxCount={1}
-        showUploadList={false}
-        beforeUpload={(f) => {
-          if (/image/g.test(f.type)) handleUpload('image', f);
-          return false;
-        }}
-      >
-        <StyledButton
-          bg={'none'}
-          c={theme.PRIMARY}
-          b={`2px solid ${theme.PRIMARY}`}
-          icon={<PictureOutlined />}
-          htmlType="button"
-        >
-          <Text fS={18} fW={500}>
-            Add Picture
-          </Text>
-        </StyledButton>
-      </Upload>
-    </Space>
-  );
-
-  /**
-   * THIS IS FOR CREATE OF CONTENT
-   * QUIZ, TOPIC, ASSIGNMENT
-   * FORMS
-   */
   return (
     <Form
-      onFinish={({ content_title, content_description }) =>
+      style={{ marginTop: '15px' }}
+      initialValues={{ t: t, d: d }}
+      onFinish={({ content_title, content_description = '$nan' }) =>
         cb(content_title, content_description, file)
       }
-      initialValues={{ t: t, d: d }}
-      style={{ marginTop: '15px' }}
     >
-      {mode !== 0 ? (
-        <>
+      <div
+        style={{
+          height: '60px',
+          display: 'flex',
+          marginBottom: '20px',
+        }}
+      >
+        <Col span={15}>
           <Form.Item
             name="content_title"
             rules={[{ required: true, message: `Add a ${modes[mode]} Title` }]}
           >
             <Input
               placeholder={`${modes[mode]} Title`}
-              onChage={(event) => setTitle(event.target.value)}
+              style={{ border: '1px solid #cee1fa' }}
             />
           </Form.Item>
+        </Col>
 
-          {/* <Form.Item
-            name="content_description"
-            rules={[{ required: true, message: 'Add a Content' }]}
+        <Row align="middle" justify="end">
+          <StyledButton
+            bg={'none'}
+            c={theme.BLACK}
+            htmlType="button"
+            onClick={() => setOnEdit([false])}
           >
-            <TextArea
-              style={{ minHeight: '179px' }}
-              placeholder="Add Content"
-            />
-          </Form.Item> */}
-
-          <Form.Item>
-            <Row justify={mode <= 2 ? 'space-between' : 'end'}>
-              {/* {mode <= 2 ? (
-                file.type ? (
-                  <MediaPreview />
-                ) : (
-                  <MediaField />
-                )
-              ) : (
-                <></>
-              )} */}
-              <div />
-              <Col>
-                <Row justify="end">
-                  <Col>
-                    <StyledButton
-                      bg={'none'}
-                      c={theme.BLACK}
-                      htmlType="button"
-                      onClick={() => setOnEdit([false])}
-                    >
-                      CANCEL
-                    </StyledButton>
-                    <StyledButton htmlType="submit">SAVE</StyledButton>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-          </Form.Item>
-        </>
-      ) : (
-        <div
-          style={{
-            display: 'flex',
-            height: '60px',
-            marginBottom: '20px',
-            justifyContent: 'center',
-          }}
-        >
-          <div style={{ width: 'calc(100% - 332px)' }}>
-            <Form.Item
-              name="content_title"
-              rules={[
-                { required: true, message: `Add a ${modes[mode]} Title` },
-              ]}
-            >
-              <Input placeholder={`${modes[mode]} Title`} />
-            </Form.Item>
-          </div>
-
-          <Row align="middle" justify="end">
-            <StyledButton
-              bg={'none'}
-              c={theme.BLACK}
-              htmlType="button"
-              onClick={() => setOnEdit([false])}
-            >
-              CANCEL
-            </StyledButton>
-            <StyledButton htmlType="submit">SAVE</StyledButton>
-          </Row>
-        </div>
-      )}
+            CANCEL
+          </StyledButton>
+          <StyledButton htmlType="submit">SAVE</StyledButton>
+        </Row>
+      </div>
     </Form>
   );
 };

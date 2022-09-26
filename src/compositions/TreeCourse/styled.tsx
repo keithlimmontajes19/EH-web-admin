@@ -101,17 +101,18 @@ export const StyledTree = styled(Tree)`
   }
 
   .ant-tree-treenode-selected > span {
-    border-top: 1px solid #635ffa;
-    border-bottom: 1px solid #635ffa;
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
   }
 
   .ant-tree-treenode-selected > span:last-child {
-    border-right: 1px solid #635ffa;
+    // border-right: 1px solid #635ffa;
   }
 
   .ant-tree-treenode-selected > span:nth-child(2) {
-    border-left: 10px solid #635ffa;
     padding-left: 10px;
+    border-left: 8px solid #635ffa;
   }
 `;
 
@@ -122,5 +123,16 @@ export const StyledLesson = styled.span`
   font-size: 16px;
   line-height: 18px;
   text-align: center;
-  color: #ffffff;
+  color: #fff;
 `;
+
+export const StyledInputTitle = styled(Input)`
+  width: 800px;
+  height: 48px;
+  background: #fafafb;
+  border-radius: 8px;
+  border: 1px solid #635ffa;
+  box-shadow: inset 0px 0px 5px 2px rgba(99, 95, 250, 0.1);
+`;
+
+export const BuildIcon = styled.img``;
