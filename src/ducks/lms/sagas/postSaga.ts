@@ -215,47 +215,30 @@ export function* updateLessonContent({ payload }: any): any {
 
 export function* postLessonContent({ payload }: any): any {
   const { idLesson, callback = () => {} } = payload;
-  const { contentType, title, description, position } = payload.data;
-
-  console.log("contentType", contentType)
-  console.log(idLesson)
-
-
-  // const data = {
-    // title,
-    // position,
-    // description,
-    // contentType,
-    // preview: { type: 'video' },
-    // body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
-  // };
+  const { contentType } = payload.data;
 
   const data = {
     ...payload.data,
     lessonId: idLesson,
-  }
+  };
 
   try {
     let response;
 
-    if (contentType === "quiz") {
-      yield call( lms_service.postQuiz, data)
+    if (contentType === 'quiz') {
+      response = yield call(lms_service.postQuiz, data);
     } else {
-      yield call( lms_service.postTopic, data)
+      response = yield call(lms_service.postTopic, data);
     }
-   
+
     yield put({
       type: TYPES.POST_LESSON_CONTENT_SUCCESS,
-      payload: response.data,
+      payload: response?.data,
     });
 
-    const res = response?.data?.data;
+    const res = response?.data;
 
-    callback(
-      'content' in res
-        ? { ...res.content, uploadSignedUrl: res.uploadSignedUrl }
-        : res
-    );
+    callback(res);
 
     return Promise.resolve(response);
   } catch (error) {

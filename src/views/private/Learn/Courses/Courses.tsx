@@ -14,7 +14,18 @@ import {
   StyledContentText,
 } from './styled';
 import { StyledTitle } from 'views/private/Learn/Learn/styled';
-import { Layout, PageHeader, Avatar, Collapse, Row, Col, Tooltip } from 'antd';
+
+import {
+  Row,
+  Col,
+  Spin,
+  Layout,
+  Avatar,
+  Tooltip,
+  Collapse,
+  PageHeader,
+} from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import StyledButton from 'components/StyledButton';
 import BuilderCourse from 'compositions/BuilderCourse';
@@ -59,8 +70,10 @@ const Courses = (): ReactElement => {
   const { data, loading }: any = useSelector<RootState>((state) => state.lms);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [lessonLoading, setLessonLoading] = useState(false);
   const [viewVisible, setViewVisible] = useState(false);
   const [courses, setCourses] = useState([]);
+  const [courseId, setCourseId] = useState(null);
 
   useEffect(() => {
     dispatch(getMyCourses());
@@ -112,13 +125,15 @@ const Courses = (): ReactElement => {
     );
   };
 
-  const callback = (lesson, id) => {
+  const callback = (lesson, id, loading) => {
+    setLessonLoading(loading);
+
     let copyData: any = Array.from(courses);
 
     if (lesson) {
       copyData.filter((course, index) => {
         if (course?._id === id) {
-          copyData[index] = { ...course, lessons: lesson };
+          copyData[index] = { ...course, lessons: lesson?.lessons };
         }
       });
 
@@ -126,28 +141,28 @@ const Courses = (): ReactElement => {
     }
   };
 
-  const contentCallback = (content, lessonid, courseid) => {
-    let copyData: any = Array.from(courses);
+  // const contentCallback = (content, lessonid, courseid) => {
+  //   let copyData: any = Array.from(courses);
 
-    if (content) {
-      const course = copyData.find((x) => x._id === courseid);
-      const lesson = course?.lessons.find((y) => y._id === lessonid);
-      const contents = { ...lesson, contents: content };
+  //   if (content) {
+  //     const course = copyData.find((x) => x._id === courseid);
+  //     const lesson = course?.lessons.find((y) => y._id === lessonid);
+  //     const contents = { ...lesson, contents: content };
 
-      const findCourseIndex = copyData.findIndex((x) => x._id === courseid);
-      const findLessonIndex = course?.lessons.findIndex(
-        (y) => y._id === lessonid
-      );
+  //     const findCourseIndex = copyData.findIndex((x) => x._id === courseid);
+  //     const findLessonIndex = course?.lessons.findIndex(
+  //       (y) => y._id === lessonid
+  //     );
 
-      if (findCourseIndex !== undefined && findLessonIndex !== undefined) {
-        copyData[findCourseIndex].lessons[findLessonIndex] = {
-          ...contents,
-        };
+  //     if (findCourseIndex !== undefined && findLessonIndex !== undefined) {
+  //       copyData[findCourseIndex].lessons[findLessonIndex] = {
+  //         ...contents,
+  //       };
 
-        setCourses(copyData);
-      }
-    }
-  };
+  //       setCourses(copyData);
+  //     }
+  //   }
+  // };
 
   const content = (
     <>
@@ -173,6 +188,7 @@ const Courses = (): ReactElement => {
                 style={{ marginBottom: 10 }}
                 onChange={(event) => {
                   if (event?.length) {
+                    setCourseId(item?._id);
                     dispatch(getLessons({ id: item?._id, callback }));
                   }
                 }}
@@ -219,7 +235,7 @@ const Courses = (): ReactElement => {
                                   height={10}
                                   source={COLOR_LESSON}
                                 />
-                                &nbsp; &nbsp;Lessons
+                                &nbsp; &nbsp;{item?.stats?.lessons || 0} Lessons
                               </StyledLabel>
 
                               <StyledLabel>
@@ -228,7 +244,7 @@ const Courses = (): ReactElement => {
                                   height={10}
                                   source={COLOR_TOPICS}
                                 />
-                                &nbsp; &nbsp;Topics
+                                &nbsp; &nbsp;{item?.stats?.topics || 0} Topics
                               </StyledLabel>
                             </div>
 
@@ -239,7 +255,7 @@ const Courses = (): ReactElement => {
                                   height={10}
                                   source={COLOR_QUIZ}
                                 />
-                                &nbsp; &nbsp;Quiz
+                                &nbsp; &nbsp;{item?.stats?.quizzes || 0} Quiz
                               </StyledLabel>
 
                               <StyledLabel>
@@ -248,7 +264,8 @@ const Courses = (): ReactElement => {
                                   height={10}
                                   source={COLOR_ASSIGNMENT}
                                 />
-                                &nbsp; &nbsp;Assignment
+                                &nbsp; &nbsp;{item?.stats?.videos || 0}{' '}
+                                Assignment
                               </StyledLabel>
                             </div>
                           </div>
@@ -274,81 +291,100 @@ const Courses = (): ReactElement => {
                             borderRadius: 15,
                           }}
                         >
-                          <IconImage
-                            source={COLOR_KEBAB}
-                            width={16}
-                            height={4}
-                          />
+                          <div style={{ padding: 5 }}>
+                            <IconImage
+                              source={COLOR_KEBAB}
+                              width={16}
+                              height={4}
+                            />
+                          </div>
                         </Tooltip>
                       </Col>
                     </Row>
                   }
                 >
-                  {(item?.lessons || []).map((lesson) => {
-                    return (
-                      <Collapse
-                        accordion
-                        bordered={false}
-                        key={lesson?._id}
-                        onChange={(event) => {
-                          if (event?.length) {
-                            dispatch(
-                              getContents({
-                                courseid: item?._id,
-                                lessonid: lesson?._id,
-                                callback: contentCallback,
-                              })
-                            );
-                          }
-                        }}
-                      >
-                        <div
-                          style={{
-                            marginLeft: 18,
-                            width: '97.5%',
-                            alignSelf: 'center',
-                            borderTop: '1px solid #f0f0f3',
-                          }}
-                        />
+                  {lessonLoading && item?._id === courseId ? (
+                    <div
+                      style={{
+                        padding: 20,
+                        marginLeft: '50%',
+                        marginRight: '50%',
+                      }}
+                    >
+                      <Spin
+                        indicator={
+                          <LoadingOutlined style={{ fontSize: 18 }} spin />
+                        }
+                      />
+                    </div>
+                  ) : (
+                    (item?.lessons || []).map((lesson) => {
+                      let collapseProps = {};
 
-                        <Panel
+                      if (!lesson?.contents.length) {
+                        collapseProps = {
+                          expandIcon: () => (
+                            <span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                          ),
+                        };
+                      }
+
+                      return (
+                        <Collapse
+                          {...collapseProps}
+                          bordered={false}
                           key={lesson?._id}
-                          header={
-                            <StyledLessonText>{lesson?.title}</StyledLessonText>
-                          }
                         >
-                          {(lesson?.contents || []).map((content) => {
-                            return (
-                              <div key={content?._id} style={{ padding: 10 }}>
-                                <div
-                                  style={{
-                                    padding: 8,
-                                    width: '100%',
-                                    alignSelf: 'center',
-                                    borderTop: '1px solid #f0f0f3',
-                                  }}
-                                />
+                          <div
+                            style={{
+                              marginLeft: 19,
+                              width: '97.5%',
+                              alignSelf: 'center',
+                              borderTop: '1px solid #f0f0f3',
+                            }}
+                          />
 
-                                <IconImage
-                                  width={20}
-                                  height={20}
-                                  source={
-                                    content?.contentType === 'topic'
-                                      ? TOPIC_PINK
-                                      : QUIZ_PINK
-                                  }
-                                />
+                          <Panel
+                            key={lesson?._id}
+                            header={
+                              <StyledLessonText>
+                                {lesson?.title}
+                              </StyledLessonText>
+                            }
+                          >
+                            {(lesson?.contents || []).map((content) => {
+                              return (
+                                <div key={content?._id} style={{ padding: 10 }}>
+                                  <div
+                                    style={{
+                                      padding: 8,
+                                      width: '100%',
+                                      alignSelf: 'center',
+                                      borderTop: '1px solid #f0f0f3',
+                                    }}
+                                  />
 
-                                <StyledContentText>
-                                  {content?.title}
-                                </StyledContentText>
-                              </div>
-                            );
-                          })}
-                        </Panel>
-                      </Collapse>
-                    );
-                  })}
+                                  <IconImage
+                                    width={20}
+                                    height={20}
+                                    source={
+                                      content?.contentType === 'topic'
+                                        ? TOPIC_PINK
+                                        : QUIZ_PINK
+                                    }
+                                  />
+
+                                  <StyledContentText>
+                                    {content?.title}
+                                  </StyledContentText>
+                                </div>
+                              );
+                            })}
+                          </Panel>
+                        </Collapse>
+                      );
+                    })
+                  )}
                 </Panel>
               </StyledCollapse>
             );

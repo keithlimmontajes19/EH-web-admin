@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { theme } from 'utils/colors';
 
 export const getTreeStyle = (type, lastIofSect, i) => {
-  const mode =  type === 'section-head' ? 0 : type === 'lesson' ? 1 : i % 2 === 0 ? 2 : 3;
+  const mode =
+    type === 'section-head' ? 0 : type === 'lesson' ? 1 : i % 2 === 0 ? 2 : 3;
   const color = [
     theme.PRIMARY_MID,
     '#fff',
@@ -13,17 +14,22 @@ export const getTreeStyle = (type, lastIofSect, i) => {
   ];
 
   return {
-    background: color[mode],
-    fontSize: mode === 0 ? '20px' : '18px',
+    // background: color[mode],
+    background: '#fff',
+    boxShadow: '0px 4px 8px rgba(10, 130, 0, 0.05)',
+    border: '1px solid  rgba(10, 130, 0, 0.05)',
+
+    height: '60px',
+    color: '#4C4B7B',
+
+    zIndex: mode <= 1 ? 3 : 2,
     fontWeight: mode === 0 ? 600 : 400,
     marginTop: mode === 0 ? '15px' : '0',
+    fontSize: mode === 0 ? '20px' : '18px',
     marginBottom: mode === 0 || lastIofSect ? '15px' : '0',
-    color: theme.BLACK,
-    height: '60px',
-    borderTop: mode === 0 ? '1px solid #635FFA' : 'none',
-    borderBottom: mode === 0 ? '1px solid #635FFA' : 'none',
-    zIndex: mode <= 1 ? 3 : 2,
-    filter: `drop-shadow(0 0 ${mode <= 1 ? 2 : 1}px #635FFAEA)`,
+    // borderTop: mode === 0 ? '1px solid #635FFA' : 'none',
+    // borderBottom: mode === 0 ? '1px solid #635FFA' : 'none',
+    // filter: `drop-shadow(0 0 ${mode <= 1 ? 2 : 1}px #635FFAEA)`,
   };
 };
 
@@ -95,17 +101,18 @@ export const StyledTree = styled(Tree)`
   }
 
   .ant-tree-treenode-selected > span {
-    border-top: 1px solid #635ffa;
-    border-bottom: 1px solid #635ffa;
+    border-top: 1px solid transparent;
+    border-right: 1px solid transparent;
+    border-bottom: 1px solid transparent;
   }
 
   .ant-tree-treenode-selected > span:last-child {
-    border-right: 1px solid #635ffa;
+    // border-right: 1px solid #635ffa;
   }
 
   .ant-tree-treenode-selected > span:nth-child(2) {
-    border-left: 10px solid #635ffa;
     padding-left: 10px;
+    border-left: 8px solid #635ffa;
   }
 `;
 
@@ -116,5 +123,16 @@ export const StyledLesson = styled.span`
   font-size: 16px;
   line-height: 18px;
   text-align: center;
-  color: #ffffff;
+  color: #fff;
 `;
+
+export const StyledInputTitle = styled(Input)`
+  width: 800px;
+  height: 48px;
+  background: #fafafb;
+  border-radius: 8px;
+  border: 1px solid #635ffa;
+  box-shadow: inset 0px 0px 5px 2px rgba(99, 95, 250, 0.1);
+`;
+
+export const BuildIcon = styled.img``;

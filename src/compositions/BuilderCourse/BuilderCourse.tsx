@@ -1,45 +1,46 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { StyledLinkBack, StyledAddCourse } from './styled';
+import { StyledLinkBack, StyledAddCourse, StyledCoverphoto } from './styled';
 
 import {
+  Row,
   Col,
   Form,
   Layout,
-  PageHeader,
-  Row,
-  Space,
+  Avatar,
   Upload,
   message,
+  PageHeader,
 } from 'antd';
-import { VideoCameraOutlined, PictureOutlined } from '@ant-design/icons';
+import { PictureOutlined } from '@ant-design/icons';
 
+/* reducer and actions */
+import lmsService from 'api/services/lms_service';
 import { useDispatch } from 'react-redux';
 import { updateCourse } from 'ducks/lms/actionCreator';
 import { getCourse, postCourse } from 'ducks/lms/actionCreator';
-import lmsService from 'api/services/lms_service';
-
-import Text from 'components/Text';
-import Input from 'components/Input';
-import Loading from 'components/Loading';
-import TreeCourse from 'compositions/TreeCourse';
-import StyledButton from 'components/StyledButton';
-import LessonTreeTable from 'compositions/LessonTreeTable';
 
 import { theme } from 'utils/colors';
 import { useHistory, useParams } from 'react-router-dom';
 import { Params } from 'views/private/Learn/Courses/types';
 
+import Input from 'components/Input';
+import Loading from 'components/Loading';
+import IconImage from 'components/IconImage';
+import TreeCourse from 'compositions/TreeCourse';
+import StyledButton from 'components/StyledButton';
+import NO_IMAGE from 'assets/icons/no-purple-box.png';
+
 const blankData = {
+  body: '',
   title: '',
+  points: '',
   description: '',
-  body: '&lt;html&gt; &lt;body&gt;&lt;/body&gt; &lt;/html&gt;',
   preview: {
     type: 'image',
   },
   instructor: {
     name: '',
   },
-  points: '',
 };
 
 const BuilderCourse = ({ id = '' }: any): ReactElement => {
@@ -48,7 +49,6 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
   const params: Params = useParams();
 
   const addNew = params.page === 'add';
-  const organizationId = history?.location?.state?.organization;
   const organizations = history?.location?.state?.organization;
 
   const [queue, setQueue] = useState(false);
@@ -56,18 +56,22 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
   const [onAdd, setOnAdd]: any = useState(false);
   const [refreshed, setRefreshed] = useState(false);
   const [file, setFile]: any = useState({ type: false, ref: {} });
+  const [fileUrl, setFileUrl] = useState(null);
   const [course, setCourse]: any = useState(
     JSON.parse(JSON.stringify(blankData))
   );
 
   useEffect(() => {
+    setFileUrl(course?.preview);
+  }, [course]);
+
+  useEffect(() => {
     localStorage.setItem('courseId', id);
-    localStorage.setItem('organizationId', organizationId);
 
     if (!addNew)
       dispatch(
         getCourse({
-          callback: defaultCallback,
+          callback: getCourseDetail,
         })
       );
     else setLoading(false);
@@ -80,75 +84,35 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     }
   }, [course]);
 
-  const uploadFile = (signedUrl, file) => {
-    const getBlob = async (fileUri: any) => {
-      const resp = await fetch(fileUri);
-      const fileBody = await resp.blob();
-      return fileBody;
-    };
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const formData = new FormData();
-      formData.append('file', file);
-      const fileBlob = await getBlob(reader.result);
-
-      const response = await fetch(
-        new Request(signedUrl, {
-          method: 'PUT',
-          body: fileBlob,
-          headers: new Headers({ 'Content-Type': file.type }),
-        })
-      );
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const addNewCallback = async (response) => {
-    if (response) {
-      setCourse(response);
-      localStorage.setItem('courseId', response?._id);
-
-      await lmsService.uploadCoursePreview(response?._id).then((res) => {
-        fetch(res?.data?.data, {
-          body: file,
-          method: 'PUT',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-          .then(() => {
-            setLoading(false);
-          })
-          .catch((err) => console.log('error', err));
-      });
+  const getCourseDetail = (res) => {
+    if (res) {
+      setCourse(res?.data);
+      setLoading(false);
     }
-  };
-
-  const defaultCallback = (res) => {
-    if (!res) return;
-    setCourse(res.data);
-    setLoading(false);
   };
 
   const setCourseInfo = () => {
     if (addNew) {
       dispatch(
         postCourse({
-          data: { ...course, organizations },
-          callback: addNewCallback,
+          data: { ...course, organizations, description: '&nan' },
+          callback: (res) => {
+            if (res) {
+              course._id = res?._id || '';
+            }
+          },
         })
       );
       setQueue(false);
+
       return;
     }
 
     localStorage.setItem('courseId', course?._id);
 
-    const { type, ref }: any = file;
+    const { type }: any = file;
     const callback = async (res) => {
       if (!res) return;
-      if (type) uploadFile(res.uploadSignedUrl, ref);
     };
 
     dispatch(
@@ -168,97 +132,78 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
     return;
   };
 
-  const MediaPreview = () => (
-    <StyledButton
-      c={'red'}
-      bg={'none'}
-      b={`2px solid ${'red'}`}
-      p={`10px`}
-      icon={
-        file.type === 'image' ? <PictureOutlined /> : <VideoCameraOutlined />
-      }
-      htmlType="button"
-      onClick={() => setFile({ type: false, ref: {} })}
-    >
-      <Text fC={'red'} fS={18} fW={500}>
-        {file.ref.name}
-      </Text>
-    </StyledButton>
-  );
-
-  const MediaField = () => {
-    const baseURL =
-      'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload';
-    const uploadProps = {
-      maxCount: 1,
-      name: 'file',
-      showUploadList: false,
-      action: baseURL,
-    };
-
-    const onChangeImageVideo = (info, type) => {
-      if (info.file.status === 'done') {
-        const file = info?.file?.originFileObj;
-
-        handleUpload(type, file);
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    };
-
-    return (
-      <Space>
-        <Upload
-          {...uploadProps}
-          accept="video/*"
-          onChange={(args) => onChangeImageVideo(args, 'video')}
-        >
-          <StyledButton
-            bg={'none'}
-            c={theme.PRIMARY}
-            b={`2px solid ${theme.PRIMARY}`}
-            icon={<VideoCameraOutlined />}
-            htmlType="button"
-          >
-            <Text fS={18} fW={500}>
-              Add Video
-            </Text>
-          </StyledButton>
-        </Upload>
-
-        <Upload
-          {...uploadProps}
-          accept="image/*"
-          onChange={(args) => onChangeImageVideo(args, 'image')}
-        >
-          <StyledButton
-            bg={'none'}
-            c={theme.PRIMARY}
-            b={`2px solid ${theme.PRIMARY}`}
-            icon={<PictureOutlined />}
-            htmlType="button"
-          >
-            <Text fS={18} fW={500}>
-              Add Picture
-            </Text>
-          </StyledButton>
-        </Upload>
-      </Space>
-    );
+  /**
+   *================
+   * @returns
+   * FILE UPLOAD
+   * COURSE PREVIEW PHOTO
+   * ===============
+   */
+  const baseURL = 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload';
+  const uploadProps = {
+    maxCount: 1,
+    name: 'file',
+    action: baseURL,
+    showUploadList: false,
   };
+
+  const onChangeImageVideo = (info, type) => {
+    if (info.file.status === 'done') {
+      const file = info?.file?.originFileObj;
+
+      UploadCoverPhoto(info);
+      handleUpload(type, file);
+      setFileUrl(info?.file?.response?.data?.url);
+
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  };
+
+  const UploadCoverPhoto = async (response) => {
+    if (response) {
+      await lmsService.uploadCoursePreview(id).then((res) => {
+        fetch(res?.data?.data, {
+          body: response?.file?.originFileObj,
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        }).then(() => setLoading(false));
+      });
+    }
+  };
+
+  const MediaPreview = () => (
+    <div onClick={() => setFileUrl('')}>
+      <Avatar
+        src={fileUrl}
+        size="large"
+        shape="square"
+        style={{
+          width: 150,
+          minHeight: 100,
+          maxHeight: 100,
+          borderRadius: 15,
+        }}
+        icon={<IconImage source={NO_IMAGE} width={70} height={61} />}
+      />
+    </div>
+  );
 
   return (
     <Layout style={{ paddingRight: 50, background: 'transparent' }}>
       <PageHeader
         ghost={false}
+        footer={<StyledAddCourse>Add Course</StyledAddCourse>}
+        style={{ background: 'none', paddingTop: 8, paddingBottom: 30 }}
         title={
           <StyledLinkBack onClick={() => history.push('/learn/courses')}>
             {'< '}Back to Courses
           </StyledLinkBack>
         }
-        footer={<StyledAddCourse>Add Course</StyledAddCourse>}
-        style={{ background: 'none', paddingTop: 8, paddingBottom: 30 }}
       />
 
       {loading ? (
@@ -269,23 +214,20 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
         >
           <Form
             initialValues={{
-              t: course?.title === 'NaN$' ? '' : course?.title,
-              d: course?.description === 'NaN$' ? '' : course?.description,
-              a:
-                course?.instructor?.name === 'NaN$'
-                  ? ''
-                  : course?.instructor?.name,
-              p: course?.points || '',
+              t: course?.title,
+              p: course?.points,
+              d: course?.description,
+              a: course?.instructor?.name,
             }}
           >
             <Row>
-              <Col flex={19}>
+              <Col flex={24}>
                 <Form.Item
                   name="t"
                   rules={[{ required: true, message: 'Enter a title' }]}
                 >
                   <Input
-                    placeholder={'Course Title'}
+                    placeholder={'Title'}
                     value={course?.title}
                     onChange={(e) => {
                       setQueue(true);
@@ -297,51 +239,35 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
                   />
                 </Form.Item>
               </Col>
+
               <Col flex={0.5} />
-              <Col flex={3}>
-                <Form.Item name="p">
-                  <Input
-                    isNumber={true}
-                    min={0}
-                    max={100}
-                    controls={false}
-                    placeholder={'Points Earned'}
-                    value={course?.points}
-                    onChange={(e) => {
-                      setQueue(true);
-                      setCourse((prev) => {
-                        prev.points = e;
-                        return prev;
-                      });
-                    }}
-                  />
+
+              <Col>
+                <Form.Item>
+                  <Upload
+                    {...uploadProps}
+                    accept="image/*"
+                    onChange={(args) => onChangeImageVideo(args, 'image')}
+                  >
+                    <StyledButton
+                      bg={'none'}
+                      c={theme.PRIMARY}
+                      b={`2px solid ${theme.PRIMARY}`}
+                      icon={<PictureOutlined />}
+                      style={{ width: 185 }}
+                    >
+                      <StyledCoverphoto>COVER PHOTO</StyledCoverphoto>
+                    </StyledButton>
+                  </Upload>
                 </Form.Item>
               </Col>
             </Row>
+
             <Row justify="space-between">
-              <Col flex={11}>
-                <Form.Item
-                  name="d"
-                  rules={[{ required: true, message: 'Enter a content' }]}
-                >
-                  <Input
-                    placeholder={'Add Subtitle/Short Slogan/Short Description'}
-                    value={course?.description}
-                    onChange={(e) => {
-                      setQueue(true);
-                      setCourse((prev) => {
-                        prev.description = e.target.value;
-                        return prev;
-                      });
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col flex={0.5} />
-              <Col flex={11}>
+              <Col flex={30}>
                 <Form.Item
                   name="a"
-                  rules={[{ required: true, message: 'Enter an author' }]}
+                  rules={[{ required: true, message: 'Enter a author.' }]}
                 >
                   <Input
                     placeholder={'Author'}
@@ -352,6 +278,34 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
                           name: e.target.value,
                           title: prev.instructor.title,
                         };
+
+                        return prev;
+                      });
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col flex={0.5} />
+
+              <Col>
+                <Form.Item
+                  name="p"
+                  rules={[{ required: true, message: 'Enter points.' }]}
+                >
+                  <Input
+                    min={0}
+                    max={100}
+                    isNumber={true}
+                    controls={false}
+                    placeholder={'Points Earned'}
+                    value={course?.points}
+                    style={{ width: 150 }}
+                    onChange={(e) => {
+                      setQueue(true);
+                      setCourse((prev) => {
+                        prev.points = e;
+
                         return prev;
                       });
                     }}
@@ -362,7 +316,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
           </Form>
 
           <Row justify="space-between" style={{ marginBottom: 25 }}>
-            {file.type ? <MediaPreview /> : <MediaField />}
+            <MediaPreview />
             <StyledButton
               p={'-10px 0 0 0'}
               onClick={setCourseInfo}
@@ -372,28 +326,9 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
             </StyledButton>
           </Row>
 
-          {addNew ? (
-            <></>
-          ) : (
-            // <LessonTreeTable />
+          {course?._id && (
             <TreeCourse course={course} onAdd={onAdd} setOnAdd={setOnAdd} />
           )}
-
-          {/* <Row justify="end" style={{ marginTop: 150, paddingRight: 20 }}>
-            <Col>
-              {!onAdd && (
-                <>
-                  <StyledButton
-                    htmlType="submit"
-                    disabled={onAdd}
-                    onClick={() => history.goBack()}
-                  >
-                    BACK
-                  </StyledButton>
-                </>
-              )}
-            </Col>
-          </Row> */}
         </Layout>
       )}
     </Layout>
