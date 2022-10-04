@@ -1,36 +1,36 @@
-import { ReactElement, useEffect, useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
-import type { PropsType } from "./types";
+import { ReactElement, useEffect, useState } from 'react';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import type { PropsType } from './types';
 
-import "draft-js/dist/Draft.css";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import 'draft-js/dist/Draft.css';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
-import { PageHeader, Breadcrumb, Layout, Modal, Input } from "antd";
+import { PageHeader, Breadcrumb, Layout, Modal, Input } from 'antd';
 
 import {
   MoreOutlined,
   RedoOutlined,
   LoadingOutlined,
   CheckOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 
-import Text from "components/Text";
+import Text from 'components/Text';
 
-import { useDispatch } from "react-redux";
-import { Editor } from "react-draft-wysiwyg";
-import { ToastContainer } from "react-toastify";
-import { StyledLinked } from "compositions/QuizzesTab/styled";
-import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
-import { EditorContainer, StyledButton, StyledButtonCancle } from "./styled";
+import { useDispatch } from 'react-redux';
+import { Editor } from 'react-draft-wysiwyg';
+import { ToastContainer } from 'react-toastify';
+import { StyledLinked } from 'compositions/QuizzesTab/styled';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import { EditorContainer, StyledButton, StyledButtonCancle } from './styled';
 
-import draftToHtml from "draftjs-to-html";
-import htmlToDraft from "html-to-draftjs";
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 
-import { getOnePage, postPage, updatePage } from "ducks/pages/actionCreator";
-import Loading from "components/Loading";
+import { getOnePage, postPage, updatePage } from 'ducks/pages/actionCreator';
+import Loading from 'components/Loading';
 
 const blank = {
-  title: "New Page",
+  title: 'New Page',
   details: JSON.stringify(
     convertToRaw(EditorState.createEmpty().getCurrentContent())
   ),
@@ -63,8 +63,8 @@ const BuilderPage = (props: PropsType): ReactElement => {
 
   const [editInput, setEditInput]: any = useState({
     isVisible: false,
-    title: "",
-    inputVal: "",
+    title: '',
+    inputVal: '',
     callback: () => {},
   });
 
@@ -75,7 +75,7 @@ const BuilderPage = (props: PropsType): ReactElement => {
       setPageData(res);
     };
 
-    if (params?.page === "create") {
+    if (params?.page === 'create') {
       setPageData(JSON.parse(JSON.stringify(blank)));
       setLoading(false);
     } else
@@ -102,6 +102,7 @@ const BuilderPage = (props: PropsType): ReactElement => {
   useEffect(resetData, [pageData]);
 
   const onEditorStateChange = (e) => {
+    console.log('event', e);
     if (!editedData) setEditedData(pageData);
     setEditorState(e);
   };
@@ -133,12 +134,12 @@ const BuilderPage = (props: PropsType): ReactElement => {
       ...editedData,
       details: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
     };
-    if (params?.page === "create")
+    if (params?.page === 'create')
       return dispatch(
         postPage({
           data,
           callback: (res) => {
-            if (res) history.replace("team/pages/builder/" + res?._id);
+            if (res) history.replace('team/pages/builder/' + res?._id);
             defaultCallback(res);
           },
         })
@@ -156,23 +157,27 @@ const BuilderPage = (props: PropsType): ReactElement => {
   const resetEditInput = () =>
     setEditInput({
       isVisible: false,
-      title: "",
-      inputVal: "",
+      title: '',
+      inputVal: '',
       callback: () => {},
     });
 
+  const uploadImageCallBack = (file) => {
+    console.log('file uploaded', file);
+  };
+
   return (
-    <Layout style={{ background: "none", marginLeft: 20, marginTop: 25 }}>
+    <Layout style={{ background: 'none', marginLeft: 20, marginTop: 25 }}>
       {loading ? (
         <Loading />
       ) : (
         <>
-          <StyledLinked onClick={() => history.push("/team/pages")}>
-            {"<"} Back to Pages
+          <StyledLinked onClick={() => history.push('/team/pages')}>
+            {'<'} Back to Pages
           </StyledLinked>
 
           <PageHeader
-            style={{ background: "none", paddingTop: 8 }}
+            style={{ background: 'none', paddingTop: 8 }}
             title={
               <Text
                 onClick={() => {
@@ -181,7 +186,7 @@ const BuilderPage = (props: PropsType): ReactElement => {
                     : pageData?.title;
                   setEditInput({
                     isVisible: true,
-                    title: "Rename " + title,
+                    title: 'Rename ' + title,
                     inputVal: title,
                     callback: handleRenamePage,
                   });
@@ -194,19 +199,19 @@ const BuilderPage = (props: PropsType): ReactElement => {
             extra={[
               <RedoOutlined
                 style={{
-                  fontSize: "25px",
-                  paddingRight: "24px",
-                  cursor: "pointer",
+                  fontSize: '25px',
+                  paddingRight: '24px',
+                  cursor: 'pointer',
                 }}
                 onClick={() =>
                   Modal.confirm({
-                    title: "Reset Edit Progress?",
+                    title: 'Reset Edit Progress?',
                     onOk: resetData,
                   })
                 }
               />,
               <StyledButton disabled={!editedData} onClick={handlePagePublish}>
-                {onDispatch ? <LoadingOutlined spin /> : <CheckOutlined />}{" "}
+                {onDispatch ? <LoadingOutlined spin /> : <CheckOutlined />}{' '}
                 PUBLISH
               </StyledButton>,
               <StyledButtonCancle onClick={() => history.goBack()}>
@@ -214,9 +219,9 @@ const BuilderPage = (props: PropsType): ReactElement => {
               </StyledButtonCancle>,
               <MoreOutlined
                 style={{
-                  fontSize: "26px",
-                  color: "#635FFA",
-                  cursor: "pointer",
+                  fontSize: '26px',
+                  color: '#635FFA',
+                  cursor: 'pointer',
                 }}
               />,
             ]}
@@ -231,6 +236,12 @@ const BuilderPage = (props: PropsType): ReactElement => {
               onBlur={(event, editorState) => {}}
               onTab={(event) => {}}
               onEditorStateChange={onEditorStateChange}
+              toolbar={{
+                image: {
+                  uploadCallback: uploadImageCallBack,
+                  // alt: { present: true, mandatory: true },
+                },
+              }}
             />
           </EditorContainer>
 
@@ -255,7 +266,7 @@ const BuilderPage = (props: PropsType): ReactElement => {
               resetEditInput();
             }}
             onCancel={resetEditInput}
-            okButtonProps={{ disabled: editInput.inputVal === "" }}
+            okButtonProps={{ disabled: editInput.inputVal === '' }}
           />
         </>
       )}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 import {
   StyledAdd,
@@ -9,25 +9,27 @@ import {
   StyledPopover,
   HeaderContainer,
   NoAnnouncementContainer,
-} from "./styled";
-import { Col, Row } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+} from './styled';
+import { Col, Row } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 
-import Rewards from "compositions/Rewards";
-import IconImage from "components/IconImage";
-import DashboardCards from "compositions/DashboardCards";
-import OrganizationList from "compositions/OrganizationList";
-import DashboardMostEnrolled from "compositions/DashboardMostEnrolled";
+import Rewards from 'compositions/Rewards';
+import IconImage from 'components/IconImage';
+import DashboardCards from 'compositions/DashboardCards';
+import OrganizationList from 'compositions/OrganizationList';
+import DashboardMostEnrolled from 'compositions/DashboardMostEnrolled';
 
-import USER_ICONS from "assets/icons/card-employee.png";
-import ORG_ICONS from "assets/icons/card-org.png";
-import NO_ANNOUNCEMENT from "assets/images/noannouncement.png";
-import ProfileAddTeam from "compositions/ProfileAddTeam";
-import CarouselAnnouncement from "compositions/CarouselAnnouncement";
+import USER_ICONS from 'assets/icons/card-employee.png';
+import ORG_ICONS from 'assets/icons/card-org.png';
+import NO_ANNOUNCEMENT from 'assets/images/noannouncement.png';
+import ProfileAddTeam from 'compositions/ProfileAddTeam';
+import CarouselAnnouncement from 'compositions/CarouselAnnouncement';
 
 /* reducer */
-import { RootState } from "ducks/store";
-import { useSelector } from "react-redux";
+import { RootState } from 'ducks/store';
+import { useSelector } from 'react-redux';
+
+import GrapeEditor from 'components/GrapeEditor';
 
 const Home = () => {
   const { user_details }: any = useSelector<RootState>(
@@ -53,53 +55,7 @@ const Home = () => {
 
   return (
     <div>
-      <HeaderContainer>
-        <StyledTitle>Hi {user_details?.profile?.firstName || ""}!</StyledTitle>
-        {/* <StyledViewList>View List</StyledViewList> */}
-        <StyledButton>
-          <StyledAdd>USERS</StyledAdd>
-        </StyledButton>
-        &nbsp;
-        <StyledButton background="transparent" color="#fff">
-          <StyledPopover title={content()}>
-            <StyledLink>
-              ADD
-              <DownOutlined
-                style={{
-                  marginTop: 0,
-                  marginLeft: 5,
-                  fontSize: 12,
-                  fontWeight: "900",
-                }}
-              />
-            </StyledLink>
-          </StyledPopover>
-        </StyledButton>
-      </HeaderContainer>
-
-      {/**
-       * TO DO:
-       * Remove until working or has API
-       */}
-
-      <DashboardCards />
-
-      <Row gutter={40}>
-        <Col span={12}>
-          <CarouselAnnouncement />
-        </Col>
-
-        <Col span={12}>
-          <Rewards />
-        </Col>
-      </Row>
-
-      <OrganizationList />
-      <DashboardMostEnrolled />
-      <ProfileAddTeam
-        visible={visisble}
-        modalCreateHandler={modalCreateHandler}
-      />
+      <GrapeEditor />
     </div>
   );
 };
