@@ -24,12 +24,10 @@ import ORG_ICONS from 'assets/icons/card-org.png';
 import NO_ANNOUNCEMENT from 'assets/images/noannouncement.png';
 import ProfileAddTeam from 'compositions/ProfileAddTeam';
 import CarouselAnnouncement from 'compositions/CarouselAnnouncement';
-
+import GrapeEditor from 'components/GrapeEditor';
 /* reducer */
 import { RootState } from 'ducks/store';
 import { useSelector } from 'react-redux';
-
-import GrapeEditor from 'components/GrapeEditor';
 
 const Home = () => {
   const { user_details }: any = useSelector<RootState>(

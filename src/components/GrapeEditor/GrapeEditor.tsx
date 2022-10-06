@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-//import 'grapesjs/dist/css/grapes.min.css';
-// import './css/grapes.min.css';
-// import grapesjs from 'grapesjs';
-// import gsWebpage from 'grapesjs-preset-webpage';
-// import gsCustome from 'grapesjs-custom-code';
+// import EditorJS from '@editorjs/editorjs';
+import axios from 'axios';
+import api from 'api/index';
+import edjsParser from 'editorjs-parser';
 
-import EditorJS from '@editorjs/editorjs';
 import Embed from '@editorjs/embed';
 import Table from '@editorjs/table';
 import List from '@editorjs/list';
@@ -20,75 +18,206 @@ import Marker from '@editorjs/marker';
 import CheckList from '@editorjs/checklist';
 import Delimiter from '@editorjs/delimiter';
 import InlineCode from '@editorjs/inline-code';
-import SimpleImage from '@editorjs/simple-image';
 import VideoTool from '@weekwood/editorjs-video';
-import SimpleVideoTool from 'simple-video-editorjs';
+
+import { createReactEditorJS } from 'react-editor-js';
+import { editorJsParser } from 'editorjs-data-parser';
+
+const ReactEditorJS = createReactEditorJS();
+const baseURL = 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload';
 
 export const EDITOR_JS_TOOLS = {
   embed: Embed,
   table: Table,
   marker: Marker,
   list: List,
-  warning: Warning,
-  code: Code,
-  linkTool: LinkTool,
-  image: Image,
-  raw: Raw,
+  // warning: Warning,
+  // code: Code,
+  // linkTool: LinkTool,
+  // raw: Raw,
   header: Header,
-  quote: Quote,
-  checklist: CheckList,
+  // quote: Quote,
+  // checklist: CheckList,
   delimiter: Delimiter,
   inlineCode: InlineCode,
-  simpleImage: SimpleImage,
-  // video: VideoTool,
-};
-
-const App = () => {
-  // const [pluginLoaded, setPluginLoaded] = useState(false);
-  // const [editor, setEditor] = useState(null);
-
-  useEffect(() => {
-    new EditorJS({
-      holder: 'editor',
-      tools: {
-        video: SimpleVideoTool,
-        ...EDITOR_JS_TOOLS,
-        // header: {
-        //   class: Header,
-        //   inlineToolbar: ['link'],
-        // },
-        // list: {
-        //   class: List,
-        //   inlineToolbar: true,
-        // },
+  image: {
+    class: Image,
+    config: {
+      field: 'file',
+      endpoints: {
+        byFile: 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload',
       },
-    });
-    //   grapesjs.init({
-    //     // color: "white",
-    //     height: '100vh',
-    //     width: 'auto',
-    //     container: '#g',
-    //     fromElement: true,
-    //     // plugins: [gsWebpage, gsCustome, gsTap, TablePluginRef, ChartPluginRef],
-    //     storageManager: {
-    //       type: 'remote',
-    //       //   urlStore:
-    //       //     "http://173.249.14.149:3001/api/Dashboards/5ef370de14213070188a41eb/grapes?access_token=B6IES26pZSvpX4J8c8q4wmseASpRtmBOtvXzztH57NDDJXxO94qE7VbtJ7y718GZ",
-    //       //   urlLoad:
-    //       //     "http://173.249.14.149:3001/api/Dashboards/5ef370de14213070188a41eb/grapes?access_token=B6IES26pZSvpX4J8c8q4wmseASpRtmBOtvXzztH57NDDJXxO94qE7VbtJ7y718GZ",
-    //       autosave: false,
-    //       autoload: true,
-    //       //   contentTypeJson: true,
-    //       //   storeComponents: true,
-    //       //   allowScripts: 1,
-    //       //   storeStyles: true,
-    //       //   storeHtml: true,
-    //       //   storeCss: true
-    //     },
-    //   });
-  });
-
-  return <div id="editor" />;
+      //   uploader: {
+      //     uploadSelectedFile(file) {
+      //       return axios
+      //         .post(baseURL, file, {
+      //           headers: {
+      //             'Content-Type': 'multipart/form-data',
+      //           },
+      //         })
+      //         .then((res: any) => {
+      //           return {
+      //             success: 1,
+      //             type: 'image',
+      //             file: {
+      //               url: res?.data?.data?.url,
+      //             },
+      //           };
+      //         });
+      //     },
+      //   },
+    },
+  },
+  video: {
+    class: VideoTool,
+    config: {
+      player: {
+        pip: false,
+        light: false,
+        controls: true,
+        playing: true,
+      },
+      field: 'file',
+      endpoints: {
+        byFile: 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload',
+      },
+      // uploader: {
+      //   uploadByFile(file) {
+      //     return axios
+      //       .post(baseURL, { name: '', mimetype: '', data: file })
+      //       .then((res) => {
+      //         return {
+      //           success: 1,
+      //           file: {
+      //             url: res?.data?.data?.url,
+      //           },
+      //         };
+      //       });
+      //   },
+      // },
+      actions: [
+        {
+          name: 'new_button',
+          icon: '<svg>...</svg>',
+          title: 'New Button',
+          action: (name) => {
+            console.log('name');
+            alert(`${name} button clicked`);
+            return false;
+          },
+        },
+      ],
+    },
+  },
 };
 
-export default App;
+/**
+ * =================================
+ * VIDEO CONFIGS BASED ON THE GITHUB
+ * =================================
+ */
+// endpoints: config.endpoints || '',
+// additionalRequestData: config.additionalRequestData || {},
+// additionalRequestHeaders: config.additionalRequestHeaders || {},
+// field: config.field || 'video',
+// types: config.types || 'video/*',
+// captionPlaceholder: this.api.i18n.t(config.captionPlaceholder || 'Caption'),
+// buttonContent: config.buttonContent || '',
+// uploader: config.uploader || undefined,
+// actions: config.actions || [],
+// player: {
+//   pip: config.player.pip || false,
+//   controls: config.player.controls || false,
+//   light: config.player.light || false,
+//   playing: config.player.playing || false,
+// },
+
+// const ReactEditor = new EditorJS({
+//   holder: 'editor',
+//   placeholder: 'Let`s write an awesome story!',
+//   onChange: (event) => {
+//     console.log('evenerts', event);
+//   },
+//   autofocus: false,
+//   tools: {
+//     ...EDITOR_JS_TOOLS,
+//   },
+// });
+
+const GrapeEditor = () => {
+  const editorCore = React.useRef(null);
+
+  const handleInitialize = React.useCallback((instance) => {
+    editorCore.current = instance;
+  }, []);
+
+  const handleSave = React.useCallback(async () => {
+    const savedData =
+      await editorCore.current.dangerouslyLowLevelInstance?.save();
+    const converted = convertDataToHtml(savedData?.blocks);
+
+    const parser = new edjsParser(undefined, undefined);
+
+    console.log(savedData?.blocks);
+    console.log('converted', converted);
+    console.log('parser --->', editorJsParser(savedData?.blocks));
+  }, []);
+
+  const convertDataToHtml = (blocks) => {
+    let convertedHtml = '';
+
+    blocks.map((block) => {
+      switch (block.type) {
+        case 'header':
+          convertedHtml += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
+          break;
+        case 'video':
+          convertedHtml += `<div><iframe width="560" height="315" src="${block.data.file.url}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+          break;
+        case 'paragraph':
+          convertedHtml += `<p>${block.data.text}</p>`;
+          break;
+        case 'delimiter':
+          convertedHtml += '<hr />';
+          break;
+        case 'image':
+          convertedHtml += `<img class="img-fluid" src="${block.data.file.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em>`;
+          break;
+        case 'list':
+          convertedHtml += '<ul>';
+          block.data.items.forEach(function (li) {
+            convertedHtml += `<li>${li}</li>`;
+          });
+          convertedHtml += '</ul>';
+          break;
+        case 'table':
+          convertedHtml += '<table>';
+          block.data.items.forEach(function (li) {
+            convertedHtml += `<li>${li}</li>`;
+          });
+          convertedHtml += '</table>';
+          break;
+        default:
+          console.log('Unknown block type', block.type);
+          break;
+      }
+    });
+
+    return convertedHtml;
+  };
+
+  return (
+    <>
+      <button onClick={handleSave}>save</button>
+      {/* <div id="editor" /> */}
+
+      <ReactEditorJS
+        onInitialize={handleInitialize}
+        tools={EDITOR_JS_TOOLS}
+        placeholder="Lets start making your content!"
+      />
+    </>
+  );
+};
+
+export default GrapeEditor;

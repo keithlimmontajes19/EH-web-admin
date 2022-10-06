@@ -30,7 +30,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "src/components/GrapeEditor/GrapeEditorjtsx"
+    "src/components/GrapeEditor/GrapeEditorjtsx",
+    "src/components/GrapeEditor/components/Video.js"
   ],
 
   "exclude": [
