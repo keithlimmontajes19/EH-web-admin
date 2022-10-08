@@ -154,12 +154,12 @@ const GrapeEditor = () => {
   const handleSave = React.useCallback(async () => {
     const savedData =
       await editorCore.current.dangerouslyLowLevelInstance?.save();
-    const converted = convertDataToHtml(savedData?.blocks);
+    // const converted = convertDataToHtml(savedData?.blocks);
 
-    const parser = new edjsParser(undefined, undefined);
+    // const parser = new edjsParser(undefined, undefined);
 
     console.log(savedData?.blocks);
-    console.log('converted', converted);
+    // console.log('converted', converted);
     console.log('parser --->', editorJsParser(savedData?.blocks));
   }, []);
 
@@ -190,13 +190,7 @@ const GrapeEditor = () => {
           });
           convertedHtml += '</ul>';
           break;
-        case 'table':
-          convertedHtml += '<table>';
-          block.data.items.forEach(function (li) {
-            convertedHtml += `<li>${li}</li>`;
-          });
-          convertedHtml += '</table>';
-          break;
+
         default:
           console.log('Unknown block type', block.type);
           break;
@@ -207,16 +201,11 @@ const GrapeEditor = () => {
   };
 
   return (
-    <>
-      <button onClick={handleSave}>save</button>
-      {/* <div id="editor" /> */}
-
-      <ReactEditorJS
-        onInitialize={handleInitialize}
-        tools={EDITOR_JS_TOOLS}
-        placeholder="Lets start making your content!"
-      />
-    </>
+    <ReactEditorJS
+      tools={EDITOR_JS_TOOLS}
+      onInitialize={handleInitialize}
+      placeholder="Lets start making your content!"
+    />
   );
 };
 

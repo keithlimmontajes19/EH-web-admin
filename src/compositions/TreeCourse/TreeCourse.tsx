@@ -151,6 +151,11 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                   }}
                 >
                   <BuildIcon
+                    onClick={() =>
+                      history.push(
+                        '/learn/builder/:courseId/:lessonId/:contents?'
+                      )
+                    }
                     src={hammericon}
                     color="#4C4B7B"
                     style={{

@@ -24,6 +24,7 @@ import ProfileUser from 'compositions/ProfileUser';
 import ProfileAccount from 'compositions/ProfileAccount';
 import ProfileOrg from 'compositions/ProfileOrganization';
 import ProfileDetails from 'compositions/ProfileDetails';
+import FormBuilder from 'compositions/FormBuilder';
 
 const Navigation = () => {
   return (
@@ -51,14 +52,19 @@ const Navigation = () => {
        * =============
        */}
       <Route exact path="/learn" component={Learn} />
+
       <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
       <Route path="/learn/courses/:page?/:subpage?" component={Courses} />
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
+      <Route path="/learn/reports/:page?/:subpage?" component={Reports} />
       <Route
         path="/learn/quizzes/:page?/:subpage?/:item?"
         component={Quizzes}
       />
-      <Route path="/learn/reports/:page?/:subpage?" component={Reports} />
+      <Route
+        path="/learn/builder/:courseId/:lessonId/:contents?"
+        component={FormBuilder}
+      />
 
       {/**
        * =============
