@@ -7,6 +7,7 @@ import {
   StyledText,
   StyledStar,
   StyledLabel,
+  StyleAction,
   // StyledPopover,
   StyledSubtitle,
   StyledCollapse,
@@ -25,7 +26,14 @@ import {
   Collapse,
   PageHeader,
 } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+
+import {
+  EyeFilled,
+  EditFilled,
+  BuildFilled,
+  DeleteFilled,
+  LoadingOutlined,
+} from '@ant-design/icons';
 
 import StyledButton from 'components/StyledButton';
 import BuilderCourse from 'compositions/BuilderCourse';
@@ -33,6 +41,7 @@ import CreateCourses from 'compositions/CreateCourses';
 import ModalCurriculum from 'compositions/ModalCurriculum';
 // import TableCourses from "compositions/TableCourses";
 
+import Lessons from '../Lessons';
 import Loading from 'components/Loading';
 import IconImage from 'components/IconImage';
 import RatingStar from 'components/RatingStar';
@@ -48,7 +57,7 @@ import COLOR_ASSIGNMENT from 'assets/icons/color-assignment.png';
 
 /* reducer action */
 import {
-  getContents,
+  // getContents,
   getLessons,
   getMyCourses,
   deleteCourse,
@@ -56,9 +65,6 @@ import {
 } from 'ducks/lms/actionCreator';
 import { RootState } from 'ducks/store';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { EyeFilled, BuildFilled, DeleteFilled } from '@ant-design/icons';
-import Lessons from '../Lessons';
 
 const { Panel } = Collapse;
 

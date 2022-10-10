@@ -27,6 +27,17 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "src/components/GrapeEditor/GrapeEditorjtsx",
+    "src/components/GrapeEditor/components/Video.js"
+  ],
+
+  "exclude": [
+    "**/*.js",
+    "**/*.jsx",
+    "node_modules",
+    "src/components/GrapeEditor/components/SlateEditor/Toolbar/Toolbar.jsx"
+  ]
 }

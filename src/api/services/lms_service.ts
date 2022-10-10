@@ -183,11 +183,21 @@ const auth_services = {
       `${ORGANIZATION}/${organizationId}/course-reports/user/${userId}/course/${courseId}`
     ),
   getUserDetails: (userId: string) => api.get(`${USERS}/${userId}`),
-  uploadCoursePreview: (courseId: string) =>
-    api.patch(`courses/${courseId}/preview`),
 
   /**
-   * NEW ENDPOINTS KEITH
+   * UPLOAD UPDATE ENDPOINTS
+   * TOPIC QUIZ LESSON
+   **/
+
+  uploadCoursePreview: (courseId: string) =>
+    api.patch(`courses/${courseId}/preview`),
+  uploadLessonPreview: (lessonId: string) =>
+    api.patch(`lessons/${lessonId}/preview`),
+  uploadContentPreview: (contentId: string) =>
+    api.patch(`topics/${contentId}/preview`),
+
+  /**
+   * NEW ENDPOINTS
    * TOPIC QUIZ
    **/
   getTopic: (id: any) => api.get(`/topics/${id}`),

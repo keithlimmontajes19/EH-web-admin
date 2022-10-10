@@ -5,7 +5,7 @@
 @import 'antd/dist/antd.min.css';
 @import '~gleap/build/index.min.css';
 
-.react-horizontal-scrolling-menu--scroll-container  {
+.react-horizontal-scrolling-menu--scroll-container {
   display: flex;
   height: max-content;
   overflow-x: scroll;
@@ -14,7 +14,6 @@
   position: relative;
   width: 100%;
 }
-
 
 ::-webkit-scrollbar {
   width: 0;
@@ -31,4 +30,28 @@
   min-height: 225px !important;
   max-height: 225px !important;
   border-radius: 15px !important;
- }
+}
+
+.ce-block__content {
+  position: relative;
+  max-width: 100%;
+  width: 200%;
+  -webkit-transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease;
+}
+
+.ce-toolbar {
+  left: 10;
+  right: 0;
+  -webkit-transition: opacity 0.1s ease;
+  transition: opacity 0.1s ease;
+  will-change: opacity, top;
+  /* display: none; */
+}
+
+.ce-toolbar__content {
+  /* max-width: 650px; */
+  /* margin: 0 auto; */
+  margin-left: -5px;
+  position: block !important;
+}

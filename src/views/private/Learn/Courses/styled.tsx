@@ -104,3 +104,12 @@ export const StyledContentText = styled.span`
   margin-left: 15px;
   // border-top: 1px solid #f0f0f3;
 `;
+
+export const StyleAction = styled.span`
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 28px;
+  color: #4c4b7b;
+`;
