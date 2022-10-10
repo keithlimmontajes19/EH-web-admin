@@ -62,7 +62,7 @@ const Navigation = () => {
         component={Quizzes}
       />
       <Route
-        path="/learn/builder/:courseId/:lessonId/:contents?"
+        path="/learn/builder/:courseId/:lessonId"
         component={FormBuilder}
       />
 

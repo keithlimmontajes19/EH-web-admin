@@ -34,29 +34,24 @@
 
 .ce-block__content {
   position: relative;
-  /* max-width: 700px; */
-  width: 100%;
+  max-width: 100%;
+  width: 200%;
   -webkit-transition: background-color 0.15s ease;
   transition: background-color 0.15s ease;
 }
 
-/* .ce-toolbar__plus {
-  color: #1d202b;
-  cursor: pointer;
-  width: 26px;
-  height: 26px;
-  border-radius: 7px;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-} */
+.ce-toolbar {
+  left: 10;
+  right: 0;
+  -webkit-transition: opacity 0.1s ease;
+  transition: opacity 0.1s ease;
+  will-change: opacity, top;
+  /* display: none; */
+}
+
+.ce-toolbar__content {
+  /* max-width: 650px; */
+  /* margin: 0 auto; */
+  margin-left: -5px;
+  position: block !important;
+}

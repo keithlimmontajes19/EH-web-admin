@@ -21,13 +21,13 @@ export const StyledPopover = styled(Popconfirm).attrs((props) => ({
 }))``;
 
 export const FormContainer = styled.div`
-  width: 60%;
+  width: 100%;
   min-height: 1000px !important;
   padding: 20px;
   border-radius: 10px;
   background: #fff;
-  margin-left: auto;
-  margin-right: auto;
+  // margin-left: auto;
+  // margin-right: auto;
   box-shadow: 1px 0px 5px -1px rgba(0, 0, 0, 0.78);
   -webkit-box-shadow: 1px 0px 5px -1px rgba(0, 0, 0, 0.78);
   -moz-box-shadow: 1px 0px 5px -1px rgba(0, 0, 0, 0.78);

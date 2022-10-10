@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import type { PropsType } from './types';
 
 import { useHistory } from 'react-router-dom';
@@ -21,15 +21,31 @@ import {
 import { theme } from 'utils/colors';
 import { Modal, Row, message, Avatar, Upload } from 'antd';
 
+import lmsService from 'api/services/lms_service';
+import { useDispatch } from 'react-redux';
+import { updateCourse } from 'ducks/lms/actionCreator';
+import { getCourse, postCourse } from 'ducks/lms/actionCreator';
+
+import ReactPlayer from 'react-player';
 import IconImage from 'components/IconImage';
+import Button from 'components/StyledButton';
 import GrapeEditor from 'components/GrapeEditor';
 import NO_IMAGE from 'assets/icons/no-purple-box.png';
-import Button from 'components/StyledButton';
 
 const FormBuilder = (props: PropsType): ReactElement => {
-  const history = useHistory();
-  const [fileUrl, setFileUrl] = useState(null);
+  const history: any = useHistory();
 
+  const data = history.location?.state?.data;
+  const [fileUrl, setFileUrl] = useState(null);
+  const [isImage, setIsImage] = useState(true);
+
+  console.log('data', data);
+
+  useEffect(() => {
+    if (data) {
+      setFileUrl(data?.preview);
+    }
+  }, [data]);
   /**
    *================
    * @returns
@@ -49,13 +65,42 @@ const FormBuilder = (props: PropsType): ReactElement => {
     if (info.file.status === 'done') {
       const file = info?.file?.originFileObj;
 
-      // UploadCoverPhoto(info);
       // handleUpload(type, file);
+
+      UploadCoverPhoto(info);
       setFileUrl(info?.file?.response?.data?.url);
 
       message.success(`${info.file.name} file uploaded successfully`);
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
+    }
+  };
+
+  const UploadCoverPhoto = async (response) => {
+    if (response) {
+      if (data?.contentType === 'topic' || data?.contentType === 'quiz') {
+        await lmsService.uploadContentPreview(data?._id).then((res) => {
+          fetch(res?.data?.data, {
+            body: response?.file?.originFileObj,
+            method: 'PUT',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        });
+      } else {
+        await lmsService.uploadLessonPreview(data?._id).then((res) => {
+          fetch(res?.data?.data, {
+            body: response?.file?.originFileObj,
+            method: 'PUT',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+        });
+      }
     }
   };
 
@@ -96,7 +141,7 @@ const FormBuilder = (props: PropsType): ReactElement => {
 
       <div
         onClick={() => setFileUrl('')}
-        style={{ marginRight: 'auto', marginLeft: '20%' }}
+        // style={{ marginRight: 'auto', marginLeft: '20%' }}
       >
         <Upload
           {...uploadProps}
@@ -109,6 +154,7 @@ const FormBuilder = (props: PropsType): ReactElement => {
             b={`1px solid ${theme.PRIMARY}`}
             icon={<PictureOutlined />}
             style={{ width: 185, marginBottom: 20 }}
+            onClick={() => setIsImage(true)}
           >
             <StyledCoverphoto>COVER PHOTO</StyledCoverphoto>
           </Button>
@@ -125,12 +171,13 @@ const FormBuilder = (props: PropsType): ReactElement => {
             b={`1px solid ${theme.PRIMARY}`}
             icon={<PlayCircleOutlined />}
             style={{ width: 185, marginBottom: 20, marginLeft: 10 }}
+            onClick={() => setIsImage(false)}
           >
             <StyledCoverphoto>COVER VIDEO</StyledCoverphoto>
           </Button>
         </Upload>
 
-        <div onClick={() => setFileUrl('')} style={{ marginBottom: 20 }}>
+        <div style={{ marginBottom: 20 }}>
           <Avatar
             src={fileUrl}
             size="large"
@@ -141,14 +188,31 @@ const FormBuilder = (props: PropsType): ReactElement => {
               maxHeight: 150,
               borderRadius: 15,
             }}
-            icon={<IconImage source={NO_IMAGE} width={70} height={61} />}
+            icon={
+              !fileUrl ? (
+                <IconImage source={NO_IMAGE} width={70} height={61} />
+              ) : (
+                <ReactPlayer
+                  onError={(err) => err && setIsImage(true)}
+                  playing
+                  width={200}
+                  height={150}
+                  url={[
+                    {
+                      src: fileUrl,
+                      type: 'video/mp4',
+                    },
+                  ]}
+                />
+              )
+            }
           />
         </div>
       </div>
 
-      <FormContainer>
-        <GrapeEditor />
-      </FormContainer>
+      {/* <FormContainer> */}
+      <GrapeEditor />
+      {/* </FormContainer> */}
     </div>
   );
 };
