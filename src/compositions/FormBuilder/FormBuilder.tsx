@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState, useCallback, useRef } from 'react';
 import type { PropsType } from './types';
 
 import { useHistory } from 'react-router-dom';
@@ -19,33 +19,38 @@ import {
   PlayCircleOutlined,
 } from '@ant-design/icons';
 import { theme } from 'utils/colors';
+import { notificationAlert } from 'utils/alerts';
 import { Modal, Row, message, Avatar, Upload } from 'antd';
-
-import lmsService from 'api/services/lms_service';
-import { useDispatch } from 'react-redux';
-import { updateCourse } from 'ducks/lms/actionCreator';
-import { getCourse, postCourse } from 'ducks/lms/actionCreator';
 
 import ReactPlayer from 'react-player';
 import IconImage from 'components/IconImage';
 import Button from 'components/StyledButton';
 import GrapeEditor from 'components/GrapeEditor';
+import lmsService from 'api/services/lms_service';
 import NO_IMAGE from 'assets/icons/no-purple-box.png';
 
 const FormBuilder = (props: PropsType): ReactElement => {
   const history: any = useHistory();
+  const editorCore = useRef(null);
 
   const data = history.location?.state?.data;
+
+  const [blocks, setBlocks] = useState<any>({});
   const [fileUrl, setFileUrl] = useState(null);
   const [isImage, setIsImage] = useState(true);
+  const [load, setLoad] = useState(false);
 
-  console.log('data', data);
+  const isTopic = data?.contentType === 'topic' || data?.contentType === 'quiz';
 
   useEffect(() => {
-    if (data) {
-      setFileUrl(data?.preview);
-    }
-  }, [data]);
+    const parseBlocks: any = data?.body ? JSON.parse(data?.body) : {};
+
+    setBlocks(parseBlocks);
+    setFileUrl(data?.preview);
+
+    setLoad(true);
+  }, [data, history, editorCore]);
+
   /**
    *================
    * @returns
@@ -63,10 +68,6 @@ const FormBuilder = (props: PropsType): ReactElement => {
 
   const onChangeImageVideo = (info, type) => {
     if (info.file.status === 'done') {
-      const file = info?.file?.originFileObj;
-
-      // handleUpload(type, file);
-
       UploadCoverPhoto(info);
       setFileUrl(info?.file?.response?.data?.url);
 
@@ -78,7 +79,7 @@ const FormBuilder = (props: PropsType): ReactElement => {
 
   const UploadCoverPhoto = async (response) => {
     if (response) {
-      if (data?.contentType === 'topic' || data?.contentType === 'quiz') {
+      if (isTopic) {
         await lmsService.uploadContentPreview(data?._id).then((res) => {
           fetch(res?.data?.data, {
             body: response?.file?.originFileObj,
@@ -103,6 +104,28 @@ const FormBuilder = (props: PropsType): ReactElement => {
       }
     }
   };
+
+  const onSave = useCallback(async () => {
+    const savedData =
+      await editorCore.current.dangerouslyLowLevelInstance?.save();
+
+    const item = {
+      position: 0,
+      title: data?.title,
+      description: data?.description,
+      body: JSON.stringify(savedData),
+    };
+
+    if (isTopic) {
+      await lmsService
+        ?.updateTopicNew(data?._id, item)
+        .then(() => notificationAlert('success', 'Content published success!'));
+    } else {
+      await lmsService
+        ?.updateLessonNew(data?._id, item)
+        .then(() => notificationAlert('success', 'Lesson published success!'));
+    }
+  }, []);
 
   return (
     <div
@@ -131,11 +154,12 @@ const FormBuilder = (props: PropsType): ReactElement => {
             onClick={() =>
               Modal.confirm({
                 title: 'Reset Edit Progress?',
+                onOk: () => editorCore.current.clear(),
               })
             }
           />
 
-          <StyledButton>PUBLISH</StyledButton>
+          <StyledButton onClick={() => onSave()}>PUBLISH</StyledButton>
         </div>
       </Row>
 
@@ -211,7 +235,9 @@ const FormBuilder = (props: PropsType): ReactElement => {
       </div>
 
       {/* <FormContainer> */}
-      <GrapeEditor />
+      {(blocks?.version || load) && (
+        <GrapeEditor editorCore={editorCore} blocks={blocks} />
+      )}
       {/* </FormContainer> */}
     </div>
   );
