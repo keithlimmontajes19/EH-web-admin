@@ -39,7 +39,7 @@ export const EDITOR_JS_TOOLS = {
   quote: Quote,
   checklist: CheckList,
   delimiter: Delimiter,
-  // inlineCode: InlineCode,
+  inlineCode: InlineCode,
   image: {
     class: Image,
     config: {
@@ -144,64 +144,66 @@ export const EDITOR_JS_TOOLS = {
 //   },
 // });
 
-const GrapeEditor = () => {
-  const editorCore = React.useRef(null);
+// const convertDataToHtml = (blocks) => {
+//   let convertedHtml = '';
+//   blocks.map((block) => {
+//     switch (block.type) {
+//       case 'header':
+//         convertedHtml += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
+//         break;
+//       case 'video':
+//         convertedHtml += `<div><iframe width="560" height="315" src="${block.data.file.url}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+//         break;
+//       case 'paragraph':
+//         convertedHtml += `<p>${block.data.text}</p>`;
+//         break;
+//       case 'delimiter':
+//         convertedHtml += '<hr />';
+//         break;
+//       case 'image':
+//         convertedHtml += `<img class="img-fluid" src="${block.data.file.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em>`;
+//         break;
+//       case 'list':
+//         convertedHtml += '<ul>';
+//         block.data.items.forEach(function (li) {
+//           convertedHtml += `<li>${li}</li>`;
+//         });
+//         convertedHtml += '</ul>';
+//         break;
+//       default:
+//         console.log('Unknown block type', block.type);
+//         break;
+//     }
+//   });
+//   return convertedHtml;
+// };
+
+const GrapeEditor = (props: any) => {
+  const { editorCore, blocks } = props;
+
+  console.log('blocks', blocks);
 
   const handleInitialize = React.useCallback((instance) => {
     editorCore.current = instance;
   }, []);
 
-  const handleSave = React.useCallback(async () => {
-    const savedData =
-      await editorCore.current.dangerouslyLowLevelInstance?.save();
-    // const converted = convertDataToHtml(savedData?.blocks);
+  // const handleSave = React.useCallback(async () => {
+  //   const savedData =
+  //     await editorCore.current.dangerouslyLowLevelInstance?.save();
 
-    // const parser = new edjsParser(undefined, undefined);
+  //   // const converted = convertDataToHtml(savedData?.blocks);
+  //   // const parser = new edjsParser(undefined, undefined);
+  //   // console.log('converted', converted);
 
-    console.log(savedData?.blocks);
-    // console.log('converted', converted);
-    console.log('parser --->', editorJsParser(savedData?.blocks));
-  }, []);
-
-  const convertDataToHtml = (blocks) => {
-    let convertedHtml = '';
-
-    blocks.map((block) => {
-      switch (block.type) {
-        case 'header':
-          convertedHtml += `<h${block.data.level}>${block.data.text}</h${block.data.level}>`;
-          break;
-        case 'video':
-          convertedHtml += `<div><iframe width="560" height="315" src="${block.data.file.url}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
-          break;
-        case 'paragraph':
-          convertedHtml += `<p>${block.data.text}</p>`;
-          break;
-        case 'delimiter':
-          convertedHtml += '<hr />';
-          break;
-        case 'image':
-          convertedHtml += `<img class="img-fluid" src="${block.data.file.url}" title="${block.data.caption}" /><br /><em>${block.data.caption}</em>`;
-          break;
-        case 'list':
-          convertedHtml += '<ul>';
-          block.data.items.forEach(function (li) {
-            convertedHtml += `<li>${li}</li>`;
-          });
-          convertedHtml += '</ul>';
-          break;
-
-        default:
-          console.log('Unknown block type', block.type);
-          break;
-      }
-    });
-
-    return convertedHtml;
-  };
+  //   setValues(savedData?.blocks);
+  //   console.log(savedData?.blocks);
+  //   console.log('parser --->', editorJsParser(savedData?.blocks));
+  // }, []);
 
   return (
     <ReactEditorJS
+      value={blocks}
+      defaultValue={blocks}
       tools={EDITOR_JS_TOOLS}
       onInitialize={handleInitialize}
       placeholder="Lets start making your content!"

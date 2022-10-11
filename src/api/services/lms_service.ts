@@ -195,6 +195,10 @@ const auth_services = {
     api.patch(`lessons/${lessonId}/preview`),
   uploadContentPreview: (contentId: string) =>
     api.patch(`topics/${contentId}/preview`),
+  updateTopicNew: (topicId: string, payload: any) =>
+    api.patch(`topics/${topicId}`, payload),
+  updateLessonNew: (lessonId: string, payload: any) =>
+    api.patch(`lessons/${lessonId}`, payload),
 
   /**
    * NEW ENDPOINTS
