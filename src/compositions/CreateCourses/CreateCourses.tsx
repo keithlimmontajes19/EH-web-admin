@@ -33,9 +33,7 @@ const CreateCourses = (props: PropsType): ReactElement => {
     if (organization && organization.length) {
       setIsModalVisible(false);
       setTimeout(() => {
-        history.push('/learn/courses/add', {
-          organization: organization,
-        });
+        history.push('/course/builder/');
       }, 50);
     } else {
       return notificationAlert(

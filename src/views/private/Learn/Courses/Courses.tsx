@@ -102,7 +102,9 @@ const Courses = (): ReactElement => {
         <ColumnText
           onClick={() => {
             localStorage.setItem('courseId', item?._id);
-            history.push('/learn/courses/builder/' + item?._id);
+            history.push(`/course/builder/${item?._id}`, {
+              isBuilder: 'false',
+            });
           }}
         >
           <BuildFilled style={{ color: '#4C4B7B' }} />
@@ -172,247 +174,238 @@ const Courses = (): ReactElement => {
 
   const content = (
     <>
-      {params.page ? (
+      {/* {params.page ? (
         <BuilderCourse id={params.subpage} />
-      ) : (
-        <Layout style={{ paddingRight: 50, background: 'transparent' }}>
-          <PageHeader
-            ghost={false}
-            title={<StyledTitle>Courses</StyledTitle>}
-            style={{ background: 'none', paddingTop: 8 }}
-            extra={[
-              <StyledButton w={130} onClick={() => setIsModalVisible(true)}>
-                CREATE
-              </StyledButton>,
-            ]}
-          />
+      ) : ( */}
+      <Layout style={{ paddingRight: 50, background: 'transparent' }}>
+        <PageHeader
+          ghost={false}
+          title={<StyledTitle>Courses</StyledTitle>}
+          style={{ background: 'none', paddingTop: 8 }}
+          extra={[
+            <StyledButton w={130} onClick={() => setIsModalVisible(true)}>
+              CREATE
+            </StyledButton>,
+          ]}
+        />
 
-          {(courses || []).map((item) => {
-            return (
-              <StyledCollapse
+        {(courses || []).map((item) => {
+          return (
+            <StyledCollapse
+              key={item?._id}
+              style={{ marginBottom: 10 }}
+              onChange={(event) => {
+                if (event?.length) {
+                  setCourseId(item?._id);
+                  dispatch(getLessons({ id: item?._id, callback }));
+                }
+              }}
+            >
+              <Panel
                 key={item?._id}
-                style={{ marginBottom: 10 }}
-                onChange={(event) => {
-                  if (event?.length) {
-                    setCourseId(item?._id);
-                    dispatch(getLessons({ id: item?._id, callback }));
-                  }
-                }}
-              >
-                <Panel
-                  key={item?._id}
-                  header={
-                    <Row style={{ width: '100%' }} gutter={20}>
-                      <Col span={4}>
-                        <Avatar
-                          src={item?.preview}
-                          size="large"
-                          shape="square"
-                          style={{
-                            width: 150,
-                            minHeight: 100,
-                            maxHeight: 100,
-                            borderRadius: 15,
-                          }}
-                          icon={
-                            <IconImage
-                              source={NO_IMAGE}
-                              width={70}
-                              height={61}
-                            />
-                          }
-                        />
-                      </Col>
-
-                      <Col span={12}>
-                        <div>
-                          <StyledText>{item?.title}</StyledText>
-                          <StyledSubtitle>
-                            {item?.instructor?.name}
-                          </StyledSubtitle>
-
-                          <div
-                            style={{ display: 'flex', flexDirection: 'row' }}
-                          >
-                            <div>
-                              <StyledLabel>
-                                <IconImage
-                                  width={10}
-                                  height={10}
-                                  source={COLOR_LESSON}
-                                />
-                                &nbsp; &nbsp;{item?.stats?.lessons || 0} Lessons
-                              </StyledLabel>
-
-                              <StyledLabel>
-                                <IconImage
-                                  width={10}
-                                  height={10}
-                                  source={COLOR_TOPICS}
-                                />
-                                &nbsp; &nbsp;{item?.stats?.topics || 0} Topics
-                              </StyledLabel>
-                            </div>
-
-                            <div style={{ marginLeft: 200 }}>
-                              <StyledLabel>
-                                <IconImage
-                                  width={10}
-                                  height={10}
-                                  source={COLOR_QUIZ}
-                                />
-                                &nbsp; &nbsp;{item?.stats?.quizzes || 0} Quiz
-                              </StyledLabel>
-
-                              <StyledLabel>
-                                <IconImage
-                                  width={10}
-                                  height={10}
-                                  source={COLOR_ASSIGNMENT}
-                                />
-                                &nbsp; &nbsp;{item?.stats?.videos || 0}{' '}
-                                Assignment
-                              </StyledLabel>
-                            </div>
-                          </div>
-                        </div>
-                      </Col>
-
-                      <Col span={7}>
-                        <Row>
-                          <div style={{ marginTop: -3, marginRight: 6 }}>
-                            <RatingStar count={1} />
-                          </div>
-                          <StyledStar>5.0</StyledStar>
-                        </Row>
-                      </Col>
-
-                      <Col flex={1}>
-                        <Tooltip
-                          color="#fff"
-                          placement="bottomRight"
-                          title={popoverContent(item)}
-                          overlayInnerStyle={{
-                            width: 150,
-                            borderRadius: 15,
-                          }}
-                        >
-                          <div style={{ padding: 5 }}>
-                            <IconImage
-                              source={COLOR_KEBAB}
-                              width={16}
-                              height={4}
-                            />
-                          </div>
-                        </Tooltip>
-                      </Col>
-                    </Row>
-                  }
-                >
-                  {lessonLoading && item?._id === courseId ? (
-                    <div
-                      style={{
-                        padding: 20,
-                        marginLeft: '50%',
-                        marginRight: '50%',
-                      }}
-                    >
-                      <Spin
-                        indicator={
-                          <LoadingOutlined style={{ fontSize: 18 }} spin />
+                header={
+                  <Row style={{ width: '100%' }} gutter={20}>
+                    <Col span={4}>
+                      <Avatar
+                        src={item?.preview}
+                        size="large"
+                        shape="square"
+                        style={{
+                          width: 150,
+                          minHeight: 100,
+                          maxHeight: 100,
+                          borderRadius: 15,
+                        }}
+                        icon={
+                          <IconImage source={NO_IMAGE} width={70} height={61} />
                         }
                       />
-                    </div>
-                  ) : (
-                    (item?.lessons || []).map((lesson) => {
-                      let collapseProps = {};
+                    </Col>
 
-                      if (!lesson?.contents.length) {
-                        collapseProps = {
-                          expandIcon: () => (
-                            <span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
-                          ),
-                        };
-                      }
+                    <Col span={12}>
+                      <div>
+                        <StyledText>{item?.title}</StyledText>
+                        <StyledSubtitle>
+                          {item?.instructor?.name}
+                        </StyledSubtitle>
 
-                      return (
-                        <Collapse
-                          {...collapseProps}
-                          bordered={false}
-                          key={lesson?._id}
-                        >
-                          <div
-                            style={{
-                              marginLeft: 19,
-                              width: '97.5%',
-                              alignSelf: 'center',
-                              borderTop: '1px solid #f0f0f3',
-                            }}
+                        <div style={{ display: 'flex', flexDirection: 'row' }}>
+                          <div>
+                            <StyledLabel>
+                              <IconImage
+                                width={10}
+                                height={10}
+                                source={COLOR_LESSON}
+                              />
+                              &nbsp; &nbsp;{item?.stats?.lessons || 0} Lessons
+                            </StyledLabel>
+
+                            <StyledLabel>
+                              <IconImage
+                                width={10}
+                                height={10}
+                                source={COLOR_TOPICS}
+                              />
+                              &nbsp; &nbsp;{item?.stats?.topics || 0} Topics
+                            </StyledLabel>
+                          </div>
+
+                          <div style={{ marginLeft: 200 }}>
+                            <StyledLabel>
+                              <IconImage
+                                width={10}
+                                height={10}
+                                source={COLOR_QUIZ}
+                              />
+                              &nbsp; &nbsp;{item?.stats?.quizzes || 0} Quiz
+                            </StyledLabel>
+
+                            <StyledLabel>
+                              <IconImage
+                                width={10}
+                                height={10}
+                                source={COLOR_ASSIGNMENT}
+                              />
+                              &nbsp; &nbsp;{item?.stats?.videos || 0} Assignment
+                            </StyledLabel>
+                          </div>
+                        </div>
+                      </div>
+                    </Col>
+
+                    <Col span={7}>
+                      <Row>
+                        <div style={{ marginTop: -3, marginRight: 6 }}>
+                          <RatingStar count={1} />
+                        </div>
+                        <StyledStar>5.0</StyledStar>
+                      </Row>
+                    </Col>
+
+                    <Col flex={1}>
+                      <Tooltip
+                        color="#fff"
+                        placement="bottomRight"
+                        title={popoverContent(item)}
+                        overlayInnerStyle={{
+                          width: 150,
+                          borderRadius: 15,
+                        }}
+                      >
+                        <div style={{ padding: 5 }}>
+                          <IconImage
+                            source={COLOR_KEBAB}
+                            width={16}
+                            height={4}
                           />
+                        </div>
+                      </Tooltip>
+                    </Col>
+                  </Row>
+                }
+              >
+                {lessonLoading && item?._id === courseId ? (
+                  <div
+                    style={{
+                      padding: 20,
+                      marginLeft: '50%',
+                      marginRight: '50%',
+                    }}
+                  >
+                    <Spin
+                      indicator={
+                        <LoadingOutlined style={{ fontSize: 18 }} spin />
+                      }
+                    />
+                  </div>
+                ) : (
+                  (item?.lessons || []).map((lesson) => {
+                    let collapseProps = {};
 
-                          <Panel
-                            key={lesson?._id}
-                            header={
-                              <StyledLessonText>
-                                {lesson?.title}
-                              </StyledLessonText>
-                            }
-                          >
-                            {(lesson?.contents || []).map((content) => {
-                              return (
-                                <div key={content?._id} style={{ padding: 10 }}>
-                                  <div
-                                    style={{
-                                      padding: 8,
-                                      width: '100%',
-                                      alignSelf: 'center',
-                                      borderTop: '1px solid #f0f0f3',
-                                    }}
-                                  />
+                    if (!lesson?.contents.length) {
+                      collapseProps = {
+                        expandIcon: () => (
+                          <span>&nbsp; &nbsp; &nbsp; &nbsp;</span>
+                        ),
+                      };
+                    }
 
-                                  <IconImage
-                                    width={20}
-                                    height={20}
-                                    source={
-                                      content?.contentType === 'topic'
-                                        ? TOPIC_PINK
-                                        : QUIZ_PINK
-                                    }
-                                  />
+                    return (
+                      <Collapse
+                        {...collapseProps}
+                        bordered={false}
+                        key={lesson?._id}
+                      >
+                        <div
+                          style={{
+                            marginLeft: 19,
+                            width: '97.5%',
+                            alignSelf: 'center',
+                            borderTop: '1px solid #f0f0f3',
+                          }}
+                        />
 
-                                  <StyledContentText>
-                                    {content?.title}
-                                  </StyledContentText>
-                                </div>
-                              );
-                            })}
-                          </Panel>
-                        </Collapse>
-                      );
-                    })
-                  )}
-                </Panel>
-              </StyledCollapse>
-            );
-          })}
+                        <Panel
+                          key={lesson?._id}
+                          header={
+                            <StyledLessonText>{lesson?.title}</StyledLessonText>
+                          }
+                        >
+                          {(lesson?.contents || []).map((content) => {
+                            return (
+                              <div key={content?._id} style={{ padding: 10 }}>
+                                <div
+                                  style={{
+                                    padding: 8,
+                                    width: '100%',
+                                    alignSelf: 'center',
+                                    borderTop: '1px solid #f0f0f3',
+                                  }}
+                                />
 
-          {/**
-           * ==============
-           * MODALS FOR LMS
-           * ==============
-           * */}
-          {/* <TableCourses /> */}
-          <ModalCurriculum
-            isVisible={viewVisible}
-            isCancel={() => setViewVisible(false)}
-          />
+                                <IconImage
+                                  width={20}
+                                  height={20}
+                                  source={
+                                    content?.contentType === 'topic'
+                                      ? TOPIC_PINK
+                                      : QUIZ_PINK
+                                  }
+                                />
 
-          <CreateCourses
-            isModalVisible={isModalVisible}
-            setIsModalVisible={setIsModalVisible}
-          />
-        </Layout>
-      )}
+                                <StyledContentText>
+                                  {content?.title}
+                                </StyledContentText>
+                              </div>
+                            );
+                          })}
+                        </Panel>
+                      </Collapse>
+                    );
+                  })
+                )}
+              </Panel>
+            </StyledCollapse>
+          );
+        })}
+
+        {/**
+         * ==============
+         * MODALS FOR LMS
+         * ==============
+         * */}
+        {/* <TableCourses /> */}
+        <ModalCurriculum
+          isVisible={viewVisible}
+          isCancel={() => setViewVisible(false)}
+        />
+
+        <CreateCourses
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
+        />
+      </Layout>
+      {/* )} */}
     </>
   );
 

@@ -1,8 +1,9 @@
 export type PropsType = {
-  testID?: string,
+  testID?: string;
 };
 
 export type Params = {
-  page?: string,
-  subpage?: string
-}
+  page?: string;
+  subpage?: string;
+  courseId?: string;
+};

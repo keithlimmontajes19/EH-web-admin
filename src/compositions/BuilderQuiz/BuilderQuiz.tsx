@@ -1,54 +1,60 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from 'react';
 
-import { QuestionLayout, QuizLayout } from "./styled";
-
-import Text from "components/Text";
-import Input from "components/Input";
-import TextArea from "components/TextArea";
-import StyledButton from "components/StyledButton";
-
-import { Col, Layout, PageHeader, Row } from "antd";
-import { PlusOutlined, DownOutlined } from "@ant-design/icons";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteQuizQuestion,
   getMyCourses,
-  getQuizQuestions,
   getSingleLesson,
-  postLessonContent,
   postQuizQuestion,
-  updateLessonContent,
+  getQuizQuestions,
+  postLessonContent,
   updateQuizQuestion,
-} from "ducks/lms/actionCreator";
-import Loading from "components/Loading";
-import { theme } from "utils/colors";
-import { useHistory } from "react-router-dom";
-import Dropdown from "components/Dropdown";
+  deleteQuizQuestion,
+  updateLessonContent,
+} from 'ducks/lms/actionCreator';
+import { Col, Layout, PageHeader, Row } from 'antd';
+import { QuestionLayout, QuizLayout } from './styled';
 
-import BuilderQuizSingleChoice from "compositions/BuilderQuizSingleChoice";
-import BuilderQuizSort from "compositions/BuilderQuizSort";
-import BuilderQuizFillBlanks from "compositions/BuilderQuizFillBlanks";
-import BuilderQuizEssay from "compositions/BuilderQuizEssay";
-import BuilderQuizMultipleChoice from "compositions/BuilderQuizMultipleChoice";
-import { blanks } from "./blanks";
+import { useDispatch, useSelector } from 'react-redux';
+import { PlusOutlined, DownOutlined } from '@ant-design/icons';
+
+import Text from 'components/Text';
+import Input from 'components/Input';
+import Loading from 'components/Loading';
+import Dropdown from 'components/Dropdown';
+import TextArea from 'components/TextArea';
+import StyledButton from 'components/StyledButton';
+import BuilderQuizSort from 'compositions/BuilderQuizSort';
+import BuilderQuizEssay from 'compositions/BuilderQuizEssay';
+import BuilderQuizFillBlanks from 'compositions/BuilderQuizFillBlanks';
+import BuilderQuizSingleChoice from 'compositions/BuilderQuizSingleChoice';
+import BuilderQuizMultipleChoice from 'compositions/BuilderQuizMultipleChoice';
+
+import { blanks } from './blanks';
+import { theme } from 'utils/colors';
+import { useHistory } from 'react-router-dom';
 
 const BuilderQuiz = ({
-  courseid: idCourse = "",
-  lessonid: idLesson = "",
+  courseid: idCourse = '',
+  lessonid: idLesson = '',
 }: any): ReactElement => {
-  const history = useHistory();
+  const history: any = useHistory();
   const dispatch = useDispatch();
+
+  const item = history.location?.state?.data;
   const [data, setData]: any = useState({});
-  const [loading, setLoading] = useState(true);
+  const [type, setType] = useState('');
+  const [loading, setLoading] = useState(false);
   const [builderData, setBuilderData] = useState([]);
 
   const getOrgId = () => {
-    const getItem = localStorage.getItem("organizationId");
-    return getItem ? getItem : "6239ffd1cb8440277f2a2b39";
+    const getItem = localStorage.getItem('organizationId');
+    return getItem ? getItem : '6239ffd1cb8440277f2a2b39';
   };
+
+  console.log('item ====================>', item);
 
   const sortByPosition = (arr) =>
     arr.sort((a, b) => Number(a.position) - Number(b.position));
+
   const recurseQuiz = (arr, i = 0) => {
     if (i >= arr.length) return;
     dispatch(
@@ -61,12 +67,13 @@ const BuilderQuiz = ({
       })
     );
   };
+
   const initialDispatchCallback = (res, ids) => {
     if (!res) return;
     const quizArr = [];
     const sorted = JSON.parse(JSON.stringify(res));
     sorted.contents = sortByPosition(res.contents).map((quizObj, i) => {
-      if (quizObj.contentType !== "quiz") return quizObj;
+      if (quizObj.contentType !== 'quiz') return quizObj;
       const tmp = JSON.parse(JSON.stringify(quizObj));
       quizArr.push({
         idList: { ...ids, idQuiz: quizObj._id },
@@ -122,46 +129,58 @@ const BuilderQuiz = ({
     });
   };
 
-  const headerActions = (i) => [
+  // case 'single-choice':
+  //   return <BuilderQuizSingleChoice {...props} />;
+  // case 'multiple-choice':
+  //   return <BuilderQuizMultipleChoice {...props} />;
+  // case 'essay':
+  //   return <BuilderQuizEssay {...props} />;
+  // case 'sorting':
+  //   return <BuilderQuizSort {...props} />;
+  // case 'fill-in-the-blanks':
+
+  const headerActions = () => [
     {
-      name: "Single Choice",
-      action: () => addNew(blanks.singleChoice, i),
+      name: 'Single Choice',
+      action: () => setType('single-choice'),
     },
     {
-      name: "Multiple Choice",
-      action: () => addNew(blanks.multipleChoice, i),
+      name: 'Multiple Choice',
+      action: () => setType('multiple-choice'),
     },
     {
-      name: "Essay",
-      action: () => addNew(blanks.essay, i),
+      name: 'Essay',
+      action: () => setType('essay'),
     },
     {
-      name: "Fill Blanks",
-      action: () => addNew(blanks.fillBlanks, i),
+      name: 'Fill Blanks',
+      action: () => setType('fill-in-the-blanks'),
     },
     {
-      name: "Sort",
-      action: () => addNew(blanks.sort, i),
+      name: 'Sort',
+      action: () => setType('sorting'),
     },
   ];
 
-  const dataMapper = (questionObj, questionI, contentI) => {
+  const dataMapper = (questionObj) => {
     if (questionObj.isDeleted) return <></>;
+
     const props = {
-      item: "title" in questionObj ? questionObj : undefined,
-      submitQ: (data) => questionSubmit(data, questionI, contentI),
-      deleteQ: () => questionDelete(questionI, contentI),
+      item: undefined,
+      // submitQ: (data) => questionSubmit(data, questionI, contentI),
+      // deleteQ: () => questionDelete(questionI, contentI),
     };
-    switch (questionObj.questionType) {
-      case "single-choice":
+
+    switch (questionObj) {
+      case 'single-choice':
         return <BuilderQuizSingleChoice {...props} />;
-      case "multiple-choice":
+      case 'multiple-choice':
         return <BuilderQuizMultipleChoice {...props} />;
-      case "essay":
+      case 'essay':
         return <BuilderQuizEssay {...props} />;
-      case "sorting":
+      case 'sorting':
         return <BuilderQuizSort {...props} />;
-      case "fill-in-the-blanks":
+      case 'fill-in-the-blanks':
         return <BuilderQuizFillBlanks {...props} />;
       default:
         return <></>;
@@ -221,9 +240,10 @@ const BuilderQuiz = ({
             })
           );
       });
+
     const iterateContent = (arr) =>
       arr.forEach((obj, i) => {
-        if (obj.contentType !== "quiz") return;
+        if (obj.contentType !== 'quiz') return;
         const { isNew, isUpdated, _id: idContent } = obj;
         if (isNew)
           return dispatch(
@@ -270,18 +290,18 @@ const BuilderQuiz = ({
   };
 
   return (
-    <Layout style={{ paddingRight: 50, background: "transparent" }}>
+    <Layout style={{ paddingRight: 50, background: 'transparent' }}>
       <PageHeader
         ghost={false}
         title={
           <Text
             u={true}
             fS={16}
-            fC={"#635FFA"}
+            fC={'#635FFA'}
             fW={500}
-            onClick={() => history.push("/learn/quizzes")}
+            onClick={() => history.push('/learn/quizzes')}
           >
-            {"< "}Back to Quizzes
+            {'< '}Back to Quizzes
           </Text>
         }
         extra={[
@@ -314,56 +334,60 @@ const BuilderQuiz = ({
           // />,
         ]}
         footer={
-          <Text fS={25} fC={"#2B2E4A"}>
+          <Text fS={25} fC={'#2B2E4A'}>
             {!loading && data?.title}
           </Text>
         }
-        style={{ background: "none", paddingTop: 8, paddingBottom: 30 }}
+        style={{ background: 'none', paddingTop: 8, paddingBottom: 30 }}
       />
-      {loading ? (
+
+      {/* {loading ? (
         <Loading />
       ) : (
         <>
-          {data?.contents.map((obj, contentI) => {
-            if (obj.contentType !== "quiz") return <></>;
-            return (
-              <QuizLayout>
-                <Row justify="space-between">
-                  <Col flex={5}>
-                    <Input
-                      isNaked={true}
-                      value={obj.title}
-                      style={{ marginBottom: 30 }}
-                      placeholder={"Add Title"}
-                      onChange={(e) =>
-                        setData((prev) => {
-                          const tmp = JSON.parse(JSON.stringify(prev));
-                          tmp.contents[contentI].title = e.target.value;
-                          tmp.contents[contentI].isUpdated = true;
-                          return tmp;
-                        })
-                      }
-                    />
-                  </Col>
-                  <Col flex={2}></Col>
-                </Row>
-                <TextArea
-                  value={obj.description}
-                  style={{ minHeight: "179px", marginBottom: 30 }}
-                  placeholder="Add Description"
-                  onChange={(e) =>
-                    setData((prev) => {
-                      const tmp = JSON.parse(JSON.stringify(prev));
-                      tmp.contents[contentI].description = e.target.value;
-                      tmp.contents[contentI].isUpdated = true;
-                      return tmp;
-                    })
-                  }
-                />
-                <QuestionLayout>
+          {(data?.contents || [{ data: '1' }]).map((obj, contentI) => {
+            if (obj.contentType !== 'quiz') return <></>; */}
+      {/* // return ( */}
+      <>
+        <QuizLayout>
+          <Row justify="space-between">
+            <Col flex={5}>
+              <Input
+                isNaked={true}
+                // value={obj.title}
+                style={{ marginBottom: 30 }}
+                placeholder={'Add Title'}
+                // onChange={(e) =>
+                // setData((prev) => {
+                //   const tmp = JSON.parse(JSON.stringify(prev));
+                //   tmp.contents[contentI].title = e.target.value;
+                //   tmp.contents[contentI].isUpdated = true;
+                //   return tmp;
+                // })
+                // }
+              />
+            </Col>
+            <Col flex={2}></Col>
+          </Row>
+
+          <TextArea
+            placeholder="Add Description"
+            style={{ minHeight: '179px', marginBottom: 30 }}
+            // value={obj.description}
+            // onChange={(e) =>
+            //   setData((prev) => {
+            //     const tmp = JSON.parse(JSON.stringify(prev));
+            //     tmp.contents[contentI].description = e.target.value;
+            //     tmp.contents[contentI].isUpdated = true;
+            //     return tmp;
+            //   })
+            // }
+          />
+
+          {/* <QuestionLayout>
                   {obj.questions.length === 0 ? (
                     <></>
-                  ) : typeof obj.questions[0] !== "object" ? (
+                  ) : typeof obj.questions[0] !== 'object' ? (
                     <Loading />
                   ) : (
                     obj.questions.map((_obj, questionI) =>
@@ -375,12 +399,12 @@ const BuilderQuiz = ({
                     disabled={
                       obj.questions.length === 0
                         ? false
-                        : typeof obj.questions[0] !== "object"
+                        : typeof obj.questions[0] !== 'object'
                     }
                     title={
                       <StyledButton
                         w={184}
-                        m={"-20px 0 5px 0"}
+                        m={'-20px 0 5px 0'}
                         icon={<PlusOutlined />}
                       >
                         <Text fC="#fff" fS="18" fW="500">
@@ -388,28 +412,46 @@ const BuilderQuiz = ({
                         </Text>
                       </StyledButton>
                     }
-                  />
-                </QuestionLayout>
-              </QuizLayout>
-            );
-          })}
-          <Row justify="end" style={{ marginTop: 150, marginRight: 30 }}>
-            <Col>
-              <StyledButton
-                bg={"none"}
-                c={theme.BLACK}
-                htmlType="button"
-                onClick={() => history.goBack()}
-              >
-                CANCEL
-              </StyledButton>
-              <StyledButton htmlType="submit" onClick={onSave}>
-                SAVE
-              </StyledButton>
-            </Col>
-          </Row>
-        </>
-      )}
+                  /> */}
+          {/* </QuestionLayout> */}
+          {dataMapper(type)}
+        </QuizLayout>
+        {/* ); */}
+        {/* })} */}
+
+        <Dropdown
+          menu={headerActions()}
+          // disabled={
+          //   obj.questions.length === 0
+          //     ? false
+          //     : typeof obj.questions[0] !== 'object'
+          // }
+          title={
+            <StyledButton w={184} m={'-20px 0 5px 0'} icon={<PlusOutlined />}>
+              <Text fC="#fff" fS="18" fW="500">
+                QUESTION
+              </Text>
+            </StyledButton>
+          }
+        />
+
+        <Row justify="end" style={{ marginTop: 150, marginRight: 30 }}>
+          <Col>
+            <StyledButton
+              bg={'none'}
+              c={theme.BLACK}
+              htmlType="button"
+              onClick={() => history.goBack()}
+            >
+              CANCEL
+            </StyledButton>
+            <StyledButton htmlType="submit" onClick={onSave}>
+              SAVE
+            </StyledButton>
+          </Col>
+        </Row>
+      </>
+      {/* )} */}
     </Layout>
   );
 };

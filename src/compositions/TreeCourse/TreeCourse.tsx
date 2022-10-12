@@ -29,8 +29,9 @@ import QUIZ_PINK from 'assets/icons/quiz-pink.png';
 import TOPIC_PINK from 'assets/icons/topic-pink.png';
 import ModalCurriculum from 'compositions/ModalCurriculum';
 import hammericon from '../../assets/icons/hammer-color.png';
+import Loading from 'components/Loading';
 
-function TreeCourse({ course, onAdd, setOnAdd }) {
+function TreeCourse({ course, onAdd, setOnAdd, isBuilder, addNew }) {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -46,26 +47,37 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   const { loading } = lesson;
 
   useEffect(() => {
-    localStorage.setItem('courseId', course._id);
-    localStorage.setItem('organizationId', '6239ffd1cb8440277f2a2b39');
+    if (!addNew) {
+      setData({ curriculum: lesson?.data?.lessons });
+    }
+  }, [loading]);
 
-    dispatch(
-      getLessons({
-        id: course?._id,
-        callback: lessonCallback,
-      })
-    );
+  useEffect(() => {
+    localStorage.setItem('courseId', course._id);
+
+    if (isBuilder === 'false') {
+      dispatch(
+        getLessons({
+          id: course?._id,
+          callback: (res, _id, loading) => {
+            if (!res) return;
+
+            setIsLoading(loading);
+          },
+          // callback: lessonCallback,
+        })
+      );
+    }
   }, []);
 
   const lessonCallback = (res, id, loading) => {
     if (!res) {
       setData({});
       setTreeData([]);
-      setIsLoading(true);
       return;
     }
 
-    setIsLoading(loading);
+    console.log('res', res);
     setData({ curriculum: res?.lessons });
   };
 
@@ -151,11 +163,18 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                   }}
                 >
                   <BuildIcon
-                    onClick={() =>
-                      history.push(`/learn/builder/${course?._id}/${obj._id}`, {
-                        data: obj,
-                      })
-                    }
+                    onClick={() => {
+                      obj?.contentType === 'quiz'
+                        ? history.push('/learn/quiz/builder', {
+                            data: obj,
+                          })
+                        : history.push(
+                            `/learn/builder/${course?._id}/${obj._id}`,
+                            {
+                              data: obj,
+                            }
+                          );
+                    }}
                     src={hammericon}
                     color="#4C4B7B"
                     style={{
@@ -238,6 +257,8 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
                       callback: lessonCallback,
                     })
                   );
+
+                  // setData({ curriculum: res?.lessons });
                 };
 
                 const payload = {
@@ -477,9 +498,14 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
   const handleLessonDispatch = (obj) => {
     const callback = (res: any) => {
       if (!res) return;
-      const newArr = data?.curriculum.concat(res);
+
+      const newArr = Array.from(data?.curriculum || []);
+
+      newArr.push(res);
+
       setData({ curriculum: newArr });
     };
+
     dispatch(
       postLesson({
         data: obj,
@@ -491,41 +517,45 @@ function TreeCourse({ course, onAdd, setOnAdd }) {
     setOnAdd(false);
   };
 
-  return (
-    <div style={{ paddingBottom: 50 }}>
-      <Row justify="space-between">
-        <StyledButton
-          w={180}
-          m={'0 0 20px 0'}
-          p={'-10px 0 0 0'}
-          onClick={() => setOnAdd(true)}
-        >
-          <StyledLesson>ADD LESSON</StyledLesson>
-        </StyledButton>
-      </Row>
+  const content = () => {
+    return (
+      <div style={{ paddingBottom: 50 }}>
+        <Row justify="space-between">
+          <StyledButton
+            w={180}
+            m={'0 0 20px 0'}
+            p={'-10px 0 0 0'}
+            onClick={() => setOnAdd(true)}
+          >
+            <StyledLesson>ADD LESSON</StyledLesson>
+          </StyledButton>
+        </Row>
 
-      {onAdd && (
-        <AddLesson
-          data={data}
-          setOnAdd={setOnAdd}
-          handleDispatch={handleLessonDispatch}
+        {onAdd && (
+          <AddLesson
+            data={data}
+            setOnAdd={setOnAdd}
+            handleDispatch={handleLessonDispatch}
+          />
+        )}
+
+        <StyledTree
+          blockNode
+          onDrop={onDropv2}
+          onExpand={onExpand}
+          treeData={treeData}
+          allowDrop={allowDrop}
+          draggable={!onEdit[0]}
+          className="draggable-tree"
+          expandedKeys={expandedKeys}
+          style={{ background: 'none ' }}
+          onDragStart={({ node }) => setOnDragNode(node)}
         />
-      )}
+      </div>
+    );
+  };
 
-      <StyledTree
-        blockNode
-        onDrop={onDropv2}
-        onExpand={onExpand}
-        treeData={treeData}
-        allowDrop={allowDrop}
-        draggable={!onEdit[0]}
-        className="draggable-tree"
-        expandedKeys={expandedKeys}
-        style={{ background: 'none ' }}
-        onDragStart={({ node }) => setOnDragNode(node)}
-      />
-    </div>
-  );
+  return isLoading ? <Loading /> : content();
 }
 
 export default TreeCourse;

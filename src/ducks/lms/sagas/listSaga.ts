@@ -239,12 +239,12 @@ export function* getLessonId({ payload }: any): any {
 }
 
 export function* getCourse({ payload }: any): any {
-  const { callback = () => {} } = payload;
+  const { callback = () => {}, id } = payload;
 
-  const idCourse = yield call(courseId);
+  // const idCourse = yield call(courseId);
 
   try {
-    const res = yield call(lms_service.getCourse, idCourse);
+    const res = yield call(lms_service.getCourse, id);
 
     yield put({
       type: TYPES.GET_COURSE_SUCCESS,
