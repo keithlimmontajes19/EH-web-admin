@@ -86,8 +86,8 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
 
   const getCourseDetail = (res) => {
     if (res) {
-      setLoading(false);
       setCourse(res?.data);
+      setLoading(false);
     }
   };
 
