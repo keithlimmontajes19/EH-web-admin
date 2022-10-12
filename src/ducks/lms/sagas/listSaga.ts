@@ -173,16 +173,10 @@ export function* getLessonDetails({ payload }: any): any {
 }
 
 export function* getQuizQuestions({ payload }: any): any {
-  const { idOrg, idCourse, idLesson, idQuiz, callback = () => {} } = payload;
+  const { idQuiz, callback = () => {} } = payload;
 
   try {
-    const response = yield call(
-      lms_service.getQuizQuestions,
-      idOrg,
-      idCourse,
-      idLesson,
-      idQuiz
-    );
+    const response = yield call(lms_service.getQuizQuestions, idQuiz);
 
     yield put({
       type: TYPES.GET_QUIZ_QUESTIONS_SUCCESS,

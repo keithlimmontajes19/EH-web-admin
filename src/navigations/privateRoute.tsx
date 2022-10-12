@@ -59,7 +59,10 @@ const Navigation = () => {
       <Route path="/learn/courses" component={Courses} />
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
       <Route path="/learn/reports/:page?/:subpage?" component={Reports} />
-      <Route path="/learn/quiz/builder" component={BuilderQuiz} />
+      <Route
+        path="/learn/quiz/builder/:courseId/:lessonId"
+        component={BuilderQuiz}
+      />
       <Route
         exact
         path="/course/builder/:courseId?"

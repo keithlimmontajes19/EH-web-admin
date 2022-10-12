@@ -165,9 +165,12 @@ function TreeCourse({ course, onAdd, setOnAdd, isBuilder, addNew }) {
                   <BuildIcon
                     onClick={() => {
                       obj?.contentType === 'quiz'
-                        ? history.push('/learn/quiz/builder', {
-                            data: obj,
-                          })
+                        ? history.push(
+                            `/learn/quiz/builder/${course?._id}/${obj._id}`,
+                            {
+                              data: obj,
+                            }
+                          )
                         : history.push(
                             `/learn/builder/${course?._id}/${obj._id}`,
                             {
