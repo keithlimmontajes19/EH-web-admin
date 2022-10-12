@@ -11,27 +11,23 @@ import {
   message,
   PageHeader,
 } from 'antd';
-import { PictureOutlined } from '@ant-design/icons';
-
-/* reducer and actions */
-import lmsService from 'api/services/lms_service';
-import { useDispatch } from 'react-redux';
-import { updateCourse } from 'ducks/lms/actionCreator';
-import { getCourse, postCourse } from 'ducks/lms/actionCreator';
-
 import { theme } from 'utils/colors';
+import { useDispatch } from 'react-redux';
+import { PictureOutlined } from '@ant-design/icons';
+import { updateCourse } from 'ducks/lms/actionCreator';
 import { useHistory, useParams } from 'react-router-dom';
 import { Params } from 'views/private/Learn/Courses/types';
+import { getCourse, postCourse } from 'ducks/lms/actionCreator';
 
 import Input from 'components/Input';
 import Loading from 'components/Loading';
 import IconImage from 'components/IconImage';
 import TreeCourse from 'compositions/TreeCourse';
+import lmsService from 'api/services/lms_service';
 import StyledButton from 'components/StyledButton';
 import NO_IMAGE from 'assets/icons/no-purple-box.png';
 
 const blankData = {
-  body: '',
   title: '',
   points: '',
   description: '',
@@ -44,20 +40,24 @@ const blankData = {
 };
 
 const BuilderCourse = ({ id = '' }: any): ReactElement => {
-  const history: any = useHistory();
   const dispatch = useDispatch();
+  const history: any = useHistory();
   const params: Params = useParams();
 
   const addNew = params.page === 'add';
+  const isBuilder = history?.location?.state?.isBuilder;
   const organizations = history?.location?.state?.organization;
 
-  const [queue, setQueue] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [onAdd, setOnAdd]: any = useState(false);
-  const [refreshed, setRefreshed] = useState(false);
-  const [file, setFile]: any = useState({ type: false, ref: {} });
-  const [fileUrl, setFileUrl] = useState(null);
-  const [course, setCourse]: any = useState(
+  console.log('params', params);
+  console.log('history', history);
+
+  const [queue, setQueue] = useState<any>(false);
+  const [onAdd, setOnAdd] = useState<any>(false);
+  const [fileUrl, setFileUrl] = useState<any>(null);
+  const [loading, setLoading] = useState<any>(true);
+  const [refreshed, setRefreshed] = useState<any>(false);
+  const [file, setFile] = useState<any>({ type: false, ref: {} });
+  const [course, setCourse] = useState<any>(
     JSON.parse(JSON.stringify(blankData))
   );
 
@@ -86,8 +86,8 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
 
   const getCourseDetail = (res) => {
     if (res) {
-      setCourse(res?.data);
       setLoading(false);
+      setCourse(res?.data);
     }
   };
 
@@ -327,7 +327,12 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
           </Row>
 
           {course?._id && (
-            <TreeCourse course={course} onAdd={onAdd} setOnAdd={setOnAdd} />
+            <TreeCourse
+              course={course}
+              onAdd={onAdd}
+              setOnAdd={setOnAdd}
+              isBuilder={isBuilder}
+            />
           )}
         </Layout>
       )}
