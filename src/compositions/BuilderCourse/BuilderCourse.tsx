@@ -48,7 +48,7 @@ const BuilderCourse = (): ReactElement => {
   const id = params?.courseId;
   const addNew = params?.courseId ? false : true;
   const isBuilder = history?.location?.state?.isBuilder;
-  // const organizations = history?.location?.state?.organization;
+  const organizations = history?.location?.state?.organization;
 
   const [queue, setQueue] = useState<any>(false);
   const [onAdd, setOnAdd] = useState<any>(false);
@@ -59,6 +59,8 @@ const BuilderCourse = (): ReactElement => {
   const [course, setCourse] = useState<any>(
     JSON.parse(JSON.stringify(blankData))
   );
+
+  console.log('organizations', organizations);
 
   const courseData: any = useSelector<RootState>((state) => state.lms);
 
@@ -104,9 +106,12 @@ const BuilderCourse = (): ReactElement => {
 
       dispatch(
         postCourse({
-          data: { ...course, description: '&nan' },
+          data: {
+            ...course,
+            organizations: organizations,
+            description: '&nan',
+          },
           callback: (res) => {
-            console.log('res', res);
             if (res) {
               course._id = res?._id || '';
             }
