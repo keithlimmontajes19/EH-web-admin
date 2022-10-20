@@ -1,7 +1,7 @@
 import { ReactElement, useEffect, useState, useCallback, useRef } from 'react';
 import type { PropsType } from './types';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
   StyledLinked,
   StyledButton,
@@ -31,9 +31,13 @@ import NO_IMAGE from 'assets/icons/no-purple-box.png';
 
 const FormBuilder = (props: PropsType): ReactElement => {
   const history: any = useHistory();
+  const params: any = useParams();
   const editorCore = useRef(null);
 
+  const { isBuilder } = props;
   const data = history.location?.state?.data;
+
+  console.log('params', params);
 
   const [blocks, setBlocks] = useState<any>({});
   const [fileUrl, setFileUrl] = useState(null);
@@ -136,7 +140,13 @@ const FormBuilder = (props: PropsType): ReactElement => {
       }}
     >
       <Row>
-        <StyledLinked onClick={() => history.goBack()}>
+        <StyledLinked
+          onClick={() =>
+            history.push(`/course/builder/${params?.courseId}`, {
+              isBuilder: 'true',
+            })
+          }
+        >
           {'<'} Back to Lessons
         </StyledLinked>
 

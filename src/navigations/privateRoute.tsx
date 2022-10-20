@@ -25,6 +25,8 @@ import ProfileAccount from 'compositions/ProfileAccount';
 import ProfileOrg from 'compositions/ProfileOrganization';
 import ProfileDetails from 'compositions/ProfileDetails';
 import FormBuilder from 'compositions/FormBuilder';
+import BuilderQuiz from 'compositions/BuilderQuiz';
+import BuilderCourse from 'compositions/BuilderCourse';
 
 const Navigation = () => {
   return (
@@ -54,9 +56,18 @@ const Navigation = () => {
       <Route exact path="/learn" component={Learn} />
 
       <Route path="/learn/topics/:page?/:subpage?" component={Topics} />
-      <Route path="/learn/courses/:page?/:subpage?" component={Courses} />
+      <Route path="/learn/courses" component={Courses} />
       <Route path="/learn/lessons/:page?/:subpage?" component={Lessons} />
       <Route path="/learn/reports/:page?/:subpage?" component={Reports} />
+      <Route
+        path="/learn/quiz/builder/:courseId/:lessonId"
+        component={BuilderQuiz}
+      />
+      <Route
+        exact
+        path="/course/builder/:courseId?"
+        component={BuilderCourse}
+      />
       <Route
         path="/learn/quizzes/:page?/:subpage?/:item?"
         component={Quizzes}
@@ -65,7 +76,6 @@ const Navigation = () => {
         path="/learn/builder/:courseId/:lessonId"
         component={FormBuilder}
       />
-
       {/**
        * =============
        * TEAM ROUTE

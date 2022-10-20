@@ -17,11 +17,11 @@ export function* updateCourse({ payload }: any): any {
 
   const {
     title,
+    points,
     instructor,
     description,
-    points = false,
     callback = () => {},
-  } = payload;
+  } = payload?.course;
 
   const data = {
     title,
@@ -30,15 +30,10 @@ export function* updateCourse({ payload }: any): any {
     instructor: {
       name: instructor?.name,
     },
-    body: `&lt;html&gt;&lt;body&gt;&lt;p&gt;${description}&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;`,
   };
 
   try {
-    const response = yield call(
-      lms_service.updateCourse,
-      points ? { ...data, points } : data,
-      idCourse
-    );
+    const response = yield call(lms_service.updateCourse, data, idCourse);
 
     yield put({
       type: TYPES.PUT_UPDATE_COURSE_SUCCESS,

@@ -1,11 +1,11 @@
-import { ReactElement } from "react";
+import { ReactElement } from 'react';
 
-import { Col, Form, Row, Space } from "antd";
-import { EditOutlined } from "@ant-design/icons";
-import { theme } from "utils/colors";
+import { Col, Form, Row, Space } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+import { theme } from 'utils/colors';
 
-import Text from 'components/Text'
-import Input from 'components/Input'
+import Text from 'components/Text';
+import Input from 'components/Input';
 
 const BuilderQuizEssay = ({ item, submitQ, deleteQ }: any): ReactElement => {
   const data = { ...item };
@@ -13,10 +13,10 @@ const BuilderQuizEssay = ({ item, submitQ, deleteQ }: any): ReactElement => {
   return (
     <div className="question">
       <Row justify="start" style={{ height: 35, marginBottom: 0 }}>
-        <Col flex={1} style={{ justifyContent: "center", paddingRight: 35 }}>
+        <Col flex={1} style={{ justifyContent: 'center', paddingRight: 35 }}>
           <Input
             isNaked={true}
-            value={data.title}
+            value={data?.title}
             placeholder="Essay Title"
             onChange={(e) => {
               data.title = e.target.value;
@@ -34,10 +34,10 @@ const BuilderQuizEssay = ({ item, submitQ, deleteQ }: any): ReactElement => {
         </Col>
       </Row>
       <Row justify="start" style={{ height: 35, marginBottom: 50 }}>
-        <Col flex={1} style={{ justifyContent: "center", height: 35 }}>
+        <Col flex={1} style={{ justifyContent: 'center', height: 35 }}>
           <Input
             isNaked={true}
-            defaultValue={data.description}
+            defaultValue={data?.description}
             placeholder="Essay Description"
             onChange={(e) => {
               data.description = e.target.value;
@@ -54,11 +54,11 @@ const BuilderQuizEssay = ({ item, submitQ, deleteQ }: any): ReactElement => {
             <Form.Item>
               <Input
                 isNaked={true}
-                value={data.resource.points}
+                value={data?.points}
                 placeholder="0"
                 onChange={(e) => {
                   if (!/^\d{0,2}$/.test(e.target.value)) return;
-                  data.resource = { points: e.target.value };
+                  data.points = { points: e.target.value };
                   submitQ(data);
                 }}
               />
