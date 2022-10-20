@@ -1,25 +1,14 @@
 import { ReactElement, useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 
-import {
-  getMyCourses,
-  getSingleLesson,
-  postQuizQuestion,
-  getQuizQuestions,
-  postLessonContent,
-  updateQuizQuestion,
-  deleteQuizQuestion,
-  updateLessonContent,
-} from 'ducks/lms/actionCreator';
 import { Col, Layout, PageHeader, Row } from 'antd';
-import { QuestionLayout, QuizLayout, Styledtitle, StyledText } from './styled';
+import { QuizLayout, Styledtitle, StyledText } from './styled';
 import { StyledLinked } from 'compositions/FormBuilder/styled';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { PlusOutlined, DownOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { getQuizQuestions } from 'ducks/lms/actionCreator';
 
-import Text from 'components/Text';
 import Input from 'components/Input';
-import Loading from 'components/Loading';
 import Dropdown from 'components/Dropdown';
 import TextArea from 'components/TextArea';
 import StyledButton from 'components/StyledButton';
@@ -29,9 +18,10 @@ import BuilderQuizFillBlanks from 'compositions/BuilderQuizFillBlanks';
 import BuilderQuizSingleChoice from 'compositions/BuilderQuizSingleChoice';
 import BuilderQuizMultipleChoice from 'compositions/BuilderQuizMultipleChoice';
 
-import { blanks } from './blanks';
 import { theme } from 'utils/colors';
-import { useHistory, useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+
+uuidv4();
 
 const BuilderQuiz = (): ReactElement => {
   const history: any = useHistory();
@@ -48,7 +38,8 @@ const BuilderQuiz = (): ReactElement => {
     setData(item);
   }, [item]);
 
-  console.log('item ====================>', item);
+  // console.log('item ====================>', item);
+  console.log(quizQuestions);
 
   useEffect(() => {
     if (data) {
@@ -57,37 +48,54 @@ const BuilderQuiz = (): ReactElement => {
   }, [data]);
 
   const callback = (res) => {
-    console.log(res);
+    if (res) {
+      setQuizQuestions(res);
+    }
   };
 
   const headerActions = () => [
     {
       name: 'Single Choice',
-      action: () => setType('single-choice'),
+      action: () => {
+        setType('single-choice');
+        setQuizQuestions([]);
+      },
     },
     {
       name: 'Multiple Choice',
-      action: () => setType('multiple-choice'),
+      action: () => {
+        setType('multiple-choice');
+        setQuizQuestions([]);
+      },
     },
     {
       name: 'Essay',
-      action: () => setType('essay'),
+      action: () => {
+        setType('essay');
+        setQuizQuestions([]);
+      },
     },
     {
       name: 'Fill Blanks',
-      action: () => setType('fill-in-the-blanks'),
+      action: () => {
+        setType('fill-in-the-blanks');
+        setQuizQuestions([]);
+      },
     },
     {
       name: 'Sort',
-      action: () => setType('sorting'),
+      action: () => {
+        setType('sorting');
+        setQuizQuestions([]);
+      },
     },
   ];
 
-  const dataMapper = (questionObj) => {
+  const dataMapper = (questionObj, question) => {
     if (questionObj.isDeleted) return <></>;
 
     const props = {
-      item: undefined,
+      item: question,
     };
 
     switch (questionObj) {
@@ -96,7 +104,7 @@ const BuilderQuiz = (): ReactElement => {
       case 'multiple-choice':
         return <BuilderQuizMultipleChoice {...props} />;
       case 'essay':
-        return <BuilderQuizEssay {...props} />;
+        return <BuilderQuizEssay {...props} setType={setType} />;
       case 'sorting':
         return <BuilderQuizSort {...props} />;
       case 'fill-in-the-blanks':
@@ -104,6 +112,22 @@ const BuilderQuiz = (): ReactElement => {
       default:
         return <></>;
     }
+  };
+
+  const pushNewQuestion = () => {
+    const oldObject = Array.from(quizQuestions);
+    const data = {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      questionPosition: (quizQuestions || []).length + 1,
+      choices: [''],
+      questionType: type,
+      title: '',
+      _id: uuidv4(),
+    };
+
+    oldObject.push(data);
+    setQuizQuestions(oldObject);
   };
 
   return (
@@ -125,45 +149,86 @@ const BuilderQuiz = (): ReactElement => {
         style={{ background: 'none', paddingTop: 8, paddingBottom: 30 }}
       />
 
-      <>
-        <QuizLayout>
-          <Input style={{ marginBottom: 11 }} placeholder={'Add Title'} />
+      <QuizLayout>
+        <Row gutter={19}>
+          <Col span={20}>
+            <Input
+              placeholder={'Add Title'}
+              defaultValue={item?.title}
+              style={{
+                height: 48,
+                borderRadius: 8,
+                marginBottom: 11,
+                border: '1px solid #635FFA',
+              }}
+            />
+          </Col>
 
-          <TextArea
-            placeholder="Add Description (optional)"
-            style={{ minHeight: '179px', marginBottom: 30 }}
-          />
-
-          {dataMapper(type)}
-
-          <Col span={8}>
+          <Col span={4}>
             <Dropdown
               menu={headerActions()}
               title={
-                <StyledButton w={180} m={'-20px 0 5px 0'}>
-                  <StyledText>ADD QUESTION</StyledText>
-                </StyledButton>
+                <Input
+                  disabled
+                  value={type}
+                  placeholder="Select Quiz"
+                  style={{
+                    height: 48,
+                    borderRadius: 8,
+                    marginBottom: 11,
+                    border: '1px solid #635FFA',
+                  }}
+                />
               }
             />
           </Col>
-        </QuizLayout>
-
-        <Row justify="end" style={{ marginTop: 150, marginRight: 30 }}>
-          <Col>
-            <StyledButton
-              bg={'none'}
-              c={theme.BLACK}
-              htmlType="button"
-              onClick={() => history.goBack()}
-            >
-              CANCEL
-            </StyledButton>
-            <StyledButton htmlType="submit" onClick={() => {}}>
-              SAVE
-            </StyledButton>
-          </Col>
         </Row>
-      </>
+
+        <TextArea
+          placeholder="Add Description (optional)"
+          defaultValue={item?.description}
+          style={{
+            borderRadius: 8,
+            marginBottom: 30,
+            minHeight: '179px',
+            border: '1px solid #635FFA',
+          }}
+        />
+
+        <Col span={24}>
+          {(quizQuestions || []).map((question) => {
+            return (
+              <div key={question?._id}>
+                {dataMapper(question?.questionType, question)}
+              </div>
+            );
+          })}
+        </Col>
+
+        <Col span={8}>
+          <StyledButton w={180} m={'-20px 0 5px 0'}>
+            <StyledText onClick={() => pushNewQuestion()}>
+              ADD QUESTION
+            </StyledText>
+          </StyledButton>
+        </Col>
+      </QuizLayout>
+
+      <Row justify="end" style={{ marginTop: 150, marginRight: 30 }}>
+        <Col>
+          <StyledButton
+            bg={'none'}
+            c={theme.BLACK}
+            htmlType="button"
+            onClick={() => history.goBack()}
+          >
+            CANCEL
+          </StyledButton>
+          <StyledButton htmlType="submit" onClick={() => {}}>
+            SAVE
+          </StyledButton>
+        </Col>
+      </Row>
     </Layout>
   );
 };

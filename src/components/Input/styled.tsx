@@ -23,14 +23,14 @@ export const LineInput: any = styled(Input)`
   font-size: 18px;
   padding: 0;
   border: none;
-  border-bottom: 1px solid ${theme.GRAY};
+  border-bottom: 1px solid #a2a1bd;
   background: none;
 
   &:hover,
   &:active,
   &:focus {
     border: none;
-    border-bottom: 1px solid ${theme.GRAY};
+    border-bottom: 1px solid #a2a1bd;
     outline: 0px solid transparent;
   }
 `;
