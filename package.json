@@ -88,6 +88,7 @@
     "styled-components": "^5.3.3",
     "suneditor": "^2.43.2",
     "typescript": "^4.5.4",
+    "uuid": "^9.0.0",
     "video-react": "^0.15.0",
     "web-vitals": "^2.1.2",
     "yarn": "^1.22.19"

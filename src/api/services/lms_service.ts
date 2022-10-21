@@ -28,15 +28,8 @@ const auth_services = {
   getLessonDetails: (lessonId: string) =>
     api.get(`/lessons/${lessonId}/contents`),
 
-  getQuizQuestions: (
-    organizationId: string,
-    courseId: string,
-    lessonId: string,
-    quizId: string
-  ) =>
-    api.get(
-      `${ORGANIZATION}/${organizationId}/courses/${courseId}/curriculum/${lessonId}/contents/${quizId}/questions`
-    ),
+  getQuizQuestions: (quizId: string) => api.get(`quizzes/${quizId}/questions`),
+
   getTopicDetails: (
     courseId: string,
     lessonId: string,

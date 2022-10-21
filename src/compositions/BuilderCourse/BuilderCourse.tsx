@@ -12,7 +12,7 @@ import {
   PageHeader,
 } from 'antd';
 import { theme } from 'utils/colors';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PictureOutlined } from '@ant-design/icons';
 import { updateCourse } from 'ducks/lms/actionCreator';
 import { useHistory, useParams } from 'react-router-dom';
@@ -26,6 +26,7 @@ import TreeCourse from 'compositions/TreeCourse';
 import lmsService from 'api/services/lms_service';
 import StyledButton from 'components/StyledButton';
 import NO_IMAGE from 'assets/icons/no-purple-box.png';
+import { RootState } from 'ducks/store';
 
 const blankData = {
   title: '',
@@ -39,63 +40,77 @@ const blankData = {
   },
 };
 
-const BuilderCourse = ({ id = '' }: any): ReactElement => {
+const BuilderCourse = (): ReactElement => {
   const dispatch = useDispatch();
   const history: any = useHistory();
   const params: Params = useParams();
 
-  const addNew = params.page === 'add';
+  const id = params?.courseId;
+  const addNew = params?.courseId ? false : true;
   const isBuilder = history?.location?.state?.isBuilder;
   const organizations = history?.location?.state?.organization;
-
-  console.log('params', params);
-  console.log('history', history);
 
   const [queue, setQueue] = useState<any>(false);
   const [onAdd, setOnAdd] = useState<any>(false);
   const [fileUrl, setFileUrl] = useState<any>(null);
-  const [loading, setLoading] = useState<any>(true);
-  const [refreshed, setRefreshed] = useState<any>(false);
+  // const [loading, setLoading] = useState<any>(true);
+  // const [refreshed, setRefreshed] = useState<any>(false);
   const [file, setFile] = useState<any>({ type: false, ref: {} });
   const [course, setCourse] = useState<any>(
     JSON.parse(JSON.stringify(blankData))
   );
 
+  console.log('organizations', organizations);
+
+  const courseData: any = useSelector<RootState>((state) => state.lms);
+
   useEffect(() => {
-    setFileUrl(course?.preview);
+    if (!addNew) {
+      setFileUrl(course?.preview);
+    }
   }, [course]);
+
+  useEffect(() => {
+    if (!addNew) {
+      if (!courseData?.course?.loading || isBuilder === 'true') {
+        setCourse(courseData?.course?.data?.data);
+      }
+    }
+  }, [courseData?.course?.loading, isBuilder]);
 
   useEffect(() => {
     localStorage.setItem('courseId', id);
 
-    if (!addNew)
-      dispatch(
-        getCourse({
-          callback: getCourseDetail,
-        })
-      );
-    else setLoading(false);
+    if (isBuilder === 'false') {
+      if (!addNew) {
+        dispatch(
+          getCourse({
+            id,
+            callback: () => {},
+          })
+        );
+      }
+    }
   }, []);
 
-  useEffect(() => {
-    if (!refreshed && '_id' in course) {
-      history.replace('/learn/courses/builder/' + course?._id);
-      setRefreshed(true);
-    }
-  }, [course]);
-
-  const getCourseDetail = (res) => {
-    if (res) {
-      setCourse(res?.data);
-      setLoading(false);
-    }
-  };
+  // useEffect(() => {
+  //   if (!refreshed && '_id' in course) {
+  //     history.replace('/learn/courses/builder/' + course?._id);
+  //     setRefreshed(true);
+  //   }
+  // }, [course]);
 
   const setCourseInfo = () => {
     if (addNew) {
+      delete course?.instructor?.title;
+
       dispatch(
         postCourse({
-          data: { ...course, organizations, description: '&nan' },
+          data: {
+            ...course,
+            organizations: organizations,
+            description: '&nan',
+          },
           callback: (res) => {
             if (res) {
               course._id = res?._id || '';
@@ -110,15 +125,16 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
 
     localStorage.setItem('courseId', course?._id);
 
-    const { type }: any = file;
+    // const { type }: any = file;
     const callback = async (res) => {
       if (!res) return;
     };
 
     dispatch(
       updateCourse({
-        ...course,
-        preview: { type: type ? type : 'image' },
+        course,
+        // ...course,
+        // preview: { type: type ? type : 'image' },
         callback,
       })
     );
@@ -171,7 +187,7 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
             Accept: 'application/json',
             'Content-Type': 'multipart/form-data',
           },
-        }).then(() => setLoading(false));
+        });
       });
     }
   };
@@ -200,122 +216,132 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
         footer={<StyledAddCourse>Add Course</StyledAddCourse>}
         style={{ background: 'none', paddingTop: 8, paddingBottom: 30 }}
         title={
-          <StyledLinkBack onClick={() => history.push('/learn/courses')}>
+          <StyledLinkBack
+            onClick={() => {
+              history.push('/learn/courses');
+              setCourse(JSON.parse(JSON.stringify(blankData)));
+            }}
+          >
             {'< '}Back to Courses
           </StyledLinkBack>
         }
       />
 
-      {loading ? (
+      {courseData?.course?.loading ? (
         <Loading />
       ) : (
         <Layout
           style={{ background: 'none', paddingLeft: 30, paddingRight: 25 }}
         >
-          <Form
+          {/* <Form
             initialValues={{
               t: course?.title,
               p: course?.points,
               d: course?.description,
               a: course?.instructor?.name,
             }}
-          >
-            <Row>
-              <Col flex={24}>
-                <Form.Item
+          > */}
+          <Row>
+            <Col flex={24}>
+              {/* <Form.Item
                   name="t"
+                  initialValue={course?.title}
                   rules={[{ required: true, message: 'Enter a title' }]}
+                > */}
+              <Input
+                placeholder={'Title'}
+                value={course?.title}
+                onChange={(e) => {
+                  setQueue(true);
+                  setCourse({
+                    ...course,
+                    title: e.target.value,
+                  });
+                }}
+              />
+              {/* </Form.Item> */}
+            </Col>
+
+            <Col flex={0.5} />
+
+            <Col>
+              {/* <Form.Item> */}
+              <Upload
+                {...uploadProps}
+                accept="image/*"
+                onChange={(args) => onChangeImageVideo(args, 'image')}
+              >
+                <StyledButton
+                  bg={'none'}
+                  c={theme.PRIMARY}
+                  b={`2px solid ${theme.PRIMARY}`}
+                  icon={<PictureOutlined />}
+                  style={{ width: 185 }}
                 >
-                  <Input
-                    placeholder={'Title'}
-                    value={course?.title}
-                    onChange={(e) => {
-                      setQueue(true);
-                      setCourse((prev) => {
-                        prev.title = e.target.value;
-                        return prev;
-                      });
-                    }}
-                  />
-                </Form.Item>
-              </Col>
+                  <StyledCoverphoto>COVER PHOTO</StyledCoverphoto>
+                </StyledButton>
+              </Upload>
+              {/* </Form.Item> */}
+            </Col>
+          </Row>
 
-              <Col flex={0.5} />
-
-              <Col>
-                <Form.Item>
-                  <Upload
-                    {...uploadProps}
-                    accept="image/*"
-                    onChange={(args) => onChangeImageVideo(args, 'image')}
-                  >
-                    <StyledButton
-                      bg={'none'}
-                      c={theme.PRIMARY}
-                      b={`2px solid ${theme.PRIMARY}`}
-                      icon={<PictureOutlined />}
-                      style={{ width: 185 }}
-                    >
-                      <StyledCoverphoto>COVER PHOTO</StyledCoverphoto>
-                    </StyledButton>
-                  </Upload>
-                </Form.Item>
-              </Col>
-            </Row>
-
-            <Row justify="space-between">
-              <Col flex={30}>
-                <Form.Item
+          <Row justify="space-between" style={{ marginTop: 10 }}>
+            <Col flex={30}>
+              {/* <Form.Item
                   name="a"
+                  initialValue={course?.instructor?.name}
                   rules={[{ required: true, message: 'Enter a author.' }]}
-                >
-                  <Input
-                    placeholder={'Author'}
-                    onChange={(e) => {
-                      setQueue(true);
-                      setCourse((prev) => {
-                        prev.instructor = {
-                          name: e.target.value,
-                          title: prev.instructor.title,
-                        };
+                > */}
+              <Input
+                placeholder={'Author'}
+                value={course?.instructor?.name}
+                onChange={(e) => {
+                  setQueue(true);
+                  setCourse({
+                    ...course,
+                    instructor: {
+                      name: e.target.value,
+                      title: '',
+                    },
+                  });
+                }}
+              />
+              {/* </Form.Item> */}
+            </Col>
 
-                        return prev;
-                      });
-                    }}
-                  />
-                </Form.Item>
-              </Col>
+            <Col flex={0.5} />
 
-              <Col flex={0.5} />
+            {/* <Col> */}
+            {/* <Form.Item
+                name="p"
+                initialValue={course?.points}
+                rules={[{ required: true, message: 'Enter points.' }]}
+              > */}
+            <Input
+              min={0}
+              max={100}
+              isNumber={true}
+              controls={false}
+              placeholder={'Points Earned'}
+              value={course?.points}
+              style={{ width: 150 }}
+              onChange={(e) => {
+                setQueue(true);
+                setCourse({
+                  ...course,
+                  points: e,
+                });
+              }}
+            />
+            {/* </Form.Item> */}
+            {/* </Col> */}
+          </Row>
+          {/* </Form> */}
 
-              <Col>
-                <Form.Item
-                  name="p"
-                  rules={[{ required: true, message: 'Enter points.' }]}
-                >
-                  <Input
-                    min={0}
-                    max={100}
-                    isNumber={true}
-                    controls={false}
-                    placeholder={'Points Earned'}
-                    value={course?.points}
-                    style={{ width: 150 }}
-                    onChange={(e) => {
-                      setQueue(true);
-                      setCourse((prev) => {
-                        prev.points = e;
-
-                        return prev;
-                      });
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-
-          <Row justify="space-between" style={{ marginBottom: 25 }}>
+          <Row
+            justify="space-between"
+            style={{ marginBottom: 15, marginTop: 15 }}
+          >
             <MediaPreview />
             <StyledButton
               p={'-10px 0 0 0'}
@@ -328,8 +354,9 @@ const BuilderCourse = ({ id = '' }: any): ReactElement => {
 
           {course?._id && (
             <TreeCourse
-              course={course}
               onAdd={onAdd}
+              course={course}
+              addNew={addNew}
               setOnAdd={setOnAdd}
               isBuilder={isBuilder}
             />

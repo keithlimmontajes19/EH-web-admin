@@ -13,7 +13,7 @@ export const newData = (m: number, t: string, d: string, pos: number) => {
   return {
     title: t,
     description: d,
-    body: `&lt;html&gt; &lt;body&gt; &lt;p&gt;${d}&lt;/p&gt; &lt;/body&gt; &lt;/html&gt;`,
+    // body: `&lt;html&gt; &lt;body&gt; &lt;p&gt;${d}&lt;/p&gt; &lt;/body&gt; &lt;/html&gt;`,
     preview: {
       type: 'video',
     },
@@ -37,7 +37,7 @@ export const AddLesson = ({ data, setOnAdd, handleDispatch }) => {
           title: t,
           description: '$nan',
           contentType: 'lesson',
-          position: data.curriculum.length + 1,
+          position: (data.curriculum || []).length + 1,
           courseId: localStorage.getItem('courseId'),
           preview: { type: file.type ? file.type : 'video' },
           organizationId: localStorage.getItem('organizationId'),
