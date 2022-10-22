@@ -1,15 +1,12 @@
 import { ReactElement, useEffect, useState } from 'react';
 
-import { PlusCircleFilled, MinusCircleFilled } from '@ant-design/icons';
+import { Col, Radio, Row, Space } from 'antd';
+import { PlusCircleFilled, EditOutlined } from '@ant-design/icons';
+
 import Text from 'components/Text';
 import Input from 'components/Input';
-import { Col, Radio, Row, Space } from 'antd';
 
-const BuilderQuizSingleChoice = ({
-  item,
-  submitQ,
-  deleteQ,
-}: any): ReactElement => {
+const BuilderQuizSingleChoice = ({ item, submitQ }: any): ReactElement => {
   const data = { ...item };
 
   const [answers, setAnswers] = useState([]);
@@ -20,8 +17,8 @@ const BuilderQuizSingleChoice = ({
 
   return (
     <>
-      <Row justify="start" style={{ marginBottom: 15 }}>
-        <Col span={24}>
+      <Row justify="start" style={{ marginBottom: 15 }} gutter={15}>
+        <Col flex={1}>
           <Input
             isNaked={true}
             defaultValue={data?.title}
@@ -35,11 +32,32 @@ const BuilderQuizSingleChoice = ({
         </Col>
 
         <Col span={3}>
-          <Row justify="end">
-            <Text fS={18} onClick={deleteQ} className="question-delete">
-              DELETE
-            </Text>
-          </Row>
+          <Input
+            placeholder="0"
+            isNumber={true}
+            value={data?.points}
+            onChange={(e) => {
+              if (!/^\d{0,2}$/.test(e.target.value)) return;
+              data.points = { points: e.target.value };
+              submitQ(data);
+            }}
+            style={{
+              height: 48,
+              maxWidth: 255,
+              borderRadius: 8,
+              border: '1px solid #635FFA',
+            }}
+          />
+        </Col>
+
+        <Col>
+          <p>
+            <br />
+            point
+            <EditOutlined
+              style={{ fontSize: 20, color: '#4C4B7B', marginLeft: 5 }}
+            />
+          </p>
         </Col>
       </Row>
 

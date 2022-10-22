@@ -27,12 +27,12 @@ const BuilderQuizEssay = ({ item, submitQ, setType }: any): ReactElement => {
           />
         </Col>
 
-        <Col span={5}>
+        <Col span={3}>
           <Form.Item>
             <Input
+              placeholder="0"
               isNumber={true}
               value={data?.points}
-              placeholder="0"
               onChange={(e) => {
                 if (!/^\d{0,2}$/.test(e.target.value)) return;
                 data.points = { points: e.target.value };
@@ -40,6 +40,7 @@ const BuilderQuizEssay = ({ item, submitQ, setType }: any): ReactElement => {
               }}
               style={{
                 height: 48,
+                maxWidth: 255,
                 borderRadius: 8,
                 border: '1px solid #635FFA',
               }}

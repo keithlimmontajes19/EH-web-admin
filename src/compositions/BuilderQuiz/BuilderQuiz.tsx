@@ -24,9 +24,9 @@ import { v4 as uuidv4 } from 'uuid';
 uuidv4();
 
 const BuilderQuiz = (): ReactElement => {
-  const history: any = useHistory();
-  const params: any = useParams();
   const dispatch = useDispatch();
+  const params: any = useParams();
+  const history: any = useHistory();
 
   const item = history.location?.state?.data;
 
@@ -38,7 +38,7 @@ const BuilderQuiz = (): ReactElement => {
     setData(item);
   }, [item]);
 
-  // console.log('item ====================>', item);
+  console.log('item ====================>', item);
   console.log(quizQuestions);
 
   useEffect(() => {
@@ -105,10 +105,10 @@ const BuilderQuiz = (): ReactElement => {
         return <BuilderQuizMultipleChoice {...props} />;
       case 'essay':
         return <BuilderQuizEssay {...props} setType={setType} />;
-      case 'sorting':
+      case 'sort':
         return <BuilderQuizSort {...props} />;
-      case 'fill-in-the-blanks':
-        return <BuilderQuizFillBlanks {...props} />;
+      // case 'fill-in-the-blanks':
+      //   return <BuilderQuizFillBlanks {...props} />;
       default:
         return <></>;
     }
@@ -117,13 +117,13 @@ const BuilderQuiz = (): ReactElement => {
   const pushNewQuestion = () => {
     const oldObject = Array.from(quizQuestions);
     const data = {
+      title: '',
+      _id: uuidv4(),
+      choices: [''],
+      questionType: type,
       createdAt: new Date(),
       updatedAt: new Date(),
       questionPosition: (quizQuestions || []).length + 1,
-      choices: [''],
-      questionType: type,
-      title: '',
-      _id: uuidv4(),
     };
 
     oldObject.push(data);
@@ -206,10 +206,12 @@ const BuilderQuiz = (): ReactElement => {
         </Col>
 
         <Col span={8}>
-          <StyledButton w={180} m={'-20px 0 5px 0'}>
-            <StyledText onClick={() => pushNewQuestion()}>
-              ADD QUESTION
-            </StyledText>
+          <StyledButton
+            w={180}
+            m={'-20px 0 5px 0'}
+            onClick={() => pushNewQuestion()}
+          >
+            <StyledText>ADD QUESTION</StyledText>
           </StyledButton>
         </Col>
       </QuizLayout>
