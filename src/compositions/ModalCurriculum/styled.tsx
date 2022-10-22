@@ -1,10 +1,10 @@
-import { Modal } from "antd";
-import styled from "styled-components";
+import { Modal } from 'antd';
+import styled from 'styled-components';
 
 export const StyledModal = styled(Modal)`
   .ant-modal-content {
     background: #fff;
     border-radius: 15px;
-    padding: 10px 25px 0px 10px;
+    padding: 3px 13px 4px 5px;
   }
 `;

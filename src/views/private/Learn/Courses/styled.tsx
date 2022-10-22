@@ -113,3 +113,10 @@ export const StyleAction = styled.span`
   line-height: 28px;
   color: #4c4b7b;
 `;
+
+export const StyledHover = styled.div`
+  display: none;
+  width: 300px;
+  height: 150px;
+  background: red;
+`;

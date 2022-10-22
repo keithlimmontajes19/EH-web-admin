@@ -10,7 +10,8 @@ import {
   RenderContainer,
 } from './styled';
 import { Image, Row, Col } from 'antd';
-import { NO_IMAGE } from 'utils/constants';
+// import { NO_IMAGE } from 'utils/constants';
+import NO_IMAGE from 'assets/icons/no-purple-box.png';
 
 /* logos */
 import USER_LOGO from 'assets/images/user-icon.png';
@@ -24,28 +25,28 @@ import IconImage from 'components/IconImage';
 import RenderHtml from 'components/RenderHtml';
 import RatingStar from 'components/RatingStar';
 
-const IntroductionComponent = ({ curriculum }: any): ReactElement => {
+const IntroductionComponent = ({ course }: any): ReactElement => {
   return (
     <Fragment>
       <Image
         width="100%"
         height={316}
         preview={false}
-        src={curriculum?.preview?.ref ? curriculum?.preview?.ref : NO_IMAGE}
+        src={course?.preview ? course?.preview : NO_IMAGE}
       />
       <SubContainer>
-        <TitleStyled>{curriculum?.title}</TitleStyled>
+        <TitleStyled>{course?.title}</TitleStyled>
         <Row>
           <Col span={10}>
             <Row align="middle">
               <IconImage width={10} height={12} source={USER_LOGO} />
-              <AuthorStyled>{curriculum?.instructor?.name}</AuthorStyled>
+              <AuthorStyled>{course?.instructor?.name}</AuthorStyled>
             </Row>
           </Col>
           <Col span={12}>
             <Row align="middle">
               <RatingStar count={1} outOf={1} />
-              <RatingText>{curriculum?.averageUserRating || 1}</RatingText>
+              <RatingText>{course?.averageUserRating || 1}</RatingText>
             </Row>
           </Col>
         </Row>
@@ -54,13 +55,13 @@ const IntroductionComponent = ({ curriculum }: any): ReactElement => {
           <Col span={10}>
             <Row align="middle">
               <IconImage width={20} height={14} source={BOOK_LOGO} />
-              <IconText>{curriculum?.stats?.lesson || 0} Lessons</IconText>
+              <IconText>{course?.stats?.lessons || 0} Lessons</IconText>
             </Row>
           </Col>
           <Col span={10}>
             <Row align="middle">
               <IconImage width={18} height={14} source={PENCIL_LOGO} />
-              <IconText>{curriculum?.stats?.quiz || 0} Quiz</IconText>
+              <IconText>{course?.stats?.quizzes || 0} Quiz</IconText>
             </Row>
           </Col>
         </Row>
@@ -68,22 +69,22 @@ const IntroductionComponent = ({ curriculum }: any): ReactElement => {
           <Col span={10}>
             <Row align="middle">
               <IconImage width={18} height={18} source={TIME_LOGO} />
-              <IconText>{curriculum?.stats?.topic || 0} Topics</IconText>
+              <IconText>{course?.stats?.topics || 0} Topics</IconText>
             </Row>
           </Col>
           <Col span={10}>
             <Row align="middle">
               <IconImage width={20} height={16} source={YOUTUBE_LOGO} />
-              <IconText>{curriculum?.stats?.video || 0} Videos</IconText>
+              <IconText>{course?.stats?.videos || 0} Videos</IconText>
             </Row>
           </Col>
         </Row>
         <RenderContainer>
-          {curriculum?.body && <RenderHtml source={curriculum?.body} />}
+          {course?.body && <RenderHtml source={course?.body} />}
         </RenderContainer>
       </SubContainer>
 
-      {curriculum?.progress?.status === 'new' && (
+      {course?.progress?.status === 'new' && (
         <StyledButton>Start Course</StyledButton>
       )}
     </Fragment>

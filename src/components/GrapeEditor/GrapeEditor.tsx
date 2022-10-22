@@ -21,10 +21,10 @@ import InlineCode from '@editorjs/inline-code';
 import VideoTool from '@weekwood/editorjs-video';
 
 import { createReactEditorJS } from 'react-editor-js';
-import { editorJsParser } from 'editorjs-data-parser';
+// import { editorJsParser } from 'editorjs-data-parser';
 
 const ReactEditorJS = createReactEditorJS();
-const baseURL = 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload';
+// const baseURL = 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload';
 
 export const EDITOR_JS_TOOLS = {
   embed: Embed,
@@ -180,8 +180,6 @@ export const EDITOR_JS_TOOLS = {
 
 const GrapeEditor = (props: any) => {
   const { editorCore, blocks } = props;
-
-  console.log('blocks', blocks);
 
   const handleInitialize = React.useCallback((instance) => {
     editorCore.current = instance;
