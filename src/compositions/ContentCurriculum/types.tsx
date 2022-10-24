@@ -5,4 +5,5 @@ export type PropsType = {
   setSelected?: any;
   lessonIndex?: any;
   setLessonIndex?: any;
+  course?: any;
 };

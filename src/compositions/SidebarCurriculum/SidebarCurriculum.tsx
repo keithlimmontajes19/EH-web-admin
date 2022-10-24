@@ -1,5 +1,5 @@
-import { ReactElement, useEffect } from "react";
-import type { PropsType } from "./types";
+import { ReactElement, useEffect } from 'react';
+import type { PropsType } from './types';
 
 import {
   SubLabel,
@@ -7,15 +7,17 @@ import {
   StyledLabel,
   MenuSublabel,
   MenuContainer,
-} from "./styled";
+  StyledMainTitle,
+  StyledViewCourse,
+} from './styled';
 
-import { Menu } from "antd";
-import { theme } from "utils/colors";
-import { useDispatch } from "react-redux";
-import { CaretRightOutlined } from "@ant-design/icons";
-import { getTopicID, getLessonId } from "ducks/lms/actionCreator";
+import { Menu } from 'antd';
+import { theme } from 'utils/colors';
+import { useDispatch } from 'react-redux';
+import { CaretRightOutlined } from '@ant-design/icons';
+import { getTopicID, getLessonId } from 'ducks/lms/actionCreator';
 
-import Text from "components/Text";
+import Text from 'components/Text';
 
 const { SubMenu } = Menu;
 
@@ -48,21 +50,19 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
   };
 
   const checkNullUndefined = (stats: string, label: string) => {
-    return stats ? `${stats + " " + label} ` : " ";
+    return stats ? `${stats + ' ' + label} ` : ' ';
   };
 
   return (
     <MenuContainer>
-      <div style={{ paddingTop: 50, paddingLeft: 20 }}>
-        <Text fS={18} fW={700}>
-          View Course
-        </Text>
+      <div style={{ paddingTop: 38, paddingLeft: 20 }}>
+        <StyledViewCourse>View Course</StyledViewCourse>
+        <StyledMainTitle>{curriculumTitle}</StyledMainTitle>
 
-        <StyledLabel>{curriculumTitle}</StyledLabel>
         <Menu
           mode="inline"
           selectedKeys={[selected]}
-          defaultSelectedKeys={["a"]}
+          defaultSelectedKeys={['a']}
           openKeys={[lessonIndex.toString()]}
           onSelect={(e) => setSelected(e?.key)}
           style={{ background: theme.SUB_LAYOUT, paddingRight: 8 }}
@@ -75,15 +75,15 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
            * ==================
            */}
           <Menu.Item
-            key={"a"}
+            key={'a'}
             onClick={() => {
               setTopicId(null);
               setLessonId(null);
-              localStorage.setItem("topicId", "");
-              localStorage.setItem("lessonId", "");
+              localStorage.setItem('topicId', '');
+              localStorage.setItem('lessonId', '');
             }}
           >
-            <StyledLabel color={colorCondition("a")}>Introduction</StyledLabel>
+            <StyledLabel color={colorCondition('a')}>Introduction</StyledLabel>
           </Menu.Item>
 
           {/**
@@ -92,8 +92,8 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
            * Lessons Menu
            * ===============
            */}
-          {(lesson?.data || [])
-            .sort((a, b) => a?.position - b?.position)
+          {(lesson || [])
+            // .sort((a, b) => a?.position - b?.position)
             .map((lessonContent, itemIndex) => {
               const stats = lessonContent?.stats;
 
@@ -105,21 +105,21 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
                     setSelected(lessonContent?._id);
                     setLessonIndex(e?.key);
                     setLessonId(lessonContent?._id);
-                    localStorage.setItem("topicId", "");
-                    localStorage.setItem("lessonId", lessonContent?._id);
+                    localStorage.setItem('topicId', '');
+                    localStorage.setItem('lessonId', lessonContent?._id);
                   }}
                   className={
                     selected === lessonContent?._id
-                      ? "active-ant-menu-submenu"
-                      : "inactive-ant-menu-submenu"
+                      ? 'active-ant-menu-submenu'
+                      : 'inactive-ant-menu-submenu'
                   }
                   title={
                     <StyledLabel color={colorCondition(lessonContent?.title)}>
                       {lessonContent?.title}
                       <SubLabel color={colorCondition(lessonContent?.title)}>
-                        {checkNullUndefined(stats?.lesson, "Lesson")}
-                        {checkNullUndefined(stats?.topic, "Topic")}
-                        {checkNullUndefined(stats?.quiz, "Quiz")}
+                        {checkNullUndefined(stats?.lesson, 'Lesson')}
+                        {checkNullUndefined(stats?.topic, 'Topic')}
+                        {checkNullUndefined(stats?.quiz, 'Quiz')}
                       </SubLabel>
                     </StyledLabel>
                   }
@@ -135,7 +135,7 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
                     .map((topicContent, topicIndex) => {
                       const firstIndex = () => {
                         return (
-                          (lessonIndex === "0" && topicIndex === 0) ||
+                          (lessonIndex === '0' && topicIndex === 0) ||
                           topicContent?.progress?.started
                         );
                       };
@@ -148,10 +148,10 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
                             setLessonId(lessonContent?._id);
 
                             localStorage.setItem(
-                              "lessonId",
+                              'lessonId',
                               lessonContent?._id
                             );
-                            localStorage.setItem("topicId", topicContent?._id);
+                            localStorage.setItem('topicId', topicContent?._id);
                           }}
                         >
                           <MenuLabel
@@ -161,7 +161,7 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
                             <MenuSublabel
                               color={subColorCondition(topicContent?.title)}
                             >
-                              {topicContent?.description}
+                              {topicContent?.contentType}
                             </MenuSublabel>
                           </MenuLabel>
                         </Menu.Item>
@@ -175,8 +175,8 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
                     setTopicId(null);
                     setLessonIndex(e?.key);
                     setLessonId(lessonContent?._id);
-                    localStorage.setItem("topicId", "");
-                    localStorage.setItem("lessonId", lessonContent?._id);
+                    localStorage.setItem('topicId', '');
+                    localStorage.setItem('lessonId', lessonContent?._id);
                   }}
                 >
                   <StyledLabel color={colorCondition(lessonContent?.title)}>

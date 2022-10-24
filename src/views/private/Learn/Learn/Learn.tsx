@@ -1,4 +1,4 @@
-import { Fragment, ReactElement, useEffect } from 'react';
+import { useState, ReactElement, useEffect } from 'react';
 
 /* components */
 import LearnMaincourse from 'compositions/LearnMaincourse';
@@ -29,6 +29,7 @@ import RatingStar from 'components/RatingStar';
 import USER_ICON from 'assets/icons/profile-user.png';
 import NO_IMAGE from 'assets/icons/no-purple-image.png';
 import NO_COURSES from 'assets/icons/no-courses-icon.png';
+import ModalCurriculum from 'compositions/ModalCurriculum';
 
 const Learn = (): ReactElement => {
   const dispatch = useDispatch();
@@ -37,6 +38,16 @@ const Learn = (): ReactElement => {
   useEffect(() => {
     dispatch(getMyCourses());
   }, []);
+
+  const [singleCourse, setSingleCourse] = useState({});
+  const [viewVisible, setViewVisible] = useState(false);
+
+  const openView = (obj) => {
+    setSingleCourse(obj);
+    localStorage.setItem('courseId', obj?._id);
+
+    setTimeout(() => setViewVisible(true), 500);
+  };
 
   const noCourses = () => {
     return (
@@ -82,7 +93,12 @@ const Learn = (): ReactElement => {
       <Row gutter={40} style={{ marginBottom: 40 }}>
         {(data || []).map((item) => {
           return (
-            <Col span={8} style={{ marginTop: 40 }} key={item?._id}>
+            <Col
+              span={8}
+              key={item?._id}
+              style={{ marginTop: 40 }}
+              onClick={() => openView(item)}
+            >
               <StyledCard>
                 <Avatar
                   src={item?.preview}
@@ -136,6 +152,12 @@ const Learn = (): ReactElement => {
           );
         })}
       </Row>
+
+      <ModalCurriculum
+        item={singleCourse}
+        isVisible={viewVisible}
+        isCancel={() => setViewVisible(false)}
+      />
     </Container>
   );
 

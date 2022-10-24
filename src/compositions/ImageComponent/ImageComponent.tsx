@@ -1,11 +1,12 @@
-import {ReactElement} from 'react';
-import type {PropsType} from './types';
+import { ReactElement } from 'react';
+import type { PropsType } from './types';
 
-import {Image} from 'antd';
-import {NO_IMAGE} from 'utils/constants';
+import { Image } from 'antd';
+// import {NO_IMAGE} from 'utils/constants';
+import NO_IMAGE from 'assets/icons/no-purple-box.png';
 
 const ImageComponent = (props: PropsType): ReactElement => {
-  const {data} = props;
+  const { data } = props;
 
   return (
     <Image

@@ -7,8 +7,7 @@ import {
   StyledText,
   StyledStar,
   StyledLabel,
-  StyleAction,
-  // StyledPopover,
+  StyledHover,
   StyledSubtitle,
   StyledCollapse,
   StyledLessonText,
@@ -39,7 +38,6 @@ import StyledButton from 'components/StyledButton';
 import BuilderCourse from 'compositions/BuilderCourse';
 import CreateCourses from 'compositions/CreateCourses';
 import ModalCurriculum from 'compositions/ModalCurriculum';
-// import TableCourses from "compositions/TableCourses";
 
 import Lessons from '../Lessons';
 import Loading from 'components/Loading';
@@ -57,11 +55,9 @@ import COLOR_ASSIGNMENT from 'assets/icons/color-assignment.png';
 
 /* reducer action */
 import {
-  // getContents,
   getLessons,
   getMyCourses,
   deleteCourse,
-  getCurriculum,
 } from 'ducks/lms/actionCreator';
 import { RootState } from 'ducks/store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -80,6 +76,7 @@ const Courses = (): ReactElement => {
   const [viewVisible, setViewVisible] = useState(false);
   const [courses, setCourses] = useState([]);
   const [courseId, setCourseId] = useState(null);
+  const [singleCourse, setSingleCourse] = useState({});
 
   useEffect(() => {
     dispatch(getMyCourses());
@@ -90,10 +87,10 @@ const Courses = (): ReactElement => {
   }, [data]);
 
   const openView = (obj) => {
+    setSingleCourse(obj);
     localStorage.setItem('courseId', obj?._id);
 
-    dispatch(getCurriculum(obj));
-    setTimeout(() => setViewVisible(true), 100);
+    setTimeout(() => setViewVisible(true), 500);
   };
 
   const popoverContent = (item: any) => {
@@ -394,8 +391,8 @@ const Courses = (): ReactElement => {
          * MODALS FOR LMS
          * ==============
          * */}
-        {/* <TableCourses /> */}
         <ModalCurriculum
+          item={singleCourse}
           isVisible={viewVisible}
           isCancel={() => setViewVisible(false)}
         />

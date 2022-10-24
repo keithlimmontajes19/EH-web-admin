@@ -100,7 +100,7 @@ export function* getCurrilumDetails({ payload }: any): any {
 export function* getLesson({ payload }: any): any {
   const { id, callback = () => {} } = payload;
 
-  callback([], null, true);
+  callback({}, null, true);
   try {
     const response = yield call(lms_service.getLesson, id);
 
