@@ -60,7 +60,6 @@ const TablePages = (props: PropsType): ReactElement => {
     history.push(route);
   };
 
-  console.log('dataSource', dataSource);
   const makeTitle = (record) => {
     const { forms } = record;
     const testA = forms ? forms.length > 0 : false;
@@ -130,32 +129,43 @@ const TablePages = (props: PropsType): ReactElement => {
           <Row align="middle" justify="space-between">
             {makeTitle(record)}
             <Space className="row-actions" size={'middle'}>
-              <span onClick={() => onEditData(record)}>
-                <EditOutlined style={{ color: '#4C4B7B' }} />
-                &nbsp;RENAME
+              <span>
+                <EyeFilled style={{ color: '#4C4B7B', width: 20 }} />
               </span>
-              {/* &nbsp; &nbsp; &nbsp;
+
+              <span onClick={() => onDeleteData([record])}>
+                <DeleteOutlined
+                  style={{ color: '#4C4B7B', width: 20, height: 20 }}
+                />
+              </span>
+
               <span onClick={() => onEditData(record)}>
-                <EyeFilled style={{ color: '#4C4B7B' }} />
-                &nbsp;VIEW
-              </span> */}
-              &nbsp; &nbsp; &nbsp;
+                <EditOutlined
+                  style={{
+                    color: '#4C4B7B',
+                    width: 20,
+                    fontSize: 20,
+                  }}
+                />
+              </span>
+
               <span
                 onClick={() =>
-                  pushHistory(`/team/pages/builder/${record?._id}`)
+                  history.push(`/team/builder/edit/${record?._id}`, {
+                    data: rec,
+                  })
                 }
               >
                 <BuildIcon
                   src={hammericon}
                   color="#4C4B7B"
-                  style={{ color: '#4C4B7B', width: 20, height: 15 }}
+                  style={{
+                    color: '#4C4B7B',
+                    width: 20,
+                    height: 17,
+                    marginTop: -5,
+                  }}
                 />
-                &nbsp;&nbsp;BUILDER
-              </span>
-              &nbsp; &nbsp; &nbsp;
-              <span onClick={() => onDeleteData([record])}>
-                <DeleteOutlined style={{ color: '#4C4B7B' }} />
-                &nbsp;DELETE
               </span>
             </Space>
           </Row>
@@ -292,7 +302,7 @@ const TablePages = (props: PropsType): ReactElement => {
           title={<StyledTitle>Pages</StyledTitle>}
           style={{ background: 'none', paddingTop: 8 }}
           extra={[
-            <StyledButton onClick={() => pushHistory('/team/pages/create')}>
+            <StyledButton onClick={() => pushHistory('/team/builder/add')}>
               CREATE
             </StyledButton>,
           ]}
@@ -313,7 +323,7 @@ const TablePages = (props: PropsType): ReactElement => {
 
           <Table
             onRow={rowListener}
-            rowSelection={rowSelection}
+            // rowSelection={rowSelection}
             columns={columns}
             dataSource={searchInpt !== '' ? searchdData : dataSource}
             loading={loading}

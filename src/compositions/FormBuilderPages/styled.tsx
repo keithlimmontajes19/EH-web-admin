@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Button, Popconfirm } from 'antd';
+import { theme } from 'utils/colors';
 
 export const Container = styled.div``;
 
@@ -60,6 +61,22 @@ export const StyledButton: any = styled(Button)`
   color: #ffffff;
 `;
 
+export const StyledButtonAddform: any = styled(Button)`
+  align-items: center;
+  gap: 10px;
+  width: 180px;
+  height: 48px;
+  background: #ffffff;
+  border-radius: 8px;
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: center;
+  color: #635ffa;
+`;
+
 export const StyledCoverphoto = styled.span`
   font-family: 'Red Hat Display';
   font-style: normal;
@@ -68,4 +85,28 @@ export const StyledCoverphoto = styled.span`
   line-height: 18px;
   text-align: center;
   color: #635ffa;
+`;
+
+export const SelectStyledComponent: any = styled.button`
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 16px 20px 21px;
+  gap: 137px;
+  width: 160px;
+  height: 60px;
+  background: #f7f7ff;
+  border: 1px solid #635ffa;
+  border-radius: 8px;
+`;
+
+export const FormText: any = styled.span`
+  padding: 13px;
+
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 32px;
+  font-style: normal;
 `;

@@ -46,7 +46,7 @@ const teamItems = [
   { name: 'Dashboards', link: 'dashboards', icon: AppstoreOutlined },
   { name: 'Pages', link: 'pages', icon: FileTextOutlined },
   { name: 'Announcements', link: 'announcements', icon: NotificationOutlined },
-  { name: 'Forms', link: 'forms', icon: PaperClipOutlined },
+  // { name: 'Forms', link: 'forms', icon: PaperClipOutlined },
   { name: `Onboarding \nScreens`, link: 'onboarding', icon: ExpandOutlined },
 ];
 
@@ -154,7 +154,7 @@ const MainLayout = (): ReactElement => {
               style={selected === '1' && MenuItemOnSelect}
               onClick={() => {
                 setSelected('1');
-                setSubSelected('')
+                setSubSelected('');
                 pushHistory('/home');
               }}
             >
@@ -177,7 +177,7 @@ const MainLayout = (): ReactElement => {
             </Menu.Item>
 
             <StyledSubMenu
-              active={selected ==="2" ? 1 : 0}
+              active={selected === '2' ? 1 : 0}
               collapsed={collapsed}
               key="2"
               title={
@@ -207,7 +207,7 @@ const MainLayout = (): ReactElement => {
                 ];
 
                 setSelected('2');
-                setSubSelected('')
+                setSubSelected('');
 
                 if (acceptArr.includes(e.domEvent.target.className)) {
                   handleOpenKeys('2');
@@ -221,7 +221,7 @@ const MainLayout = (): ReactElement => {
                   key={'learn-' + i}
                   onClick={() => {
                     setSelected(`learn-${i}`);
-                    setSubSelected(`learn-${i}`)
+                    setSubSelected(`learn-${i}`);
                     setListNum(listNum);
                     pushHistory('/learn/' + obj.link);
                   }}
@@ -274,7 +274,7 @@ const MainLayout = (): ReactElement => {
                 ];
 
                 setSelected('3');
-                setSubSelected('')
+                setSubSelected('');
 
                 if (acceptArr.includes(e.domEvent.target.className)) {
                   handleOpenKeys('3');

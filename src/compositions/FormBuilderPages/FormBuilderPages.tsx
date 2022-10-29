@@ -8,38 +8,73 @@ import {
   PlayCircleOutlined,
 } from '@ant-design/icons';
 import { theme } from 'utils/colors';
-import { notificationAlert } from 'utils/alerts';
-import { Modal, Row, message, Avatar, Upload } from 'antd';
-import { StyledLinked, StyledButton, StyledCoverphoto } from './styled';
+import { Modal, Row, message, Avatar, Upload, Input } from 'antd';
+import {
+  StyledLinked,
+  StyledButton,
+  StyledCoverphoto,
+  StyledButtonAddform,
+} from './styled';
+import { EditOutlined } from '@ant-design/icons';
 
+import Text from 'components/Text';
+import Dropdown from 'components/Dropdown';
+import EditForm from 'compositions/EditForm';
 import ReactPlayer from 'react-player';
 import IconImage from 'components/IconImage';
 import Button from 'components/StyledButton';
 import GrapeEditor from 'components/GrapeEditor';
-import lmsService from 'api/services/lms_service';
 import NO_IMAGE from 'assets/icons/no-purple-box.png';
+
+import { useDispatch } from 'react-redux';
+import { postPage, updatePage } from 'ducks/pages/actionCreator';
 
 const FormBuilderPages = (props: PropsType): ReactElement => {
   const history: any = useHistory();
   const params: any = useParams();
   const editorCore = useRef(null);
+  const dispatch = useDispatch();
 
   const data = history.location?.state?.data;
 
   const [blocks, setBlocks] = useState<any>({});
   const [fileUrl, setFileUrl] = useState(null);
-  const [isImage, setIsImage] = useState(true);
-  const [load, setLoad] = useState(false);
+  const [fileId, setFileId] = useState(null);
+  const [fileType, setFileType] = useState('');
+  const [title, setTitle] = useState('New page');
 
-  const isTopic = data?.contentType === 'topic' || data?.contentType === 'quiz';
+  const [load, setLoad] = useState(false);
+  const [formType, setFormType] = useState(null);
+  const [isVisible, setIsVible] = useState(null);
+  const [formId, setFormId] = useState([]);
+
+  const headerActions = [
+    {
+      name: 'Quiz',
+      action: () => setFormType('Quiz'),
+    },
+    {
+      name: 'Survey',
+      action: () => setFormType('Survey'),
+    },
+  ];
 
   useEffect(() => {
-    const parseBlocks: any = data?.body ? JSON.parse(data?.body) : {};
+    if (params?.editAdd === 'edit') {
+      const parseBlocks: any = data?.details.length
+        ? JSON.parse(data?.details)
+        : {};
 
-    setBlocks(parseBlocks);
-    setFileUrl(data?.preview);
+      setBlocks(parseBlocks?.blocks);
+      setFileUrl(data?.imageURL || data?.videoURL);
+      setTitle(data?.title);
 
-    setLoad(true);
+      if ((data?.forms || []).length) {
+        setFormType(data?.forms[0].type);
+      }
+
+      setLoad(true);
+    }
   }, [data, history, editorCore]);
 
   /**
@@ -59,8 +94,9 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
 
   const onChangeImageVideo = (info, type) => {
     if (info.file.status === 'done') {
-      UploadCoverPhoto(info);
       setFileUrl(info?.file?.response?.data?.url);
+      setFileId(info?.file?.response?.data?.uid);
+      setFileType(info?.file?.response?.data?.type);
 
       message.success(`${info.file.name} file uploaded successfully`);
     } else if (info.file.status === 'error') {
@@ -68,55 +104,40 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
     }
   };
 
-  const UploadCoverPhoto = async (response) => {
-    if (response) {
-      if (isTopic) {
-        await lmsService.uploadContentPreview(data?._id).then((res) => {
-          fetch(res?.data?.data, {
-            body: response?.file?.originFileObj,
-            method: 'PUT',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-        });
-      } else {
-        await lmsService.uploadLessonPreview(data?._id).then((res) => {
-          fetch(res?.data?.data, {
-            body: response?.file?.originFileObj,
-            method: 'PUT',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-        });
-      }
-    }
-  };
-
-  const onSave = useCallback(async () => {
+  const onSave = async () => {
     const savedData =
       await editorCore.current.dangerouslyLowLevelInstance?.save();
 
-    const item = {
-      position: 0,
-      title: data?.title,
-      description: data?.description,
-      body: JSON.stringify(savedData),
+    const data = {
+      title: title,
+      forms: formId,
+      isPublish: true,
+      details: JSON.stringify(savedData),
+      imageURL: fileType.includes('image') ? fileId : null,
+      videoURL: fileType.includes('video') ? fileId : null,
     };
 
-    // if (isTopic) {
-    //   await lmsService
-    //     ?.updateTopicNew(data?._id, item)
-    //     .then(() => notificationAlert('success', 'Content published success!'));
-    // } else {
-    //   await lmsService
-    //     ?.updateLessonNew(data?._id, item)
-    //     .then(() => notificationAlert('success', 'Lesson published success!'));
-    // }
-  }, []);
+    if (params?.editAdd === 'add') {
+      return dispatch(
+        postPage({
+          data,
+          callback: (res) => {
+            res && history.goBack();
+          },
+        })
+      );
+    } else {
+      dispatch(
+        updatePage({
+          data,
+          pageId: params?.id,
+          callback: (res) => {
+            res && history.goBack();
+          },
+        })
+      );
+    }
+  };
 
   return (
     <div
@@ -127,14 +148,8 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
       }}
     >
       <Row>
-        <StyledLinked
-          onClick={() =>
-            history.push(`/course/builder/${params?.courseId}`, {
-              isBuilder: 'true',
-            })
-          }
-        >
-          {'<'} Back to Lessons
+        <StyledLinked onClick={() => history.goBack()}>
+          {'<'} Back to Pages
         </StyledLinked>
 
         <div
@@ -156,14 +171,42 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
             }
           />
 
+          <Dropdown
+            menu={headerActions}
+            title={<StyledButtonAddform>ADD FORM</StyledButtonAddform>}
+          />
+
+          <span style={{ marginLeft: 5 }} />
+
           <StyledButton onClick={() => onSave()}>PUBLISH</StyledButton>
         </div>
       </Row>
 
-      <div
-        onClick={() => setFileUrl('')}
-        // style={{ marginRight: 'auto', marginLeft: '20%' }}
-      >
+      <div style={{ marginBottom: 50 }}>
+        <Text>
+          {title} &nbsp;
+          <EditOutlined
+            style={{
+              color: '#4C4B7B',
+              width: 20,
+              fontSize: 20,
+            }}
+            onClick={() => setIsVible(true)}
+          />
+        </Text>
+
+        <Modal
+          title="Edit Title"
+          visible={isVisible}
+          children={
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+          }
+          onOk={() => setIsVible(false)}
+          onCancel={() => setIsVible(false)}
+        />
+      </div>
+
+      <div onClick={() => setFileUrl('')}>
         <Upload
           {...uploadProps}
           accept="image/*"
@@ -175,7 +218,6 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
             b={`1px solid ${theme.PRIMARY}`}
             icon={<PictureOutlined />}
             style={{ width: 185, marginBottom: 20 }}
-            onClick={() => setIsImage(true)}
           >
             <StyledCoverphoto>COVER PHOTO</StyledCoverphoto>
           </Button>
@@ -192,7 +234,6 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
             b={`1px solid ${theme.PRIMARY}`}
             icon={<PlayCircleOutlined />}
             style={{ width: 185, marginBottom: 20, marginLeft: 10 }}
-            onClick={() => setIsImage(false)}
           >
             <StyledCoverphoto>COVER VIDEO</StyledCoverphoto>
           </Button>
@@ -214,7 +255,6 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
                 <IconImage source={NO_IMAGE} width={70} height={61} />
               ) : (
                 <ReactPlayer
-                  onError={(err) => err && setIsImage(true)}
                   playing
                   width={200}
                   height={150}
@@ -233,6 +273,15 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
 
       {(blocks?.version || load) && (
         <GrapeEditor editorCore={editorCore} blocks={blocks} />
+      )}
+
+      {formType && (
+        <EditForm
+          data={data}
+          formType={formType}
+          setFormType={setFormType}
+          setFormId={setFormId}
+        />
       )}
     </div>
   );

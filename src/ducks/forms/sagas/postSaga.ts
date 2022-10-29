@@ -1,11 +1,11 @@
-import { takeLatest, put, call } from "redux-saga/effects";
-import { TYPES } from "../actionTypes";
-import { TYPES as ALERT_TYPES } from "ducks/alert/actionTypes";
+import { takeLatest, put, call } from 'redux-saga/effects';
+import { TYPES } from '../actionTypes';
+import { TYPES as ALERT_TYPES } from 'ducks/alert/actionTypes';
 
-import form_service from "api/services/form_service";
+import form_service from 'api/services/form_service';
 
 export function* postForms({ payload }: any) {
-  payload.callback({ loading: true, success: null })
+  payload.callback({ loading: true, success: null });
   try {
     const response = yield call(form_service.postForms, payload.data);
     yield put({
@@ -17,12 +17,12 @@ export function* postForms({ payload }: any) {
       type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
       payload: {
         onShow: true,
-        type: "success",
-        message: "Add form success!",
+        type: 'success',
+        message: 'Add form success!',
       },
     });
 
-    payload.callback({ loading: false, success: true })
+    payload.callback({ loading: false, success: true, data: response?.data });
     return Promise.resolve(response);
   } catch (error) {
     yield put({
@@ -33,12 +33,12 @@ export function* postForms({ payload }: any) {
       type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
       payload: {
         onShow: true,
-        type: "error",
-        message: "Add form failed!",
+        type: 'error',
+        message: 'Add form failed!',
       },
     });
 
-    payload.callback({ loading: false, success: false })
+    payload.callback({ loading: false, success: false });
     return Promise.reject(error);
   }
 }
