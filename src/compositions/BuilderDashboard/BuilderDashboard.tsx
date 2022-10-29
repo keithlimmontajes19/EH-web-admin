@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useHistory, useParams } from 'react-router-dom';
 
 /* icons */
-import plusicon from "assets/icons/plus-Icon.svg";
+import plusicon from 'assets/icons/plus-Icon.svg';
 
 /* styles antd */
-import { Breadcrumb, Col, Input, message, Modal, PageHeader, Spin } from "antd";
-import { RootContainer, FlexWrap, AddContainer, PlusImg } from "./styled";
+import { Breadcrumb, Col, Input, message, Modal, PageHeader, Spin } from 'antd';
+import { RootContainer, FlexWrap, AddContainer, PlusImg } from './styled';
 import {
   RedoOutlined,
   MoreOutlined,
@@ -14,24 +14,28 @@ import {
   CheckOutlined,
   EditOutlined,
   LoadingOutlined,
-} from "@ant-design/icons";
-import { StyledText } from "compositions/TableDashboards/styled";
-import { StyledLinked } from "compositions/QuizzesTab/styled";
+} from '@ant-design/icons';
+import { StyledText } from 'compositions/TableDashboards/styled';
+import { StyledLinked } from 'compositions/QuizzesTab/styled';
 
 /* components */
-import Board from "compositions/Board";
-import ListOfPages from "compositions/ListOfPages";
+import Board from 'compositions/Board';
+import ListOfPages from 'compositions/ListOfPages';
 
 /* reducer action */
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   getOneDashboard,
   updateDashboard,
-} from "ducks/dashboard/actionCreator";
-import StyledButton from "components/StyledButton";
-import { theme } from "utils/colors";
-import Loading from "components/Loading";
+} from 'ducks/dashboard/actionCreator';
+import StyledButton from 'components/StyledButton';
+import { theme } from 'utils/colors';
+import Loading from 'components/Loading';
+
+const antIcon = (
+  <LoadingOutlined style={{ fontSize: 20, color: '#fff' }} spin />
+);
 
 const BuilderDashboard = () => {
   const history = useHistory();
@@ -50,8 +54,8 @@ const BuilderDashboard = () => {
   });
   const [editInput, setEditInput]: any = useState({
     isVisible: false,
-    title: "",
-    inputVal: "",
+    title: '',
+    inputVal: '',
     callback: () => {},
   });
 
@@ -64,7 +68,7 @@ const BuilderDashboard = () => {
       getOneDashboard({
         dashboardId: params?.page,
         callback: (res) => {
-          if (!res) return message.success("Something went wrong");
+          if (!res) return message.success('Something went wrong');
           setLoading(false);
           setEditedData(false);
           setOnDispatch(false);
@@ -77,7 +81,7 @@ const BuilderDashboard = () => {
     if (!editedData || onDispatch) return;
 
     setOnDispatch(true);
-    localStorage.setItem("dashboardId", editedData._id);
+    localStorage.setItem('dashboardId', editedData._id);
     dispatch(
       updateDashboard({
         data: editedData,
@@ -87,7 +91,7 @@ const BuilderDashboard = () => {
             getOneDashboard({
               dashboardId: params?.page,
               callback: (res) => {
-                if (!res) return message.success("Something went wrong");
+                if (!res) return message.success('Something went wrong');
                 setLoading(false);
                 setIsEditing(false);
                 setEditedData(false);
@@ -108,7 +112,7 @@ const BuilderDashboard = () => {
       copy.boards = [
         ...copy.boards,
         {
-          board_name: "Board " + (Number(copy.boards.length) + 1),
+          board_name: 'Board ' + (Number(copy.boards.length) + 1),
           board_items: [],
         },
       ];
@@ -119,7 +123,7 @@ const BuilderDashboard = () => {
     prev.boards = [
       ...prev.boards,
       {
-        board_name: "Boards " + (prev.boards.length + 1),
+        board_name: 'Boards ' + (prev.boards.length + 1),
         board_items: [],
       },
     ];
@@ -178,8 +182,8 @@ const BuilderDashboard = () => {
   const resetEditInput = () =>
     setEditInput({
       isVisible: false,
-      title: "",
-      inputVal: "",
+      title: '',
+      inputVal: '',
       callback: () => {},
     });
   const resetInputs = () => {
@@ -197,26 +201,26 @@ const BuilderDashboard = () => {
                 ? editedData?.name
                 : single_dashboard?.data?.length
                 ? single_dashboard?.data[0].name
-                : "";
+                : '';
               setEditInput({
                 isVisible: true,
-                title: "Rename " + title,
+                title: 'Rename ' + title,
                 inputVal: title,
                 callback: handleRenameDashboard,
               });
             }
           }}
         >
-          <span style={{ cursor: isEditing ? "pointer" : "auto" }}>
+          <span style={{ cursor: isEditing ? 'pointer' : 'auto' }}>
             {editedData
               ? editedData?.name
               : single_dashboard?.data?.length
               ? single_dashboard?.data[0].name
-              : ""}
+              : ''}
           </span>
           {isEditing && (
             <>
-              {" "}
+              {' '}
               <EditOutlined style={{ color: theme.HEADINGS }} />
             </>
           )}
@@ -225,36 +229,38 @@ const BuilderDashboard = () => {
       extra={[
         <RedoOutlined
           style={{
-            fontSize: "25px",
-            paddingRight: "24px",
-            cursor: "pointer",
+            fontSize: '25px',
+            // paddingRight: '15px',
+            cursor: 'pointer',
           }}
         />,
         editedData || isEditing ? (
           <>
-            <StyledButton w={134} onClick={handleBoardAdd}>
+            {/* <StyledButton w={134} onClick={handleBoardAdd}>
               <PlusOutlined /> BOARD
-            </StyledButton>
+            </StyledButton> */}
+
             <StyledButton
               m="0 15px"
               onClick={handlePublish}
               disabled={isEditing && !editedData}
             >
-              {onDispatch ? (
-                <Spin style={{ color: "#fff" }} />
-              ) : (
-                <CheckOutlined />
-              )}{" "}
-              &nbsp; PUBLISH
+              {onDispatch && (
+                <>
+                  <Spin indicator={antIcon} /> &nbsp;
+                </>
+              )}
+              PUBLISH
             </StyledButton>
+
             <StyledButton
-              bg={"none"}
+              bg={'none'}
               c={theme.PRIMARY}
               w={104}
               onClick={() => {
                 if (onDispatch) return;
-                if (params.page === "create")
-                  return history.push("/team/dashboards/");
+                if (params.page === 'create')
+                  return history.push('/team/dashboards/');
                 setEditedData(false);
                 setIsEditing(false);
               }}
@@ -267,8 +273,9 @@ const BuilderDashboard = () => {
             <StyledButton w={106} onClick={() => setIsEditing(true)}>
               <EditOutlined /> EDIT
             </StyledButton>
+
             <MoreOutlined
-              style={{ fontSize: "26px", color: "#635FFA", cursor: "pointer" }}
+              style={{ fontSize: '26px', color: '#635FFA', cursor: 'pointer' }}
             />
           </>
         ),
@@ -277,7 +284,7 @@ const BuilderDashboard = () => {
   );
 
   const BlankBoardFiller = ({ scalable }) => (
-    <Col span={12}>
+    <Col span={11}>
       <AddContainer scalable={scalable}>
         <PlusImg src={plusicon} onClick={handleBoardAdd} />
       </AddContainer>
@@ -285,9 +292,9 @@ const BuilderDashboard = () => {
   );
 
   return (
-    <RootContainer style={{ background: "none !important" }}>
-      <StyledLinked onClick={() => history.push("/team/dashboards")}>
-        {"<"} Back to Dashboards
+    <RootContainer style={{ background: 'none !important', padding: 20 }}>
+      <StyledLinked onClick={() => history.push('/team/dashboards')}>
+        {'<'} Back to Dashboards
       </StyledLinked>
 
       {loading ? (
@@ -313,6 +320,7 @@ const BuilderDashboard = () => {
                 setEditInput={setEditInput}
               />
             ))}
+
             {editedData || isEditing ? (
               (
                 editedData
@@ -329,6 +337,7 @@ const BuilderDashboard = () => {
           </FlexWrap>
         </>
       )}
+
       <ListOfPages
         visible={pageState.isVisible}
         defaultVal={pageState.defaultVal}
@@ -337,6 +346,7 @@ const BuilderDashboard = () => {
         }}
         handleCancel={resetPageState}
       />
+
       <Modal
         visible={editInput.isVisible}
         title={editInput.title}
@@ -352,7 +362,7 @@ const BuilderDashboard = () => {
           editInput.callback(editInput.inputVal);
         }}
         onCancel={resetEditInput}
-        okButtonProps={{ disabled: editInput.inputVal === "" }}
+        okButtonProps={{ disabled: editInput.inputVal === '' }}
       />
     </RootContainer>
   );

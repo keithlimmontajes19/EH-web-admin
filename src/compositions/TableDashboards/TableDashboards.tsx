@@ -5,7 +5,6 @@ import {
   DeleteFilled,
   EditOutlined,
   SearchOutlined,
-  DeleteOutlined,
 } from '@ant-design/icons';
 
 import {
@@ -28,6 +27,9 @@ import {
 import CreateDashboard from '../CreateDashboard';
 import IconImage from 'components/IconImage';
 import DELETE_ICON from 'assets/icons/delete-icon.png';
+import hammericon from '../../assets/icons/hammer-color.png';
+import { BuildIcon } from '../TablePages/styled';
+import { Space } from 'antd';
 
 function TableDashboards() {
   const dispatch = useDispatch();
@@ -93,22 +95,42 @@ function TableDashboards() {
         return (
           <>
             <div className="row-actions">
-              <span onClick={() => onEditData(record)}>
-                <EditOutlined style={{ color: '#4C4B7B' }} />
-                &nbsp;RENAME
-              </span>
-              &nbsp; &nbsp; &nbsp;
-              <span
-                onClick={() => pushHistory(`/team/dashboards/${record?._id}`)}
-              >
-                <EyeFilled style={{ color: '#4C4B7B' }} />
-                &nbsp;VIEW
-              </span>
-              &nbsp; &nbsp; &nbsp;
-              <span onClick={() => onDeleteData([record])}>
-                <DeleteOutlined style={{ color: '#4C4B7B' }} />
-                &nbsp;DELETE
-              </span>
+              <Space className="row-actions" size={'middle'}>
+                <span onClick={() => onDeleteData([record])}>
+                  <DeleteFilled
+                    style={{
+                      color: '#4C4B7B',
+                      width: 20,
+                      fontSize: 20,
+                    }}
+                  />
+                </span>
+
+                <span onClick={() => onEditData(record)}>
+                  <EditOutlined
+                    style={{
+                      color: '#4C4B7B',
+                      width: 20,
+                      fontSize: 20,
+                    }}
+                  />
+                </span>
+
+                <span
+                  onClick={() => pushHistory(`/team/dashboards/${record?._id}`)}
+                >
+                  <BuildIcon
+                    src={hammericon}
+                    color="#4C4B7B"
+                    style={{
+                      color: '#4C4B7B',
+                      width: 20,
+                      height: 17,
+                      marginTop: -5,
+                    }}
+                  />
+                </span>
+              </Space>
             </div>
           </>
         );
