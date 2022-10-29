@@ -1,21 +1,21 @@
-import { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect } from 'react';
 
 import {
   StyledHeader,
   CarouselContainer,
   NoAnnouncementContainer,
-} from "./styled";
+} from './styled';
 
-import { Image } from "antd";
-import { Carousel } from "react-responsive-carousel";
+import { Image } from 'antd';
+import { Carousel } from 'react-responsive-carousel';
 
 /* reducer action */
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
-import { getAnnouncements } from "ducks/announcement/actionCreator";
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAnnouncements } from 'ducks/announcement/actionCreator';
 
-import ReactPlayer from "react-player";
-import NO_ANNOUNCEMENT from "assets/images/noannouncement.png";
+import ReactPlayer from 'react-player';
+import NO_ANNOUNCEMENT from 'assets/images/noannouncement.png';
 
 const CarouselAnnouncement = (): ReactElement => {
   const dispatch = useDispatch();
@@ -48,7 +48,7 @@ const CarouselAnnouncement = (): ReactElement => {
             url={[
               {
                 src: item?.videoURL,
-                type: "video/mp4",
+                type: 'video/mp4',
               },
             ]}
           />

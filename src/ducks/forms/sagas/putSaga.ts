@@ -1,10 +1,13 @@
-import { takeLatest, put, call } from "redux-saga/effects";
-import { TYPES } from "../actionTypes";
-import { TYPES as ALERT_TYPES } from "ducks/alert/actionTypes";
+import { takeLatest, put, call } from 'redux-saga/effects';
+import { TYPES } from '../actionTypes';
+import { TYPES as ALERT_TYPES } from 'ducks/alert/actionTypes';
 
-import form_service from "api/services/form_service";
+import form_service from 'api/services/form_service';
 
 export function* putForms({ payload }: any) {
+  payload.callback({ loading: true, success: null });
+
+  console.log('payloads --->', payload);
   try {
     const response = yield call(
       form_service.putForms,
@@ -21,10 +24,12 @@ export function* putForms({ payload }: any) {
       type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
       payload: {
         onShow: true,
-        type: "success",
-        message: "Edit form success!",
+        type: 'success',
+        message: 'Edit form success!',
       },
     });
+
+    payload.callback({ loading: false, success: true, data: response?.data });
 
     return Promise.resolve(response);
   } catch (error) {
@@ -36,10 +41,12 @@ export function* putForms({ payload }: any) {
       type: ALERT_TYPES.ALERT_NOTIFICATION_REQUEST,
       payload: {
         onShow: true,
-        type: "error",
-        message: "Edit form failed!",
+        type: 'error',
+        message: 'Edit form failed!',
       },
     });
+
+    payload.callback({ loading: false, success: false });
 
     return Promise.reject(error);
   }

@@ -1,15 +1,15 @@
-import { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect } from 'react';
 
-import { Row, Col } from "antd";
-import { columns } from "./columns";
-import { Container, StyledTable, AnnouncementContainer } from "./styled";
+import { Row, Col } from 'antd';
+import { columns } from './columns';
+import { Container, StyledTable, AnnouncementContainer } from './styled';
 
 /* reducer action */
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
-import { getAnnouncements } from "ducks/announcement/actionCreator";
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAnnouncements } from 'ducks/announcement/actionCreator';
 
-import CarouselAnnouncement from "compositions/CarouselAnnouncement";
+import CarouselAnnouncement from 'compositions/CarouselAnnouncement';
 
 const Homepage = (): ReactElement => {
   const dispatch = useDispatch();

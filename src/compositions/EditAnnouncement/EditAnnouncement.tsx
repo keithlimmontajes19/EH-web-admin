@@ -1,5 +1,5 @@
-import { ReactElement, useEffect, useState } from "react";
-import type { PropsType } from "./types";
+import { ReactElement, useEffect, useState } from 'react';
+import type { PropsType } from './types';
 
 import {
   Row,
@@ -12,15 +12,15 @@ import {
   DatePicker,
   TimePicker,
   Image,
-} from "antd";
-import type { UploadProps } from "antd";
+} from 'antd';
+import type { UploadProps } from 'antd';
 
 import {
   TeamOutlined,
   CalendarOutlined,
   ClockCircleOutlined,
-} from "@ant-design/icons";
-import { StyledText } from "compositions/Announcements/styled";
+} from '@ant-design/icons';
+import { StyledText } from 'compositions/Announcements/styled';
 
 import {
   EndDate,
@@ -35,54 +35,54 @@ import {
   ModalContainer,
   ViewerContainer,
   StyledButtonCancle,
-} from "./styled";
+} from './styled';
 
-import moment from "moment";
-import ReactPlayer from "react-player";
-import CustomeSelect from "components/CustomeSelect";
-import videoicon from "assets/icons/video-icon.svg";
-import galleryicon from "assets/icons/gallery-icon.svg";
-import publishicon from "assets/icons/publish-icon.svg";
+import moment from 'moment';
+import ReactPlayer from 'react-player';
+import CustomeSelect from 'components/CustomeSelect';
+import videoicon from 'assets/icons/video-icon.svg';
+import galleryicon from 'assets/icons/gallery-icon.svg';
+import publishicon from 'assets/icons/publish-icon.svg';
 
 /* reducer action */
 import {
   putAnnouncements,
   getOrganizations,
-} from "ducks/announcement/actionCreator";
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
+} from 'ducks/announcement/actionCreator';
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
 
 const { MonthPicker, YearPicker } = DatePicker;
 const { Option } = Select;
 
-const dayFormat = "DD";
+const dayFormat = 'DD';
 
 const EditAnnouncement = (props: PropsType): ReactElement => {
   const { selected, editShow, setEditShow } = props;
   const dispatch = useDispatch();
 
   const [end, setEnd] = useState({
-    end_min: "00",
-    end_hour: "00",
-    end_date: "00",
-    end_month: "00",
-    end_year: "0000",
+    end_min: '00',
+    end_hour: '00',
+    end_date: '00',
+    end_month: '00',
+    end_year: '0000',
   });
   const [start, setStart] = useState({
-    start_min: "00",
-    start_hour: "00",
-    start_date: "00",
-    start_month: "00",
-    start_year: "0000",
+    start_min: '00',
+    start_hour: '00',
+    start_date: '00',
+    start_month: '00',
+    start_year: '0000',
   });
 
-  const [title, setTitle] = useState("");
-  const [fileId, setFileId] = useState("");
-  const [fileUrl, setFileUrl] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [startDate, setStartDate] = useState("");
+  const [title, setTitle] = useState('');
+  const [fileId, setFileId] = useState('');
+  const [fileUrl, setFileUrl] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState('');
   const [isImage, setIsimage] = useState(false);
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState('');
   const [organization, setOrganization] = useState([]);
 
   const { organizations }: any = useSelector<RootState>(
@@ -95,10 +95,10 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
    * LOCAL URL http://localhost:8080/api/v1/upload
    * =============================================================
    */
-  const baseURL = "https://engage-hub-platform-dev.herokuapp.com/api/v1/upload";
+  const baseURL = 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload';
   const uploadProps: UploadProps = {
     maxCount: 1,
-    name: "file",
+    name: 'file',
     showUploadList: false,
     action: baseURL,
   };
@@ -113,42 +113,42 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
   };
 
   const clearIdUrl = () => {
-    setFileId("");
-    setFileUrl("");
+    setFileId('');
+    setFileUrl('');
     setStart({
-      start_min: "",
-      start_hour: "",
-      start_date: "",
-      start_year: "",
-      start_month: "",
+      start_min: '',
+      start_hour: '',
+      start_date: '',
+      start_year: '',
+      start_month: '',
     });
     setEnd({
-      end_min: "",
-      end_hour: "",
-      end_date: "",
-      end_year: "",
-      end_month: "",
+      end_min: '',
+      end_hour: '',
+      end_date: '',
+      end_year: '',
+      end_month: '',
     });
   };
 
   const onChangeImageVideo = (info, type) => {
-    if (info.file.status === "done") {
+    if (info.file.status === 'done') {
       const fileURL = info?.file?.response?.data?.url;
       const fileID = info?.file?.response?.data?.uid;
 
-      type === "image" ? setIsimage(true) : setIsimage(false);
+      type === 'image' ? setIsimage(true) : setIsimage(false);
 
       setFileId(fileID);
       setFileUrl(fileURL);
       message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === "error") {
+    } else if (info.file.status === 'error') {
       clearIdUrl();
       message.error(`${info.file.name} file upload failed.`);
     }
   };
 
   const checkifIncludeHttp = (value: string, type: boolean) => {
-    const hasHttp = value.includes("http");
+    const hasHttp = value.includes('http');
 
     if (hasHttp && type) {
       return selected?.videoId;
@@ -169,7 +169,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
       organization: organization,
       startDate: startDate,
       endDate: endDate,
-      isPublish: status === "active" ? true : false,
+      isPublish: status === 'active' ? true : false,
       videoURL: !isImage ? checkifIncludeHttp(fileId, true) : null,
       imageURL: isImage ? checkifIncludeHttp(fileId, false) : null,
     };
@@ -188,18 +188,18 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
     );
 
     setStart({
-      start_min: moment(selected?.startDate).format("mm"),
-      start_hour: moment(selected?.startDate).format("HH"),
-      start_date: moment(selected?.startDate).format("DD"),
-      start_month: moment(selected?.startDate).format("MM"),
-      start_year: moment(selected?.startDate).format("YYYY"),
+      start_min: moment(selected?.startDate).format('mm'),
+      start_hour: moment(selected?.startDate).format('HH'),
+      start_date: moment(selected?.startDate).format('DD'),
+      start_month: moment(selected?.startDate).format('MM'),
+      start_year: moment(selected?.startDate).format('YYYY'),
     });
     setEnd({
-      end_min: moment(selected?.endDate).format("mm"),
-      end_hour: moment(selected?.endDate).format("HH"),
-      end_date: moment(selected?.endDate).format("DD"),
-      end_month: moment(selected?.endDate).format("MM"),
-      end_year: moment(selected?.endDate).format("YYYY"),
+      end_min: moment(selected?.endDate).format('mm'),
+      end_hour: moment(selected?.endDate).format('HH'),
+      end_date: moment(selected?.endDate).format('DD'),
+      end_month: moment(selected?.endDate).format('MM'),
+      end_year: moment(selected?.endDate).format('YYYY'),
     });
 
     setTitle(selected?.title);
@@ -242,29 +242,28 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
           <StyledButtonCancle
             onClick={handleCancel}
             style={{
-              width: "100 px",
-              color: "#635ffa",
-              background: "#fff",
-              border: "1px solid #635ffa ",
+              width: '100 px',
+              color: '#635ffa',
+              background: '#fff',
+              border: '1px solid #635ffa ',
             }}
           >
             Cancel
           </StyledButtonCancle>,
-          <StyledButton onClick={() => handleSubmit("inactive")}>
+          <StyledButton onClick={() => handleSubmit('inactive')}>
             Save As Draft
           </StyledButton>,
-          <StyledButton onClick={() => handleSubmit("active")}>
-            <img src={publishicon} style={{ paddingRight: "5px" }} />
+          <StyledButton onClick={() => handleSubmit('active')}>
             Publish
           </StyledButton>,
         ]}
       >
         <div
           style={{
-            display: "flex",
-            flexDirection: "row",
-            objectFit: "contain",
-            justifyContent: "space-between",
+            display: 'flex',
+            flexDirection: 'row',
+            objectFit: 'contain',
+            justifyContent: 'space-between',
           }}
         >
           <div>
@@ -280,7 +279,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                   url={[
                     {
                       src: fileUrl,
-                      type: "video/mp4",
+                      type: 'video/mp4',
                     },
                   ]}
                 />
@@ -290,15 +289,15 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
 
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-around",
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-around',
             }}
           >
             <Upload
               {...uploadProps}
               accept="image/*"
-              onChange={(args) => onChangeImageVideo(args, "image")}
+              onChange={(args) => onChangeImageVideo(args, 'image')}
             >
               <ItemContainer src={galleryicon} />
             </Upload>
@@ -306,21 +305,21 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
             <Upload
               {...uploadProps}
               accept="video/*"
-              onChange={(args) => onChangeImageVideo(args, "video")}
+              onChange={(args) => onChangeImageVideo(args, 'video')}
             >
               <ItemContainer src={videoicon} />
             </Upload>
           </div>
         </div>
 
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: '20px' }}>
           <Input
             style={{
-              width: "485px",
-              height: "38px",
-              margin: "10px 0px",
-              borderRadius: "15px",
-              background: "#F8F8F8",
+              width: '485px',
+              height: '38px',
+              margin: '10px 0px',
+              borderRadius: '15px',
+              background: '#F8F8F8',
             }}
             size="large"
             value={title}
@@ -330,11 +329,11 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
 
           <Input.TextArea
             style={{
-              width: "485px",
-              height: "auto",
-              margin: "10px 0px",
-              borderRadius: "15px",
-              background: "#F8F8F8",
+              width: '485px',
+              height: 'auto',
+              margin: '10px 0px',
+              borderRadius: '15px',
+              background: '#F8F8F8',
             }}
             size="large"
             value={description}
@@ -348,7 +347,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
             <StyledH4>Start Date</StyledH4>
 
             <StartDate>
-              <CalendarOutlined style={{ padding: "5px" }} />
+              <CalendarOutlined style={{ padding: '5px' }} />
               <MonthPicker
                 format="MM"
                 placeholder="Month"
@@ -360,7 +359,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                     start_month: dateString,
                   });
                 }}
-                style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
+                style={{ borderRadius: '15px', width: '90px', margin: '5px' }}
               />
 
               <DatePicker
@@ -374,7 +373,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                     start_date: dateString,
                   })
                 }
-                style={{ borderRadius: "15px", width: "80px", margin: "5px" }}
+                style={{ borderRadius: '15px', width: '80px', margin: '5px' }}
               />
 
               <YearPicker
@@ -388,7 +387,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                     start_year: dateString,
                   })
                 }
-                style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
+                style={{ borderRadius: '15px', width: '90px', margin: '5px' }}
               />
             </StartDate>
           </Col>
@@ -409,7 +408,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                     start_hour: dateString,
                   })
                 }
-                style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
+                style={{ borderRadius: '15px', width: '60px', margin: '5px' }}
               />
               :
               <TimePicker
@@ -423,7 +422,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                     start_min: dateString,
                   })
                 }
-                style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
+                style={{ borderRadius: '15px', width: '60px', margin: '5px' }}
               />
             </TimeStart>
           </Col>
@@ -433,7 +432,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
           <Col flex={2}>
             <StyledH4>End Date</StyledH4>
             <EndDate>
-              <CalendarOutlined style={{ padding: "5px" }} />
+              <CalendarOutlined style={{ padding: '5px' }} />
 
               <MonthPicker
                 format="MM"
@@ -446,7 +445,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                     end_month: dateString,
                   })
                 }
-                style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
+                style={{ borderRadius: '15px', width: '90px', margin: '5px' }}
               />
 
               <DatePicker
@@ -460,7 +459,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                     end_date: dateString,
                   })
                 }
-                style={{ borderRadius: "15px", width: "80px", margin: "5px" }}
+                style={{ borderRadius: '15px', width: '80px', margin: '5px' }}
               />
 
               <YearPicker
@@ -474,7 +473,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                     end_year: dateString,
                   })
                 }
-                style={{ borderRadius: "15px", width: "90px", margin: "5px" }}
+                style={{ borderRadius: '15px', width: '90px', margin: '5px' }}
               />
             </EndDate>
           </Col>
@@ -495,7 +494,7 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                     end_hour: dateString,
                   });
                 }}
-                style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
+                style={{ borderRadius: '15px', width: '60px', margin: '5px' }}
               />
               :
               <TimePicker
@@ -509,13 +508,13 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                     end_min: dateString,
                   })
                 }
-                style={{ borderRadius: "15px", width: "60px", margin: "5px" }}
+                style={{ borderRadius: '15px', width: '60px', margin: '5px' }}
               />
             </TimeEnd>
           </Col>
         </Row>
 
-        <StyledText fS={25} style={{ marginBottom: "12px !important" }}>
+        <StyledText fS={25} style={{ marginBottom: '12px !important' }}>
           Viewer
         </StyledText>
 
@@ -531,8 +530,8 @@ const EditAnnouncement = (props: PropsType): ReactElement => {
                 <span style={{ marginLeft: 20 }}>Organization Name</span>
               }
               style={{
-                width: "485px",
-                borderRadius: "15px !important",
+                width: '485px',
+                borderRadius: '15px !important',
               }}
             >
               {(organizations?.data || []).map((item) => {

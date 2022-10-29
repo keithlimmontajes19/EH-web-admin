@@ -25,6 +25,7 @@ import { EditorContainer, StyledButton, StyledButtonCancle } from './styled';
 
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
+import GrapeEditor from 'components/GrapeEditor';
 
 import { getOnePage, postPage, updatePage } from 'ducks/pages/actionCreator';
 import Loading from 'components/Loading';
@@ -211,12 +212,12 @@ const BuilderPage = (props: PropsType): ReactElement => {
                 }
               />,
               <StyledButton disabled={!editedData} onClick={handlePagePublish}>
-                {onDispatch ? <LoadingOutlined spin /> : <CheckOutlined />}{' '}
+                {/* {onDispatch ? <LoadingOutlined spin /> : <CheckOutlined />}{' '} */}
                 PUBLISH
               </StyledButton>,
-              <StyledButtonCancle onClick={() => history.goBack()}>
-                CANCEL
-              </StyledButtonCancle>,
+              // <StyledButtonCancle onClick={() => history.goBack()}>
+              //   CANCEL
+              // </StyledButtonCancle>,
               <MoreOutlined
                 style={{
                   fontSize: '26px',
@@ -227,7 +228,7 @@ const BuilderPage = (props: PropsType): ReactElement => {
             ]}
           />
 
-          <EditorContainer>
+          {/* <EditorContainer>
             <Editor
               editorState={editorState}
               wrapperClassName="demo-wrapper"
@@ -243,8 +244,9 @@ const BuilderPage = (props: PropsType): ReactElement => {
                 },
               }}
             />
-          </EditorContainer>
+          </EditorContainer> */}
 
+          <GrapeEditor />
           <ToastContainer />
 
           <Modal

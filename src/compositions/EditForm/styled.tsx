@@ -1,8 +1,8 @@
-import { Button, Input, Layout, Select, Checkbox } from "antd";
-import { theme } from "utils/colors";
+import { Button, Input, Layout, Select, Checkbox } from 'antd';
+import { theme } from 'utils/colors';
 
-import styled from "styled-components";
-import TextArea from "antd/lib/input/TextArea";
+import styled from 'styled-components';
+import TextArea from 'antd/lib/input/TextArea';
 
 export const Container = styled.div``;
 
@@ -22,22 +22,8 @@ export const QuizLayout = styled(Layout)`
   }
 `;
 
-export const StyledButtonCancle = styled(Button)`
-  background: #fff;
-  color: #635ffa;
-  width: auto;
-  height: 48px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: 700;
-  text-align: center;
-  justify-contet: center;
-  cursor: pointer;
-  border: 1px solid ${theme.PRIMARY};
-`;
-
 export const QuestionLayout = styled(Layout)`
-  background: #f9f9f9;
+  background: #eeeefa;
   border-radius: 15px;
   padding: 30px 35px;
 
@@ -127,26 +113,57 @@ export const StyledSelect: any = styled(Select)`
   }
 `;
 
-export const StyledButton: any = styled(Button)`
-  background: ${({ bg }: any) => (bg ? bg : `#635ffa`)};
-  color: ${({ c }: any) => (c ? c : `#fff`)};
-  width: ${({ w }: any) => (w ? w : `166`)}px;
-  height: 48px;
+export const StyledButtonCancle = styled(Button)`
   box-sizing: border-box;
-  border-radius: 8px;
-  border: ${({ b }: any) => (b ? b : "none")};
-  font-size: 20px;
-  font-weight: 700;
-  padding-top: -10px;
-  margin: ${({ m }: any) => (m ? m : `0`)};
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 
-  &:hover,
-  &:active,
-  &:focus {
-    background: ${({ bg }: any) => (bg ? bg : `#635ffa`)};
-    color: ${({ c }: any) => (c ? c : `#fff`)};
-    border: ${({ b }: any) => (b ? b : "none")};
-  }
+  width: 160px;
+  height: 38px;
+
+  /* Hub Blurple */
+
+  border: 2px solid #635ffa;
+  border-radius: 8px;
+
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+  /* identical to box height, or 112% */
+
+  text-align: center;
+
+  /* Hub Blurple */
+
+  color: #635ffa;
+`;
+
+export const StyledButton: any = styled(Button)`
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  width: 160px;
+  height: 38px;
+
+  /* Hub Blurple */
+
+  background: #635ffa;
+  border-radius: 8px;
+
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 18px;
+
+  text-align: center;
+
+  color: #ffffff;
 `;
 
 export const StyledTextArea: any = styled(TextArea)`
@@ -186,6 +203,7 @@ export const MainContainer = styled.div`
   padding: 20px;
   border-radius: 15px;
   background: #f9f9f9;
+  background: #eeeefa;
 `;
 
 export const CheckboxStyled = styled(Checkbox)`

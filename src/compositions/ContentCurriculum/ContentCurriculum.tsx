@@ -16,6 +16,7 @@ import HTMLRenderer from 'components/RenderHtml';
 import QuizStepper from 'compositions/QuizStepper';
 import NO_IMAGE from 'assets/icons/no-purple-box.png';
 import IntroductionComponent from 'compositions/IntroductionComponent';
+import BlockViewer from 'components/editor-js/BlockViewer';
 
 // import Loading from 'components/Loading';
 // import TextComponent from 'compositions/TextComponent';
@@ -163,7 +164,14 @@ const ContentCurriculum = (props: PropsType): ReactElement => {
             />
           )}
 
-          <HTMLRenderer source={editorJsParser(parseBlocks?.blocks)} />
+          {/* <HTMLRenderer source={editorJsParser(parseBlocks?.blocks)} /> */}
+          {(parseBlocks?.blocks || []).map((block) => {
+            return (
+              <div style={{ margin: 4 }}>
+                <BlockViewer key={block?.id} block={block} />
+              </div>
+            );
+          })}
         </div>
       );
     } else {
@@ -211,7 +219,14 @@ const ContentCurriculum = (props: PropsType): ReactElement => {
               setSelected={setSelected}
             />
           ) : (
-            <HTMLRenderer source={editorJsParser(parseBlocks?.blocks)} />
+            // <HTMLRenderer source={editorJsParser(parseBlocks?.blocks)} />
+            (parseBlocks?.blocks || []).map((block) => {
+              return (
+                <div style={{ margin: 4 }}>
+                  <BlockViewer key={block?.id} block={block} />
+                </div>
+              );
+            })
           )}
         </div>
       );

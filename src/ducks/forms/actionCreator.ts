@@ -1,4 +1,4 @@
-import { TYPES } from "./actionTypes";
+import { TYPES } from './actionTypes';
 
 export const getForms = () => ({
   type: TYPES.LIST_FORMS_REQUEST,
@@ -13,15 +13,16 @@ export const postForm = (payload, callback) => ({
   type: TYPES.POST_FORMS_REQUEST,
   payload: {
     data: payload,
-    callback
+    callback,
   },
 });
 
-export const putForm = (id, data) => ({
+export const putForm = (id, data, callback) => ({
   type: TYPES.PUT_FORMS_REQUEST,
   payload: {
     id,
     data,
+    callback,
   },
 });
 

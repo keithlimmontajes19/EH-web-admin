@@ -27,6 +27,7 @@ import ProfileDetails from 'compositions/ProfileDetails';
 import FormBuilder from 'compositions/FormBuilder';
 import BuilderQuiz from 'compositions/BuilderQuiz';
 import BuilderCourse from 'compositions/BuilderCourse';
+import FormBuilderPages from 'compositions/FormBuilderPages';
 
 const Navigation = () => {
   return (
@@ -107,6 +108,10 @@ const Navigation = () => {
         path="/team/onboarding/edit/:screenname"
         component={EditOnboardingScreen}
       />
+        <Route
+          path="/team/builder/:editAdd/:id?"
+          component={FormBuilderPages}
+        />
 
       <Redirect to="/" />
     </Switch>

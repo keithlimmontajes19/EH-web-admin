@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { Button, Input, Layout } from "antd";
-import { theme } from "utils/colors";
+import styled from 'styled-components';
+import { Button, Input, Layout } from 'antd';
+import { theme } from 'utils/colors';
 
 export const Container = styled.div``;
 export const StyledText: any = styled.span`
@@ -43,14 +43,14 @@ export const NakedInput: any = styled(Input)`
 export const StyledButton: any = styled(Button)`
   width: 180px;
   height: 48px;
-  background: #635FFA;
+  background: #635ffa;
   border-radius: 8px;
   font-family: 'Red Hat Display';
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
   text-align: center;
-  color: #FFFFFF;
+  color: #ffffff;
 `;
 
 export const TableContainer: any = styled(Layout)`
@@ -98,14 +98,14 @@ export const TableContainer: any = styled(Layout)`
   .ant-table-tbody > .ant-table-row:nth-child(even) {
     background: #fff;
   }
-  
+
   .ant-table-row:hover {
     box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.04);
     cursor: pointer;
   }
 
   tbody:before {
-    content: "@";
+    content: '@';
     display: block;
     line-height: 20px;
     text-indent: -99999px;
@@ -203,7 +203,7 @@ export const TableContainer: any = styled(Layout)`
   }
 
   .ant-collapse-header > div {
-    width: 23px
+    width: 23px;
   }
 
   .ant-collapse-content-box {

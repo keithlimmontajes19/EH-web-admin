@@ -1,15 +1,15 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from 'react';
 
-import { Row, Col, Modal } from "antd";
+import { Row, Col, Modal } from 'antd';
 
-import { BoardContainer, HeaderContainer, BodyContainer } from "./styled";
-import Folder from "components/Folder";
-import File from "components/File";
-import { EllipsisOutlined } from "@ant-design/icons";
-import Dropdown from "components/Dropdown";
-import { theme } from "utils/colors";
-import Loading from "components/Loading";
-import { useDispatch } from "react-redux";
+import { BoardContainer, HeaderContainer, BodyContainer } from './styled';
+import Folder from 'components/Folder';
+import File from 'components/File';
+import { EllipsisOutlined } from '@ant-design/icons';
+import Dropdown from 'components/Dropdown';
+import { theme } from 'utils/colors';
+import Loading from 'components/Loading';
+import { useDispatch } from 'react-redux';
 
 const Board = ({
   index,
@@ -29,7 +29,7 @@ const Board = ({
     if (focusItem[0] === -1) return setViewItem(false);
 
     const copy = JSON.parse(JSON.stringify(item));
-    iterateFindItem(copy, "board_items", focusItem, 0, (objResult) => {
+    iterateFindItem(copy, 'board_items', focusItem, 0, (objResult) => {
       setViewItem({ ...objResult });
     });
   }, [focusItem, item]);
@@ -45,7 +45,7 @@ const Board = ({
     if (indexArr.length === count)
       return callback({ obj, objKey, index: count - 1, indexArr, prev });
     const nextObj = obj[objKey][indexArr[count]];
-    const nextObjKey = "item_pages";
+    const nextObjKey = 'item_pages';
     return iterateFindItem(
       nextObj,
       nextObjKey,
@@ -58,49 +58,58 @@ const Board = ({
 
   const mainActions = [
     {
-      name: "Rename Board",
+      name: 'Rename Board',
       action: () =>
         setEditInput({
           isVisible: true,
-          title: "Rename " + item?.board_name,
+          title: 'Rename ' + item?.board_name,
           inputVal: item?.board_name,
           callback: (e) => saveBoard(index, { ...item, board_name: e }),
         }),
     },
     {
-      name: "Delete Board",
+      name: 'Delete Board',
       action: () =>
         Modal.confirm({
-          title: "Delete " + item?.board_name,
+          title: 'Delete ' + item?.board_name,
           onOk: () => deleteBoard(index),
         }),
     },
   ];
-  
+
   const defaultActions = () => {
-    let directory = []
-    if(viewItem) iterateFindItem(item, "board_items", viewItem.indexArr, 0, ({ obj, objKey }) => {directory = obj[objKey]})
-    else directory = item?.board_items
+    let directory = [];
+    if (viewItem)
+      iterateFindItem(
+        item,
+        'board_items',
+        viewItem.indexArr,
+        0,
+        ({ obj, objKey }) => {
+          directory = obj[objKey];
+        }
+      );
+    else directory = item?.board_items;
     return [
       {
-        name: "Add Folder",
+        name: 'Add Folder',
         action: () => {
           const title = viewItem ? viewItem?.obj?.item_name : item?.board_name;
           setEditInput({
             isVisible: true,
-            title: "Add Folder to " + title,
-            inputVal: "",
+            title: 'Add Folder to ' + title,
+            inputVal: '',
             callback: (e) => {
               const copy = JSON.parse(JSON.stringify(item));
               const blank = {
                 item_name: e,
                 item_pages: [],
-                item_type: "folder",
+                item_type: 'folder',
               };
               if (viewItem) {
                 iterateFindItem(
                   copy,
-                  "board_items",
+                  'board_items',
                   viewItem.indexArr,
                   0,
                   ({ obj, objKey, index }) => {
@@ -118,23 +127,25 @@ const Board = ({
         },
       },
       {
-        name: "Add Page",
-        action: () => 
+        name: 'Add Page',
+        action: () =>
           setPageState({
             isVisible: true,
-            defaultVal: directory.filter(itemObj => itemObj?.item_type === "page").map(pageObj => pageObj?.item_pageId),
+            defaultVal: directory
+              .filter((itemObj) => itemObj?.item_type === 'page')
+              .map((pageObj) => pageObj?.item_pageId),
             callback: (result) => {
               const copy = JSON.parse(JSON.stringify(item));
-              const convertedResult = result.map(pageObj => ({
+              const convertedResult = result.map((pageObj) => ({
                 item_name: pageObj?.title,
-                item_type: "page",
-                item_pageId: pageObj?._id
-              }))
-  
+                item_type: 'page',
+                item_pageId: pageObj?._id,
+              }));
+
               if (viewItem) {
                 iterateFindItem(
                   copy,
-                  "board_items",
+                  'board_items',
                   viewItem.indexArr,
                   0,
                   ({ obj, objKey, index }) => {
@@ -147,28 +158,28 @@ const Board = ({
                 copy.board_items = newItems;
               }
               saveBoard(index, copy);
-            }
+            },
           }),
       },
-    ]
+    ];
   };
   const selectedActions = () => {
-    const _item = viewItem ? viewItem?.obj : item?.board_items[selectedItem]
-    console.log(_item)
+    const _item = viewItem ? viewItem?.obj : item?.board_items[selectedItem];
+    console.log(_item);
     const pageActions = [
       {
         name: `${_item.item_type === 'folder' ? 'Delete' : 'Remove'} Selected`,
         action: () => {
           if (onDispatch) return;
           Modal.confirm({
-            title: "Remove " + _item?.item_name,
+            title: 'Remove ' + _item?.item_name,
             onOk: () => {
               const copy = JSON.parse(JSON.stringify(item));
               setSelectedItem(-1);
               if (viewItem) {
                 iterateFindItem(
                   copy,
-                  "board_items",
+                  'board_items',
                   viewItem.indexArr,
                   0,
                   ({ obj, objKey, index }) => {
@@ -190,14 +201,14 @@ const Board = ({
     if (_item?.item_type === 'page') return pageActions;
     return [
       {
-        name: "Rename Selected",
+        name: 'Rename Selected',
         action: () => {
           const title = viewItem
             ? viewItem?.obj?.item_pages[selectedItem]?.item_name
             : item?.board_items[selectedItem]?.item_name;
           setEditInput({
             isVisible: true,
-            title: "Rename " + title,
+            title: 'Rename ' + title,
             inputVal: title,
             callback: (e) => {
               const copy = JSON.parse(JSON.stringify(item));
@@ -205,7 +216,7 @@ const Board = ({
               if (viewItem) {
                 iterateFindItem(
                   copy,
-                  "board_items",
+                  'board_items',
                   viewItem.indexArr,
                   0,
                   ({ obj, objKey }) => {
@@ -222,15 +233,15 @@ const Board = ({
           });
         },
       },
-      ...pageActions
+      ...pageActions,
     ];
   };
 
-  const headerActions = (mode) => mode ? defaultActions() : selectedActions()
+  const headerActions = (mode) => (mode ? defaultActions() : selectedActions());
 
   return (
     <>
-      <Col span={12}>
+      <Col span={10} style={{ margin: 36 }}>
         <BoardContainer>
           <HeaderContainer>
             <h2>{item?.board_name}</h2>
@@ -243,17 +254,19 @@ const Board = ({
               }
             />
           </HeaderContainer>
+
           <div
             style={{
               color: theme.LIGHT_GRAY,
               height: 50,
               padding: 20,
-              visibility: viewItem ? "visible" : "hidden",
-              textDecoration: "underline",
+              marginTop: 50,
+              visibility: viewItem ? 'visible' : 'hidden',
+              textDecoration: 'underline',
             }}
           >
             <span
-              style={{ cursor: "pointer" }}
+              style={{ cursor: 'pointer' }}
               onClick={() => {
                 const prev = [...focusItem];
                 prev.pop();
@@ -261,15 +274,16 @@ const Board = ({
                 setOnDispatch(false);
               }}
             >
-              &lt; Back to{" "}
+              &lt; Back to{' '}
               {viewItem
                 ? viewItem.prev?.item_name || viewItem.prev?.board_name
-                : ""}
+                : ''}
             </span>
           </div>
+
           <BodyContainer
             onClick={(e: any) => {
-              if (e.target.localName === "div") setSelectedItem(-1);
+              if (e.target.localName === 'div') setSelectedItem(-1);
             }}
           >
             <Row justify="space-around">
@@ -292,15 +306,23 @@ const Board = ({
                         setSelectedItem((prev) => (prev === index ? -1 : index))
                       }
                       style={{
-                        background:
-                          index === selectedItem ? theme.PRIMARY_LIGHT : "none",
+                        // background: index === selectedItem ? theme.PRIMARY_LIGHT : 'none',
                         borderRadius: 15,
                       }}
                     >
-                      {pages?.item_type === "folder" ? (
-                        <Folder key={index} pages={pages} />
+                      {pages?.item_type === 'folder' ? (
+                        <Folder
+                          key={index}
+                          index={index}
+                          pages={pages}
+                          selectedItem={selectedItem}
+                        />
                       ) : (
-                        <File name={pages?.item_name || pages?.title} />
+                        <File
+                          index={index}
+                          selectedItem={selectedItem}
+                          name={pages?.item_name || pages?.title}
+                        />
                       )}
                     </span>
                   );

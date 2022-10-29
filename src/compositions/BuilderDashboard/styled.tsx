@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const RootContainer = styled.div`
   .ant-row ant-row-center {
@@ -33,9 +33,11 @@ export const FlexWrap = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
 `;
+
 export const AddContainer: any = styled.div`
   background: #e0dffe;
-  min-height: ${({ scalable = false }: any) => (scalable ? `90%` : `500px`)};
+  // min-height: ${({ scalable = false }: any) => (scalable ? `90%` : `500px`)};
+  min-height: 496px;
   margin: 36px;
   box-shadow: 0px 5px 20px -5px rgba(43, 46, 74, 0.2);
   border-radius: 15px;
@@ -43,6 +45,7 @@ export const AddContainer: any = styled.div`
   align-items: center;
   justify-content: center;
 `;
+
 export const PlusImg = styled.img`
   height: 80%;
   width: 80%;
