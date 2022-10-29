@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import { Table } from "antd";
-import { theme } from "utils/colors";
+import { Table } from 'antd';
+import { theme } from 'utils/colors';
 
 export const Container = styled.div`
   width: 95%;
@@ -23,13 +23,19 @@ export const StyledTitle = styled.p`
 `;
 
 export const StyledSubtitle = styled.p`
-  color: #a2a1bd;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 22px;
+  font-family: 'Red Hat Display';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 25px;
+  /* identical to box height, or 156% */
+
+  /* Hub Headings */
+
+  color: #4c4b7b;
 `;
 
-export const StyledTable = styled(Table)`
+export const StyledTable = styled<any>(Table)`
   .ant-table-thead > tr > th {
     background: none;
   }

@@ -19,7 +19,7 @@ import {
   EditOutlined,
   EnterOutlined,
   SearchOutlined,
-  DeleteOutlined,
+  DeleteFilled,
   LoadingOutlined,
 } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
@@ -129,12 +129,12 @@ const TablePages = (props: PropsType): ReactElement => {
           <Row align="middle" justify="space-between">
             {makeTitle(record)}
             <Space className="row-actions" size={'middle'}>
-              <span>
+              {/* <span>
                 <EyeFilled style={{ color: '#4C4B7B', width: 20 }} />
-              </span>
+              </span> */}
 
               <span onClick={() => onDeleteData([record])}>
-                <DeleteOutlined
+                <DeleteFilled
                   style={{ color: '#4C4B7B', width: 20, height: 20 }}
                 />
               </span>
@@ -323,7 +323,7 @@ const TablePages = (props: PropsType): ReactElement => {
 
           <Table
             onRow={rowListener}
-            // rowSelection={rowSelection}
+            rowSelection={rowSelection}
             columns={columns}
             dataSource={searchInpt !== '' ? searchdData : dataSource}
             loading={loading}

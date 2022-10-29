@@ -1,20 +1,40 @@
-import { ReactElement } from "react";
-import type { PropsType } from "./types";
+import { ReactElement, useEffect, useState } from 'react';
+import type { PropsType } from './types';
 
-import { Row, Col } from "antd";
-import { columns } from "./columns";
-import { Container, StyledTable } from "./styled";
+import { Row, Col } from 'antd';
+import { columns } from './columns';
+import { Container, StyledTable } from './styled';
 
-import NO_COURSES from "assets/icons/no-courses-icon.png";
+import NO_COURSES from 'assets/icons/no-courses-icon.png';
+
+/* reducer action */
+import { getMyCourses } from 'ducks/lms/actionCreator';
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
 
 const DashboardMostEnrolled = (props: PropsType): ReactElement => {
+  const dispatch = useDispatch();
+
+  const { data }: any = useSelector<RootState>((state) => state.lms);
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    dispatch(getMyCourses());
+  }, []);
+
+  useEffect(() => {
+    setCourses(data);
+  }, [data]);
+
   return (
     <Row style={{ marginTop: 81, marginBottom: 50 }}>
       <Col span={12}>
         <Container>
           <StyledTable
             size="small"
-            dataSource={[]}
+            bordered={false}
+            pagination={false}
+            dataSource={courses.slice(0, 3) || []}
             columns={columns()}
             locale={{
               emptyText: (
