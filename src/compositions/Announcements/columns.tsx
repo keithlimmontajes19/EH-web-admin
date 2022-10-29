@@ -16,7 +16,7 @@ import {
   ColumnText,
 } from './styled';
 
-import IconImage from "components/IconImage";
+import IconImage from 'components/IconImage';
 import DELETE_ICON from 'assets/icons/delete-icon.png';
 
 const convertSnakeCase = (string) => {
@@ -62,6 +62,7 @@ export const columns = (
     render: (record) => {
       let color: string = 'green';
 
+      console.log(record);
       if (record === 'active') {
         color = 'green';
       }
@@ -112,7 +113,7 @@ export const columns = (
           });
         }}
       >
-        <IconImage source={DELETE_ICON} width={17} height={21}/>
+        <IconImage source={DELETE_ICON} width={17} height={21} />
       </a>
     ),
     width: 50,

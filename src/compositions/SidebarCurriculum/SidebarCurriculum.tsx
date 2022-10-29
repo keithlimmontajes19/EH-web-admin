@@ -74,7 +74,7 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
            * Introduction Menu
            * ==================
            */}
-          <Menu.Item
+          {/* <Menu.Item
             key={'a'}
             onClick={() => {
               setTopicId(null);
@@ -84,7 +84,7 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
             }}
           >
             <StyledLabel color={colorCondition('a')}>Introduction</StyledLabel>
-          </Menu.Item>
+          </Menu.Item> */}
 
           {/**
            * ===============

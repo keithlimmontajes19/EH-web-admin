@@ -60,8 +60,6 @@ const BuilderCourse = (): ReactElement => {
     JSON.parse(JSON.stringify(blankData))
   );
 
-  console.log('organizations', organizations);
-
   const courseData: any = useSelector<RootState>((state) => state.lms);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import { Table, Layout } from "antd";
+import { Table, Layout } from 'antd';
 
 export const Container = styled.div`
   padding: 30px;
@@ -14,7 +14,7 @@ export const StyledTable = styled(Table)`
 `;
 
 export const StyledTitle = styled.p`
-  font-family: "Red Hat Display", sans-serif;
+  font-family: 'Red Hat Display', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
@@ -23,7 +23,7 @@ export const StyledTitle = styled.p`
 `;
 
 export const StyledSubtitle = styled.p`
-  font-family: "DM Sans", sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
@@ -40,8 +40,9 @@ export const StyledHeader = styled.h2`
 
 export const AnnouncementContainer = styled.div`
   width: 100%;
-  height: 452px;
+  max-height: 452px;
   padding: 20px;
+  overflow-y: auto;
   background: #ffffff;
   border-radius: 15px;
   box-shadow: 0px 5px 20px -5px rgba(43, 46, 74, 0.2);
@@ -119,27 +120,27 @@ export const TabitemContainer = styled.p`
 `;
 
 export const HeaderStyles = {
-  padding: "10px",
-  fontSize: "22px",
-  fontWeight: "500",
-  color: "#2B2E4A !important",
+  padding: '10px',
+  fontSize: '22px',
+  fontWeight: '500',
+  color: '#2B2E4A !important',
 };
 
 export const DivEmptyStyles: any = {
-  display: "flex",
-  alignItems: "center",
-  flexDirection: "column",
-  backgroundColor: "#fff",
+  display: 'flex',
+  alignItems: 'center',
+  flexDirection: 'column',
+  backgroundColor: '#fff',
   padding: 30,
 };
 
 export const ImgEmptyStyles = {
-  width: "87px",
-  height: "109px",
+  width: '87px',
+  height: '109px',
 };
 
 export const StyledCol1 = styled.span`
-  font-family: "DM Sans";
+  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
@@ -148,7 +149,7 @@ export const StyledCol1 = styled.span`
 `;
 
 export const StyledCol2 = styled.span`
-  font-family: "DM Sans";
+  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -157,7 +158,7 @@ export const StyledCol2 = styled.span`
 `;
 
 export const StyledCol3 = styled.span`
-  font-family: "DM Sans";
+  font-family: 'DM Sans';
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
