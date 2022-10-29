@@ -260,7 +260,7 @@ const Board = ({
               color: theme.LIGHT_GRAY,
               height: 50,
               padding: 20,
-              marginTop: 50,
+              marginTop: 80,
               visibility: viewItem ? 'visible' : 'hidden',
               textDecoration: 'underline',
             }}
