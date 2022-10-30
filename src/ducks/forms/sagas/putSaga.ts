@@ -7,7 +7,6 @@ import form_service from 'api/services/form_service';
 export function* putForms({ payload }: any) {
   payload.callback({ loading: true, success: null });
 
-  console.log('payloads --->', payload);
   try {
     const response = yield call(
       form_service.putForms,

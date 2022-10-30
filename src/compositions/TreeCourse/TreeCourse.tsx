@@ -77,7 +77,6 @@ function TreeCourse({ course, onAdd, setOnAdd, isBuilder, addNew }) {
       return;
     }
 
-    console.log('res', res);
     setData({ curriculum: res?.lessons });
   };
 
@@ -305,7 +304,6 @@ function TreeCourse({ course, onAdd, setOnAdd, isBuilder, addNew }) {
               setTitle={setTitle}
               setOnEdit={setOnEdit}
               cb={(t, d) => {
-                console.log(t, d);
                 const payload = {
                   data: newData(mode, t, d, (_obj || []).length + 1),
                   ...ids,

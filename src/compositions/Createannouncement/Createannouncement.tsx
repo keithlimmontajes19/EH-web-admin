@@ -223,6 +223,7 @@ const Createannouncement = (props: PropsType): ReactElement => {
                 <Image src={fileUrl} height="100%" width="100%" />
               ) : (
                 <ReactPlayer
+                  controls={true}
                   playing
                   width={360}
                   height="28vh"

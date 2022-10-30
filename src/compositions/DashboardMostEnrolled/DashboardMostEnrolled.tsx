@@ -28,7 +28,7 @@ const DashboardMostEnrolled = (props: PropsType): ReactElement => {
 
   return (
     <Row style={{ marginTop: 81, marginBottom: 50 }}>
-      <Col span={12}>
+      <Col span={24}>
         <Container>
           <StyledTable
             size="small"

@@ -101,7 +101,6 @@ export const EDITOR_JS_TOOLS = {
           icon: '<svg>...</svg>',
           title: 'New Button',
           action: (name) => {
-            console.log('name');
             alert(`${name} button clicked`);
             return false;
           },

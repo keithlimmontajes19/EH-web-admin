@@ -1,5 +1,5 @@
-import { Table, Modal, Input, Row, Space, Collapse, Spin } from "antd";
-import { useEffect, useState } from "react";
+import { Table, Modal, Input, Row, Space, Collapse, Spin } from 'antd';
+import { useEffect, useState } from 'react';
 import {
   EditOutlined,
   DeleteOutlined,
@@ -7,13 +7,13 @@ import {
   BuildFilled,
   EnterOutlined,
   LoadingOutlined,
-} from "@ant-design/icons";
-import { TableContainer } from "./styled";
-import { theme } from "utils/colors";
+} from '@ant-design/icons';
+import { TableContainer } from './styled';
+import { theme } from 'utils/colors';
 
 // ducks action
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "ducks/store";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'ducks/store';
 import {
   deleteCourse,
   deleteLesson,
@@ -22,12 +22,12 @@ import {
   getMyCourses,
   updateCourse,
   updateLesson,
-} from "ducks/lms/actionCreator";
-import Loading from "components/Loading";
-import Text from "components/Text";
-import { useHistory } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
-import ModalCurriculum from "compositions/ModalCurriculum";
+} from 'ducks/lms/actionCreator';
+import Loading from 'components/Loading';
+import Text from 'components/Text';
+import { useHistory } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+import ModalCurriculum from 'compositions/ModalCurriculum';
 
 function TableTopics() {
   const history = useHistory();
@@ -44,15 +44,15 @@ function TableTopics() {
 
   const columns = [
     {
-      key: "b1",
+      key: 'b1',
       title: (
         <Row align="middle" justify="space-between">
           <Text fS={20}>TITLE</Text>
           <span
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             onClick={() => deleteSelected(selectedRowKeys)}
           >
-            <DeleteOutlined style={{ color: "#635ffa", fontSize: 20 }} />
+            <DeleteOutlined style={{ color: '#635ffa', fontSize: 20 }} />
             &nbsp;
             <Text fS={20} fC={theme.BLACK}>
               DELETE
@@ -60,14 +60,14 @@ function TableTopics() {
           </span>
         </Row>
       ),
-      dataIndex: "table",
+      dataIndex: 'table',
       style: { marginBottom: 100 },
     },
   ];
 
   const getOrgId = () => {
-    const getItem = localStorage.getItem("organizationId");
-    return getItem ? getItem : "6239ffd1cb8440277f2a2b39";
+    const getItem = localStorage.getItem('organizationId');
+    return getItem ? getItem : '6239ffd1cb8440277f2a2b39';
   };
 
   const { data: rawData = [] }: any = useSelector<RootState>(
@@ -87,7 +87,7 @@ function TableTopics() {
       return 0;
     };
     const tmp = [...rawData].sort(sortIt);
-    tmp.forEach((x, _i) => createUniqueId(tmp[_i], "curriculum", `${_i}`));
+    tmp.forEach((x, _i) => createUniqueId(tmp[_i], 'curriculum', `${_i}`));
     setDataSource(tmp);
     setOnDispatch(true);
     iterateArray([...rawData].sort(sortIt));
@@ -106,10 +106,10 @@ function TableTopics() {
     if (!arr) return;
     for (let i = 0; i < arr.length; i++) {
       const _obj = arr[i];
-      if (!_obj || typeof _obj !== "object") continue;
+      if (!_obj || typeof _obj !== 'object') continue;
 
-      const currLvl = lvl + "-" + i;
-      _obj.style = { background: "red" };
+      const currLvl = lvl + '-' + i;
+      _obj.style = { background: 'red' };
       _obj.key = currLvl;
     }
   };
@@ -121,11 +121,11 @@ function TableTopics() {
         const result = res ? sortByPosition(res) : [];
         result.forEach((_obj, _i) => {
           result[_i].contents = _obj.contents.filter(
-            (obj) => obj.contentType === "topic"
+            (obj) => obj.contentType === 'topic'
           );
         });
         tmp[i].curriculum = result;
-        tmp.forEach((x, _i) => createUniqueId(tmp[_i], "curriculum", `${_i}`));
+        tmp.forEach((x, _i) => createUniqueId(tmp[_i], 'curriculum', `${_i}`));
         setDataSource([...tmp]);
 
         if (i < tmp.length - 1) return dispatchIterator(i + 1);
@@ -149,14 +149,14 @@ function TableTopics() {
       const { contents } = record;
       const testA = contents ? contents.length > 0 : false;
       const toCollapse = (arr) => (
-        <Collapse activeKey={"2"} expandIcon={() => <></>} ghost>
+        <Collapse activeKey={'2'} expandIcon={() => <></>} ghost>
           <Collapse.Panel header={record.title} key="2">
-            {typeof arr[0] !== "object" ? (
+            {typeof arr[0] !== 'object' ? (
               <p>
                 <EnterOutlined
                   style={{
-                    transform: "scale(-1,1)",
-                    margin: "0 10px 0 21px",
+                    transform: 'scale(-1,1)',
+                    margin: '0 10px 0 21px',
                   }}
                 />
                 <Spin indicator={<LoadingOutlined spin />} />
@@ -166,8 +166,8 @@ function TableTopics() {
                 <p>
                   <EnterOutlined
                     style={{
-                      transform: "scale(-1,1)",
-                      margin: "0 10px 0 21px",
+                      transform: 'scale(-1,1)',
+                      margin: '0 10px 0 21px',
                     }}
                   />
                   <span style={{ color: theme.BLACK }}>{String(title)}</span>
@@ -191,31 +191,31 @@ function TableTopics() {
         <Table
           columns={[
             {
-              key: "b1",
+              key: 'b1',
               title: (
                 <Row align="middle" justify="space-between">
                   <Text fS={25} fC={theme.BLACK} fW={500}>
                     {obj.title}
                   </Text>
-                  <Space className="row-actions" size={"middle"}>
+                  <Space className="row-actions" size={'middle'}>
                     <span onClick={() => onEditData(copy, iA, -1)}>
-                      <EditOutlined style={{ color: "#635ffa" }} />
+                      <EditOutlined style={{ color: '#635ffa' }} />
                       &nbsp;RENAME
                     </span>
                     <span onClick={() => openView(obj)}>
-                      <EyeFilled style={{ color: "#635ffa" }} />
+                      <EyeFilled style={{ color: '#635ffa' }} />
                       &nbsp;VIEW
                     </span>
                     <span onClick={() => onDeleteData([obj.key])}>
-                      <DeleteOutlined style={{ color: "#635ffa" }} />
+                      <DeleteOutlined style={{ color: '#635ffa' }} />
                       &nbsp;DELETE
                     </span>
                     <span
                       onClick={() =>
-                        history.push("/learn/courses/builder/" + obj._id)
+                        history.push('/learn/courses/builder/' + obj._id)
                       }
                     >
-                      <BuildFilled style={{ color: "#635ffa" }} />
+                      <BuildFilled style={{ color: '#635ffa' }} />
                       &nbsp;BUILDER
                     </span>
                   </Space>
@@ -225,25 +225,25 @@ function TableTopics() {
                 children: (
                   <Row align="middle" justify="space-between">
                     {makeTitle(record)}
-                    <Space className="row-actions" size={"middle"}>
+                    <Space className="row-actions" size={'middle'}>
                       <span onClick={() => onEditData(copy, iA, iB)}>
-                        <EditOutlined style={{ color: "#635ffa" }} />
+                        <EditOutlined style={{ color: '#635ffa' }} />
                         &nbsp;RENAME
                       </span>
                       <span onClick={() => openView(obj)}>
-                        <EyeFilled style={{ color: "#635ffa" }} />
+                        <EyeFilled style={{ color: '#635ffa' }} />
                         &nbsp;VIEW
                       </span>
                       <span onClick={() => onDeleteData([record.key])}>
-                        <DeleteOutlined style={{ color: "#635ffa" }} />
+                        <DeleteOutlined style={{ color: '#635ffa' }} />
                         &nbsp;DELETE
                       </span>
                       <span
                         onClick={() =>
-                          history.push("/learn/courses/builder/" + obj._id)
+                          history.push('/learn/courses/builder/' + obj._id)
                         }
                       >
-                        <BuildFilled style={{ color: "#635ffa" }} />
+                        <BuildFilled style={{ color: '#635ffa' }} />
                         &nbsp;BUILDER
                       </span>
                     </Space>
@@ -253,10 +253,10 @@ function TableTopics() {
             },
           ]}
           rowClassName={(record) => {
-            const testA = record.contentType === "section-head";
+            const testA = record.contentType === 'section-head';
             const resultA = testA
-              ? "table-row-section-head"
-              : "table-row-lesson";
+              ? 'table-row-section-head'
+              : 'table-row-lesson';
             return resultA;
           }}
           dataSource={obj.curriculum}
@@ -266,7 +266,7 @@ function TableTopics() {
         />
       ),
       key: iA + 1,
-      isLone: "curriculum" in obj ? obj.curriculum < 1 : true,
+      isLone: 'curriculum' in obj ? obj.curriculum < 1 : true,
     }));
 
     setTreeData(tmp);
@@ -275,17 +275,17 @@ function TableTopics() {
   const onDeleteData = (recArr) => {
     if (!recArr.length) return;
     Modal.confirm({
-      title: "Are you sure, you want to delete this record?",
-      okText: "Yes",
-      okType: "danger",
+      title: 'Are you sure, you want to delete this record?',
+      okText: 'Yes',
+      okType: 'danger',
       onOk: () => {
         setSelectedRowKeys({});
         const tmp = { arr: [...dataSource] };
         recArr.forEach((key) =>
-          findAKey(tmp, "arr", key, (obj, objKey, i) => {
+          findAKey(tmp, 'arr', key, (obj, objKey, i) => {
             const arr = [...obj[objKey]];
             const result = arr[i];
-            const isLesson = "course" in result;
+            const isLesson = 'course' in result;
             const ids = isLesson
               ? {
                   idOrg: getOrgId(),
@@ -320,22 +320,22 @@ function TableTopics() {
         break;
       }
 
-      const nextObjKey = "curriculum" in _obj ? "curriculum" : "contents";
+      const nextObjKey = 'curriculum' in _obj ? 'curriculum' : 'contents';
       findAKey(_obj, nextObjKey, key, callback);
     }
   };
 
   const deleteSelected = (keysArrInObject) => {
     Modal.confirm({
-      title: "Are you sure, you want to delete the selected record/s?",
-      okText: "Yes",
-      okType: "danger",
+      title: 'Are you sure, you want to delete the selected record/s?',
+      okText: 'Yes',
+      okType: 'danger',
       onOk: () => {
         let copy = [...dataSource];
         let deletedArr = [];
         for (const i in keysArrInObject) {
           // course is detected
-          if (i.toString() === "0") {
+          if (i.toString() === '0') {
             const callback = (res) => {
               if (!res) return;
               deletedArr = keysArrInObject[0];
@@ -363,7 +363,7 @@ function TableTopics() {
           // lesson detected default
           copy.forEach((obj, index) =>
             keysArrInObject[i].forEach((key) =>
-              findAKey(obj, "curriculum", key, (obj, objKey, i) => {
+              findAKey(obj, 'curriculum', key, (obj, objKey, i) => {
                 // return location for lesson
                 const tmp = [...obj[objKey]];
                 const _lesson = tmp[i];
@@ -393,7 +393,7 @@ function TableTopics() {
 
   const onEditData = (copy, iA, iB) => {
     setIsEditing(true);
-    setEditingData({ copy, iA, iB, title: "" });
+    setEditingData({ copy, iA, iB, title: '' });
   };
   const resetEditing = () => {
     setIsEditing(false);
@@ -413,11 +413,10 @@ function TableTopics() {
   });
 
   const openView = (obj) => {
-    console.log("eto GAGO", obj);
     dispatch(getCurriculum(obj));
 
-    localStorage.setItem("courseId", obj?._id);
-    localStorage.setItem("organizationId", obj?.organizationId);
+    localStorage.setItem('courseId', obj?._id);
+    localStorage.setItem('organizationId', obj?.organizationId);
     setViewVisible(true);
   };
   const closeView = () => {
@@ -430,7 +429,7 @@ function TableTopics() {
         paddingLeft: 30,
         paddingRight: 24,
         paddingTop: 31,
-        background: "transparent",
+        background: 'transparent',
       }}
     >
       <Table
@@ -439,7 +438,7 @@ function TableTopics() {
         dataSource={[]} //TODO: should be treeData
         loading={{ indicator: <Loading />, spinning: loading }}
         rowClassName={(rec) =>
-          rec.isLone ? "main-table-row row-is-lone" : "main-table-row"
+          rec.isLone ? 'main-table-row row-is-lone' : 'main-table-row'
         }
         className="parent-table"
       />
@@ -459,8 +458,8 @@ function TableTopics() {
               setDataSource(tmp);
             };
             const result = { ...tmp[editingData.iA], title: editingData.title };
-            localStorage.setItem("organizationId", getOrgId());
-            localStorage.setItem("courseId", result._id);
+            localStorage.setItem('organizationId', getOrgId());
+            localStorage.setItem('courseId', result._id);
             dispatch(updateCourse({ ...result, callback }));
             resetEditing();
             return;

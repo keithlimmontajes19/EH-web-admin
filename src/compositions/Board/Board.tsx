@@ -165,7 +165,6 @@ const Board = ({
   };
   const selectedActions = () => {
     const _item = viewItem ? viewItem?.obj : item?.board_items[selectedItem];
-    console.log(_item);
     const pageActions = [
       {
         name: `${_item.item_type === 'folder' ? 'Delete' : 'Remove'} Selected`,
