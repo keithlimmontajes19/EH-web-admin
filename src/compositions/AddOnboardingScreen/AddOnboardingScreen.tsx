@@ -18,12 +18,10 @@ import {
 import { theme } from 'utils/colors';
 import { PageHeader, Breadcrumb, Input } from 'antd';
 
-/* icon */
 import UploadButton from 'components/UploadButton';
 import galleryicon from 'assets/icons/gallery-icon.svg';
 import { RedoOutlined, MoreOutlined } from '@ant-design/icons';
 
-/* reducer action */
 import { useDispatch } from 'react-redux';
 import { postOnboarding } from 'ducks/onboarding/actionCreator';
 
