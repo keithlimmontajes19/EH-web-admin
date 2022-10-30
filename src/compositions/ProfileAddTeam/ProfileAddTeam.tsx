@@ -1,5 +1,5 @@
-import { ReactElement, useEffect, useState } from "react";
-import type { PropsType } from "./types";
+import { ReactElement, useEffect, useState } from 'react';
+import type { PropsType } from './types';
 
 import {
   StyledSave,
@@ -13,22 +13,22 @@ import {
   StyledTextarea,
   UploadContainer,
   ButtonContainer,
-} from "./styled";
-import { PageHeader } from "antd";
+} from './styled';
+import { PageHeader } from 'antd';
 
 /* components */
-import Avatar from "components/Avatar/Avatar";
-import UploadButton from "components/UploadButton";
-import ORG_IMAGE from "assets/icons/organization.png";
-import organization_service from "api/services/organization_service";
+import Avatar from 'components/Avatar/Avatar';
+import UploadButton from 'components/UploadButton';
+import ORG_IMAGE from 'assets/icons/organization.png';
+import organization_service from 'api/services/organization_service';
 
 /* reducer action */
-import { RootState } from "ducks/store";
-import { useDispatch, useSelector } from "react-redux";
+import { RootState } from 'ducks/store';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   postOrganization,
   clearOrganizationID,
-} from "ducks/organization/actionCreator";
+} from 'ducks/organization/actionCreator';
 
 const ProfileAddTeam = (props: PropsType): ReactElement => {
   const { visible, modalCreateHandler } = props;
@@ -37,20 +37,20 @@ const ProfileAddTeam = (props: PropsType): ReactElement => {
   const { organization_id, put_delete_post_status }: any =
     useSelector<RootState>((state) => state.organization);
 
-  const [fileUrl, setFileUrl] = useState("");
+  const [fileUrl, setFileUrl] = useState('');
   const [fileForm, setFileForm] = useState<any>({});
 
   const [values, setValues] = useState({
-    name: "",
-    description: "",
+    name: '',
+    description: '',
   });
 
   const clearFields = () => {
-    setFileUrl("");
+    setFileUrl('');
     setFileForm({});
     setValues({
-      name: "",
-      description: "",
+      name: '',
+      description: '',
     });
   };
 
@@ -70,11 +70,12 @@ const ProfileAddTeam = (props: PropsType): ReactElement => {
     await organization_service
       .patchAvatarOrganization(organization_id)
       .then((res) => {
-        fetch(res?.data?.data?.updateUrl, {
+        fetch(res?.data?.data?.uploadUrl, {
           body: fileForm,
-          method: "PUT",
+          method: 'PUT',
           headers: {
-            "Content-Type": "",
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
           },
         })
           .then(() => dispatch(clearOrganizationID()))
@@ -121,14 +122,14 @@ const ProfileAddTeam = (props: PropsType): ReactElement => {
           <StyledInput
             value={values.name}
             placeholder="Enter Team Name"
-            onChange={(e) => handlerOnchage(e.target.value, "name")}
+            onChange={(e) => handlerOnchage(e.target.value, 'name')}
           />
 
           <StyledLabel>Description</StyledLabel>
           <StyledTextarea
             placeholder="Enter Team Description"
             value={values.description}
-            onChange={(e) => handlerOnchage(e.target.value, "description")}
+            onChange={(e) => handlerOnchage(e.target.value, 'description')}
           />
         </FlexContainer>
       </RowContainer>

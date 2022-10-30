@@ -1,7 +1,7 @@
-import { ReactElement, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { ReactElement, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import type { PropsType } from "./types";
+import type { PropsType } from './types';
 import {
   Divider,
   Container,
@@ -14,11 +14,12 @@ import {
   RowContainer,
   FlexContainer,
   ButtonContainer,
-} from "./styled";
-import { EditOutlined } from "@ant-design/icons";
+} from './styled';
+import { EditOutlined } from '@ant-design/icons';
 
-import Avatar from "components/Avatar/Avatar";
-import USER_ICON from "assets/icons/user-white.png";
+import Avatar from 'components/Avatar/Avatar';
+import USER_ICON from 'assets/icons/user-white.png';
+import Dropdown from 'components/Dropdown';
 
 const ProfileEditUser = (props: PropsType): ReactElement => {
   const {
@@ -34,7 +35,22 @@ const ProfileEditUser = (props: PropsType): ReactElement => {
   const setModalShowHide = () => setVisible(!visible);
 
   const [isEdit, setIsEdit] = useState(false);
-  const [position, setPosition] = useState("");
+  const [position, setPosition] = useState('');
+
+  const headerActions = [
+    {
+      name: 'staff',
+      action: () => setPosition('staff'),
+    },
+    {
+      name: 'manager',
+      action: () => setPosition('manager'),
+    },
+    {
+      name: 'admin',
+      action: () => setPosition('admin'),
+    },
+  ];
 
   const handleSubmit = () => {
     dispatch(putMembers(organization_id, selectedUser?._id, { position }));
@@ -71,7 +87,10 @@ const ProfileEditUser = (props: PropsType): ReactElement => {
             <Divider />
 
             {isEdit ? (
-              <StyledInput />
+              <Dropdown
+                menu={headerActions}
+                title={<StyledInput value={position} />}
+              />
             ) : (
               <span>
                 {position} <EditOutlined onClick={() => setIsEdit(true)} />

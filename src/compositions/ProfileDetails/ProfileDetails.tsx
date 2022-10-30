@@ -1,15 +1,15 @@
-import { ReactElement, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { ReactElement, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 /* reducer action */
 import {
   putMembers,
   deleteMembers,
   getMembersOrganization,
-} from "ducks/organization/actionCreator";
-import { RootState } from "ducks/store";
-import { getAllUsers } from "ducks/authentication/actionCreator";
+} from 'ducks/organization/actionCreator';
+import { RootState } from 'ducks/store';
+import { getAllUsers } from 'ducks/authentication/actionCreator';
 
 import {
   Container,
@@ -20,27 +20,27 @@ import {
   StyledCancel,
   StyledInvite,
   HeaderContainer,
-} from "./styled";
-import { theme } from "utils/colors";
-import { Row, PageHeader } from "antd";
-import { LeftOutlined, SearchOutlined } from "@ant-design/icons";
+} from './styled';
+import { theme } from 'utils/colors';
+import { Row, PageHeader } from 'antd';
+import { LeftOutlined, SearchOutlined } from '@ant-design/icons';
 
-import { columns } from "./columns";
+import { columns } from './columns';
 
-import Avatar from "components/Avatar";
-import IconImage from "components/IconImage";
-import ORG_ICON from "assets/icons/organization.png";
-import SETTING_ICON from "assets/icons/setting-icon.png";
+import Avatar from 'components/Avatar';
+import IconImage from 'components/IconImage';
+import ORG_ICON from 'assets/icons/organization.png';
+import SETTING_ICON from 'assets/icons/setting-icon.png';
 
-import ProfileEditUser from "compositions/ProfileEditUser";
-import ProfileEditTeam from "compositions/ProfileEditTeam";
-import ProfileInviteUser from "compositions/ProfileInviteUser";
+import ProfileEditUser from 'compositions/ProfileEditUser';
+import ProfileEditTeam from 'compositions/ProfileEditTeam';
+import ProfileInviteUser from 'compositions/ProfileInviteUser';
 
 const ProfileDetails = (): ReactElement => {
   const history: any = useHistory();
   const dispatch = useDispatch();
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [selectedUser, setSelectedUser] = useState({});
   const [inviteModal, setInviteModal] = useState(false);
   const [editUserModal, setEditUserModal] = useState(false);
@@ -82,7 +82,7 @@ const ProfileDetails = (): ReactElement => {
 
   return (
     <Container>
-      <StyledBack onClick={() => history.push("/profile/organization")}>
+      <StyledBack onClick={() => history.push('/profile/organization')}>
         <LeftOutlined style={{ fontSize: 11, width: 15 }} />
         Back to My Organization
       </StyledBack>
@@ -106,7 +106,7 @@ const ProfileDetails = (): ReactElement => {
                 source={organization_details?.avatar}
               />
               <StyledTitle>
-                {history?.location?.state?.org_title || ""}
+                {history?.location?.state?.org_title || ''}
               </StyledTitle>
             </Row>
           }
@@ -127,7 +127,7 @@ const ProfileDetails = (): ReactElement => {
             <StyledInput
               placeholder="Search Pages"
               onChange={(e) => setSearch(e.target.value)}
-              prefix={<SearchOutlined style={{ color: "#635ffa" }} />}
+              prefix={<SearchOutlined style={{ color: '#635ffa' }} />}
             />
           }
         />
@@ -161,9 +161,9 @@ const ProfileDetails = (): ReactElement => {
         visible={editTeamModal}
         setVisible={setEditTeamModal}
         org_id={organization_id}
-        org_title={history?.location?.state?.org_title || ""}
-        org_avatar={history?.location?.state?.org_avatar || ""}
-        org_description={history?.location?.state?.org_description || ""}
+        org_title={history?.location?.state?.org_title || ''}
+        org_avatar={history?.location?.state?.org_avatar || ''}
+        org_description={history?.location?.state?.org_description || ''}
         getMembersOrganization={getMembersOrganization}
       />
 

@@ -1,5 +1,5 @@
-import api from "../index";
-import { ORGANIZATION } from "../constants";
+import api from '../index';
+import { ORGANIZATION } from '../constants';
 
 interface payloadTypes {
   name?: string;
@@ -18,7 +18,7 @@ const organization_services = {
   deleteOrganization: (orgId: string) => api.delete(`${ORGANIZATION}/${orgId}`),
 
   patchAvatarOrganization: (orgId: string) =>
-    api.patch(`${ORGANIZATION}/${orgId}/avatar`),
+    api.put(`${ORGANIZATION}/${orgId}/avatar`),
 
   getMembersOrganization: (orgId: string) =>
     api.get(`${ORGANIZATION}/${orgId}/members`),

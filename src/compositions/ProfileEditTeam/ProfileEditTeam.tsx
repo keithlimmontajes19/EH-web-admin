@@ -1,5 +1,5 @@
-import { ReactElement, useEffect, useState } from "react";
-import type { PropsType } from "./types";
+import { ReactElement, useEffect, useState } from 'react';
+import type { PropsType } from './types';
 
 import {
   StyledSave,
@@ -13,22 +13,23 @@ import {
   StyledTextarea,
   UploadContainer,
   ButtonContainer,
-} from "./styled";
-import { PageHeader } from "antd";
+} from './styled';
+import { PageHeader } from 'antd';
 
 /* components */
-import Avatar from "components/Avatar/Avatar";
-import UploadButton from "components/UploadButton";
-import ORG_IMAGE from "assets/icons/organization.png";
+import Avatar from 'components/Avatar/Avatar';
+import UploadButton from 'components/UploadButton';
+import ORG_IMAGE from 'assets/icons/organization.png';
 
 /* reducer action */
 import {
   putOrganization,
   deleteOrganization,
-} from "ducks/organization/actionCreator";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { RootState } from "ducks/store";
+} from 'ducks/organization/actionCreator';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { RootState } from 'ducks/store';
+import organization_service from 'api/services/organization_service';
 
 const ProfileEditTeam = (props: PropsType): ReactElement => {
   const {
@@ -44,25 +45,27 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
   const dispatch = useDispatch();
   const hisotry = useHistory();
 
-  const { error_put_delete_post_status }: any =
-    useSelector<RootState>((state) => state.organization);
+  const { error_put_delete_post_status }: any = useSelector<RootState>(
+    (state) => state.organization
+  );
 
-  const [status, setStatus ] = useState(error_put_delete_post_status);
-  const [fileUrl, setFileUrl] = useState("");
+  const [status, setStatus] = useState(error_put_delete_post_status);
+  const [fileUrl, setFileUrl] = useState('');
+  const [fileForm, setFileForm] = useState(null);
   const [values, setValues] = useState({
-    name: "",
-    description: "",
+    name: '',
+    description: '',
   });
 
   useEffect(() => {
-    setStatus(error_put_delete_post_status)
+    setStatus(error_put_delete_post_status);
   }, [error_put_delete_post_status]);
 
   const clearFields = () => {
-    setFileUrl("");
+    setFileUrl('');
     setValues({
-      name: "",
-      description: "",
+      name: '',
+      description: '',
     });
   };
 
@@ -98,6 +101,28 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
     });
   }, []);
 
+  useEffect(() => {
+    if (fileForm) {
+      console.log('log');
+      uploadAvatar();
+    }
+  }, [fileForm]);
+
+  const uploadAvatar = async () => {
+    await organization_service.patchAvatarOrganization(org_id).then((res) => {
+      fetch(res?.data?.data?.uploadUrl, {
+        body: fileForm,
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      // .then(() => dispatch(clearOrganizationID()))
+      // .catch(() => dispatch(clearOrganizationID()));
+    });
+  };
+
   return (
     <StyledModal
       width={550}
@@ -114,7 +139,7 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
           <StyledSave
             onClick={() => {
               dispatch(deleteOrganization(org_id));
-              hisotry.push("/profile/organization");
+              hisotry.push('/profile/organization');
             }}
           >
             DELETE TEAM
@@ -136,19 +161,20 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
               border="none"
               setImageUrl={setFileUrl}
               placeholder="Change Photo"
+              setFileForm={setFileForm}
             />
           </UploadContainer>
           <StyledLabel>Team Name</StyledLabel>
           <StyledInput
             placeholder="Enter Team Description"
             value={values.name}
-            onChange={(e) => handlerOnchage(e.target.value, "name")}
+            onChange={(e) => handlerOnchage(e.target.value, 'name')}
           />
           <StyledLabel>Description</StyledLabel>
           <StyledTextarea
             placeholder="Enter Team Description"
             value={values.description}
-            onChange={(e) => handlerOnchage(e.target.value, "description")}
+            onChange={(e) => handlerOnchage(e.target.value, 'description')}
           />
         </FlexContainer>
       </RowContainer>
