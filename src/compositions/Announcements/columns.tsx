@@ -62,7 +62,6 @@ export const columns = (
     render: (record) => {
       let color: string = 'green';
 
-      console.log(record);
       if (record === 'active') {
         color = 'green';
       }

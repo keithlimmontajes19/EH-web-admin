@@ -15,3 +15,4 @@ export const DASHBOARD = '/dashboard';
 export const ONBOARDING = '/onboarding/mobile/user';
 export const ONBOARDING_ALL = '/onboarding';
 export const FORMS = '/forms';
+export const SCHEDULES = '/training-schedules';

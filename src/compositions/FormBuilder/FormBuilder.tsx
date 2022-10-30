@@ -37,8 +37,6 @@ const FormBuilder = (props: PropsType): ReactElement => {
   const { isBuilder } = props;
   const data = history.location?.state?.data;
 
-  console.log('params', params);
-
   const [blocks, setBlocks] = useState<any>({});
   const [fileUrl, setFileUrl] = useState(null);
   const [isImage, setIsImage] = useState(true);
@@ -229,6 +227,7 @@ const FormBuilder = (props: PropsType): ReactElement => {
                 <ReactPlayer
                   onError={(err) => err && setIsImage(true)}
                   playing
+                  controls={true}
                   width={200}
                   height={150}
                   url={[

@@ -15,17 +15,16 @@ export const columns = () => [
   {
     key: 1,
     align: 'left',
-    title: <StyledTitle>Recent Added Courses</StyledTitle>,
+    title: <StyledTitle>Recently Added Courses</StyledTitle>,
     dataIndex: 'title',
     render: (_a, b) => {
-      console.log(b);
       return <Card data={b} />;
     },
   },
   {
     key: 2,
     align: 'center',
-    title: <StyledSubtitle>Date</StyledSubtitle>,
+    title: <StyledSubtitle>Date created</StyledSubtitle>,
     dataIndex: 'createdAt',
     render: (a) => {
       return <StyledSubtitle>{moment(a).format('LL')}</StyledSubtitle>;

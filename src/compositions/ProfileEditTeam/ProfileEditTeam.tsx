@@ -103,7 +103,6 @@ const ProfileEditTeam = (props: PropsType): ReactElement => {
 
   useEffect(() => {
     if (fileForm) {
-      console.log('log');
       uploadAvatar();
     }
   }, [fileForm]);

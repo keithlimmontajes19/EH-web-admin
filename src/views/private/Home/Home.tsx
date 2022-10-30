@@ -5,10 +5,8 @@ import {
   StyledLink,
   StyledTitle,
   StyledButton,
-  StyledHeader,
   StyledPopover,
   HeaderContainer,
-  NoAnnouncementContainer,
 } from './styled';
 import { Col, Row } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -19,10 +17,10 @@ import DashboardCards from 'compositions/DashboardCards';
 import OrganizationList from 'compositions/OrganizationList';
 import DashboardMostEnrolled from 'compositions/DashboardMostEnrolled';
 
-import USER_ICONS from 'assets/icons/card-employee.png';
 import ORG_ICONS from 'assets/icons/card-org.png';
-import NO_ANNOUNCEMENT from 'assets/images/noannouncement.png';
+import USER_ICONS from 'assets/icons/card-employee.png';
 import ProfileAddTeam from 'compositions/ProfileAddTeam';
+import ScheduleTrainings from 'compositions/ScheduleTrainings';
 import CarouselAnnouncement from 'compositions/CarouselAnnouncement';
 
 /* reducer */
@@ -76,11 +74,6 @@ const Home = () => {
         </StyledButton>
       </HeaderContainer>
 
-      {/**
-       * TO DO:
-       * Remove until working or has API
-       */}
-
       <DashboardCards />
 
       <Row gutter={40}>
@@ -94,7 +87,16 @@ const Home = () => {
       </Row>
 
       <OrganizationList />
-      <DashboardMostEnrolled />
+
+      <Row>
+        <Col span={12}>
+          <ScheduleTrainings />
+        </Col>
+        <Col span={12}>
+          <DashboardMostEnrolled />
+        </Col>
+      </Row>
+
       <ProfileAddTeam
         visible={visisble}
         modalCreateHandler={modalCreateHandler}

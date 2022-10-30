@@ -152,6 +152,7 @@ const ContentCurriculum = (props: PropsType): ReactElement => {
                     playing
                     width={'100%'}
                     height={'100%'}
+                    controls={true}
                     url={[
                       {
                         src: fileUrl,
@@ -200,6 +201,7 @@ const ContentCurriculum = (props: PropsType): ReactElement => {
                     playing
                     width={'100%'}
                     height={'100%'}
+                    controls={true}
                     url={[
                       {
                         src: fileUrl,

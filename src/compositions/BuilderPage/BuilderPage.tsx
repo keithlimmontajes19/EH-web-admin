@@ -103,7 +103,6 @@ const BuilderPage = (props: PropsType): ReactElement => {
   useEffect(resetData, [pageData]);
 
   const onEditorStateChange = (e) => {
-    console.log('event', e);
     if (!editedData) setEditedData(pageData);
     setEditorState(e);
   };

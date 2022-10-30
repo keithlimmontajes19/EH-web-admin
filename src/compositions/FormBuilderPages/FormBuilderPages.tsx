@@ -256,6 +256,7 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
               ) : (
                 <ReactPlayer
                   playing
+                  controls={true}
                   width={200}
                   height={150}
                   url={[

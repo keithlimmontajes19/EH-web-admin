@@ -38,9 +38,6 @@ const BuilderQuiz = (): ReactElement => {
     setData(item);
   }, [item]);
 
-  console.log('item ====================>', item);
-  console.log(quizQuestions);
-
   useEffect(() => {
     if (data) {
       dispatch(getQuizQuestions({ idQuiz: data?._id, callback }));
@@ -59,6 +56,7 @@ const BuilderQuiz = (): ReactElement => {
       action: () => {
         setType('single-choice');
         setQuizQuestions([]);
+        pushNewQuestion('single-choice');
       },
     },
     {
@@ -66,6 +64,7 @@ const BuilderQuiz = (): ReactElement => {
       action: () => {
         setType('multiple-choice');
         setQuizQuestions([]);
+        pushNewQuestion('multiple-choice');
       },
     },
     {
@@ -73,6 +72,7 @@ const BuilderQuiz = (): ReactElement => {
       action: () => {
         setType('essay');
         setQuizQuestions([]);
+        pushNewQuestion('essay');
       },
     },
     {
@@ -80,13 +80,15 @@ const BuilderQuiz = (): ReactElement => {
       action: () => {
         setType('fill-in-the-blanks');
         setQuizQuestions([]);
+        pushNewQuestion('fill-in-the-blanks');
       },
     },
     {
       name: 'Sort',
       action: () => {
-        setType('sorting');
+        setType('sort');
         setQuizQuestions([]);
+        pushNewQuestion('sort');
       },
     },
   ];
@@ -114,13 +116,13 @@ const BuilderQuiz = (): ReactElement => {
     }
   };
 
-  const pushNewQuestion = () => {
+  const pushNewQuestion = (quizType: string) => {
     const oldObject = Array.from(quizQuestions);
     const data = {
       title: '',
       _id: uuidv4(),
       choices: [''],
-      questionType: type,
+      questionType: quizType,
       createdAt: new Date(),
       updatedAt: new Date(),
       questionPosition: (quizQuestions || []).length + 1,
@@ -151,7 +153,7 @@ const BuilderQuiz = (): ReactElement => {
 
       <QuizLayout>
         <Row gutter={19}>
-          <Col span={20}>
+          <Col span={24}>
             <Input
               placeholder={'Add Title'}
               defaultValue={item?.title}
@@ -164,7 +166,7 @@ const BuilderQuiz = (): ReactElement => {
             />
           </Col>
 
-          <Col span={4}>
+          {/* <Col span={4}>
             <Dropdown
               menu={headerActions()}
               title={
@@ -181,7 +183,7 @@ const BuilderQuiz = (): ReactElement => {
                 />
               }
             />
-          </Col>
+          </Col> */}
         </Row>
 
         <TextArea
@@ -206,13 +208,21 @@ const BuilderQuiz = (): ReactElement => {
         </Col>
 
         <Col span={8}>
-          <StyledButton
+          {/* <StyledButton
             w={180}
             m={'-20px 0 5px 0'}
             onClick={() => pushNewQuestion()}
           >
             <StyledText>ADD QUESTION</StyledText>
-          </StyledButton>
+          </StyledButton> */}
+          <Dropdown
+            menu={headerActions()}
+            title={
+              <StyledButton w={180} m={'-20px 0 5px 0'}>
+                <StyledText>ADD QUESTION</StyledText>
+              </StyledButton>
+            }
+          />
         </Col>
       </QuizLayout>
 

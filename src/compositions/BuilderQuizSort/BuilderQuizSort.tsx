@@ -120,16 +120,17 @@ const BuilderQuizSort = ({ item, submitQ, deleteQ }: any): ReactElement => {
           nodeDraggable: () => true,
         }}
       >
-        {data?.answer.map(generateData)}
+        {(data?.answer || []).map(generateData)}
       </StyledTree>
 
       <Space size={0} style={{ margin: '10px 0 50px 50px' }}>
         <Text fS={30}>
           <PlusCircleFilled
-          // onClick={() => {
-          //   data?.answer.push('');
-          //   submitQ(data);
-          // }}
+            onClick={() => {
+              data;
+              data?.answer.push('');
+              // submitQ(data);
+            }}
           />
           {/* <MinusCircleFilled
             onClick={() => {
