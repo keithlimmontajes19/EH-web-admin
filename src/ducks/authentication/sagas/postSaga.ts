@@ -6,6 +6,7 @@ import axios from 'axios';
 import history from 'utils/history';
 import auth_services from 'api/services/auth_services';
 import organization_services from 'api/services/organization_service';
+import { notificationAlert } from 'utils/alerts';
 
 import { openNotification } from 'ducks/alert/actionCreator';
 
@@ -32,6 +33,9 @@ export function* postLogin({ payload }: never) {
       const userId = response?.data?.userId;
       const details = yield call(auth_services.getUser, userId);
 
+      /**
+       *
+       */
       if (details?.status === 200) {
         const organizations = yield call(
           organization_services.getUserOrganization,
@@ -46,33 +50,47 @@ export function* postLogin({ payload }: never) {
           });
         }
       }
+
+      /**
+       * ==================================
+       * CHECKING FOR AUTHORIZATION
+       * USER ACCOUNT IF
+       * HAS ADMIN.
+       * =================================
+       */
+      if (positions.includes('staff')) {
+        notificationAlert('error', `Admin account does not exists.`, () => {});
+
+        yield put({
+          type: TYPES.GET_AUTHENTICATION_FAILED,
+          payload: { success: false, message: '' },
+        });
+      } else if (
+        positions.includes('owner') ||
+        positions.includes('admin') ||
+        positions.includes('manager')
+      ) {
+        localStorage.setItem('userId', response?.data?.userId);
+
+        yield put({
+          type: TYPES.GET_AUTHENTICATION_SUCCESS,
+          payload: response?.data,
+        });
+      }
+
+      /**
+       * ====================
+       * ELSE FAILED FOR 401 | 403
+       * POST LOGIN
+       * ===================
+       */
+      if (response?.status === 403) {
+        yield put({
+          type: TYPES.GET_AUTHENTICATION_FAILED,
+          payload: response?.response?.data,
+        });
+      }
     }
-
-    if (positions.includes('staff')) {
-      yield put({
-        type: TYPES.GET_AUTHENTICATION_FAILED,
-        payload: { success: false, message: 'Go to Employee Login Page.' },
-      });
-    } else {
-      localStorage.setItem('userId', response?.data?.userId);
-
-      yield put({
-        type: TYPES.GET_AUTHENTICATION_SUCCESS,
-        payload: response?.data,
-      });
-    }
-
-    // if (response?.data) {
-    //    yield put({
-    //      type: TYPES.GET_AUTHENTICATION_SUCCESS,
-    //      payload: response?.data,
-    //    });
-    // } else {
-    //   yield put({
-    //     type: TYPES.GET_AUTHENTICATION_FAILED,
-    //     payload: { success: false, message: 'Please try again.' },
-    //   });
-    // }
   } catch (e) {
     yield put({
       type: TYPES.GET_AUTHENTICATION_FAILED,
