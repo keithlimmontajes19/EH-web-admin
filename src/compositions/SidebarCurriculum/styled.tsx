@@ -9,7 +9,7 @@ export const MenuContainer = styled.div`
   .ant-menu-submenu-title,
   .ant-menu-item {
     min-height: 50px;
-    border-radius: 20px;
+    border-radius: 8px;
 
     &::after {
       border-right: none;
@@ -48,6 +48,7 @@ export const StyledLabel = styled.p<any>`
   margin-top: 40px;
   margin-bottom: 40px;
   color: ${(props) => props.color};
+  max-width: 5px;
 `;
 
 export const SubLabel = styled.div`
@@ -88,7 +89,6 @@ export const StyledMainTitle = styled.p`
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
-  line-height: 50px;
   color: #4c4b7b;
 `;
 
@@ -97,7 +97,6 @@ export const StyledViewCourse = styled.p`
   font-style: normal;
   font-weight: 700;
   font-size: 18px;
-  line-height: 30px;
   color: #635ffa;
   margin-bottom: 24px;
 `;

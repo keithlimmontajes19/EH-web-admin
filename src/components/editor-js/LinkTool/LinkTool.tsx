@@ -1,3 +1,7 @@
-export default function LinkTool({data}: any) {
-  return <a href={`${data.link}`} target="_blank">{data.link}</a>
+export default function LinkTool({ data }: any) {
+  const openLink = () => {
+    window.open(data.link);
+  };
+
+  return <a onClick={() => openLink()}>{data.link}</a>;
 }
