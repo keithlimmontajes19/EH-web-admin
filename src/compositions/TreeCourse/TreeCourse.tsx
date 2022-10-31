@@ -30,6 +30,7 @@ import TOPIC_PINK from 'assets/icons/topic-pink.png';
 import ModalCurriculum from 'compositions/ModalCurriculum';
 import hammericon from '../../assets/icons/hammer-color.png';
 import Loading from 'components/Loading';
+import lms_service from 'api/services/lms_service';
 
 function TreeCourse({ course, onAdd, setOnAdd, isBuilder, addNew }) {
   const history = useHistory();
@@ -68,7 +69,7 @@ function TreeCourse({ course, onAdd, setOnAdd, isBuilder, addNew }) {
         })
       );
     }
-  }, []);
+  }, [course?._id]);
 
   const lessonCallback = (res, id, loading) => {
     if (!res) {
@@ -78,6 +79,27 @@ function TreeCourse({ course, onAdd, setOnAdd, isBuilder, addNew }) {
     }
 
     setData({ curriculum: res?.lessons });
+  };
+
+  const deleteQuizTopic = async (obj: any) => {
+    const reloadLessons = (res) => {
+      if (res?.status === 204) {
+        dispatch(
+          getLessons({
+            id: course?._id,
+            callback: lessonCallback,
+          })
+        );
+      }
+    };
+
+    if (obj?.contentType === 'topic') {
+      const response = await lms_service.deleteTopic(obj?._id);
+      reloadLessons(response);
+    } else {
+      const response = await lms_service.deleteQuiz(obj?._id);
+      reloadLessons(response);
+    }
   };
 
   useEffect(() => {
@@ -209,8 +231,7 @@ function TreeCourse({ course, onAdd, setOnAdd, isBuilder, addNew }) {
                       const payload = { ...ids, callback };
 
                       if (branchLvl === 1) dispatch(deleteLesson(payload));
-                      if (branchLvl === 2)
-                        dispatch(deleteLessonContent(payload));
+                      if (branchLvl === 2) deleteQuizTopic(obj);
                     }}
                   />
 
