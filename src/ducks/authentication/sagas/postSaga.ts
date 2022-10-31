@@ -5,6 +5,8 @@ import { baseURL } from 'api/index';
 import axios from 'axios';
 import history from 'utils/history';
 import auth_services from 'api/services/auth_services';
+import organization_services from 'api/services/organization_service';
+
 import { openNotification } from 'ducks/alert/actionCreator';
 
 const setOtpToken = async (token: string) => {
@@ -20,22 +22,57 @@ export const getOtpUserId = async () => await localStorage.getItem('otpUserId');
 
 export function* postLogin({ payload }: never) {
   try {
+    let positions = [];
     const response = yield call(auth_services.postLogin, payload);
 
-    if (response?.data) {
-      localStorage.setItem('accessToken', response?.data?.accessToken);
+    localStorage.setItem('accessToken', response?.data?.accessToken);
+    // localStorage.setItem('userId', response?.data?.userId);
+
+    if (response?.status === 200) {
+      const userId = response?.data?.userId;
+      const details = yield call(auth_services.getUser, userId);
+
+      if (details?.status === 200) {
+        const organizations = yield call(
+          organization_services.getUserOrganization,
+          userId
+        );
+
+        if (organizations?.status === 200) {
+          (organizations?.data?.data || []).filter((x) => {
+            (x?.members || []).map((y) => {
+              y?.userId === userId && positions.push(y?.position);
+            });
+          });
+        }
+      }
+    }
+
+    if (positions.includes('staff')) {
+      yield put({
+        type: TYPES.GET_AUTHENTICATION_FAILED,
+        payload: { success: false, message: 'Go to Employee Login Page.' },
+      });
+    } else {
       localStorage.setItem('userId', response?.data?.userId);
 
       yield put({
         type: TYPES.GET_AUTHENTICATION_SUCCESS,
         payload: response?.data,
       });
-    } else {
-      yield put({
-        type: TYPES.GET_AUTHENTICATION_FAILED,
-        payload: { success: false, message: 'Please try again.' },
-      });
     }
+
+    // if (response?.data) {
+    //    yield put({
+    //      type: TYPES.GET_AUTHENTICATION_SUCCESS,
+    //      payload: response?.data,
+    //    });
+    // } else {
+    //   yield put({
+    //     type: TYPES.GET_AUTHENTICATION_FAILED,
+    //     payload: { success: false, message: 'Please try again.' },
+    //   });
+    // }
   } catch (e) {
     yield put({
       type: TYPES.GET_AUTHENTICATION_FAILED,
