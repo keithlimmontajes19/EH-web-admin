@@ -1,27 +1,28 @@
-import { ReactElement, useEffect } from "react";
-import { Redirect, Router } from "react-router-dom";
+import { ReactElement, useEffect } from 'react';
+import { Redirect, Router } from 'react-router-dom';
 
 /* styles utils*/
-import {} from "./styled";
-import { notificationAlert } from "utils/alerts";
-import history from "utils/history";
+import {} from './styled';
+import { notificationAlert } from 'utils/alerts';
+import history from 'utils/history';
 
 /* components */
-import MainLayout from "views/private/MainLayout";
-import LoginLayout from "views/public/LoginLayout";
+import MainLayout from 'views/private/MainLayout';
+import LoginLayout from 'views/public/LoginLayout';
 
 /* reducer action */
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "ducks/store";
-import { closeNotification } from "ducks/alert/actionCreator";
-import { getUserDetails } from "ducks/authentication/actionCreator";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from 'ducks/store';
+import { closeNotification } from 'ducks/alert/actionCreator';
+import { getUserDetails } from 'ducks/authentication/actionCreator';
 
 const ComponentLayout = (): any => {
   const dispatch = useDispatch();
   const { authentication, alert }: any = useSelector<RootState>(
     (state) => state
   );
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem('accessToken');
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     alert.onShow &&
@@ -33,18 +34,18 @@ const ComponentLayout = (): any => {
   }, [alert.onShow]);
 
   useEffect(() => {
-    if (token) {
+    if (token && userId) {
       dispatch(getUserDetails());
-      dispatch({ type: "GET_AUTHENTICATION_SUCCESS" });
+      dispatch({ type: 'GET_AUTHENTICATION_SUCCESS' });
     } else {
-      dispatch({ type: "GET_AUTHENTICATION_FAILED" });
+      dispatch({ type: 'GET_AUTHENTICATION_FAILED' });
     }
   }, [token]);
 
   return (
     <Router history={history}>
       {token && authentication.authenticated && <Redirect to="/home" />}
-      {token ? <MainLayout /> : <LoginLayout />}
+      {token && authentication.authenticated ? <MainLayout /> : <LoginLayout />}
     </Router>
   );
 };

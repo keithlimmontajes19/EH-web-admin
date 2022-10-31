@@ -1,11 +1,16 @@
-import { takeLatest, put, call } from "redux-saga/effects";
-import { TYPES } from "../actionTypes";
+import { takeLatest, put, call } from 'redux-saga/effects';
+import { TYPES } from '../actionTypes';
 
-import organization_service from "api/services/organization_service";
+import organization_service from 'api/services/organization_service';
 
 export function* listOrganizations(): any {
+  const userId = localStorage.getItem('userId');
+
   try {
-    const response = yield call(organization_service.getListOrganization);
+    const response = yield call(
+      organization_service.getUserOrganization,
+      userId
+    );
 
     yield put({
       type: TYPES.LIST_DEPARTMENT_SUCCESS,

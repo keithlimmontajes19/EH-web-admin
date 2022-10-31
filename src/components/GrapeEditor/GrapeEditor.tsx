@@ -33,7 +33,7 @@ export const EDITOR_JS_TOOLS = {
   list: List,
   warning: Warning,
   code: Code,
-  linkTool: LinkTool,
+  // linkTool: LinkTool,
   raw: Raw,
   header: Header,
   quote: Quote,
