@@ -11,7 +11,7 @@ import {
   StyledViewCourse,
 } from './styled';
 
-import { Menu } from 'antd';
+import { Menu, Col } from 'antd';
 import { theme } from 'utils/colors';
 import { useDispatch } from 'react-redux';
 import { CaretRightOutlined } from '@ant-design/icons';
@@ -53,11 +53,23 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
     return stats ? `${stats + ' ' + label} ` : ' ';
   };
 
+  const truncate = (word: string) => {
+    if (word.length >= 28) {
+      return word.substring(0, 25) + '...';
+    } else {
+      return word;
+    }
+  };
+
   return (
     <MenuContainer>
-      <div style={{ paddingTop: 38, paddingLeft: 20 }}>
-        <StyledViewCourse>View Course</StyledViewCourse>
-        <StyledMainTitle>{curriculumTitle}</StyledMainTitle>
+      <div style={{ paddingTop: 38 }}>
+        <StyledViewCourse style={{ marginLeft: 20 }}>
+          View Course
+        </StyledViewCourse>
+        <StyledMainTitle style={{ marginLeft: 20 }}>
+          {curriculumTitle}
+        </StyledMainTitle>
 
         <Menu
           mode="inline"
@@ -115,7 +127,7 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
                   }
                   title={
                     <StyledLabel color={colorCondition(lessonContent?.title)}>
-                      {lessonContent?.title}
+                      {truncate(lessonContent?.title)}
                       <SubLabel color={colorCondition(lessonContent?.title)}>
                         {checkNullUndefined(stats?.lesson, 'Lesson')}
                         {checkNullUndefined(stats?.topic, 'Topic')}
@@ -133,16 +145,17 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
                   {(lessonContent?.contents || lessonContent || [])
                     .sort((a, b) => a?.position - b?.position)
                     .map((topicContent, topicIndex) => {
-                      const firstIndex = () => {
-                        return (
-                          (lessonIndex === '0' && topicIndex === 0) ||
-                          topicContent?.progress?.started
-                        );
-                      };
+                      // const firstIndex = () => {
+                      //   return (
+                      //     (lessonIndex === '0' && topicIndex === 0) ||
+                      //     topicContent?.progress?.started
+                      //   );
+                      // };
 
                       return (
                         <Menu.Item
                           key={topicContent?.title}
+                          title={topicContent?.title}
                           onClick={() => {
                             setTopicId(topicContent?._id);
                             setLessonId(lessonContent?._id);
@@ -157,7 +170,8 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
                           <MenuLabel
                             color={colorCondition(topicContent?.title)}
                           >
-                            {topicContent?.title}
+                            {truncate(topicContent?.title)}
+
                             <MenuSublabel
                               color={subColorCondition(topicContent?.title)}
                             >
@@ -178,9 +192,10 @@ const SidebarCurriculum = (props: PropsType): ReactElement => {
                     localStorage.setItem('topicId', '');
                     localStorage.setItem('lessonId', lessonContent?._id);
                   }}
+                  title={lessonContent?.title}
                 >
                   <StyledLabel color={colorCondition(lessonContent?.title)}>
-                    {lessonContent?.title}
+                    {truncate(lessonContent?.title)}
                   </StyledLabel>
                 </Menu.Item>
               );

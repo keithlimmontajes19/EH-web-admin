@@ -1,7 +1,8 @@
 export default function OrderedList({items}: any) {
   return <ol>
     {items.map((item, index) => {
-      return <li key={index}>{item}</li>
+      const text = item?.replace(/&lt;/g, '<') || ''
+      return <li dangerouslySetInnerHTML={{__html: text}} key={index}></li>
     })}
   </ol>
 }
