@@ -153,22 +153,16 @@ const ContentCurriculum = (props: PropsType): ReactElement => {
                     width={'100%'}
                     height={'100%'}
                     controls={true}
-                    url={[
-                      {
-                        src: fileUrl,
-                        type: 'video/mp4',
-                      },
-                    ]}
+                    url={fileUrl}
                   />
                 )
               }
             />
           )}
 
-          {/* <HTMLRenderer source={editorJsParser(parseBlocks?.blocks)} /> */}
           {(parseBlocks?.blocks || []).map((block) => {
             return (
-              <div style={{ margin: 4 }}>
+              <div style={{ margin: 4, padding: '10px 20px 0px 20px' }}>
                 <BlockViewer key={block?.id} block={block} />
               </div>
             );
@@ -202,12 +196,7 @@ const ContentCurriculum = (props: PropsType): ReactElement => {
                     width={'100%'}
                     height={'100%'}
                     controls={true}
-                    url={[
-                      {
-                        src: fileUrl,
-                        type: 'video/mp4',
-                      },
-                    ]}
+                    url={fileUrl}
                   />
                 )
               }
@@ -221,10 +210,9 @@ const ContentCurriculum = (props: PropsType): ReactElement => {
               setSelected={setSelected}
             />
           ) : (
-            // <HTMLRenderer source={editorJsParser(parseBlocks?.blocks)} />
             (parseBlocks?.blocks || []).map((block) => {
               return (
-                <div style={{ margin: 4 }}>
+                <div style={{ margin: 4, padding: '10px 20px 0px 20px' }}>
                   <BlockViewer key={block?.id} block={block} />
                 </div>
               );

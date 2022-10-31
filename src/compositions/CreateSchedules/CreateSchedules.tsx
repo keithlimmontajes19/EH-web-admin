@@ -42,6 +42,7 @@ const CreateSchedules = (props: any): ReactElement => {
   const [organization, setOrganization] = useState([]);
   const [fileObject, setFileObject] = useState(null);
   const [fileName, setFileName] = useState(null);
+  const [fileType, setFileType] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [end, setEnd] = useState({
@@ -82,6 +83,7 @@ const CreateSchedules = (props: any): ReactElement => {
 
   const fileUpload = (info) => {
     if (info.file.status === 'done') {
+      setFileType(info.file.type);
       setFileName(info.file.name);
       setFileObject(info?.file?.originFileObj);
 
@@ -98,7 +100,7 @@ const CreateSchedules = (props: any): ReactElement => {
         method: 'PUT',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': fileType,
         },
       });
     });
@@ -155,13 +157,11 @@ const CreateSchedules = (props: any): ReactElement => {
     const data = {
       title: '',
       fileDisplayName: fileName,
-      // fileDisplayName: fileName.split('.').slice(0, -1).join('.'),
     };
 
     try {
       const response = await schedules_service.postSchedules(data);
       const schedID = response?.data?.data?._id;
-
       if (schedID) {
         Promise.all([
           await postOrganization(schedID),
@@ -173,7 +173,6 @@ const CreateSchedules = (props: any): ReactElement => {
             setLoading(false);
             callingSchedules();
             notificationAlert('success', 'Schedule added success!', () => {});
-
             setTimeout(() => {
               setIsModalVisible(false);
             }, 50);
