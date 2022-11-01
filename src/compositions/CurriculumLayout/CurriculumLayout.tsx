@@ -1,5 +1,5 @@
-import {ReactElement, Fragment} from 'react';
-import type {PropsType} from './types';
+import { ReactElement, Fragment } from 'react';
+import type { PropsType } from './types';
 
 import RenderHtml from 'components/RenderHtml';
 import {
@@ -10,18 +10,18 @@ import {
   StyledWhite,
 } from './styled';
 
-import {useDispatch} from 'react-redux';
-import {getTopicID} from 'ducks/lms/actionCreator';
+import { useDispatch } from 'react-redux';
+import { getTopicID } from 'ducks/lms/actionCreator';
 
 const CurriculumLayout = (props: PropsType): ReactElement => {
-  const {data, type, lesson, topic, onClick, selected, setSelected} = props;
+  const { data, type, lesson, topic, onClick, selected, setSelected } = props;
 
   const sortedLesson = (lesson?.data?.contents || []).sort(
-    (a, b) => a?.position - b?.position,
+    (a, b) => a?.position - b?.position
   );
   const lessonLength = (sortedLesson || []).length;
   const findIndex = (sortedLesson || []).findIndex((x) =>
-    x?.title.includes(selected),
+    x?.title.includes(selected)
   );
 
   const dispatch = useDispatch();
@@ -37,7 +37,6 @@ const CurriculumLayout = (props: PropsType): ReactElement => {
     const itemChecker = nextIndexItem() !== null ? nextIndexItem() : null;
 
     if (itemChecker !== null) {
-
       setTopicId(itemChecker?._id);
       setSelected(itemChecker?.title);
 
@@ -55,7 +54,8 @@ const CurriculumLayout = (props: PropsType): ReactElement => {
       <Container>
         {type === 'quiz' ? (
           <Fragment>
-            <StyledStart onClick={onClick}>Start Quiz</StyledStart>
+            {/* <StyledStart onClick={onClick}>Start Quiz</StyledStart> */}
+            <StyledStart disabled>Start Quiz</StyledStart>
           </Fragment>
         ) : findIndex !== -1 ? (
           findIndex + 1 <= lessonLength && (

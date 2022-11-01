@@ -20,7 +20,7 @@ export const columns = (
     key: '2',
     title: (
       <>
-        <StyledCalendar>CALENDAR TRAINING</StyledCalendar>
+        <StyledCalendar>Training Calendars</StyledCalendar>
         <StyledTitle>Month/Date</StyledTitle>
       </>
     ),

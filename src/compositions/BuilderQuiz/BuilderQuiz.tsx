@@ -59,14 +59,14 @@ const BuilderQuiz = (): ReactElement => {
         pushNewQuestion('single-choice');
       },
     },
-    {
-      name: 'Multiple Choice',
-      action: () => {
-        setType('multiple-choice');
-        setQuizQuestions([]);
-        pushNewQuestion('multiple-choice');
-      },
-    },
+    // {
+    //   name: 'Multiple Choice',
+    //   action: () => {
+    //     setType('multiple-choice');
+    //     setQuizQuestions([]);
+    //     pushNewQuestion('multiple-choice');
+    //   },
+    // },
     {
       name: 'Essay',
       action: () => {
@@ -75,14 +75,14 @@ const BuilderQuiz = (): ReactElement => {
         pushNewQuestion('essay');
       },
     },
-    {
-      name: 'Fill Blanks',
-      action: () => {
-        setType('fill-in-the-blanks');
-        setQuizQuestions([]);
-        pushNewQuestion('fill-in-the-blanks');
-      },
-    },
+    // {
+    //   name: 'Fill Blanks',
+    //   action: () => {
+    //     setType('fill-in-the-blanks');
+    //     setQuizQuestions([]);
+    //     pushNewQuestion('fill-in-the-blanks');
+    //   },
+    // },
     {
       name: 'Sort',
       action: () => {

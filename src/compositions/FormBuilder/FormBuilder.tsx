@@ -230,12 +230,7 @@ const FormBuilder = (props: PropsType): ReactElement => {
                   controls={true}
                   width={200}
                   height={150}
-                  url={[
-                    {
-                      src: fileUrl,
-                      type: 'video/mp4',
-                    },
-                  ]}
+                  url={fileUrl}
                 />
               )
             }
