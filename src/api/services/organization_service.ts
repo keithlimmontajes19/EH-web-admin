@@ -9,6 +9,9 @@ interface payloadTypes {
 const organization_services = {
   getListOrganization: () => api.get(`${ORGANIZATION}`),
 
+  getUserOrganization: (userId: string) =>
+    api.get(`/users/${userId}/organizations`),
+
   postOrganization: (payload: payloadTypes) =>
     api.post(`${ORGANIZATION}`, payload),
 

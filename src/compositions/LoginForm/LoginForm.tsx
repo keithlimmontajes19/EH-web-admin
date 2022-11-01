@@ -56,14 +56,16 @@ const LoginForm = (): ReactElement => {
     const email = form.getFieldValue('email');
     const password = form.getFieldValue('password');
 
-    if (!data?.success && email.length) {
-      setFormFields('email', data?.message);
-    }
+    if (data) {
+      if (!data?.success && email.length) {
+        setFormFields('email', data?.message);
+      }
 
-    if (!data?.success && password.length) {
-      setFormFields('password', data?.message);
+      if (!data?.success && password.length) {
+        setFormFields('password', data?.message);
+      }
     }
-  }, [data]);
+  }, [loading, data]);
 
   return (
     <Container>

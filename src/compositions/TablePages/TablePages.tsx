@@ -46,7 +46,7 @@ import DELETE_ICON from 'assets/icons/delete-icon.png';
 
 const TablePages = (props: PropsType): ReactElement => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingData, setEditingData] = useState(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -178,7 +178,8 @@ const TablePages = (props: PropsType): ReactElement => {
     dispatch(getPages());
   }, []);
 
-  const { data: rawData }: any = useSelector<RootState>((state) => state.pages);
+  const pagesData: any = useSelector<RootState>((state) => state.pages);
+  const { data: rawData } = pagesData;
 
   useEffect(() => {
     if (!rawData.length) return;
@@ -326,7 +327,7 @@ const TablePages = (props: PropsType): ReactElement => {
             rowSelection={rowSelection}
             columns={columns}
             dataSource={searchInpt !== '' ? searchdData : dataSource}
-            loading={loading}
+            loading={pagesData?.loading}
             locale={{
               emptyText: (
                 <div
