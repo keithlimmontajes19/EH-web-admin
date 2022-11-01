@@ -55,7 +55,7 @@ const CurriculumLayout = (props: PropsType): ReactElement => {
         {type === 'quiz' ? (
           <Fragment>
             {/* <StyledStart onClick={onClick}>Start Quiz</StyledStart> */}
-            <StyledStart>Start Quiz</StyledStart>
+            <StyledStart disabled>Start Quiz</StyledStart>
           </Fragment>
         ) : findIndex !== -1 ? (
           findIndex + 1 <= lessonLength && (
