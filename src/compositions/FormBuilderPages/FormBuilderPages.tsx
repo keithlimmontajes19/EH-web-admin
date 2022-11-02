@@ -65,7 +65,7 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
         ? JSON.parse(data?.details)
         : {};
 
-      setBlocks(parseBlocks?.blocks);
+      setBlocks(parseBlocks);
       setFileUrl(data?.imageURL || data?.videoURL);
       setTitle(data?.title);
 
@@ -105,9 +105,9 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
   };
 
   const onSave = async () => {
-    const savedData =
-      await editorCore.current.dangerouslyLowLevelInstance?.save();
+    const savedData = await editorCore.current.dangerouslyLowLevelInstance?.save();
 
+    console.log('savedData', savedData)
     const data = {
       title: title,
       forms: formId,
@@ -271,8 +271,10 @@ const FormBuilderPages = (props: PropsType): ReactElement => {
           />
         </div>
       </div>
-
-      {(blocks?.version || load) && (
+      {/* blocks?.version || */}
+      {params?.editAdd === 'edit' ? (
+        (blocks?.version && load) && <GrapeEditor editorCore={editorCore} blocks={blocks} />
+      ) : (
         <GrapeEditor editorCore={editorCore} blocks={blocks} />
       )}
 
