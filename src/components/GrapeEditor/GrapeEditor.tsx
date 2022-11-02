@@ -24,7 +24,6 @@ import { createReactEditorJS } from 'react-editor-js';
 // import { editorJsParser } from 'editorjs-data-parser';
 
 const ReactEditorJS = createReactEditorJS();
-// const baseURL = 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload';
 
 export const EDITOR_JS_TOOLS = {
   embed: Embed,
@@ -47,25 +46,6 @@ export const EDITOR_JS_TOOLS = {
       endpoints: {
         byFile: 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload',
       },
-      //   uploader: {
-      //     uploadSelectedFile(file) {
-      //       return axios
-      //         .post(baseURL, file, {
-      //           headers: {
-      //             'Content-Type': 'multipart/form-data',
-      //           },
-      //         })
-      //         .then((res: any) => {
-      //           return {
-      //             success: 1,
-      //             type: 'image',
-      //             file: {
-      //               url: res?.data?.data?.url,
-      //             },
-      //           };
-      //         });
-      //     },
-      //   },
     },
   },
   video: {
@@ -81,20 +61,7 @@ export const EDITOR_JS_TOOLS = {
       endpoints: {
         byFile: 'https://engage-hub-platform-dev.herokuapp.com/api/v1/upload',
       },
-      // uploader: {
-      //   uploadByFile(file) {
-      //     return axios
-      //       .post(baseURL, { name: '', mimetype: '', data: file })
-      //       .then((res) => {
-      //         return {
-      //           success: 1,
-      //           file: {
-      //             url: res?.data?.data?.url,
-      //           },
-      //         };
-      //       });
-      //   },
-      // },
+
       actions: [
         {
           name: 'new_button',
@@ -177,6 +144,19 @@ export const EDITOR_JS_TOOLS = {
 //   return convertedHtml;
 // };
 
+// const handleSave = React.useCallback(async () => {
+//   const savedData =
+//     await editorCore.current.dangerouslyLowLevelInstance?.save();
+
+//   // const converted = convertDataToHtml(savedData?.blocks);
+//   // const parser = new edjsParser(undefined, undefined);
+//   // console.log('converted', converted);
+
+//   setValues(savedData?.blocks);
+//   console.log(savedData?.blocks);
+//   console.log('parser --->', editorJsParser(savedData?.blocks));
+// }, []);
+
 const GrapeEditor = (props: any) => {
   const { editorCore, blocks } = props;
 
@@ -184,25 +164,69 @@ const GrapeEditor = (props: any) => {
     editorCore.current = instance;
   }, []);
 
-  // const handleSave = React.useCallback(async () => {
-  //   const savedData =
-  //     await editorCore.current.dangerouslyLowLevelInstance?.save();
+  const blocker = [];
 
-  //   // const converted = convertDataToHtml(savedData?.blocks);
-  //   // const parser = new edjsParser(undefined, undefined);
-  //   // console.log('converted', converted);
+  // const updateImages = async ({ data }) => {
+  //   const url = data?.file?.url || '';
+  //   if (url.length) {
+  //     const imageId = url.match(/(\/.*)\/(.*)\?token/)[2] || null;
+  //     const accessToken = localStorage.getItem('accessToken');
+  //     const basUrl = `https://engage-hub-platform-dev.herokuapp.com/api/v1/download`;
 
-  //   setValues(savedData?.blocks);
-  //   console.log(savedData?.blocks);
-  //   console.log('parser --->', editorJsParser(savedData?.blocks));
-  // }, []);
+  //     const urlCall = await axios.get(`${basUrl}/${imageId}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     });
 
+  //     setLoading(false);
+  //     return urlCall?.data?.data;
+  //   } else {
+  //     setLoading(false);
+  //     return '';
+  //   }
+  // };
+
+  /**
+   * ====================
+   * OVERIDES TAGS
+   * LINK, IMAGES, VIDEOS
+   * =====================
+   */
+  // (blocks?.blocks || []).filter(async (item) => {
+  //   switch (item?.type) {
+  //     case 'paragraph':
+  //       const text = item?.data?.text?.replace(/&lt;/g, '<') || '';
+  //       blocker.push({ ...item, data: { text: text } });
+  //       break;
+  //     case 'image':
+  //       const image = await updateImages(item);
+  //       blocker.push({
+  //         ...item,
+  //         data: { ...item?.data, file: { url: image } },
+  //       });
+  //       break;
+  //     default:
+  //       blocker.push(item);
+  //   }
+  // });
+
+  (blocks?.blocks || []).filter(async (item) => {
+    if (item?.type === 'paragraph') {
+      const text = item?.data?.text?.replace(/&lt;/g, '<') || '';
+      blocker.push({ ...item, data: { text: text } });
+    } else {
+      blocker.push(item);
+    }
+  });
+
+  console.log('blocker', blocker);
   return (
     <ReactEditorJS
-      value={blocks}
-      defaultValue={blocks}
       tools={EDITOR_JS_TOOLS}
       onInitialize={handleInitialize}
+      value={{ ...blocks, blocks: blocker }}
+      defaultValue={{ ...blocks, blocks: blocker }}
       placeholder="Lets start making your content!"
     />
   );
